@@ -2,6 +2,9 @@
 {% import "macros.html" as macros %}
 <!-- users.html -->
 {% block title %}{% spaceless %}{% trans %}Users{% endtrans %}{% endspaceless %}{% endblock %}
+{% block forestyle %}
+    <link rel="stylesheet" type="text/css" href="{{"/js/wmd/wmd.css"|media}}" />
+{% endblock %}
 {% block content %}
 <h1 class="section-title">
 {% if group %}
@@ -42,19 +45,19 @@
     </div>
 </div>
 <div class="clean"></div>
-<p>
-    {% if suser %}
-        {% trans %}users matching query {{suser}}:{% endtrans %}
-    {% endif %}
-    {% if not users.object_list %}
-        <span>{% trans %}Nothing found.{% endtrans %}</span>
-    {% endif %}
-</p>
+{% if suser %}
+    <p>{% trans %}users matching query {{suser}}:{% endtrans %}</p>
+{% endif %}
+{% if not users.object_list %}
+    <p><span>{% trans %}Nothing found.{% endtrans %}</span></p>
+{% endif %}
 {% if group %}
     <div id="group-wiki-{{group.id}}" class="group-wiki">
         <img class="group-logo" 
             {% if group.group_profile.logo_url %}
                 src="{{ group.group_profile.logo_url }}"
+            {% else %}
+                style="display:none"
             {% endif %}
         />
         <div class="content">
@@ -64,12 +67,22 @@
         </div>
         <div class="clearfix"></div>
         {% if request.user.is_authenticated() and request.user.is_administrator_or_moderator() %}
-        <a class="edit btn">
-            {% trans %}edit group description{% endtrans %}
-        </a>
-        <a class="change_logo btn">
-            {% trans %}change logo{% endtrans %}
-        </a>
+        <div class="controls">
+            <a class="edit-description"
+            >{% trans %}edit description{% endtrans %}</a>
+            {% if group.group_profile.logo_url %}
+                <span>|</span>
+                <a class="change-logo"
+                >{% trans %}change logo{% endtrans %}</a>
+                <span>|</span>
+                <a class="delete-logo">{% trans %}delete logo{% endtrans %}</a>
+            {% else %}
+                <span>|</span>
+                <a class="change-logo"
+                >{% trans %}add logo{% endtrans %}</a>
+            {% endif %}
+
+        </div>
         {% endif %}
     </div>
 {% endif %}
@@ -90,6 +103,7 @@
         askbot['urls']['load_tag_wiki_text'] = '{% url load_tag_wiki_text %}';
         askbot['urls']['save_tag_wiki_text'] = '{% url save_tag_wiki_text %}';
         askbot['urls']['save_group_logo_url'] = '{% url save_group_logo_url %}';
+        askbot['urls']['delete_group_logo_url'] = '{% url delete_group_logo %}';
     </script>
     <script type='text/javascript' src='{{"/js/editor.js"|media}}'></script>
     <script type='text/javascript' src='{{"/js/wmd/showdown.js"|media}}'></script>
@@ -98,33 +112,37 @@
     <script src='{{"/js/post.js"|media}}' type='text/javascript'></script>
     <script type="text/javascript">
         //todo move javascript out
+        {% if settings.ENABLE_MATHJAX or settings.MARKUP_CODE_FRIENDLY %}
+            var codeFriendlyMarkdown = true;
+        {% else %}
+            var codeFriendlyMarkdown = false;
+        {% endif %}
         $().ready(function(){
             if (askbot['data']['userIsAdminOrMod'] === true){
                 //todo: this is kind of Attacklab.init ... should not be here
-                Attacklab.loadEnv = function()
-                {
-                    var mergeEnv = function(env)
-                    {
-                        if(!env)
-                        {
-                            return;
-                        }
-                    
-                        for(var key in env)
-                        {
-                            Attacklab.wmd_env[key] = env[key];
-                        }
+                Attacklab.wmd = function(){
+                    Attacklab.loadEnv = function(){
+                        var mergeEnv = function(env){
+                            if(!env){
+                                return;
+                            }
+                        
+                            for(var key in env){
+                                Attacklab.wmd_env[key] = env[key];
+                            }
+                        };
+                        
+                        mergeEnv(Attacklab.wmd_defaults);
+                        mergeEnv(Attacklab.account_options);
+                        mergeEnv(top["wmd_options"]);
+                        Attacklab.full = true;
+                        
+                        var defaultButtons = "bold italic link blockquote code image ol ul heading hr";
+                        Attacklab.wmd_env.buttons = Attacklab.wmd_env.buttons || defaultButtons;
                     };
-                    
-                    mergeEnv(Attacklab.wmd_defaults);
-                    mergeEnv(Attacklab.account_options);
-                    mergeEnv(top["wmd_options"]);
-                    Attacklab.full = true;
-                    
-                    var defaultButtons = "bold italic link blockquote code image ol ul heading hr";
-                    Attacklab.wmd_env.buttons = Attacklab.wmd_env.buttons || defaultButtons;
+                    Attacklab.loadEnv();
                 };
-                Attacklab.loadEnv();
+                Attacklab.wmd();
                 Attacklab.wmdBase();
                 var group_editor = new UserGroupProfileEditor();
                 group_editor.decorate($('#group-wiki-{{group.id}}'));

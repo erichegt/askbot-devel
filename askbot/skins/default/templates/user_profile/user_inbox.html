@@ -1,5 +1,8 @@
 {% extends "user_profile/user.html" %}
 {% import "macros.html" as macros %}
+{% block forestyle %}
+    <link href="{{'/bootstrap/css/bootstrap.min.css'|media}}" rel="stylesheet" type="text/css" />
+{% endblock %}
 <!-- user_responses.html -->
 {#
 This template accepts a list of response list
@@ -134,5 +137,6 @@ inbox_section - forum|flags
             )
         {% endfor %}
     </script>
+    <script type="text/javascript" src="{{'/bootstrap/js/bootstrap.js'|media}}" />
 <!-- end user_responses.html -->
 {% endblock %}

@@ -207,6 +207,11 @@ urlpatterns = patterns('',
         views.commands.save_group_logo_url,
         name = 'save_group_logo_url'
     ),
+    url(#ajax only
+        r'^delete-group-logo/',
+        views.commands.delete_group_logo,
+        name = 'delete_group_logo'
+    ),
     url(
         r'^get-groups-list/',
         views.commands.get_groups_list,

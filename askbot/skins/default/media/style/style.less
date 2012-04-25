@@ -151,7 +151,7 @@ a:hover {
 
 h1 {
     font-size: 24px;
-    padding: 10px 0 5px 0px;
+    padding: 0px 0 5px 0px;
 }
 
 /* ----- Extra space above for messages ----- */
@@ -864,6 +864,10 @@ ul#searchTags {
     background-color: #FFF;
     padding: 0;
     width: 100%;
+}
+
+.main-page #question-list {
+    margin-top: 10px;
 }
 
 .short-summary {
@@ -2250,13 +2254,11 @@ ul#related-tags li {
 }*/
 
 .user {
-    padding: 5px;
+    padding: 5px 10px 5px 0;
     line-height: 140%;
     width: 166px;
     height: 32px;
-    border:#eee 1px solid;
     margin-bottom:5px;
-    .rounded-corners(3px);
     .user-micro-info{
         color:@info-text-dark;
     }
@@ -3073,8 +3075,11 @@ button::-moz-focus-inner {
     -webkit-border-radius: 5px;
 }
 
-.list-table td {
-    vertical-align: top;
+.list-table {
+    td { 
+        vertical-align: top;
+    }
+    border-spacing: 0;
 }
 
 /* these need to go */
@@ -3410,10 +3415,6 @@ body.anon.lang-es {
 }
 
 .users-page {
-    #editor {
-        border: 2px #CCE6EC solid;
-        padding: 0px;
-    }
     .wmd-prompt-dialog {
         background: #ccc;
     }
@@ -3422,10 +3423,15 @@ body.anon.lang-es {
 .group-wiki {
     .content {
         float: left;
-        margin-bottom: -12px;
+        p:last-child {
+            margin-bottom: 5px;
+        }
     }
     .group-logo {
         float: left;
         margin: 0 5px 3px 0;
+    }
+    .controls {
+        margin: 0 0 10px 0;
     }
 }

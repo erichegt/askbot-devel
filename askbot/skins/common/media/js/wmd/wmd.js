@@ -1817,7 +1817,7 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
 		wmd.wmd.previewManager = wmd.previewManager;
 	};
 	
-	util.startEditor = function(){
+	util.startEditor = function(start_now){
 	
 		if (wmd.wmd_env.autostart === false) {
 			util.makeAPI();
@@ -1841,7 +1841,11 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
 			
 		};
 		
-		util.addEvent(top, "load", loadListener);
+        if (start_now){
+            loadListener();
+        } else {
+		    util.addEvent(top, "load", loadListener);
+        }
 	};
 	
 	wmd.previewManager = function(){

@@ -1957,7 +1957,7 @@ WMD.prototype.getMarkdown = function(){
 };
 
 WMD.prototype.start = function(){
-	Attacklab.Util.startEditor();
+	Attacklab.Util.startEditor(true);
     this._textarea.keyup(makeKeyHandler(27, this._escape_handler));
 };
 
@@ -1968,6 +1968,7 @@ var TagWikiEditor = function(){
     WrappedElement.call(this);
     this._state = 'display';//'edit' or 'display'
     this._content_backup  = '';
+    this._is_editor_loaded = false;
 };
 inherits(TagWikiEditor, WrappedElement);
 
@@ -1986,11 +1987,13 @@ TagWikiEditor.prototype.setState = function(state){
         this._edit_btn.hide();
         this._cancel_btn.show();
         this._save_btn.show();
+        this._cancel_sep.show();
     } else if (state === 'display'){
         this._state = state;
         this._edit_btn.show();
         this._cancel_btn.hide();
-        this._save_btn.();
+        this._cancel_sep.hide();
+        this._save_btn.hide();
     }
 };
 
@@ -2004,6 +2007,14 @@ TagWikiEditor.prototype.restoreContent = function(){
 
 TagWikiEditor.prototype.getTagId = function(){
     return this._tag_id;
+};
+
+TagWikiEditor.prototype.isEditorLoaded = function(){
+    return this._is_editor_loaded;
+};
+
+TagWikiEditor.prototype.setEditorLoaded = function(){
+    return this._is_editor_loaded = true;
 };
 
 /**
@@ -2023,18 +2034,22 @@ TagWikiEditor.prototype.startActivatingEditor = function(){
             editor.setMarkdown(data);
             me.setContent(editor.getElement());
             me.setState('edit');
-            editor.start();
+            if (me.isEditorLoaded() === false){
+                editor.start();
+                me.setEditorLoaded();
+            }
         }
     });
 };
 
-TagWikiEditor.prototype.saveData = function(markdown){
+TagWikiEditor.prototype.saveData = function(){
     var me = this;
+    var text = this._editor.getMarkdown();
     $.ajax({
         type: 'POST',
         dataType: 'json',
         url: askbot['urls']['save_tag_wiki_text'],
-        data: {tag_id: me.getTagId(), text: markdown},
+        data: {tag_id: me.getTagId(), text: text},
         cache: false,
         success: function(data){
             if (data['success']){
@@ -2048,29 +2063,32 @@ TagWikiEditor.prototype.saveData = function(markdown){
 };
 
 TagWikiEditor.prototype.cancelEdit = function(){
-    me.restoreContent(); 
-    me.setState('display');
+    this.restoreContent(); 
+    this.setState('display');
 };
 
 TagWikiEditor.prototype.decorate = function(element){
     //expect <div id='group-wiki-{{id}}'><div class="content"/><a class="edit"/></div>
     this._element = element;
-    var edit_btn = element.find('.edit');
+    var edit_btn = element.find('.edit-description');
     this._edit_btn = edit_btn;
 
+    //adding two buttons...
     var save_btn = this.makeElement('a');
-    save_btn.addClass('btn');
     save_btn.html(gettext('save'));
     edit_btn.after(save_btn);
     save_btn.hide();
     this._save_btn = save_btn;
 
     var cancel_btn = this.makeElement('a');
-    cancel_btn.addClass('btn');
     cancel_btn.html(gettext('cancel'));
     save_btn.after(cancel_btn);
     cancel_btn.hide();
     this._cancel_btn = cancel_btn;
+
+    this._cancel_sep = $('<span> | </span>');
+    cancel_btn.before(this._cancel_sep);
+    this._cancel_sep.hide();
 
     this._content_box = element.find('.content');
     this._tag_id = element.attr('id').split('-').pop();
@@ -2078,13 +2096,19 @@ TagWikiEditor.prototype.decorate = function(element){
     var me = this;
     var editor = new WMD();
     editor.setEscapeHandler(function(){me.cancelEdit()});
+    this._editor = editor;
     setupButtonEventHandlers(edit_btn, function(){ me.startActivatingEditor() });
     setupButtonEventHandlers(cancel_btn, function(){me.cancelEdit()});
+    setupButtonEventHandlers(save_btn, function(){me.saveData()});
 };
 
 var ImageChanger = function(){
     WrappedElement.call(this);
     this._image_element = undefined;
+    this._delete_button = undefined;
+    this._save_url = undefined;
+    this._delete_url = undefined;
+    this._messages = undefined;
 };
 inherits(ImageChanger, WrappedElement);
 
@@ -2092,8 +2116,20 @@ ImageChanger.prototype.setImageElement = function(image_element){
     this._image_element = image_element;
 };
 
+ImageChanger.prototype.setMessages = function(messages){
+    this._messages = messages;
+};
+
+ImageChanger.prototype.setDeleteButton = function(delete_button){
+    this._delete_button = delete_button;
+};
+
 ImageChanger.prototype.setSaveUrl = function(url){
     this._save_url = url;
+};
+
+ImageChanger.prototype.setDeleteUrl = function(url){
+    this._delete_url = url;
 };
 
 ImageChanger.prototype.setAjaxData = function(data){
@@ -2102,6 +2138,28 @@ ImageChanger.prototype.setAjaxData = function(data){
 
 ImageChanger.prototype.showImage = function(image_url){
     this._image_element.attr('src', image_url);
+    this._image_element.show();
+};
+
+ImageChanger.prototype.deleteImage = function(){
+    this._image_element.attr('src', '');
+    this._image_element.css('display', 'none');
+
+    var me = this;
+    var delete_url = this._delete_url;
+    var data = this._ajax_data;
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        url: delete_url,
+        data: data,
+        cache: false,
+        success: function(data){
+            if (data['success'] === true){
+                showMessage(me.getElement(), data['message'], 'after');
+            }
+        }
+    });
 };
 
 ImageChanger.prototype.saveImageUrl = function(image_url){
@@ -2126,6 +2184,8 @@ ImageChanger.prototype.saveImageUrl = function(image_url){
 ImageChanger.prototype.startDialog = function(){
     //reusing the wmd's file uploader
     var me = this;
+    var change_image_text = this._messages['change_image'];
+    var change_image_button = this._element;
     Attacklab.Util.prompt(
         "<h3>" + gettext('Enter the logo url or upload an image') + '</h3>',
         'http://',
@@ -2133,10 +2193,34 @@ ImageChanger.prototype.startDialog = function(){
             if (image_url){
                 me.saveImageUrl(image_url);
                 me.showImage(image_url);
+                change_image_button.html(change_image_text);
+                me.showDeleteButton();
             }
         },
         'image'
     );
+};
+
+ImageChanger.prototype.showDeleteButton = function(){
+    this._delete_button.show();
+    this._delete_button.prev().show();
+};
+
+ImageChanger.prototype.hideDeleteButton = function(){
+    this._delete_button.hide();
+    this._delete_button.prev().hide();
+};
+
+
+ImageChanger.prototype.startDeleting = function(){
+    if (confirm(gettext('Do you really want to remove the image?'))){
+        this.deleteImage();
+        this._element.html(this._messages['add_image']);
+        this.hideDeleteButton();
+        this._delete_button.hide();
+        var sep = this._delete_button.prev();
+        sep.hide();
+    };
 };
 
 /**
@@ -2151,6 +2235,12 @@ ImageChanger.prototype.decorate = function(element){
             me.startDialog();
         }
     );
+    setupButtonEventHandlers(
+        this._delete_button,
+        function(){
+            me.startDeleting();
+        }
+    )
 };
 
 var UserGroupProfileEditor = function(){
@@ -2160,7 +2250,7 @@ inherits(UserGroupProfileEditor, TagWikiEditor);
 
 UserGroupProfileEditor.prototype.decorate = function(element){
     UserGroupProfileEditor.superClass_.decorate.call(this, element);
-    var change_logo_btn = element.find('.change_logo');
+    var change_logo_btn = element.find('.change-logo');
     this._change_logo_btn = change_logo_btn;
 
     var logo_changer = new ImageChanger();
@@ -2169,6 +2259,13 @@ UserGroupProfileEditor.prototype.decorate = function(element){
         group_id: this.getTagId()
     });
     logo_changer.setSaveUrl(askbot['urls']['save_group_logo_url']);
+    logo_changer.setDeleteUrl(askbot['urls']['delete_group_logo_url']);
+    logo_changer.setMessages({
+        change_image: gettext('change logo'),
+        add_image: gettext('add logo')
+    });
+    var delete_logo_btn = element.find('.delete-logo');
+    logo_changer.setDeleteButton(delete_logo_btn);
     logo_changer.decorate(change_logo_btn);
 };
 

@@ -769,3 +769,20 @@ def save_group_logo_url(request):
     else:
         raise ValueError('invalid data found when saving group logo')
 
+
+@csrf.csrf_exempt
+@decorators.ajax_only
+@decorators.post_only
+def delete_group_logo(request):
+    if request.user.is_anonymous():
+        raise exceptions.PermissionDenied()
+
+    if not request.user.is_administrator_or_moderator():
+        raise exceptions.PermissionDenied(
+            _('Only moderators and administrators can change user groups')
+        )
+    from django.forms import IntegerField
+    group_id = IntegerField().clean(int(request.POST['group_id']))
+    group = models.Tag.group_tags.get(id = group_id)
+    group.group_profile.logo_url = None
+    group.group_profile.save()
