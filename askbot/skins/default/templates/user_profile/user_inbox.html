@@ -67,49 +67,7 @@ inbox_section - forum|flags
         {% endif %}
         </div>
     </div>
-    <div class="modal" style="display:none" id="rejectEditModal">
-        <div class="modal-header">
-            <a class="close" data-dismiss="modal">x</a>
-            <h3>{% trans %}Want to reject the post(s)?{% endtrans %}</h3>
-        </div>
-        <div class="modal-body">
-            <div id="old-reason-content">
-                <p id="details"></p>
-            </div>
-            <div id="new-reason-content">
-                <input 
-                    id="id_title"
-                    class="questionTitleInput"
-                    name="title"
-                    autocomplete="off"
-                />
-                {{ macros.edit_post() }}
-        </div>
-        <div class="modal-footer">
-            <div id="old-reason-btns">
-                <a href="#" class="btn cancel-reject">{% trans %}Do nothing{% endtrans %}</a>
-                <a 
-                    id="addReason"
-                    href="#"
-                    class="btn"
-                >{% trans %}Add new rejection reason{% endtrans %}</a>
-                <a id="doReject" href="#" class="btn btn-primary">{% trans %}Reject post{% endtrans %}</a>
-            </div>
-            <div id="new-reason-btns" style="display:none">
-                <a href="#" class="btn cancel-reject">{% trans %}Do nothing{% endtrans %}</a>
-                <a 
-                    id="useOldReason"
-                    href="#"
-                    class="btn"
-                >{% trans %}Use existing rejection reason{% endtrans %}</a>
-                <a 
-                    id="doRejectWithNewReason"
-                    href="#"
-                    class="btn btn-primary"
-                >{% trans %}Save reason and reject post{% endtrans %}</a>
-            </div>
-        </div>
-    </div>
+    {% include "user_profile/reject_post_dialog.html" %}
     <div id="responses">
     {% for response in responses %}
         <div class="response-parent">
@@ -130,12 +88,6 @@ inbox_section - forum|flags
         var askbot = askbot || {};
         askbot['urls'] = askbot['urls'] || {};
         askbot['urls']['manageInbox'] = '{% url manage_inbox %}';
-        askbot['data']['rejectReasonDetails'] = [];
-        {% for reason in post_reject_reasons %}
-            askbot['data']['rejectReasonDetails'].push(
-                "{{reason.html|escapejs}}"
-            )
-        {% endfor %}
     </script>
     <script type="text/javascript" src="{{'/bootstrap/js/bootstrap.js'|media}}" />
 <!-- end user_responses.html -->

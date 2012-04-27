@@ -86,16 +86,6 @@ $(document).ready(function(){
     setupButtonEventHandlers($('#re_remove_flag'), function(){startAction('remove_flag')});
     //setupButtonEventHandlers($('#re_close'), function(){startAction('close')});
     setupButtonEventHandlers(
-        $('#re_delete_post'),
-        function(){
-            var data = getSelected();
-            if (data['id_list'].length === 0){
-                return;
-            }
-            $('#rejectEditModal').modal('show');
-        }
-    );
-    setupButtonEventHandlers(
                     $('#sel_all'),
                     function(){
                         setCheckBoxesIn('#responses .new', true);
@@ -121,39 +111,20 @@ $(document).ready(function(){
                         setCheckBoxesIn('#responses .seen', false);
                     }
     );
-    setupButtonEventHandlers(
-        $('.cancel-reject'),
-        function(){
-            $('#rejectEditModal').modal('hide');
-        }
-    )
-    setupButtonEventHandlers(
-        $('#doReject'),
-        function(){
-            $('#rejectEditModal').modal('hide');
-        }
-    );
-    setupButtonEventHandlers(
-        $('#doRejectWithNewReason'),
-        function(){
-            $('#rejectEditModal').modal('hide');
-        }
-    );
-    setupButtonEventHandlers(
-        $('#useOldReason'),
-        function(){
-            $('#old-reason-btns').show();
-            $('#new-reason-btns').hide();
-        }
-    );
-    setupButtonEventHandlers(
-        $('#addReason'),
-        function(){
-            $('#old-reason-btns').hide();
-            $('#new-reason-btns').show();
-        }
-    );
 
+    var reject_post_dialog = new RejectPostDialog();
+    reject_post_dialog.decorate($('#reject-edit-modal'));
+    setupButtonEventHandlers(
+        $('#re_delete_post'),
+        function(){
+            var data = getSelected();
+            if (data['id_list'].length === 0){
+                return;
+            }
+            reject_post_dialog.setSelectedEditIds(data);
+            reject_post_dialog.show();
+        }
+    );
     //setupButtonEventHandlers($('.re_expand'),
     //                function(e){
     //                    e.preventDefault();
@@ -180,6 +151,78 @@ $(document).ready(function(){
         }
     });
 });
+
+/**
+ * @constructor
+ * manages post/edit reject reasons
+ * in the post moderation view
+ */
+var RejectPostDialog = function(){
+    WrappedElement.call(this);
+    this._selected_edit_ids = null;
+    this._state = null;//'select', 'preview', 'add-new'
+};
+inherits(RejectPostDialog, WrappedElement);
+
+RejectPostDialog.prototype.setSelectedEditIds = function(ids){
+    this._selected_edit_ids = ids;
+};
+
+RejectPostDialog.prototype.setState = function(state){
+    this._state = state;
+    if (this._element){
+        this._selector.hide();
+        this._adder.hide();
+        this._previewer.hide();
+        if (state === 'select'){
+            this._selector.show();
+        } else if (state === 'preview'){
+            this._previewer.show();
+        } else if (state === 'add-new'){
+            this._adder.show();
+        }
+    }
+};
+
+RejectPostDialog.prototype.show = function(){
+    $(this._element).modal('show');
+};
+
+RejectPostDialog.prototype.addReason = function(title, description){
+    $(this._adder).find('.select-other-reason').show();
+};
+
+RejectPostDialog.prototype.decorate = function(element){
+    this._element = element;
+    //set default state according to the # of available reasons
+    this._selector = $(element).find('#reject-edit-modal-select');
+    this._adder = $(element).find('#reject-edit-modal-add-new');
+    this._previewer = $(element).find('#reject-edit-modal-preview');
+    if (this._selector.find('li').length > 0){
+        this.setState('select');
+    } else {
+        this.setState('add-new');
+        $(this._adder).find('.select-other-reason').hide();
+    }
+
+    //var select_box = new SelectBox();
+    //select_box.decorate($(this._selector.find('.select-box')));
+
+    //setup tipped-inputs
+    var me = this;
+    setupButtonEventHandlers(
+        element.find('.select-other-reason'),
+        function(){ me.setState('select') }
+    )
+    setupButtonEventHandlers(
+        element.find('.add-new-reason'),
+        function(){ me.setState('add-new') }
+    );
+    setupButtonEventHandlers(
+        element.find('.cancel'),
+        function() { $(element).modal('hide') }
+    );
+};
 
 /**
  * @constructor

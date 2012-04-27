@@ -1,0 +1,60 @@
+<div class="modal" style="display:none" id="reject-edit-modal">
+    <div class="modal-header">
+        <a class="close" data-dismiss="modal">x</a>
+        <h3>{% trans %}Reject the post(s)?{% endtrans %}</h3>
+    </div>
+    <div id="reject-edit-modal-add-new">{# create new reject reason #}
+        <div class="modal-body">
+            <p>{% trans %}Please explain why you are rejecting the post.{% endtrans %}</p>
+            <input 
+                class="reject-reason-title tipped-input"
+                type="text"
+                value="{% trans %}Enter a very brief description - it will be used for the future selection of the reject reasons.{% endtrans %}"
+            />
+            <textarea class="reject-reason-details tipped-input">
+                {% trans %}Please enter details here. This text will be emailed to the user{% endtrans %}
+            </textarea>
+        </div>
+        <div class="modal-footer">
+            <a class="btn use-this-reason"
+            >{% trans %}Use this reason &amp; reject{% endtrans %}</a>
+            <a class="btn select-other-reason"
+            >{% trans %}Use other reason{% endtrans %}</a>
+            <a class="btn save-reason"
+            >{% trans %}Save reason, but do not reject{% endtrans %}</a>
+            <a class="btn cancel">{% trans %}Cancel{% endtrans %}</a>
+        </div>
+    </div>
+    <div id="reject-edit-modal-select">{# select one of existing reasons #}
+        <div class="modal-body">
+            <ul class="select-box">
+                {% for reason in reasons %}
+                <li data-original-title="{{reason.html|escape}}"
+                >{{reason.title|escape}}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="modal-footer">
+            <a class="btn select-this-reason"
+            >{% trans %}Select this reason{% endtrans %}</a>
+            <a class="btn add-new-reason"
+            >{% trans %}Add a new reason{% endtrans %}</a>
+            <a class="btn cancel">{% trans %}Cancel{% endtrans %}</a>
+        </div>
+    </div>
+    <div id="reject-edit-modal-preview">{# preview reject reason #}
+        <div class="modal-body">
+            <p>{% trans %}You have selected reason for the rejection "not relevant for this community". The text shown below will be e-mailed to the user and the post will be deleted.{% endtrans %}</p>
+            <textarea disabled="disabled" class="selected-reason-text"></textarea>
+        </div>
+        <div class="modal-footer">
+            <a class="btn use-this-reason"
+            >{% trans %}Use this reason &amp; reject{% endtrans %}</a>
+            <a class="btn select-other-reason"
+            >{% trans %}Use other reason{% endtrans %}</a>
+            <a class="btn save-reason"
+            >{% trans %}Edit this reason{% endtrans %}</a>
+            <a class="btn cancel">{% trans %}Cancel{% endtrans %}</a>
+        </div>
+    </div>
+</div>
