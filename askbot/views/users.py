@@ -81,7 +81,7 @@ def users(request):
                                             ),
                             const.USERS_PAGE_SIZE
                         )
-        base_url = reverse('users') + '?sort=%s&' % sortby
+        base_url = reverse('users') + '?sort=%s&amp;' % sortby
     else:
         sortby = "reputation"
         objects_list = Paginator(
@@ -92,7 +92,7 @@ def users(request):
                                             ),
                             const.USERS_PAGE_SIZE
                         )
-        base_url = reverse('users') + '?name=%s&sort=%s&' % (suser, sortby)
+        base_url = reverse('users') + '?name=%s&amp;sort=%s&amp;' % (suser, sortby)
 
     try:
         users_page = objects_list.page(page)
@@ -250,7 +250,6 @@ def edit_user(request, id):
             user.about = sanitize_html(form.cleaned_data['about'])
             user.country = form.cleaned_data['country']
             user.show_country = form.cleaned_data['show_country']
-
             user.save()
             # send user updated signal if full fields have been updated
             award_badges_signal.send(None,
@@ -318,6 +317,12 @@ def user_stats(request, user, context):
                     order_by('-user_tag_usage_count')[:const.USER_VIEW_DATA_SIZE]
     user_tags = list(user_tags) # evaluate
 
+    interesting_tags = models.Tag.objects.filter(user_selections__user=user, user_selections__reason='good')
+    interesting_tags = list(interesting_tags)
+
+    ignored_tags = models.Tag.objects.filter(user_selections__user=user, user_selections__reason='bad')
+    ignored_tags = list(ignored_tags)
+        
 #    tags = models.Post.objects.filter(author=user).values('id', 'thread', 'thread__tags')
 #    post_ids = set()
 #    thread_ids = set()
@@ -394,6 +399,8 @@ def user_stats(request, user, context):
         'votes_total_per_day': votes_total,
 
         'user_tags' : user_tags,
+        'interesting_tags': interesting_tags,
+        'ignored_tags': ignored_tags,
 
         'badges': badges,
         'total_badges' : len(badges),
