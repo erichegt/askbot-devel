@@ -250,6 +250,7 @@ def edit_user(request, id):
             user.about = sanitize_html(form.cleaned_data['about'])
             user.country = form.cleaned_data['country']
             user.show_country = form.cleaned_data['show_country']
+            user.show_tags = form.cleaned_data['show_tags']
             user.save()
             # send user updated signal if full fields have been updated
             award_badges_signal.send(None,
@@ -317,11 +318,14 @@ def user_stats(request, user, context):
                     order_by('-user_tag_usage_count')[:const.USER_VIEW_DATA_SIZE]
     user_tags = list(user_tags) # evaluate
 
-    interesting_tags = models.Tag.objects.filter(user_selections__user=user, user_selections__reason='good')
-    interesting_tags = list(interesting_tags)
-
-    ignored_tags = models.Tag.objects.filter(user_selections__user=user, user_selections__reason='bad')
-    ignored_tags = list(ignored_tags)
+    if user.show_tags:
+        interesting_tags = models.Tag.objects.filter(user_selections__user=user, user_selections__reason='good')
+        ignored_tags = models.Tag.objects.filter(user_selections__user=user, user_selections__reason='bad')
+        interesting_tags = list(interesting_tags)
+        ignored_tags = list(ignored_tags)
+    else:
+        interesting_tags = None
+        ignored_tags = None
         
 #    tags = models.Post.objects.filter(author=user).values('id', 'thread', 'thread__tags')
 #    post_ids = set()
