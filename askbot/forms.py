@@ -3,7 +3,7 @@ from django import forms
 from askbot import models
 from askbot import const
 from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import ungettext_lazy
+from django.utils.translation import ungettext_lazy, string_concat
 from django.utils.text import get_text_list
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
@@ -20,6 +20,14 @@ def cleanup_dict(dictionary, key, empty_value):
     """
     if key in dictionary and dictionary[key] == empty_value:
         del dictionary[key]
+
+def format_form_errors(form):
+    if form.errors:
+        errors = form.errors.values()
+        if len(errors) == 1:
+            return errors[0]
+        else:
+            return 'hahahahah'
 
 def clean_marked_tagnames(tagnames):
     """return two strings - one containing tagnames
@@ -91,6 +99,48 @@ class CountryField(forms.ChoiceField):
                 raise forms.ValidationError(_('Country field is required'))
         if value == 'unknown':
             return None
+        return value
+
+class CountedWordsField(forms.CharField):
+    
+    def __init__(
+        self, min_words = 0, max_words = 9999, field_name = None,
+        *args, **kwargs
+    ):
+        self.min_words = min_words
+        self.max_words = max_words
+        self.field_name = field_name
+        super(CountedWordsField, self).__init__(*args, **kwargs)
+
+    def clean(self, value):
+        #todo: this field must be adapted to work with Chinese, etc.
+        #for that we'll have to count characters instead of words
+        if value is None:
+            value = ''
+
+        value = value.strip()
+
+        word_count = len(value.split())
+        if word_count < self.min_words:
+            msg = ungettext_lazy(
+                'must be > %d word',
+                'must be > %d words',
+                self.min_words - 1
+            ) % (self.min_words - 1)
+            #todo - space is not used in Chinese
+            raise forms.ValidationError(
+                string_concat(self.field_name, ' ', msg)
+            )
+
+        if word_count > self.max_words:
+            msg = ungettext_lazy(
+                'must be < %d word',
+                'must be < %d words',
+                self.max_words + 1
+            ) % (self.max_words + 1)
+            raise forms.ValidationError(
+                string_concat(self.field_name, ' ', msg)
+            )
         return value
 
 class TitleField(forms.CharField):
@@ -1159,3 +1209,12 @@ class EditGroupMembershipForm(forms.Form):
             del self.cleaned_data['action']
             raise forms.ValidationError('invalid action')
         return action
+
+class EditRejectReasonForm(forms.Form):
+    reason_id = forms.IntegerField(required = False)
+    title = CountedWordsField(
+        min_words = 1, max_words = 4, field_name = _('Title')
+    )
+    details = CountedWordsField(
+        min_words = 6, field_name = _('Description')
+    )

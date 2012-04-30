@@ -356,7 +356,7 @@ class Post(models.Model):
         removed_mentions - list of mention <Activity> objects - for removed ones
         """
 
-        if post.post_type in ('question', 'answer', 'tag_wiki'):
+        if post.post_type in ('question', 'answer', 'tag_wiki', 'reject_reason'):
             _urlize = False
             _use_markdown = True
             _escape_html = False #markdow does the escaping
@@ -510,6 +510,9 @@ class Post(models.Model):
     def is_tag_wiki(self):
         return self.post_type == 'tag_wiki'
 
+    def is_reject_reason(self):
+        return self.post_type == 'reject_reason'
+
     def needs_moderation(self):
         return self.approved == False
 
@@ -576,7 +579,7 @@ class Post(models.Model):
     def __unicode__(self):
         if self.is_question():
             return self.thread.title
-        elif self.is_answer():
+        elif self.is_answer() or self.is_reject_reason():
             return self.html
         elif self.is_comment():
             return self.text
@@ -1037,7 +1040,7 @@ class Post(models.Model):
                 mentioned_users=mentioned_users,
                 exclude_list=exclude_list
             )
-        elif self.is_tag_wiki():
+        elif self.is_tag_wiki() or self.is_reject_reason():
             return list()
         raise NotImplementedError
 
@@ -1134,7 +1137,7 @@ class Post(models.Model):
     def get_origin_post(self):
         if self.is_question():
             return self
-        if self.is_tag_wiki():
+        if self.is_tag_wiki() or self.is_reject_reason():
             return None
         else:
             return self.thread._question_post()
@@ -1326,6 +1329,12 @@ class Post(models.Model):
                 return const.TYPE_ACTIVITY_CREATE_TAG_WIKI, self
             else:
                 return const.TYPE_ACTIVITY_UPDATE_TAG_WIKI, self
+        elif self.is_reject_reason():
+            if created:
+                return const.TYPE_ACTIVITY_CREATE_REJECT_REASON, self
+            else:
+                return const.TYPE_ACTIVITY_UPDATE_REJECT_REASON, self
+
 
         raise NotImplementedError
 
@@ -1439,7 +1448,7 @@ class Post(models.Model):
             return self._answer__apply_edit(*args, **kwargs)
         elif self.is_question():
             return self._question__apply_edit(*args, **kwargs)
-        elif self.is_tag_wiki() or self.is_comment():
+        elif self.is_tag_wiki() or self.is_comment() or self.is_reject_reason():
             return self.__apply_edit(*args, **kwargs)
         raise NotImplementedError
 
@@ -1505,7 +1514,7 @@ class Post(models.Model):
 
     def add_revision(self, *kargs, **kwargs):
         #todo: unify these
-        if self.post_type in ('answer', 'comment', 'tag_wiki'):
+        if self.post_type in ('answer', 'comment', 'tag_wiki', 'reject_reason'):
             return self.__add_revision(*kargs, **kwargs)
         elif self.is_question():
             return self._question__add_revision(*kargs, **kwargs)
@@ -1586,7 +1595,7 @@ class Post(models.Model):
             return self._question__get_response_receivers(exclude_list)
         elif self.is_comment():
             return self._comment__get_response_receivers(exclude_list)
-        elif self.is_tag_wiki():
+        elif self.is_tag_wiki() or self.is_reject_reason():
             return list()#todo: who should get these?
         raise NotImplementedError
 

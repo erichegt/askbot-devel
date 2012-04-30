@@ -15,12 +15,14 @@ from django.shortcuts import get_object_or_404
 from django.views.decorators import csrf
 from django.utils import simplejson
 from django.utils.translation import ugettext as _
+from django.utils.translation import string_concat
 from askbot import models
 from askbot import forms
 from askbot.conf import should_show_sort_by_relevance
 from askbot.conf import settings as askbot_settings
 from askbot.utils import decorators
 from askbot.utils import url_utils
+from askbot.utils import mail
 from askbot.skins.loaders import render_into_skin
 from askbot import const
 import logging
@@ -90,7 +92,26 @@ def manage_inbox(request):
                                 post = content_object.post
                             else:
                                 post = content_object
-                            request.user.delete_post(post) 
+                            request.user.delete_post(post)
+                            reject_reason = models.PostRejectReason.objects.get(
+                                                    id = post_data['reject_reason_id']
+                                                )
+                            body_text = string_concat(
+                                _('Your post (copied in the end),'),
+                                '<br/>',
+                                _('was rejected for the following reason:'),
+                                '<br/><br/>',
+                                reject_reason.details.html,
+                                '<br/><br/>',
+                                _('Here is your original post'),
+                                '<br/><br/>',
+                                post.text
+                            )
+                            mail.send_mail(
+                                subject_line = _('your post was not accepted'),
+                                body_text = unicode(body_text),
+                                recipient_list = [post.author,]
+                            )
                             memo.delete()
 
                     user.update_response_counts()
@@ -710,15 +731,8 @@ def read_message(request):#marks message a read
 @csrf.csrf_exempt
 @decorators.ajax_only
 @decorators.post_only
+@decorators.admins_only
 def edit_group_membership(request):
-    if request.user.is_anonymous():
-        raise exceptions.PermissionDenied()
-
-    if not request.user.is_administrator_or_moderator():
-        raise exceptions.PermissionDenied(
-            _('Only moderators and administrators can change user groups')
-        )
-
     form = forms.EditGroupMembershipForm(request.POST)
     if form.is_valid():
         group_name = form.cleaned_data['group_name']
@@ -750,15 +764,9 @@ def edit_group_membership(request):
 @csrf.csrf_exempt
 @decorators.ajax_only
 @decorators.post_only
+@decorators.admins_only
 def save_group_logo_url(request):
-    if request.user.is_anonymous():
-        raise exceptions.PermissionDenied()
-
-    if not request.user.is_administrator_or_moderator():
-        raise exceptions.PermissionDenied(
-            _('Only moderators and administrators can change user groups')
-        )
-
+    """saves urls for the group logo"""
     form = forms.GroupLogoURLForm(request.POST)    
     if form.is_valid():
         group_id = form.cleaned_data['group_id']
@@ -773,16 +781,51 @@ def save_group_logo_url(request):
 @csrf.csrf_exempt
 @decorators.ajax_only
 @decorators.post_only
+@decorators.admins_only
 def delete_group_logo(request):
-    if request.user.is_anonymous():
-        raise exceptions.PermissionDenied()
-
-    if not request.user.is_administrator_or_moderator():
-        raise exceptions.PermissionDenied(
-            _('Only moderators and administrators can change user groups')
-        )
     from django.forms import IntegerField
     group_id = IntegerField().clean(int(request.POST['group_id']))
     group = models.Tag.group_tags.get(id = group_id)
     group.group_profile.logo_url = None
     group.group_profile.save()
+
+@csrf.csrf_exempt
+@decorators.ajax_only
+@decorators.post_only
+@decorators.admins_only
+def delete_post_reject_reason(request):
+    from django.forms import IntegerField
+    reason_id = IntegerField().clean(int(request.POST['reason_id']))
+    reason = models.PostRejectReason.objects.get(id = reason_id)
+    reason.delete()
+
+@csrf.csrf_exempt
+@decorators.ajax_only
+@decorators.post_only
+@decorators.admins_only
+def save_post_reject_reason(request):
+    """saves post reject reason and returns the reason id
+    if reason_id is not given in the input - a new reason is created,
+    otherwise a reason with the given id is edited and saved
+    """
+    form = forms.EditRejectReasonForm(request.POST)
+    if form.is_valid():
+        title = form.cleaned_data['title']
+        details = form.cleaned_data['details']
+        if form.cleaned_data['reason_id'] is None:
+            reason = request.user.create_post_reject_reason(
+                title = title, details = details
+            )
+        else:
+            reason_id = form.cleaned_data['reason_id']
+            reason = models.PostRejectReason.objects.get(id = reason_id)
+            request.user.edit_post_reject_reason(
+                reason, title = title, details = details
+            )
+        return {
+            'reason_id': reason.id,
+            'title': title,
+            'details': details
+        }
+    else:
+        raise Exception(forms.format_form_errors(form))

@@ -220,3 +220,16 @@ def check_spam(field):
         return wrapper
 
     return decorator
+
+def admins_only(view_func):
+    @functools.wraps(view_func)
+    def decorator(request, *args, **kwargs):
+        if request.user.is_anonymous():
+            raise exceptions.PermissionDenied()
+        if not request.user.is_administrator_or_moderator():
+            raise exceptions.PermissionDenied(
+            _('This function is limited to moderators and administrators')
+        )
+        return view_func(request, *args, **kwargs)
+    return decorator
+

@@ -79,3 +79,11 @@ class Vote(models.Model):
         score_after = self.voted_post.score
 
         return score_after - score_before
+
+class PostRejectReason(models.Model):
+    added_at = models.DateTimeField()
+    author = models.ForeignKey('auth.User')
+    title = models.CharField(max_length=128)
+    details = models.ForeignKey('Post', related_name = 'post_reject_reasons')
+    class Meta:
+        app_label = 'askbot'

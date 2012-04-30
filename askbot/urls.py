@@ -284,9 +284,19 @@ urlpatterns = patterns('',
         name='read_message'
     ),
     url(#ajax only
-        r'^manage_inbox/$',
+        r'^manage-inbox/$',
         views.commands.manage_inbox,
         name='manage_inbox'
+    ),
+    url(#ajax only
+        r'^save-post-reject-reason/$',
+        views.commands.save_post_reject_reason,
+        name='save_post_reject_reason'
+    ),
+    url(#ajax only
+        r'^delete-post-reject-reason/$',
+        views.commands.delete_post_reject_reason,
+        name='delete_post_reject_reason'
     ),
     url(#ajax only
         r'^edit-group-membership/$',

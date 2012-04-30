@@ -52,7 +52,7 @@ POST_SORT_METHODS = (
     ('relevance-desc', _('relevance')),
 )
 
-POST_TYPES = ('answer', 'comment', 'question', 'tag_wiki')
+POST_TYPES = ('answer', 'comment', 'question', 'tag_wiki', 'reject_reason')
 
 REPLY_SEPARATOR_TEMPLATE = '==== %(user_action)s %(instruction)s -=-=='
 REPLY_SEPARATOR_REGEX = re.compile('==== .* -=-==', re.MULTILINE)
@@ -127,6 +127,8 @@ TYPE_ACTIVITY_CREATE_TAG_WIKI = 22
 TYPE_ACTIVITY_UPDATE_TAG_WIKI = 23
 TYPE_ACTIVITY_MODERATED_NEW_POST = 24
 TYPE_ACTIVITY_MODERATED_POST_EDIT = 25
+TYPE_ACTIVITY_CREATE_REJECT_REASON = 26
+TYPE_ACTIVITY_UPDATE_REJECT_REASON = 27
 #TYPE_ACTIVITY_EDIT_QUESTION = 17
 #TYPE_ACTIVITY_EDIT_ANSWER = 18
 
@@ -171,6 +173,14 @@ TYPE_ACTIVITY = (
     (
         TYPE_ACTIVITY_MODERATED_POST_EDIT,
         _('made an edit')
+    ),
+    (
+        TYPE_ACTIVITY_CREATE_REJECT_REASON,
+        _('created post reject reason'),
+    ),
+    (
+        TYPE_ACTIVITY_UPDATE_REJECT_REASON,
+        _('updated post reject reason')
     ),
 )
 

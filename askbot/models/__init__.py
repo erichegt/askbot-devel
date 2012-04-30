@@ -28,7 +28,7 @@ from askbot.models.question import QuestionView, AnonymousQuestion
 from askbot.models.question import FavoriteQuestion
 from askbot.models.answer import AnonymousAnswer
 from askbot.models.tag import Tag, MarkedTag
-from askbot.models.meta import Vote
+from askbot.models.meta import Vote, PostRejectReason
 from askbot.models.user import EmailFeedSetting, ActivityAuditStatus, Activity
 from askbot.models.user import GroupMembership, GroupProfile
 from askbot.models.post import Post, PostRevision
@@ -256,7 +256,6 @@ def user_has_interesting_wildcard_tags(self):
         askbot_settings.USE_WILDCARD_TAGS \
         and self.interesting_tags != ''
     )
-
 
 def user_can_have_strong_url(self):
     """True if user's homepage url can be
@@ -1517,6 +1516,48 @@ def user_edit_answer(
         timestamp = timestamp
     )
 
+@auto_now_timestamp
+def user_create_post_reject_reason(
+    self, title = None, details = None, timestamp = None
+):
+    """creates and returs the post reject reason"""
+    reason = PostRejectReason(
+        title = title,
+        added_at = timestamp,
+        author = self
+    )
+
+    #todo - need post_object.create_new() method
+    details = Post(
+        post_type = 'reject_reason',
+        author = self,
+        added_at = timestamp,
+        text = details
+    )
+    details.parse_and_save(author = self)
+    details.add_revision(
+        author = self,
+        revised_at = timestamp,
+        text = details,
+        comment = const.POST_STATUS['default_version']
+    )
+
+    reason.details = details
+    reason.save()
+    return reason
+
+@auto_now_timestamp
+def user_edit_post_reject_reason(
+    self, reason, title = None, details = None, timestamp = None
+):
+    reason.title = title
+    reason.save()
+    reason.details.apply_edit(
+        edited_by = self,
+        edited_at = timestamp,
+        text = details
+    )
+
 def user_post_answer(
                     self,
                     question = None,
@@ -2328,6 +2369,8 @@ User.add_to_class(
 )
 User.add_to_class('post_comment', user_post_comment)
 User.add_to_class('edit_comment', user_edit_comment)
+User.add_to_class('create_post_reject_reason', user_create_post_reject_reason)
+User.add_to_class('edit_post_reject_reason', user_edit_post_reject_reason)
 User.add_to_class('delete_post', user_delete_post)
 User.add_to_class('post_tag_wiki', user_post_tag_wiki)
 User.add_to_class('visit_question', user_visit_question)
@@ -3008,6 +3051,7 @@ __all__ = [
 
         'Tag',
         'Vote',
+        'PostRejectReason',
         'MarkedTag',
 
         'BadgeData',

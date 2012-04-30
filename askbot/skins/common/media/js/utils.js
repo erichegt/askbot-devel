@@ -267,6 +267,135 @@ WrappedElement.prototype.dispose = function(){
     this._in_document = false;
 };
 
+/**
+ * Can be used for an input box or textarea.
+ * The original value will be treated as an instruction.
+ * When user focuses on the field, the tip will be gone,
+ * when the user escapes without typing anything besides 
+ * perhaps empty text, the instruction is restored.
+ * When instruction is shown, class "blank" is present
+ * in the input/textare element.
+ */
+var TippedInput = function(){
+    WrappedElement.call(this);
+    this._instruction = null;
+};
+inherits(TippedInput, WrappedElement);
+
+TippedInput.prototype.reset = function(){
+    $(this._element).val(this._instruction);
+    $(this._element).addClass('blank');
+};
+
+TippedInput.prototype.isBlank = function(){
+    return this.getVal() === this._instruction;
+};
+
+TippedInput.prototype.getVal = function(){
+    return this._element.val();
+};
+
+TippedInput.prototype.setVal = function(value){
+    this._element.val(value);
+    if (this.isBlank()){
+        this._element.addClass('blank');
+    } else {
+        this._element.removeClass('blank');
+    }
+};
+
+TippedInput.prototype.decorate = function(element){
+    this._element = element;
+    var instruction_text = this.getVal();
+    this._instruction = instruction_text;
+    var me = this;
+    $(element).focus(function(){
+        if (me.isBlank()){
+            $(element)
+                .val('')
+                .removeClass('blank');
+        }
+    });
+    $(element).blur(function(){
+        var val = $(element).val();
+        if ($.trim(val) === ''){
+            $(element)
+                .val(instruction_text)
+                .addClass('blank');
+        }
+    });
+    makeKeyHandler(13, function(){
+        $(element).blur();
+    });
+};
+
+/**
+ * will setup a bootstrap.js alert
+ * programmatically
+ */
+var AlertBox = function(){
+    WrappedElement.call(this);
+    this._text = null;
+};
+inherits(AlertBox, WrappedElement);
+
+AlertBox.prototype.setClass = function(classes){
+    this._classes = classes;
+    if (this._element){
+        this._element.addClass(classes);
+    }
+};
+
+AlertBox.prototype.setText = function(text){
+    this._text = text;
+    if (this._content){
+        this._content.html(text);
+    }
+};
+
+AlertBox.prototype.getContent = function(){
+    if (this._content){
+        return this._content;
+    } else {
+        this._content = this.makeElement('div');
+        return this._content;
+    }
+};
+
+AlertBox.prototype.setContent = function(content){
+    var container = this.getContent();
+    container.empty()
+    container.append(content);
+};
+
+AlertBox.prototype.addContent = function(content){
+    var container = this.getContent();
+    container.append(content);
+};
+
+AlertBox.prototype.createDom = function(){
+    this._element = this.makeElement('div');
+    this._element.addClass('alert fade in');
+
+    if (this._classes){
+        this._element.addClass(this._classes);
+    }
+
+    this._cancel_button = this.makeElement('button');
+    this._cancel_button
+        .addClass('close')
+        .attr('data-dismiss', 'alert')
+        .html('&times;');
+    this._element.append(this._cancel_button);
+
+    this._element.append(this.getContent());
+    if (this._text){
+        this.setText(this._text);
+    }
+
+    this._element.alert();//bootstrap.js alert
+};
+
 var SimpleControl = function(){
     WrappedElement.call(this);
     this._handler = null;
@@ -344,6 +473,79 @@ DeleteIcon.prototype.setContent = function(content){
         this._element.html(content);
     }
 }
+
+var SelectBox = function(){
+    WrappedElement.call(this);
+    this._items = [];
+};
+inherits(SelectBox, WrappedElement);
+
+SelectBox.prototype.removeItem = function(id){
+    var item = this.getItem(id);
+    item.fadeOut();
+    item.remove();
+};
+
+SelectBox.prototype.getItem = function(id){
+    return $(this._element.find('li[data-item-id="' + id + '"]'));
+};
+
+SelectBox.prototype.addItem = function(id, title, details){
+    /*this._items.push({
+        id: id,
+        title: title,
+        details: details
+    });*/
+    if (this._element){
+        var li = this.getItem(id);
+        var new_li = false;
+        if (li.length !== 1){
+            li = this.makeElement('li');
+            new_li = true;
+        }
+        li.attr('data-item-id', id)
+            .attr('data-original-title', details)
+            .html(title);
+        if (new_li){
+            this._element.append(li);
+        }
+        this.selectItem($(li));
+        var me = this;
+        setupButtonEventHandlers(
+            $(li),
+            function(){
+                me.selectItem($(li));
+            }
+        );
+    }
+};
+
+SelectBox.prototype.getSelectedItemData = function(){
+    var item = $(this._element.find('li.selected')[0]);
+    return {
+        id: item.attr('data-item-id'),
+        title: item.html(),
+        details: item.attr('data-original-title')
+    };
+};
+
+SelectBox.prototype.selectItem = function(item){
+    this._element.find('li').removeClass('selected');
+    item.addClass('selected');
+};
+
+SelectBox.prototype.decorate = function(element){
+    this._element = element;
+    var me = this;
+    this._element.find('li').each(function(itx, item){
+        setupButtonEventHandlers(
+            $(item),
+            function(){
+                me.selectItem($(item));
+            }
+        );
+    });
+};
 
 var Tag = function(){
     SimpleControl.call(this);
