@@ -93,7 +93,7 @@ def manage_inbox(request):
                             else:
                                 post = content_object
                             request.user.delete_post(post)
-                            reject_reason = models.PostRejectReason.objects.get(
+                            reject_reason = models.PostFlagReason.objects.get(
                                                     id = post_data['reject_reason_id']
                                                 )
                             body_text = string_concat(
@@ -796,7 +796,7 @@ def delete_group_logo(request):
 def delete_post_reject_reason(request):
     from django.forms import IntegerField
     reason_id = IntegerField().clean(int(request.POST['reason_id']))
-    reason = models.PostRejectReason.objects.get(id = reason_id)
+    reason = models.PostFlagReason.objects.get(id = reason_id)
     reason.delete()
 
 @csrf.csrf_exempt
@@ -818,7 +818,7 @@ def save_post_reject_reason(request):
             )
         else:
             reason_id = form.cleaned_data['reason_id']
-            reason = models.PostRejectReason.objects.get(id = reason_id)
+            reason = models.PostFlagReason.objects.get(id = reason_id)
             request.user.edit_post_reject_reason(
                 reason, title = title, details = details
             )

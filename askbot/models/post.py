@@ -29,7 +29,7 @@ from askbot.conf import settings as askbot_settings
 from askbot import exceptions
 from askbot.utils import markup
 from askbot.utils.html import sanitize_html
-from askbot.models.base import BaseQuerySetManager
+from askbot.models.base import BaseQuerySetManager, AnonymousContent
 
 #todo: maybe merge askbot.utils.markup and forum.utils.html
 from askbot.utils.diff import textDiff as htmldiff
@@ -1644,7 +1644,7 @@ class Post(models.Model):
         return self.parent.comments.filter(added_at__lt = self.added_at).count() + 1
 
     def is_upvoted_by(self, user):
-        from askbot.models.meta import Vote
+        from askbot.models.repute import Vote
         return Vote.objects.filter(user=user, voted_post=self, vote=Vote.VOTE_UP).exists()
 
     def is_last(self):
@@ -1872,3 +1872,27 @@ class PostRevision(models.Model):
     def get_snippet(self, max_length = 120):
         """same as Post.get_snippet"""
         return html_utils.strip_tags(self.html)[:max_length] + '...'
+
+
+class PostFlagReason(models.Model):
+    added_at = models.DateTimeField()
+    author = models.ForeignKey('auth.User')
+    title = models.CharField(max_length=128)
+    details = models.ForeignKey(Post, related_name = 'post_reject_reasons')
+    class Meta:
+        app_label = 'askbot'
+
+
+class AnonymousAnswer(AnonymousContent):
+    question = models.ForeignKey(Post, related_name='anonymous_answers')
+
+    def publish(self, user):
+        added_at = datetime.datetime.now()
+        Post.objects.create_new_answer(
+            thread=self.question.thread,
+            author=user,
+            added_at=added_at,
+            wiki=self.wiki,
+            text=self.text
+        )
+        self.delete()

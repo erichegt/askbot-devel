@@ -675,7 +675,7 @@ def user_responses(request, user, context):
     #6) sort responses by time
     filtered_response_list.sort(lambda x,y: cmp(y['timestamp'], x['timestamp']))
 
-    reject_reasons = models.PostRejectReason.objects.all().order_by('title');
+    reject_reasons = models.PostFlagReason.objects.all().order_by('title');
     data = {
         'active_tab':'users',
         'page_class': 'user-profile-page',

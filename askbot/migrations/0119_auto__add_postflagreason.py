@@ -8,19 +8,19 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'PostRejectReason'
-        db.create_table('askbot_postrejectreason', (
+        # Adding model 'PostFlagReason'
+        db.create_table('askbot_postflagreason', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('added_at', self.gf('django.db.models.fields.DateTimeField')()),
             ('author', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
             ('title', self.gf('django.db.models.fields.CharField')(max_length=128)),
             ('details', self.gf('django.db.models.fields.related.ForeignKey')(related_name='post_reject_reasons', to=orm['askbot.Post'])),
         ))
-        db.send_create_signal('askbot', ['PostRejectReason'])
+        db.send_create_signal('askbot', ['PostFlagReason'])
 
     def backwards(self, orm):
-        # Deleting model 'PostRejectReason'
-        db.delete_table('askbot_postrejectreason')
+        # Deleting model 'PostFlagReason'
+        db.delete_table('askbot_postflagreason')
 
     models = {
         'askbot.activity': {
@@ -154,8 +154,8 @@ class Migration(SchemaMigration):
             'wiki': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'wikified_at': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'})
         },
-        'askbot.postrejectreason': {
-            'Meta': {'object_name': 'PostRejectReason'},
+        'askbot.postflagreason': {
+            'Meta': {'object_name': 'PostFlagReason'},
             'added_at': ('django.db.models.fields.DateTimeField', [], {}),
             'author': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"}),
             'details': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'post_reject_reasons'", 'to': "orm['askbot.Post']"}),

@@ -26,16 +26,14 @@ from askbot.models.question import Thread
 from askbot.skins import utils as skin_utils
 from askbot.models.question import QuestionView, AnonymousQuestion
 from askbot.models.question import FavoriteQuestion
-from askbot.models.answer import AnonymousAnswer
 from askbot.models.tag import Tag, MarkedTag
-from askbot.models.meta import Vote, PostRejectReason
 from askbot.models.user import EmailFeedSetting, ActivityAuditStatus, Activity
 from askbot.models.user import GroupMembership, GroupProfile
-from askbot.models.post import Post, PostRevision
+from askbot.models.post import Post, PostRevision, PostFlagReason, AnonymousAnswer
 from askbot.models.reply_by_email import ReplyAddress
 from askbot.models import signals
 from askbot.models.badges import award_badges_signal, get_badge, BadgeData
-from askbot.models.repute import Award, Repute
+from askbot.models.repute import Award, Repute, Vote
 from askbot import auth
 from askbot.utils.decorators import auto_now_timestamp
 from askbot.utils.slug import slugify
@@ -1521,7 +1519,7 @@ def user_create_post_reject_reason(
     self, title = None, details = None, timestamp = None
 ):
     """creates and returs the post reject reason"""
-    reason = PostRejectReason(
+    reason = PostFlagReason(
         title = title,
         added_at = timestamp,
         author = self
@@ -3051,7 +3049,7 @@ __all__ = [
 
         'Tag',
         'Vote',
-        'PostRejectReason',
+        'PostFlagReason',
         'MarkedTag',
 
         'BadgeData',
