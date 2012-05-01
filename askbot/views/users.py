@@ -906,6 +906,7 @@ def groups(request, id = None, slug = None):
             request.user.is_administrator_or_moderator()
     data = {
         'groups': groups,
-        'can_edit': can_edit
+        'can_edit': can_edit,
+        'active_tab': 'users'
     }
     return render_into_skin('groups.html', data, request)

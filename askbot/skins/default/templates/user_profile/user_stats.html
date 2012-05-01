@@ -12,7 +12,7 @@
                 username = view_user.username
             %}{{username}}'s groups{% endtrans %}
         </h2>
-        <ul>
+        <ul id="groups-list">
         {% if user_groups %}
             {% for group in user_groups %}
             <li>
@@ -21,6 +21,7 @@
             {% endfor %}
         {% endif %}
         </ul>
+        <div class="clearfix"></div>
         <a id="add-group">{% trans %}add group{% endtrans %}</a>
     </div>
     {% endif %}
@@ -151,5 +152,13 @@
         </table>
     </div>
     {% endif %}
+{% endblock %}
+{% block endjs %}
+    {{ super() }}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            setup_badge_details_toggle();
+        });
+    </script>
 {% endblock %}
 <!-- end user_stats.html -->

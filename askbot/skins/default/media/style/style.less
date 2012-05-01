@@ -1390,7 +1390,7 @@ ul#related-tags li {
     border-top:0;
     padding:10px;
     margin-bottom:10px;
-    width:717px;
+    width:710px;
 }
 
 #id_title {
@@ -1424,6 +1424,10 @@ ul#related-tags li {
 
 .wmd-preview IMG {
     max-width: 600px;
+}
+
+.user-page .wmd-buttons {
+    width: 725px;
 }
 
 .preview-toggle {
@@ -1789,15 +1793,6 @@ ul#related-tags li {
             border:#cce6ec 3px solid;
         }
         
-        /* A small hack to solve 1px problem on webkit browsers */
-        @media screen and (-webkit-min-device-pixel-ratio:0){
-            .question-page {
-                textarea{
-                    padding-left:3px !important;
-                }
-            }
-        }
-
         input {
             margin-left: 10px;
             margin-top: 1px;
@@ -3437,6 +3432,25 @@ body.anon.lang-es {
         margin: 0 0 10px 0;
     }
 }
+
+img.group-logo {
+    height: 64px;
+}
+
+#groups-list {
+    margin-left: 0px;
+    li {
+        display: inline;
+        list-style-type: none;
+        list-style-position: inside;
+        float: left;
+        text-align: center;
+    }
+    .group-logo, .group-name {
+        display: block;
+    }
+}
+
 
 #reject-edit-modal {
     input, textarea {

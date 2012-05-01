@@ -222,7 +222,21 @@ poor design of the data or methods on data objects #}
 {%- endmacro -%}
 
 {%- macro user_group(group) -%}
-    {{ group.name|replace('-', ' ') }}
+    {% if group.group_profile.logo_url %}
+    <a href="{% url users_by_group group.id, group.name|replace('-', ' ')|slugify %}">
+        <img class="group-logo" src="{{group.group_profile.logo_url}}" alt='{% trans name=group.name|escape %}logo for user group "{{name}}"{% endtrans %}' />
+    </a>
+    {% endif %}
+    <div class="group-name">
+        <a 
+            href="{% url users_by_group group.id, group.name|replace('-', ' ')|slugify %}"
+        >{{ group.name|escape }}</a>
+    </div>
+    <!--div id="group-{{group.id}}-description">
+    {% if group.tag_wiki %}
+        {{ group.tag_wiki.html }}
+    {% endif %}
+    </div-->
 {%- endmacro -%}
 
 {# todo: remove the extra content argument to make its usage more explicit #}

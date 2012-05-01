@@ -1,4 +1,4 @@
-$(document).ready(function(){
+var setup_inbox = function(){
 
     var getSelected = function(){
 
@@ -134,7 +134,9 @@ $(document).ready(function(){
     //                    $(re_content).slideToggle();
     //                }
     //);
+};
 
+var setup_badge_details_toggle = function(){
     $('.badge-context-toggle').each(function(idx, elem){
         var context_list = $(elem).parent().next('ul');
         if (context_list.children().length > 0){
@@ -150,7 +152,7 @@ $(document).ready(function(){
             $(elem).click(toggle_display);
         }
     });
-});
+};
 
 /**
  * @constructor
@@ -598,6 +600,7 @@ FollowUser.prototype.toggleState = function(){
 var UserGroup = function(name){
     WrappedElement.call(this);
     this._name = name;
+    this._content = null;
 };
 inherits(UserGroup, WrappedElement);
 
@@ -624,6 +627,10 @@ UserGroup.prototype.getDeleteHandler = function(){
     };
 };
 
+UserGroup.prototype.setContent = function(content){
+    this._content = content;
+};
+
 UserGroup.prototype.getName = function(){
     return this._name;
 };
@@ -634,17 +641,17 @@ UserGroup.prototype.setGroupsContainer = function(container){
 
 UserGroup.prototype.decorate = function(element){
     this._element = element;
-    this._name = $.trim(element.html());
+    this._name = $.trim(element.find('a').html());
     var deleter = new DeleteIcon();
     deleter.setHandler(this.getDeleteHandler());
     deleter.setContent('x');
-    this._element.append(deleter.getElement());
+    this._element.find('.group-name').append(deleter.getElement());
     this._delete_icon = deleter;
 };
 
 UserGroup.prototype.createDom = function(){
     var element = this.makeElement('li');
-    element.html(this._name + ' ');
+    element.html(this._content);
     this._element = element;
     this.decorate(element);
 };
@@ -679,11 +686,13 @@ GroupsContainer.prototype.decorate = function(element){
     this._group_names = group_names;
 };
 
-GroupsContainer.prototype.addGroup = function(group_name){
+GroupsContainer.prototype.addGroup = function(group_data){
+    var group_name = group_data['name'];
     if ($.inArray(group_name, this._group_names) > -1){
         return;
     }
     var group = new UserGroup(group_name);
+    group.setContent(group_data['html']);
     group.setGroupsContainer(this);
     this._groups.push(group);
     this._group_names.push(group_name);
@@ -730,8 +739,8 @@ GroupAdderWidget.prototype.getValue = function(){
     return this._input.val();
 };
 
-GroupAdderWidget.prototype.addGroup = function(group){
-    this._groups_container.addGroup(group);
+GroupAdderWidget.prototype.addGroup = function(group_data){
+    this._groups_container.addGroup(group_data);
 };
 
 GroupAdderWidget.prototype.getAddGroupHandler = function(){
@@ -751,7 +760,7 @@ GroupAdderWidget.prototype.getAddGroupHandler = function(){
             url: askbot['urls']['edit_group_membership'],
             success: function(data){
                 if (data['success'] == true){
-                    me.addGroup(group_name);
+                    me.addGroup(data);
                     me.setState('display');
                 } else {
                     var message = data['message'];

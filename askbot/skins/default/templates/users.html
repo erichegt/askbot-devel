@@ -8,7 +8,7 @@
 {% block content %}
 <h1 class="section-title">
 {% if group %}
-    {% trans name = group.name|escape %}Users in group {{name}}{% endtrans %}
+    {% trans name = group.name|replace('-', ' ')|escape %}Users in group {{name}}{% endtrans %}
 {% else %}
     {% trans %}Users{% endtrans %}
 {% endif %}

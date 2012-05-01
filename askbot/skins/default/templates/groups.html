@@ -1,3 +1,4 @@
+{% import "macros.html" as macros %}
 {% extends 'one_column_body.html' %}
 {% block title %}{% trans %}Groups{% endtrans %}{% endblock %}
 {% block content %}
@@ -10,12 +11,7 @@
     <ul id="groups-list">
     {% for group in groups %}
         <li>
-            <a href="{% url users_by_group group.id, group.name|slugify %}">{{ group.name|escape }}</a>
-            <div id="group-{{group.id}}-description">
-            {% if group.tag_wiki %}
-                {{ group.tag_wiki.html }}
-            {% endif %}
-            </div>
+            {{ macros.user_group(group) }}
         </li>
     {% endfor %}
     </ul>

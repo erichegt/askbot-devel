@@ -927,7 +927,7 @@ class EditAnswerForm(forms.Form):
         self.fields['wiki'].initial = answer.wiki
 
 class EditTagWikiForm(forms.Form):
-    text = forms.CharField()
+    text = forms.CharField(required = False)
     tag_id = forms.IntegerField()
 
 class EditUserForm(forms.Form):

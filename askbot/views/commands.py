@@ -23,7 +23,7 @@ from askbot.conf import settings as askbot_settings
 from askbot.utils import decorators
 from askbot.utils import url_utils
 from askbot.utils import mail
-from askbot.skins.loaders import render_into_skin
+from askbot.skins.loaders import render_into_skin, get_template
 from askbot import const
 import logging
 
@@ -499,7 +499,7 @@ def save_tag_wiki_text(request):
     form = forms.EditTagWikiForm(request.POST)
     if form.is_valid():
         tag_id = form.cleaned_data['tag_id']
-        text = form.cleaned_data['text']
+        text = form.cleaned_data['text'] or ' '#a hack to save blank data
         tag = models.Tag.objects.get(id = tag_id)
         if tag.tag_wiki:
             request.user.edit_post(tag.tag_wiki, body_text = text)
@@ -749,6 +749,12 @@ def edit_group_membership(request):
             group_params = {'group_name': group_name, 'user': user}
             group = models.Tag.group_tags.get_or_create(**group_params)
             request.user.edit_group_membership(user, group, 'add')
+            template = get_template('widgets/group_snippet.html')
+            return {
+                'name': group.name,
+                'description': getattr(group.tag_wiki, 'text', ''),
+                'html': template.render({'group': group})
+            }
         elif action == 'remove':
             try:
                 group = models.Tag.group_tags.get_by_name(group_name = group_name)

@@ -90,6 +90,9 @@ inbox_section - forum|flags
         askbot['urls']['manageInbox'] = '{% url manage_inbox %}';
         askbot['urls']['save_post_reject_reason'] = '{% url save_post_reject_reason %}';
         askbot['urls']['delete_post_reject_reason'] = '{% url delete_post_reject_reason %}';
+        $(document).ready(function(){
+            setup_inbox();
+        });
     </script>
     <script type="text/javascript" src="{{'/bootstrap/js/bootstrap.js'|media}}" />
 <!-- end user_responses.html -->
