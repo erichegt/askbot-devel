@@ -114,9 +114,11 @@ def get_parts(message):
         parts.append((part_type, part_content))
     return parts
 
-@route('(addr)@(host)')
+@route('(addr)@(host)', addr = '.+')
 @stateless
 def ASK(message, host = None, addr = None):
+    if addr.startswith('reply-'):
+        return
     parts = get_parts(message)
     from_address = message.From
     subject = message['Subject']#why lamson does not give it normally?
@@ -128,7 +130,7 @@ def ASK(message, host = None, addr = None):
         try:
             group_tag = Tag.group_tags.get(
                 deleted = False,
-                name = addr
+                name_iexact = addr
             )
             mail.process_emailed_question(
                 from_address, subject, parts, tags = [group_tag.name, ]

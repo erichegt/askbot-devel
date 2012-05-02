@@ -676,7 +676,7 @@ class Thread(models.Model):
         previous_tags = list(self.tags.all())
 
         previous_tagnames = set([tag.name for tag in previous_tags])
-        updated_tagnames = set(t for t in tagnames.split(' '))
+        updated_tagnames = set(t for t in tagnames.strip().split(' '))
 
         removed_tagnames = previous_tagnames - updated_tagnames
         added_tagnames = updated_tagnames - previous_tagnames
@@ -751,7 +751,7 @@ class Thread(models.Model):
 
         thread_question = self._question_post()
 
-        self.tagnames = tagnames
+        self.tagnames = tagnames.strip()
         self.save()
 
         # Update the Question itself
