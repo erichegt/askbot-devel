@@ -1342,7 +1342,8 @@ def user_post_question(
                     wiki = False,
                     is_anonymous = False,
                     timestamp = None,
-                    by_email = False
+                    by_email = False,
+                    email_address = None
                 ):
     """makes an assertion whether user can post the question
     then posts it and returns the question object"""
@@ -1369,7 +1370,8 @@ def user_post_question(
                                     added_at = timestamp,
                                     wiki = wiki,
                                     is_anonymous = is_anonymous,
-                                    by_email = by_email
+                                    by_email = by_email,
+                                    email_address = email_address
                                 )
     question = thread._question_post()
     if question.author != self:

@@ -809,6 +809,24 @@ def delete_post_reject_reason(request):
 @decorators.ajax_only
 @decorators.post_only
 @decorators.admins_only
+def toggle_group_email_moderation(request):
+    from django.forms import IntegerField
+    group_id = IntegerField().clean(int(request.POST['group_id']))
+    group = models.Tag.group_tags.get(id = group_id)
+    group.group_profile.moderate_email = not group.group_profile.moderate_email
+    group.group_profile.save()
+    if group.group_profile.moderate_email:
+        new_button_text = _('moderate emailed questions')
+    else:
+        new_button_text = _('disable moderation of emailed questions')
+    return {'new_button_text': new_button_text}
+
+
+
+@csrf.csrf_exempt
+@decorators.ajax_only
+@decorators.post_only
+@decorators.admins_only
 def save_post_reject_reason(request):
     """saves post reject reason and returns the reason id
     if reason_id is not given in the input - a new reason is created,

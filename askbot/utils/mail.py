@@ -283,7 +283,8 @@ def process_emailed_question(from_address, subject, parts, tags = None):
                 title = title,
                 tags = tagnames,
                 body_text = body_text,
-                by_email = True
+                by_email = True,
+                email_address = from_address
             )
         else:
             raise ValidationError()

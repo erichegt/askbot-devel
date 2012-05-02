@@ -354,6 +354,7 @@ class GroupProfile(models.Model):
                             related_name = 'group_profile'
                         )
     logo_url = models.URLField(null = True)
+    moderate_email = models.BooleanField(default = True)
 
     class Meta:
         app_label = 'askbot'

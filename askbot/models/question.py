@@ -71,7 +71,8 @@ class ThreadManager(models.Manager):
                 text,
                 tagnames = None,
                 is_anonymous = False,
-                by_email = False
+                by_email = False,
+                email_address = None
             ):
         # TODO: Some of this code will go to Post.objects.create_new
 
@@ -114,7 +115,8 @@ class ThreadManager(models.Manager):
             text = text,
             comment = const.POST_STATUS['default_version'],
             revised_at = added_at,
-            by_email = by_email
+            by_email = by_email,
+            email_address = email_address
         )
 
         # INFO: Question has to be saved before update_tags() is called

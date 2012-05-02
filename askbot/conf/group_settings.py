@@ -18,3 +18,15 @@ settings.register(
         description = _('Enable user groups'),
     )
 )
+
+settings.register(
+    livesettings.BooleanValue(
+        GROUP_SETTINGS,
+        'GROUP_EMAIL_ADDRESSES_ENABLED',
+        default = False,
+        description = _('Enable group email adddresses'),
+        help_text = _(
+            'If selected, users can post to groups by email "group-name@domain.com"'
+        )
+    )
+)

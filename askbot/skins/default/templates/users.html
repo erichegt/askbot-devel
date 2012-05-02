@@ -81,7 +81,16 @@
                 <a class="change-logo"
                 >{% trans %}add logo{% endtrans %}</a>
             {% endif %}
-
+            {% if group_email_moderation_enabled %}
+                <span>|</span>
+                {% if group.group_profile.moderate_email %}
+                    <a class="moderate-email"
+                    >{% trans %}disable moderation of emailed questions{% endtrans %}</a>
+                {% else %}
+                    <a class="moderate-email"
+                    >{% trans %}moderate emailed questions{% endtrans %}</a>
+                {% endif %}
+            {% endif %}
         </div>
         {% endif %}
     </div>
@@ -104,6 +113,7 @@
         askbot['urls']['save_tag_wiki_text'] = '{% url save_tag_wiki_text %}';
         askbot['urls']['save_group_logo_url'] = '{% url save_group_logo_url %}';
         askbot['urls']['delete_group_logo_url'] = '{% url delete_group_logo %}';
+        askbot['urls']['toggle_group_email_moderation'] = '{% url toggle_group_email_moderation %}';
     </script>
     <script type='text/javascript' src='{{"/js/editor.js"|media}}'></script>
     <script type='text/javascript' src='{{"/js/wmd/showdown.js"|media}}'></script>

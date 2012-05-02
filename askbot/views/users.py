@@ -59,6 +59,7 @@ def users(request, by_group = False, group_id = None, group_slug = None):
     """Users view, including listing of users by group"""
     users = models.User.objects.all()
     group = None
+    group_email_moderation_enabled = False
     if by_group == True:
         if askbot_settings.GROUPS_ENABLED == False:
             raise Http404
@@ -68,6 +69,11 @@ def users(request, by_group = False, group_id = None, group_slug = None):
             else:
                 try:
                     group = models.Tag.group_tags.get(id = group_id)
+                    group_email_moderation_enabled = \
+                        (
+                            askbot_settings.GROUP_EMAIL_ADDRESSES_ENABLED \
+                            and askbot_settings.ENABLE_CONTENT_MODERATION
+                        )
                 except models.Tag.DoesNotExist:
                     raise Http404
                 if group_slug == slugify(group.name):
@@ -149,7 +155,8 @@ def users(request, by_group = False, group_id = None, group_slug = None):
         'suser' : suser,
         'keywords' : suser,
         'tab_id' : sortby,
-        'paginator_context' : paginator_context
+        'paginator_context' : paginator_context,
+        'group_email_moderation_enabled': group_email_moderation_enabled
     }
     return render_into_skin('users.html', data, request)
 

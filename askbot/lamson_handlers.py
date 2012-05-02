@@ -3,9 +3,10 @@ from lamson.routing import route, stateless
 from lamson.server import Relay
 from django.utils.translation import ugettext as _
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.conf import settings
+from django.conf import settings as django_settings
 from askbot.models import ReplyAddress, Tag
 from askbot.utils import mail
+from askbot.conf import settings as askbot_settings
 
 
 #we might end up needing to use something like this
@@ -122,6 +123,8 @@ def ASK(message, host = None, addr = None):
     if addr == 'ask':
         mail.process_emailed_question(from_address, subject, parts)
     else:
+        if askbot_settings.GROUP_EMAIL_ADDRESSES_ENABLED == False:
+            return
         try:
             group_tag = Tag.group_tags.get(
                 deleted = False,
@@ -143,7 +146,7 @@ def PROCESS(message, address = None, host = None):
     and make a post to askbot based on the contents of
     the email, including the text body and the file attachments"""
     try:
-        for rule in settings.LAMSON_FORWARD:
+        for rule in django_settings.LAMSON_FORWARD:
             if re.match(rule['pattern'], message.base['to']):
                 relay = Relay(host=rule['host'], 
                            port=rule['port'], debug=1)

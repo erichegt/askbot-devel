@@ -24,7 +24,7 @@ import askbot
 from askbot.utils.slug import slugify
 from askbot import const
 from askbot.models.user import EmailFeedSetting
-from askbot.models.tag import MarkedTag, tags_match_some_wildcard
+from askbot.models.tag import Tag, MarkedTag, tags_match_some_wildcard
 from askbot.conf import settings as askbot_settings
 from askbot import exceptions
 from askbot.utils import markup
@@ -1487,7 +1487,8 @@ class Post(models.Model):
             text = None,
             comment = None,
             revised_at = None,
-            by_email = False
+            by_email = False,
+            email_address = None
     ):
         if None in (author, text):
             raise Exception('author, text and comment are required arguments')
@@ -1509,7 +1510,8 @@ class Post(models.Model):
             tagnames   = self.thread.tagnames,
             summary    = comment,
             text       = text,
-            by_email = by_email
+            by_email = by_email,
+            email_address = email_address
         )
 
     def add_revision(self, *kargs, **kwargs):
@@ -1709,9 +1711,10 @@ class PostRevision(models.Model):
 
     approved = models.BooleanField(default=False, db_index=True)
     approved_by = models.ForeignKey(User, null = True, blank = True) 
-    approved_at = models.DateTimeField(null= True, blank = True)
+    approved_at = models.DateTimeField(null = True, blank = True)
 
-    by_email = models.BooleanField(default=False)#true, if edited by email
+    by_email = models.BooleanField(default = False)#true, if edited by email
+    email_address = models.EmailField(null = True, blank = True)
 
     # Question-specific fields
     title      = models.CharField(max_length=300, blank=True, default='')
@@ -1736,6 +1739,15 @@ class PostRevision(models.Model):
                 return False
             if self.approved:
                 return False
+
+            #if sent by email to group and group does not want moderation
+            if self.by_email and self.email:
+                group_name = self.email.split('@')[0]
+                try:
+                    group = Tag.objects.get(name = group_name, deleted = False)
+                    return group.group.profile.moderate_email
+                except Tag.DoesNotExist:
+                    pass
             return True
         return False
 

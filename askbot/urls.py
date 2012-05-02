@@ -212,6 +212,11 @@ urlpatterns = patterns('',
         views.commands.delete_group_logo,
         name = 'delete_group_logo'
     ),
+    url(#ajax only
+        r'^toggle-group-email-moderation/',
+        views.commands.toggle_group_email_moderation,
+        name = 'toggle_group_email_moderation'
+    ),
     url(
         r'^get-groups-list/',
         views.commands.get_groups_list,
