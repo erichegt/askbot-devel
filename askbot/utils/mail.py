@@ -251,7 +251,7 @@ def process_parts(parts):
     return body_markdown.strip(), stored_files
 
 
-def process_emailed_question(from_address, subject, parts):
+def process_emailed_question(from_address, subject, parts, tags = None):
     """posts question received by email or bounces the message"""
     #a bunch of imports here, to avoid potential circular import issues
     from askbot.forms import AskByEmailForm
@@ -274,6 +274,10 @@ def process_emailed_question(from_address, subject, parts):
             tagnames = form.cleaned_data['tagnames']
             title = form.cleaned_data['title']
             body_text = form.cleaned_data['body_text']
+
+            #defect - here we might get "too many tags" issue
+            if tags:
+                tagnames += ' ' + ' '.join(tags)
 
             user.post_question(
                 title = title,

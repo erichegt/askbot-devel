@@ -4,7 +4,7 @@ from lamson.server import Relay
 from django.utils.translation import ugettext as _
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.conf import settings
-from askbot.models import ReplyAddress
+from askbot.models import ReplyAddress, Tag
 from askbot.utils import mail
 
 
@@ -113,13 +113,28 @@ def get_parts(message):
         parts.append((part_type, part_content))
     return parts
 
-@route('ask@(host)')
+@route('(addr)@(host)')
 @stateless
-def ASK(message, host = None):
+def ASK(message, host = None, addr = None):
     parts = get_parts(message)
     from_address = message.From
     subject = message['Subject']#why lamson does not give it normally?
-    mail.process_emailed_question(from_address, subject, parts)
+    if addr == 'ask':
+        mail.process_emailed_question(from_address, subject, parts)
+    else:
+        try:
+            group_tag = Tag.group_tags.get(
+                deleted = False,
+                name = addr
+            )
+            mail.process_emailed_question(
+                from_address, subject, parts, tags = [group_tag.name, ]
+            )
+        except Tag.DoesNotExist:
+            #do nothing because this handler will match all emails
+            return
+        except Tag.MultipleObjectsReturned:
+            return
 
 @route('reply-(address)@(host)', address='.+')
 @stateless
