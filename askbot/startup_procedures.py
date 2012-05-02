@@ -496,11 +496,7 @@ def run_startup_tests():
     test_celery()
     #test_csrf_cookie_domain()
     test_staticfiles()
-<<<<<<< HEAD
-    test_mysql_south_bug()
-=======
     test_avatar()
->>>>>>> 64ab1ac2d8cfe57e524aca3341abc852b861e512
     settings_tester = SettingsTester({
         'CACHE_MIDDLEWARE_ANONYMOUS_ONLY': {
             'value': True,
