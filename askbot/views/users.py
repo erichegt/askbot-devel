@@ -60,6 +60,8 @@ def users(request, by_group = False, group_id = None, group_slug = None):
     users = models.User.objects.all()
     group = None
     group_email_moderation_enabled = False
+    user_can_join_group = False
+    user_is_group_member = False
     if by_group == True:
         if askbot_settings.GROUPS_ENABLED == False:
             raise Http404
@@ -74,12 +76,15 @@ def users(request, by_group = False, group_id = None, group_slug = None):
                             askbot_settings.GROUP_EMAIL_ADDRESSES_ENABLED \
                             and askbot_settings.ENABLE_CONTENT_MODERATION
                         )
+                    user_can_join_group = group.group_profile.can_accept_user(request.user)
                 except models.Tag.DoesNotExist:
                     raise Http404
                 if group_slug == slugify(group.name):
                     users = models.User.objects.filter(
                         group_memberships__group__id = group_id
                     )
+                    if request.user.is_authenticated():
+                        user_is_group_member = users.filter(id = request.user.id)
                 else:
                     group_page_url = reverse(
                                         'users_by_group',
@@ -156,7 +161,9 @@ def users(request, by_group = False, group_id = None, group_slug = None):
         'keywords' : suser,
         'tab_id' : sortby,
         'paginator_context' : paginator_context,
-        'group_email_moderation_enabled': group_email_moderation_enabled
+        'group_email_moderation_enabled': group_email_moderation_enabled,
+        'user_can_join_group': user_can_join_group,
+        'user_is_group_member': user_is_group_member
     }
     return render_into_skin('users.html', data, request)
 

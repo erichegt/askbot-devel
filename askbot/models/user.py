@@ -355,6 +355,27 @@ class GroupProfile(models.Model):
                         )
     logo_url = models.URLField(null = True)
     moderate_email = models.BooleanField(default = True)
+    is_open = models.BooleanField(default = False)
+    #preapproved email addresses and domain names to auto-join groups
+    #trick - the field is padded with space and all tokens are space separated
+    preapproved_emails = models.TextField(null = True)
+    #only domains - without the '@' or anything before them
+    preapproved_email_domains = models.TextField(null = True)
 
     class Meta:
         app_label = 'askbot'
+
+    def can_accept_user(self, user):
+        """True if user is preapproved to join the group"""
+        if self.is_open:
+            return True
+
+        if user.is_moderator_or_administrator():
+            return True
+
+        #relying on a specific method of storage
+        if (' %s ' % user.email) in self.preapproved_emails:
+            return True
+
+        email_domain = user.email.split('@')[1]
+        return (' %s ' % email_domain) in self.preapproved_email_domains
