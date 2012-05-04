@@ -320,12 +320,18 @@ def user_stats(request, user, context):
 
     if user.show_tags:
         interesting_tags = models.Tag.objects.filter(user_selections__user=user, user_selections__reason='good')
+        interesting_tag_names = [tag.name for tag in interesting_tags]
+        if user.has_interesting_wildcard_tags():
+            interesting_tag_names.extend(user.interesting_tags.split())
+        
         ignored_tags = models.Tag.objects.filter(user_selections__user=user, user_selections__reason='bad')
-        interesting_tags = list(interesting_tags)
-        ignored_tags = list(ignored_tags)
+        ignored_tag_names = [tag.name for tag in ignored_tags]
+        if user.has_ignored_wildcard_tags():
+            ignored_tag_names.extend(user.ignored_tags.split())
+
     else:
-        interesting_tags = None
-        ignored_tags = None
+        interesting_tag_names = None
+        ignored_tag_names = None
         
 #    tags = models.Post.objects.filter(author=user).values('id', 'thread', 'thread__tags')
 #    post_ids = set()
@@ -403,8 +409,8 @@ def user_stats(request, user, context):
         'votes_total_per_day': votes_total,
 
         'user_tags' : user_tags,
-        'interesting_tags': interesting_tags,
-        'ignored_tags': ignored_tags,
+        'interesting_tag_names': interesting_tag_names,
+        'ignored_tag_names': ignored_tag_names,
 
         'badges': badges,
         'total_badges' : len(badges),

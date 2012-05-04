@@ -92,62 +92,46 @@
             </tr>
         </table>
     </div>
-    {% if interesting_tags %}
+    {% if interesting_tag_names %}
     <a name="interesting tags"></a>
     {% spaceless %}
-        <h2>{% trans counter=interesting_tags|length %}<span class="count">{{counter}}</span> Interesting Tag{% pluralize %}<span class="count">{{counter}}</span> Interesting Tags{% endtrans %}</h2>
+        <h2>{% trans counter=interesting_tag_names|length %}<span class="count">{{counter}}</span> Interesting Tag{% pluralize %}<span class="count">{{counter}}</span> Interesting Tags{% endtrans %}</h2>
     {% endspaceless %}
     <div class="user-stats-table">
         <table class="tags">
             <tr>
                 <td valign="top">
-                    <ul id="ab-interesting-tags" class="tags">
-                    {% for tag in interesting_tags %}
-                        <li>
-                        {{ macros.tag_widget(
-                            tag.name,
-                            html_tag = 'div',
-                           )
-                        }}
-                        </li>
-                        {#
-                        {% if loop.index is divisibleby 10 %}
-                            </td>
-                            <td width="180"  valign="top">
-                        {% endif %}
-                        #}
-                    {% endfor %}
-                    </ul>
+			    {{ 
+			        macros.tag_list_widget(
+			            interesting_tag_names,
+			            deletable = False,
+			            make_links = True,
+			            css_class = 'interesting marked-tags'
+			        )
+			    }}
                 </td>
             </tr>
         </table>
     </div>
     {% endif %}
-    {% if ignored_tags %}
+    {% if ignored_tag_names %}
     <a name="ignored tags"></a>
     {% spaceless %}
-        <h2>{% trans counter=ignored_tags|length %}<span class="count">{{counter}}</span> Ignored Tag{% pluralize %}<span class="count">{{counter}}</span> Ignored Tags{% endtrans %}</h2>
+        <h2>{% trans counter=ignored_tag_names|length %}<span class="count">{{counter}}</span> Ignored Tag{% pluralize %}<span class="count">{{counter}}</span> Ignored Tags{% endtrans %}</h2>
     {% endspaceless %}
     <div class="user-stats-table">
         <table class="tags">
             <tr>
                 <td valign="top">
                     <ul id="ab-ignored-tags" class="tags">
-                    {% for tag in ignored_tags %}
-                        <li>
-                        {{ macros.tag_widget(
-                            tag.name,
-                            html_tag = 'div',
-                           )
-                        }}
-                        </li>
-                        {#
-                        {% if loop.index is divisibleby 10 %}
-                            </td>
-                            <td width="180"  valign="top">
-                        {% endif %}
-                        #}
-                    {% endfor %}
+				    {{ 
+				        macros.tag_list_widget(
+				            ignored_tag_names,
+				            deletable = False,
+				            make_links = True,
+				            css_class = 'ignored marked-tags'
+				        )
+				    }}
                     </ul>
                 </td>
             </tr>
@@ -215,5 +199,6 @@
             });
         });
     </script>
+    <script type='text/javascript' src='{{"/js/tag_selector.js"|media}}'></script>
 {% endblock %}
 <!-- end user_stats.html -->
