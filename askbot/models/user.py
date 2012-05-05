@@ -345,6 +345,7 @@ class GroupMembership(models.Model):
 
     class Meta:
         app_label = 'askbot'
+        unique_together = ('group', 'user')
 
 class GroupProfile(models.Model):
     """stores group profile data"""
@@ -367,10 +368,13 @@ class GroupProfile(models.Model):
 
     def can_accept_user(self, user):
         """True if user is preapproved to join the group"""
+        if user.is_anonymous():
+            return False
+
         if self.is_open:
             return True
 
-        if user.is_moderator_or_administrator():
+        if user.is_administrator_or_moderator():
             return True
 
         #relying on a specific method of storage

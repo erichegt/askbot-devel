@@ -1,0 +1,59 @@
+<div id="group-wiki-{{group.id}}" class="box group-wiki">
+    <h2>{% trans %}Group info{% endtrans %}</h2>
+    <img class="group-logo" 
+        {% if group.group_profile.logo_url %}
+            src="{{ group.group_profile.logo_url }}"
+        {% else %}
+            style="display:none"
+        {% endif %}
+    />
+    <div class="content">
+        {% if group.tag_wiki %}
+            {{ group.tag_wiki.html }}
+        {% endif %}
+    </div>
+    <div class="clearfix"></div>
+    {% if user_can_join_group or user_is_group_member %}
+        <button 
+            class="group-join-btn follow-toggle {% if user_is_group_member %}on on-state{% endif %}"
+            data-off-prompt-text="{% trans %}Leave this group{% endtrans %}"
+            data-on-prompt-text="{% trans %}Join this group{% endtrans %}"
+            data-on-state-text="{% trans %}You are a member{% endtrans %}"
+        >
+            {% if user_is_group_member %}
+                {% trans %}You are a member{% endtrans %}
+            {% else %}
+                {% if user_can_join_group %}
+                    {% trans %}Join this group{% endtrans %}
+                {% endif %}
+            {% endif %}
+        </button>
+    {% endif %}
+    {% if request.user.is_authenticated() and request.user.is_administrator_or_moderator() %}
+    <div class="controls">
+        <a class="edit-description"
+        >{% trans %}edit description{% endtrans %}</a>
+        {% if group.group_profile.logo_url %}
+            <span>|</span>
+            <a class="change-logo"
+            >{% trans %}change logo{% endtrans %}</a>
+            <span>|</span>
+            <a class="delete-logo">{% trans %}delete logo{% endtrans %}</a>
+        {% else %}
+            <span>|</span>
+            <a class="change-logo"
+            >{% trans %}add logo{% endtrans %}</a>
+        {% endif %}
+        {% if group_email_moderation_enabled %}
+            <span>|</span>
+            {% if group.group_profile.moderate_email %}
+                <a class="moderate-email"
+                >{% trans %}disable moderation of emailed questions{% endtrans %}</a>
+            {% else %}
+                <a class="moderate-email"
+                >{% trans %}moderate emailed questions{% endtrans %}</a>
+            {% endif %}
+        {% endif %}
+    </div>
+    {% endif %}
+</div>

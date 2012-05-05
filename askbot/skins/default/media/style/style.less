@@ -3419,7 +3419,6 @@ body.anon.lang-es {
 
 .group-wiki {
     .content {
-        float: left;
         p:last-child {
             margin-bottom: 5px;
         }
@@ -3428,13 +3427,18 @@ body.anon.lang-es {
         float: left;
         margin: 0 5px 3px 0;
     }
+    .follow-toggle.group-join-btn {
+        width: 150px;
+        margin: 4px auto 10px auto;
+        display: block;
+    }
     .controls {
         margin: 0 0 10px 0;
     }
 }
 
 img.group-logo {
-    height: 64px;
+    height: 60px;/* important to align with the line spacing */
 }
 
 #groups-list {

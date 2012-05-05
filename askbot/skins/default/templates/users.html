@@ -51,50 +51,6 @@
 {% if not users.object_list %}
     <p><span>{% trans %}Nothing found.{% endtrans %}</span></p>
 {% endif %}
-{% if group %}
-    <div id="group-wiki-{{group.id}}" class="group-wiki">
-        <img class="group-logo" 
-            {% if group.group_profile.logo_url %}
-                src="{{ group.group_profile.logo_url }}"
-            {% else %}
-                style="display:none"
-            {% endif %}
-        />
-        <div class="content">
-            {% if group.tag_wiki %}
-                {{ group.tag_wiki.html }}
-            {% endif %}
-        </div>
-        <div class="clearfix"></div>
-        {% if request.user.is_authenticated() and request.user.is_administrator_or_moderator() %}
-        <div class="controls">
-            <a class="edit-description"
-            >{% trans %}edit description{% endtrans %}</a>
-            {% if group.group_profile.logo_url %}
-                <span>|</span>
-                <a class="change-logo"
-                >{% trans %}change logo{% endtrans %}</a>
-                <span>|</span>
-                <a class="delete-logo">{% trans %}delete logo{% endtrans %}</a>
-            {% else %}
-                <span>|</span>
-                <a class="change-logo"
-                >{% trans %}add logo{% endtrans %}</a>
-            {% endif %}
-            {% if group_email_moderation_enabled %}
-                <span>|</span>
-                {% if group.group_profile.moderate_email %}
-                    <a class="moderate-email"
-                    >{% trans %}disable moderation of emailed questions{% endtrans %}</a>
-                {% else %}
-                    <a class="moderate-email"
-                    >{% trans %}moderate emailed questions{% endtrans %}</a>
-                {% endif %}
-            {% endif %}
-        </div>
-        {% endif %}
-    </div>
-{% endif %}
 {{ macros.user_list(
         users.object_list, 
         karma_mode = settings.KARMA_MODE, badges_mode = settings.BADGES_MODE
@@ -103,6 +59,12 @@
 <div class="pager">
     {{ macros.paginator(paginator_context) }}
 </div>              
+{% endblock %}
+{% block sidebar %}
+    {% if group %}
+        {# this widget takes variables: group, user_can_join_group, user_is_group_member #}
+        {% include "widgets/group_info.html" %}
+    {% endif %}
 {% endblock %}
 {% block endjs %}
     <script type='text/javascript'>
@@ -114,6 +76,7 @@
         askbot['urls']['save_group_logo_url'] = '{% url save_group_logo_url %}';
         askbot['urls']['delete_group_logo_url'] = '{% url delete_group_logo %}';
         askbot['urls']['toggle_group_email_moderation'] = '{% url toggle_group_email_moderation %}';
+        askbot['urls']['join_or_leave_group'] = '{% url join_or_leave_group %}';
     </script>
     <script type='text/javascript' src='{{"/js/editor.js"|media}}'></script>
     <script type='text/javascript' src='{{"/js/wmd/showdown.js"|media}}'></script>
@@ -128,6 +91,11 @@
             var codeFriendlyMarkdown = false;
         {% endif %}
         $().ready(function(){
+            {% if group and request.user.is_authenticated() %}
+                var group_join_btn = new GroupJoinButton({{ group.id }});
+                group_join_btn.decorate($('.group-join-btn'));
+            {% endif %}
+            //setup WMD editor
             if (askbot['data']['userIsAdminOrMod'] === true){
                 //todo: this is kind of Attacklab.init ... should not be here
                 Attacklab.wmd = function(){

@@ -308,6 +308,11 @@ urlpatterns = patterns('',
         views.commands.edit_group_membership,
         name='edit_group_membership'
     ),
+    url(#ajax only
+        r'^join-or-leave-group/$',
+        views.commands.join_or_leave_group,
+        name='join_or_leave_group'
+    ),
     url(
         r'^feeds/(?P<url>.*)/$', 
         'django.contrib.syndication.views.feed',

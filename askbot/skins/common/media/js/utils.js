@@ -410,6 +410,10 @@ SimpleControl.prototype.setHandler = function(handler){
     }
 };
 
+SimpleControl.prototype.getHandler = function(){
+    return this._handler;
+};
+
 SimpleControl.prototype.setHandlerInternal = function(){
     //default internal setHandler behavior
     setupButtonEventHandlers(this._element, this._handler);
@@ -474,6 +478,112 @@ DeleteIcon.prototype.setContent = function(content){
     }
 }
 
+/**
+ * A button on which user can click
+ * and become added to some group (followers, group members, etc.)
+ * The button has four states on-prompt, off-prompt, on-state and off-state
+ * on-prompt is activated on mouseover, when user is not part of group
+ * off-prompt - on mouseover, when user is part of group
+ * on-state - when user is part of group and mouse is not over the button
+ * off-state - same as above, but when user is not part of the group
+ */
+var FollowToggle = function(){
+    SimpleControl.call(this);
+    this._state = null;
+    this._state_messages = {};
+    this._states = [
+        'on-state',
+        'off-state',
+        'on-prompt',
+        'off-prompt'
+    ];
+};
+inherits(FollowToggle, SimpleControl);
+
+FollowToggle.prototype.resetStyles = function(){
+    var element = this._element;
+    var states = this._states;
+    $.each(states, function(idx, state){
+        element.removeClass(state);
+    });
+    this._element.html('');
+};
+
+FollowToggle.prototype.isOn = function(){
+    return this._element.hasClass('on');
+};
+
+FollowToggle.prototype.setOn = function(is_on){
+    if (is_on){
+        this._element.addClass('on');
+        this._element.html(this._state_messages['on-state']);
+    } else {
+        this._element.removeClass('on');
+        this._element.html(this._state_messages['off-state']);
+    }
+};
+
+FollowToggle.prototype.setState = function(state){
+    this._state = state;
+    if (this._element){
+        this.resetStyles();
+        this._element.addClass(state);
+        this._element.html(this._state_messages[state]);
+    }
+};
+
+FollowToggle.prototype.decorate = function(element){
+    this._element = element;
+    //read messages for all states
+    var messages = {};
+    $.each(this._states, function(idx, state){
+        if (state === 'off-state'){
+            return;
+        }
+        messages[state] = element.attr('data-' + state + '-text');
+    });
+    messages['off-state'] = messages['on-prompt']
+    this._state_messages = messages;
+
+    //detect state and save it
+    var text = $.trim(element.html());
+    for (var i = 0; i < this._states.length; i++){
+        var state = this._states[i];
+        if (text === messages[state]){
+            this._state = state;
+            break;
+        }
+    }
+
+    //set mouseover handler
+    var me = this;
+    element.mouseover(function(){
+        var is_on = me.isOn();
+        if (is_on){
+            me.setState('off-prompt');
+        } else {
+            me.setState('on-prompt');
+        }
+        element.css('background-color', 'red');
+        return false;
+    });
+    element.mouseout(function(){
+        var is_on = me.isOn();
+        if (is_on){
+            me.setState('on-state');
+        } else {
+            me.setState('off-state');
+        }
+        element.css('background-color', 'white');
+        return false;
+    });
+
+    setupButtonEventHandlers(element, this.getHandler());
+};
+
+/**
+ * A list of items from where one can be selected
+ */
 var SelectBox = function(){
     WrappedElement.call(this);
     this._items = [];

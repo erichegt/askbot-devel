@@ -84,7 +84,7 @@ def users(request, by_group = False, group_id = None, group_slug = None):
                         group_memberships__group__id = group_id
                     )
                     if request.user.is_authenticated():
-                        user_is_group_member = users.filter(id = request.user.id)
+                        user_is_group_member = bool(users.filter(id = request.user.id).count())
                 else:
                     group_page_url = reverse(
                                         'users_by_group',

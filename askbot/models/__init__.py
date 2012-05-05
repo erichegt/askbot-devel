@@ -2335,6 +2335,9 @@ def user_edit_group_membership(self, user = None, group = None, action = None):
     else:
         raise ValueError('invalid action')
 
+def user_is_group_member(self, group = None):
+    return self.group_memberships.filter(group = group).count() == 1
+
 User.add_to_class(
     'add_missing_askbot_subscriptions',
     user_add_missing_askbot_subscriptions
@@ -2402,6 +2405,7 @@ User.add_to_class('is_administrator', user_is_administrator)
 User.add_to_class('is_administrator_or_moderator', user_is_administrator_or_moderator)
 User.add_to_class('set_admin_status', user_set_admin_status)
 User.add_to_class('edit_group_membership', user_edit_group_membership)
+User.add_to_class('is_group_member', user_is_group_member)
 User.add_to_class('remove_admin_status', user_remove_admin_status)
 User.add_to_class('is_moderator', user_is_moderator)
 User.add_to_class('is_approved', user_is_approved)

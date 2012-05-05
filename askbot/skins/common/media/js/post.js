@@ -2298,6 +2298,36 @@ UserGroupProfileEditor.prototype.decorate = function(element){
     logo_changer.decorate(change_logo_btn);
 };
 
+var GroupJoinButton = function(group_id){
+    FollowToggle.call(this);
+    this._group_id = group_id;
+};
+inherits(GroupJoinButton, FollowToggle);
+
+GroupJoinButton.prototype.getPostData = function(){
+    return { group_id: this._group_id };
+};
+
+GroupJoinButton.prototype.getHandler = function(){
+    var me = this;
+    return function(){
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            cache: false,
+            data: me.getPostData(),
+            url: askbot['urls']['join_or_leave_group'],
+            success: function(data){
+                if (data['success']){
+                    me.setOn(data['is_member']);
+                } else {
+                    showMessage(me.getElement(), data['message']);
+                }
+            }
+        });
+    };
+};
+
 $(document).ready(function() {
     $('[id^="comments-for-"]').each(function(index, element){
         var comments = new PostCommentsWidget();

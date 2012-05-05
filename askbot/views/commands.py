@@ -10,7 +10,7 @@ from django.core import exceptions
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect, Http404, HttpResponseBadRequest
-from django.forms import ValidationError
+from django.forms import ValidationError, IntegerField
 from django.shortcuts import get_object_or_404
 from django.views.decorators import csrf
 from django.utils import simplejson
@@ -486,7 +486,7 @@ def get_tag_list(request):
 def load_tag_wiki_text(request):
     """returns text of the tag wiki in markdown format"""
     tag = get_object_or_404(models.Tag, id = request.GET['tag_id'])
-    tag_wiki_text = getattr(tag.tag_wiki, 'text', '')
+    tag_wiki_text = getattr(tag.tag_wiki, 'text', '').strip()
     return HttpResponse(tag_wiki_text, mimetype = 'text/plain')
 
 @csrf.csrf_exempt
@@ -731,6 +731,32 @@ def read_message(request):#marks message a read
 @csrf.csrf_exempt
 @decorators.ajax_only
 @decorators.post_only
+def join_or_leave_group(request):
+    """only current user can join/leave group"""
+    if request.user.is_anonymous():
+        raise exceptions.PermissionDenied()
+
+    group_id = IntegerField().clean(request.POST['group_id'])
+    group = models.Tag.objects.get(id = group_id)
+
+    if request.user.is_group_member(group):
+        action = 'remove'
+        is_member = False
+    else:
+        action = 'add'
+        is_member = True
+    request.user.edit_group_membership(
+        user = request.user,
+        group = group,
+        action = action
+    )
+    return {'is_member': is_member}
+    
+
+
+@csrf.csrf_exempt
+@decorators.ajax_only
+@decorators.post_only
 @decorators.admins_only
 def edit_group_membership(request):
     form = forms.EditGroupMembershipForm(request.POST)
@@ -745,6 +771,7 @@ def edit_group_membership(request):
             )
 
         action = form.cleaned_data['action']
+        #warning: possible race condition
         if action == 'add':
             group_params = {'group_name': group_name, 'user': user}
             group = models.Tag.group_tags.get_or_create(**group_params)
@@ -789,7 +816,6 @@ def save_group_logo_url(request):
 @decorators.post_only
 @decorators.admins_only
 def delete_group_logo(request):
-    from django.forms import IntegerField
     group_id = IntegerField().clean(int(request.POST['group_id']))
     group = models.Tag.group_tags.get(id = group_id)
     group.group_profile.logo_url = None
@@ -800,7 +826,6 @@ def delete_group_logo(request):
 @decorators.post_only
 @decorators.admins_only
 def delete_post_reject_reason(request):
-    from django.forms import IntegerField
     reason_id = IntegerField().clean(int(request.POST['reason_id']))
     reason = models.PostFlagReason.objects.get(id = reason_id)
     reason.delete()
@@ -810,15 +835,14 @@ def delete_post_reject_reason(request):
 @decorators.post_only
 @decorators.admins_only
 def toggle_group_email_moderation(request):
-    from django.forms import IntegerField
     group_id = IntegerField().clean(int(request.POST['group_id']))
     group = models.Tag.group_tags.get(id = group_id)
     group.group_profile.moderate_email = not group.group_profile.moderate_email
     group.group_profile.save()
     if group.group_profile.moderate_email:
-        new_button_text = _('moderate emailed questions')
-    else:
         new_button_text = _('disable moderation of emailed questions')
+    else:
+        new_button_text = _('moderate emailed questions')
     return {'new_button_text': new_button_text}
 
 
