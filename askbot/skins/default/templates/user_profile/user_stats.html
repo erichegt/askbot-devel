@@ -105,7 +105,6 @@
 			        macros.tag_list_widget(
 			            interesting_tag_names,
 			            deletable = False,
-			            make_links = True,
 			            css_class = 'interesting marked-tags'
 			        )
 			    }}
@@ -123,7 +122,6 @@
         <table class="tags">
             <tr>
                 <td valign="top">
-                    <ul id="ab-ignored-tags" class="tags">
 				    {{ 
 				        macros.tag_list_widget(
 				            ignored_tag_names,
@@ -132,7 +130,6 @@
 				            css_class = 'ignored marked-tags'
 				        )
 				    }}
-                    </ul>
                 </td>
             </tr>
         </table>
@@ -200,5 +197,8 @@
         });
     </script>
     <script type='text/javascript' src='{{"/js/tag_selector.js"|media}}'></script>
+	<script type="text/javascript">
+	askbot['urls']['questions'] = '{% url "questions" %}';
+	</script>
 {% endblock %}
 <!-- end user_stats.html -->
