@@ -457,6 +457,7 @@ def edit_answer(request, id):
             revision_form = forms.RevisionForm(answer, latest_revision)
             form = forms.EditAnswerForm(answer, latest_revision)
         data = {
+            'page_class': 'edit-answer-page',
             'active_tab': 'questions',
             'answer': answer,
             'revision_form': revision_form,

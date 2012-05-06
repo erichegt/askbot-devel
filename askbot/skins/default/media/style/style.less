@@ -1296,11 +1296,11 @@ ul#related-tags li {
         margin: 0px;
         padding: 0px 0 0 5px;
         border:#cce6ec 3px solid;
-        width:725px;
+        width:719px;
     }
 }
 
-.ask-page, .edit-question-page{
+.ask-page, .edit-question-page {
 
     div#question-list {
          float: none;
@@ -1379,18 +1379,37 @@ ul#related-tags li {
     background: url(../images/medium-button.png) bottom repeat-x;
     .text-shadow(0px, 1px, 0px, #c6d9dd)
 }
-#editor { /*adjustment for editor preview*/
+
+.wmd-container {
+    border:#cce6ec 3px solid;
+}
+.users-page .wmd-container {
+    width: 200px;
+}
+.ask-page,
+.question-page,
+.edit-question-page,
+.edit-answer-page {
+    .wmd-container {
+        width: 723px;
+    }
+    #editor {
+        width: 710px;
+        padding: 6px;
+    }
+}
+
+#editor { /* adjustment for editor preview */
+    display: block;
     font-size: 100%;
     min-height: 200px;
     line-height: 18px;
-    margin:0;
-    border-left:#cce6ec 3px solid;
-    border-bottom:#cce6ec 3px solid;
-    border-right:#cce6ec 3px solid;
-    border-top:0;
-    padding:10px;
-    margin-bottom:10px;
-    width:710px;
+    margin: 0;
+    border: 0;
+}
+
+.users-page #editor {
+    width: 192px;
 }
 
 #id_title {
@@ -1398,8 +1417,8 @@ ul#related-tags li {
 }
 
 .wmd-preview {
-    margin: 3px 0 5px 0;
-    padding: 6px;
+    margin: 0;
+    padding: 5px;
     background-color: #F5F5F5;
     min-height: 20px;
     overflow: auto;
@@ -1407,9 +1426,13 @@ ul#related-tags li {
     font-family:@body-font;
 
     p{
-        margin-bottom:14px;
-       line-height:1.4;
-       font-size:14px;
+       margin-bottom: 14px;
+       line-height: 1.4;
+       font-size: 14px;
+    }
+
+    p:last-child{
+        margin-bottom: 0;
     }
 }
 
@@ -1482,7 +1505,7 @@ ul#related-tags li {
         margin: 0px;
         padding: 0px 0 0 5px;
         border:#cce6ec 3px solid;
-        width:725px;
+        width: 719px;
         margin-bottom:10px;
     }
     #id_summary{
@@ -3419,7 +3442,7 @@ body.anon.lang-es {
 
 .group-wiki {
     .content {
-        p:last-child {
+        > p:last-child {
             margin-bottom: 5px;
         }
     }

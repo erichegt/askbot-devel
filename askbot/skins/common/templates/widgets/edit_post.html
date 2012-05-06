@@ -7,9 +7,11 @@
         </div>
     </div>
 {% endif %}
-<div id="wmd-button-bar" class="wmd-panel"></div>
-<div class="form-item">
+<div class='wmd-container'>
+    <div id="wmd-button-bar" class="wmd-panel"></div>
     {{ post_form.text }}{# this element is resizable and will be wrapped by js #}
+</div>
+<div class="form-item">
     <label for="editor" class="form-error">{{ post_form.text.errors }}</label>
 </div>
 {# need label element for resizable input, b/c form validation won't find span #}

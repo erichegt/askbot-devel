@@ -1914,8 +1914,22 @@ QASwapper.prototype.startSwapping = function(){
 var WMD = function(){
     WrappedElement.call(this);
     this._markdown = undefined;
+    this._enabled_buttons = 'bold italic link blockquote code ' +
+        'image ol ul heading hr';
+    this._is_previewer_enabled = true;
 };
 inherits(WMD, WrappedElement);
+
+WMD.prototype.setEnabledButtons = function(buttons){
+    this._enabled_buttons = buttons;
+};
+
+WMD.prototype.setPreviewerEnabled = function(state){
+    this._is_previewer_enabled = state;
+    if (this._previewer){
+        this._previewer.hide();
+    }
+};
 
 WMD.prototype.setEscapeHandler = function(handler){
     this._escape_handler = handler;
@@ -1923,15 +1937,21 @@ WMD.prototype.setEscapeHandler = function(handler){
 
 WMD.prototype.createDom = function(){
     this._element = this.makeElement('div');
+    var clearfix = this.makeElement('div').addClass('clearfix');
+    this._element.append(clearfix);
+
+    var wmd_container = this.makeElement('div');
+    wmd_container.addClass('wmd-container');
+    this._element.append(wmd_container);
 
     var wmd_buttons = this.makeElement('div')
                         .attr('id', 'wmd-button-bar')
                         .addClass('wmd-panel');
-    this._element.append(wmd_buttons);
+    wmd_container.append(wmd_buttons);
 
     var editor = this.makeElement('textarea')
                         .attr('id', 'editor');
-    this._element.append(editor);
+    wmd_container.append(editor);
     this._textarea = editor;
 
     if (this._markdown){
@@ -1941,8 +1961,11 @@ WMD.prototype.createDom = function(){
     var previewer = this.makeElement('div')
                         .attr('id', 'previewer')
                         .addClass('wmd-preview');
-
-    this._element.append(previewer);
+    wmd_container.append(previewer);
+    this._previewer = previewer;
+    if (this._is_previewer_enabled === false) {
+        previewer.hide();
+    }
 };
 
 WMD.prototype.setMarkdown = function(text){
@@ -1957,7 +1980,7 @@ WMD.prototype.getMarkdown = function(){
 };
 
 WMD.prototype.start = function(){
-	Attacklab.Util.startEditor(true);
+    Attacklab.Util.startEditor(true, this._enabled_buttons);
     this._textarea.keyup(makeKeyHandler(27, this._escape_handler));
 };
 
@@ -1969,11 +1992,24 @@ var TagWikiEditor = function(){
     this._state = 'display';//'edit' or 'display'
     this._content_backup  = '';
     this._is_editor_loaded = false;
+    this._enabled_editor_buttons = null;
+    this._is_previewer_enabled = false;
 };
 inherits(TagWikiEditor, WrappedElement);
 
 TagWikiEditor.prototype.backupContent = function(){
     this._content_backup = this._content_box.contents();
+};
+
+TagWikiEditor.prototype.setEnabledEditorButtons = function(buttons){
+    this._enabled_editor_buttons = buttons;
+};
+
+TagWikiEditor.prototype.setPreviewerEnabled = function(state){
+    this._is_previewer_enabled = state;
+    if (this.isEditorLoaded()){
+        this._editor.setPreviewerEnabled(this._is_previewer_enabled);
+    }
 };
 
 TagWikiEditor.prototype.setContent = function(content){
@@ -2095,6 +2131,10 @@ TagWikiEditor.prototype.decorate = function(element){
 
     var me = this;
     var editor = new WMD();
+    if (this._enabled_editor_buttons){
+        editor.setEnabledButtons(this._enabled_editor_buttons);
+    }
+    editor.setPreviewerEnabled(this._is_previewer_enabled);
     editor.setEscapeHandler(function(){me.cancelEdit()});
     this._editor = editor;
     setupButtonEventHandlers(edit_btn, function(){ me.startActivatingEditor() });
@@ -2268,6 +2308,8 @@ UserGroupProfileEditor.prototype.toggleEmailModeration = function(){
 };
 
 UserGroupProfileEditor.prototype.decorate = function(element){
+    this.setEnabledEditorButtons('bold italic link ol ul');
+    this.setPreviewerEnabled(false);
     UserGroupProfileEditor.superClass_.decorate.call(this, element);
     var change_logo_btn = element.find('.change-logo');
     this._change_logo_btn = change_logo_btn;
