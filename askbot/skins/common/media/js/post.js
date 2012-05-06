@@ -2314,15 +2314,22 @@ UserGroupProfileEditor.prototype.decorate = function(element){
     var change_logo_btn = element.find('.change-logo');
     this._change_logo_btn = change_logo_btn;
 
-    var moderate_email_btn = element.find('.moderate-email');
+    var moderate_email_toggle = new TwoStateToggle();
+    moderate_email_toggle.setPostData({
+        group_id: this.getTagId(),
+        property_name: 'moderate_email'
+    });
+    var moderate_email_btn = element.find('#moderate-email');
     this._moderate_email_btn = moderate_email_btn;
-    var me = this;
-    setupButtonEventHandlers(
-        moderate_email_btn,
-        function(){
-            me.toggleEmailModeration();
-        }
-    )
+    moderate_email_toggle.decorate(moderate_email_btn);
+
+    var open_group_toggle = new TwoStateToggle();
+    open_group_toggle.setPostData({
+        group_id: this.getTagId(),
+        property_name: 'is_open'
+    });
+    var open_group_btn = element.find('#open-or-close-group');
+    open_group_toggle.decorate(open_group_btn);
 
     var logo_changer = new ImageChanger();
     logo_changer.setImageElement(element.find('.group-logo'));
@@ -2341,10 +2348,10 @@ UserGroupProfileEditor.prototype.decorate = function(element){
 };
 
 var GroupJoinButton = function(group_id){
-    FollowToggle.call(this);
+    TwoStateToggle.call(this);
     this._group_id = group_id;
 };
-inherits(GroupJoinButton, FollowToggle);
+inherits(GroupJoinButton, TwoStateToggle);
 
 GroupJoinButton.prototype.getPostData = function(){
     return { group_id: this._group_id };

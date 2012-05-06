@@ -10,7 +10,7 @@ from django.core import exceptions
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect, Http404, HttpResponseBadRequest
-from django.forms import ValidationError, IntegerField
+from django.forms import ValidationError, IntegerField, CharField
 from django.shortcuts import get_object_or_404
 from django.views.decorators import csrf
 from django.utils import simplejson
@@ -731,32 +731,6 @@ def read_message(request):#marks message a read
 @csrf.csrf_exempt
 @decorators.ajax_only
 @decorators.post_only
-def join_or_leave_group(request):
-    """only current user can join/leave group"""
-    if request.user.is_anonymous():
-        raise exceptions.PermissionDenied()
-
-    group_id = IntegerField().clean(request.POST['group_id'])
-    group = models.Tag.objects.get(id = group_id)
-
-    if request.user.is_group_member(group):
-        action = 'remove'
-        is_member = False
-    else:
-        action = 'add'
-        is_member = True
-    request.user.edit_group_membership(
-        user = request.user,
-        group = group,
-        action = action
-    )
-    return {'is_member': is_member}
-    
-
-
-@csrf.csrf_exempt
-@decorators.ajax_only
-@decorators.post_only
 @decorators.admins_only
 def edit_group_membership(request):
     form = forms.EditGroupMembershipForm(request.POST)
@@ -821,6 +795,7 @@ def delete_group_logo(request):
     group.group_profile.logo_url = None
     group.group_profile.save()
 
+
 @csrf.csrf_exempt
 @decorators.ajax_only
 @decorators.post_only
@@ -830,21 +805,47 @@ def delete_post_reject_reason(request):
     reason = models.PostFlagReason.objects.get(id = reason_id)
     reason.delete()
 
+
 @csrf.csrf_exempt
 @decorators.ajax_only
 @decorators.post_only
 @decorators.admins_only
-def toggle_group_email_moderation(request):
+def toggle_group_profile_property(request):
+    #todo: this might be changed to more general "toggle object property"
     group_id = IntegerField().clean(int(request.POST['group_id']))
-    group = models.Tag.group_tags.get(id = group_id)
-    group.group_profile.moderate_email = not group.group_profile.moderate_email
-    group.group_profile.save()
-    if group.group_profile.moderate_email:
-        new_button_text = _('disable moderation of emailed questions')
-    else:
-        new_button_text = _('moderate emailed questions')
-    return {'new_button_text': new_button_text}
+    property_name = CharField().clean(request.POST['property_name'])
+    assert property_name in ('is_open', 'moderate_email')
 
+    group = models.Tag.objects.get(id = group_id)
+    new_value = not getattr(group.group_profile, property_name)
+    setattr(group.group_profile, property_name, new_value)
+    group.group_profile.save()
+    return {'is_enabled': new_value}
+
+
+@csrf.csrf_exempt
+@decorators.ajax_only
+@decorators.post_only
+def join_or_leave_group(request):
+    """only current user can join/leave group"""
+    if request.user.is_anonymous():
+        raise exceptions.PermissionDenied()
+
+    group_id = IntegerField().clean(request.POST['group_id'])
+    group = models.Tag.objects.get(id = group_id)
+
+    if request.user.is_group_member(group):
+        action = 'remove'
+        is_member = False
+    else:
+        action = 'add'
+        is_member = True
+    request.user.edit_group_membership(
+        user = request.user,
+        group = group,
+        action = action
+    )
+    return {'is_member': is_member}
 
 
 @csrf.csrf_exempt

@@ -481,13 +481,14 @@ DeleteIcon.prototype.setContent = function(content){
 /**
  * A button on which user can click
  * and become added to some group (followers, group members, etc.)
+ * or toggle some state on/off
  * The button has four states on-prompt, off-prompt, on-state and off-state
  * on-prompt is activated on mouseover, when user is not part of group
  * off-prompt - on mouseover, when user is part of group
  * on-state - when user is part of group and mouse is not over the button
  * off-state - same as above, but when user is not part of the group
  */
-var FollowToggle = function(){
+var TwoStateToggle = function(){
     SimpleControl.call(this);
     this._state = null;
     this._state_messages = {};
@@ -497,10 +498,21 @@ var FollowToggle = function(){
         'on-prompt',
         'off-prompt'
     ];
+    this._handler = this.getDefaultHandler();
+    this._post_data = {};
+    this.toggleUrl = '';//public property
 };
-inherits(FollowToggle, SimpleControl);
+inherits(TwoStateToggle, SimpleControl);
 
-FollowToggle.prototype.resetStyles = function(){
+TwoStateToggle.prototype.setPostData = function(data){
+    this._post_data = data;
+};
+
+TwoStateToggle.prototype.getPostData = function(){
+    return this._post_data;
+};
+
+TwoStateToggle.prototype.resetStyles = function(){
     var element = this._element;
     var states = this._states;
     $.each(states, function(idx, state){
@@ -509,11 +521,11 @@ FollowToggle.prototype.resetStyles = function(){
     this._element.html('');
 };
 
-FollowToggle.prototype.isOn = function(){
+TwoStateToggle.prototype.isOn = function(){
     return this._element.hasClass('on');
 };
 
-FollowToggle.prototype.setOn = function(is_on){
+TwoStateToggle.prototype.setOn = function(is_on){
     if (is_on){
         this._element.addClass('on');
         this._element.html(this._state_messages['on-state']);
@@ -523,35 +535,78 @@ FollowToggle.prototype.setOn = function(is_on){
     }
 };
 
-FollowToggle.prototype.setState = function(state){
+TwoStateToggle.prototype.getDefaultHandler = function(){
+    var me = this;
+    return function(){
+        var data = me.getPostData();
+        data['disable'] = me.isOn();
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            cache: false,
+            url: me.toggleUrl,
+            data: data,
+            success: function(data) {
+                if (data['success']) {
+                    me.setOn('is_enabled');
+                } else {
+                    showMessage(me.getElement(), data['message']);
+                }
+            }
+        });
+    };
+};
+
+TwoStateToggle.prototype.setState = function(state){
+    var element = this._element;
     this._state = state;
-    if (this._element){
-        this.resetStyles();
-        this._element.addClass(state);
-        this._element.html(this._state_messages[state]);
+    if (element) {
+        if (
+            element.attr('nodeName') === 'INPUT' && 
+            element.attr('type') === 'checkbox'
+        ) {
+            if (state === 'on-state') {
+                element.attr('checked', true);
+            } else if (state === 'off-state') {
+                element.attr('checked', false);
+            }
+        } else {
+            this.resetStyles();
+            element.addClass(state);
+            this._element.html(this._state_messages[state]);
+        }
     }
 };
 
-FollowToggle.prototype.decorate = function(element){
+TwoStateToggle.prototype.decorate = function(element){
     this._element = element;
     //read messages for all states
     var messages = {};
-    $.each(this._states, function(idx, state){
-        if (state === 'off-state'){
-            return;
-        }
-        messages[state] = element.attr('data-' + state + '-text');
-    });
-    messages['off-state'] = messages['on-prompt']
+    messages['on-state'] =
+        element.attr('data-on-state-text') || gettext('enabled');
+    messages['off-state'] = 
+        element.attr('data-off-state-text') || gettext('disabled');
+    messages['on-prompt'] =
+        element.attr('data-on-prompt-text') || messages['on-state'];
+    messages['off-prompt'] = 
+        element.attr('data-off-prompt-text') || messages['off-state'];
     this._state_messages = messages;
 
+    this.toggleUrl = element.attr('data-toggle-url');
+
     //detect state and save it
-    var text = $.trim(element.html());
-    for (var i = 0; i < this._states.length; i++){
-        var state = this._states[i];
-        if (text === messages[state]){
-            this._state = state;
-            break;
+    if (
+        element.attr('nodeName') === 'INPUT' && element.attr('type', 'checkbox')
+    ) {
+        this._state = element.attr('checked') ? 'state-on' : 'state-off';
+    } else {
+        var text = $.trim(element.html());
+        for (var i = 0; i < this._states.length; i++){
+            var state = this._states[i];
+            if (text === messages[state]){
+                this._state = state;
+                break;
+            }
         }
     }
 

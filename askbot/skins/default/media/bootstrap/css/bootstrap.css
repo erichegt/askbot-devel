@@ -570,7 +570,7 @@ pre code {
   max-height: 340px;
   overflow-y: scroll;
 }
-.label {
+/*.label {
   padding: 1px 4px 2px;
   font-size: 10.998px;
   font-weight: bold;
@@ -587,7 +587,7 @@ pre code {
 .label:hover {
   color: #ffffff;
   text-decoration: none;
-}
+}*/
 .label-important {
   background-color: #b94a48;
 }
@@ -3076,10 +3076,10 @@ input[type="submit"].btn.btn-mini {
   display: inline-block;
   padding: 5px 14px;
   background-color: #fff;
-  border: 1px solid #ddd;
+  /*border: 1px solid #ddd;
   -webkit-border-radius: 15px;
   -moz-border-radius: 15px;
-  border-radius: 15px;
+  border-radius: 15px;*/
 }
 .pager a:hover {
   text-decoration: none;

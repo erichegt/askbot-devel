@@ -213,9 +213,9 @@ urlpatterns = patterns('',
         name = 'delete_group_logo'
     ),
     url(#ajax only
-        r'^toggle-group-email-moderation/',
-        views.commands.toggle_group_email_moderation,
-        name = 'toggle_group_email_moderation'
+        r'^toggle-group-profile-property/',
+        views.commands.toggle_group_profile_property,
+        name = 'toggle_group_profile_property'
     ),
     url(
         r'^get-groups-list/',
@@ -311,7 +311,7 @@ urlpatterns = patterns('',
     url(#ajax only
         r'^join-or-leave-group/$',
         views.commands.join_or_leave_group,
-        name='join_or_leave_group'
+        name = 'join_or_leave_group'
     ),
     url(
         r'^feeds/(?P<url>.*)/$', 

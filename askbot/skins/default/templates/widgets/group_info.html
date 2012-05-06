@@ -19,6 +19,7 @@
             data-off-prompt-text="{% trans %}Leave this group{% endtrans %}"
             data-on-prompt-text="{% trans %}Join this group{% endtrans %}"
             data-on-state-text="{% trans %}You are a member{% endtrans %}"
+            data-off-state-text="{% trans %}Join this group{% endtrans %}"
         >
             {% if user_is_group_member %}
                 {% trans %}You are a member{% endtrans %}
@@ -29,7 +30,7 @@
             {% endif %}
         </button>
     {% endif %}
-    {% if request.user.is_authenticated() and request.user.is_administrator_or_moderator() %}
+    {% if request.user.is_authenticated() and request.user.is_administrator() %}
     <div class="controls">
         <a class="edit-description"
         >{% trans %}edit description{% endtrans %}</a>
@@ -44,16 +45,27 @@
             <a class="change-logo"
             >{% trans %}add logo{% endtrans %}</a>
         {% endif %}
+        <br/>
         {% if group_email_moderation_enabled %}
-            <span>|</span>
-            {% if group.group_profile.moderate_email %}
-                <a class="moderate-email"
-                >{% trans %}disable moderation of emailed questions{% endtrans %}</a>
-            {% else %}
-                <a class="moderate-email"
-                >{% trans %}moderate emailed questions{% endtrans %}</a>
-            {% endif %}
+            <input type="checkbox"
+                id="moderate-email"
+                {% if group.group_profile.moderate_email %}checked="checked"{% endif %}
+                data-toggle-url="{% url toggle_group_profile_property %}"
+            />
+            <label for="moderate-email">
+                {% trans %}moderate emailed questions{% endtrans %}
+            </label>
+            <br/>
         {% endif %}
+        <input type="checkbox" 
+            id="open-or-close-group"
+            {% if group.group_profile.is_open %}checked="checked"{% endif %}
+            data-toggle-url="{% url toggle_group_profile_property %}"
+        />
+        <label for="open-or-close-group">
+            {% trans %}anyone can join{% endtrans %}
+        </label>
+        <br/>
     </div>
     {% endif %}
 </div>
