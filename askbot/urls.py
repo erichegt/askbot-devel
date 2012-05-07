@@ -159,6 +159,7 @@ urlpatterns = patterns('',
         views.readers.tags, 
         name='tags'
     ),
+    #todo: collapse these three urls and use an extra json data var
     url(#ajax only
         r'^%s%s$' % ('mark-tag/', 'interesting/'),
         views.commands.mark_tag,
@@ -170,6 +171,12 @@ urlpatterns = patterns('',
         views.commands.mark_tag,
         kwargs={'reason':'bad','action':'add'},
         name='mark_ignored_tag'
+    ),
+    url(#ajax only
+        r'^%s%s$' % ('mark-tag/', 'subscribed/'),
+        views.commands.mark_tag,
+        kwargs={'reason':'subscribed','action':'add'},
+        name='mark_subscribed_tag'
     ),
     url(#ajax only
         r'^unmark-tag/',

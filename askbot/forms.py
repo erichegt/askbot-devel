@@ -1020,7 +1020,7 @@ class EditUserForm(forms.Form):
 
 class TagFilterSelectionForm(forms.ModelForm):
     email_tag_filter_strategy = forms.ChoiceField(
-        choices = const.TAG_FILTER_STRATEGY_CHOICES,
+        choices = const.TAG_DISPLAY_FILTER_STRATEGY_CHOICES,
         initial = const.EXCLUDE_IGNORED,
         label = _('Choose email tag filter'),
         widget = forms.RadioSelect

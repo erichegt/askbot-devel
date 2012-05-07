@@ -157,7 +157,11 @@ class Tag(models.Model):
         return self.name
 
 class MarkedTag(models.Model):
-    TAG_MARK_REASONS = (('good', _('interesting')), ('bad', _('ignored')))
+    TAG_MARK_REASONS = (
+        ('good', _('interesting')),
+        ('bad', _('ignored')),
+        ('subscribed', _('subscribed')),
+    )
     tag = models.ForeignKey('Tag', related_name='user_selections')
     user = models.ForeignKey(User, related_name='tag_selections')
     reason = models.CharField(max_length=16, choices=TAG_MARK_REASONS)

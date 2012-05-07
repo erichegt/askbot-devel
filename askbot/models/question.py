@@ -226,8 +226,19 @@ class ThreadManager(models.Manager):
         if request_user and request_user.is_authenticated():
             #mark questions tagged with interesting tags
             #a kind of fancy annotation, would be nice to avoid it
-            interesting_tags = Tag.objects.filter(user_selections__user=request_user, user_selections__reason='good')
-            ignored_tags = Tag.objects.filter(user_selections__user=request_user, user_selections__reason='bad')
+            interesting_tags = Tag.objects.filter(
+                user_selections__user = request_user,
+                user_selections__reason = 'good'
+            )
+            ignored_tags = Tag.objects.filter(
+                user_selections__user = request_user,
+                user_selections__reason = 'bad'
+            )
+            if askbot_settings.SUBSCRIBED_TAG_SELECTOR_ENABLED:
+                meta_data['subscribed_tag_names'] = Tag.objects.filter(
+                    user_selections__user = request_user,
+                    user_selections__reason = 'subscribed'
+                ).values_list('name', flat = True)
 
             meta_data['interesting_tag_names'] = [tag.name for tag in interesting_tags]
             meta_data['ignored_tag_names'] = [tag.name for tag in ignored_tags]
