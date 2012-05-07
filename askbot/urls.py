@@ -217,6 +217,11 @@ urlpatterns = patterns('',
         views.commands.toggle_group_profile_property,
         name = 'toggle_group_profile_property'
     ),
+    url(#ajax only
+        r'^edit-object-property-text/',
+        views.commands.edit_object_property_text,
+        name = 'edit_object_property_text'
+    ),
     url(
         r'^get-groups-list/',
         views.commands.get_groups_list,

@@ -66,6 +66,27 @@
             {% trans %}anyone can join{% endtrans %}
         </label>
         <br/>
+        <a 
+            id="preapproved-emails"
+            title="{% trans %}list of email addresses of pre-approved users{% endtrans %}"
+            data-object-id="{{group.group_profile.id}}"
+            data-model-name="GroupProfile"
+            data-property-name="preapproved_emails"
+            data-url="{% url edit_object_property_text %}"
+            data-editor-heading="{% trans %}List of preapproved email addresses{% endtrans %}"
+            data-help-text="{% trans %}Users with these email adderesses will be added to the group automatically.{% endtrans %}"
+        >{% trans %}edit preapproved emails{% endtrans %}</a>
+        <br/>
+        <a 
+            id="preapproved-email-domains"
+            title="{% trans %}list of preapproved email address domain names{% endtrans %}"
+            data-object-id="{{group.group_profile.id}}"
+            data-model-name="GroupProfile"
+            data-property-name="preapproved_email_domains"
+            data-url="{% url edit_object_property_text %}"
+            data-editor-heading="{% trans %}List of preapproved email domain names{% endtrans %}"
+            data-help-text="{% trans %}Users whose email adderesses belong to these domains will be added to the group automatically.{% endtrans %}"
+        >{% trans %}edit preapproved email domains{% endtrans %}</a>
     </div>
     {% endif %}
 </div>

@@ -2331,6 +2331,12 @@ UserGroupProfileEditor.prototype.decorate = function(element){
     var open_group_btn = element.find('#open-or-close-group');
     open_group_toggle.decorate(open_group_btn);
 
+    var email_editor = new TextPropertyEditor();
+    email_editor.decorate(element.find('#preapproved-emails'));
+
+    var domain_editor = new TextPropertyEditor();
+    domain_editor.decorate(element.find('#preapproved-email-domains'));
+
     var logo_changer = new ImageChanger();
     logo_changer.setImageElement(element.find('.group-logo'));
     logo_changer.setAjaxData({

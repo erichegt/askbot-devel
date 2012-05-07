@@ -296,11 +296,13 @@ TippedInput.prototype.getVal = function(){
 };
 
 TippedInput.prototype.setVal = function(value){
-    this._element.val(value);
-    if (this.isBlank()){
-        this._element.addClass('blank');
-    } else {
-        this._element.removeClass('blank');
+    if (value) {
+        this._element.val(value);
+        if (this.isBlank()){
+            this._element.addClass('blank');
+        } else {
+            this._element.removeClass('blank');
+        }
     }
 };
 
@@ -346,6 +348,17 @@ AlertBox.prototype.setClass = function(classes){
     }
 };
 
+AlertBox.prototype.setError = function(state){
+    this._is_error = state;
+    if (this._element) {
+        if (state === true) {
+            this._element.addClass('alert-error');
+        } else {
+            this._element.removeClass('alert-error');
+        }
+    }
+};
+
 AlertBox.prototype.setText = function(text){
     this._text = text;
     if (this._content){
@@ -376,6 +389,10 @@ AlertBox.prototype.addContent = function(content){
 AlertBox.prototype.createDom = function(){
     this._element = this.makeElement('div');
     this._element.addClass('alert fade in');
+
+    if (this._is_error) {
+        this.setError(this._is_error);
+    }
 
     if (this._classes){
         this._element.addClass(this._classes);
@@ -477,6 +494,183 @@ DeleteIcon.prototype.setContent = function(content){
         this._element.html(content);
     }
 }
+
+/**
+ * attaches a modal menu with a text editor
+ * to a link. The modal menu is from bootstrap.js
+ */
+var TextPropertyEditor = function(){
+    WrappedElement.call(this);
+    this._editor = null;
+};
+inherits(TextPropertyEditor, WrappedElement);
+
+TextPropertyEditor.prototype.getWidgetData = function(){
+    var data = this._element.data();
+    return {
+        object_id: data['objectId'],
+        model_name: data['modelName'],
+        property_name: data['propertyName'],
+        url: data['url'],
+        help_text: data['helpText'],
+        editor_heading: data['editorHeading']
+    };
+};
+
+TextPropertyEditor.prototype.makeEditor = function(){
+    if (this._editor) {
+        return this._editor;
+    }
+    var editor = this.makeElement('div')
+        .addClass('modal');
+    this._editor = editor;
+
+    var header = this.makeElement('div')
+        .addClass('modal-header');
+    editor.append(header);
+
+    var close_link = this.makeElement('div')
+        .addClass('close')
+        .attr('data-dismiss', 'modal')
+        .html('x');
+    header.append(close_link);
+
+    var title = this.makeElement('h3')
+        .html(this.getWidgetData()['editor_heading']);
+    header.append(title);
+
+    var body = this.makeElement('div')
+        .addClass('modal-body');
+    editor.append(body);
+
+    var textarea = this.makeElement('textarea')
+        .addClass('tipped-input blank')
+        .val(this.getWidgetData()['help_text']);
+    body.append(textarea);
+
+    var tipped_input = new TippedInput();
+    tipped_input.decorate(textarea);
+    this._text_input = tipped_input;
+
+    var footer = this.makeElement('div')
+        .addClass('modal-footer');
+    editor.append(footer);
+
+    var save_btn = this.makeElement('button')
+        .addClass('btn btn-primary')
+        .html(gettext('Save'));
+    footer.append(save_btn);
+
+    var cancel_btn = this.makeElement('button')
+        .addClass('btn cancel')
+        .html(gettext('Cancel'));
+    footer.append(cancel_btn);
+
+    var me = this;
+    setupButtonEventHandlers(save_btn, function(){
+        me.saveData();
+    });
+    setupButtonEventHandlers(cancel_btn, function(){
+        editor.modal('hide');
+    });
+    editor.modal('hide');
+
+    $(document).append(editor);
+    return editor;
+};
+
+TextPropertyEditor.prototype.openEditor = function(){
+    this._editor.modal('show');
+};
+
+TextPropertyEditor.prototype.clearMessages = function(){
+    this._editor.find('.alert').remove();
+};
+
+TextPropertyEditor.prototype.getAlert = function(){
+    if (this._alert) {
+        return this._alert;
+    } else {
+        var box = new AlertBox();
+        this._alert = box;
+        this._editor.find('.modal-body').prepend(box.getElement());
+        return box;
+    }
+};
+
+TextPropertyEditor.prototype.showAlert = function(text){
+    var box = this.getAlert();
+    box.setError(false);
+    box.setText(text);
+};
+
+TextPropertyEditor.prototype.showError = function(text){
+    var box = this.getAlert();
+    box.setError(true);
+    box.setText(text);
+};
+
+TextPropertyEditor.prototype.setText = function(text){
+    this._text_input.setVal(text);
+};
+
+TextPropertyEditor.prototype.getText = function(){
+    return this._text_input.getVal();
+};
+
+TextPropertyEditor.prototype.hideDialog = function(){
+    this._editor.modal('hide');
+};
+
+TextPropertyEditor.prototype.startOpeningEditor = function(){
+    var me = this;
+    $.ajax({
+        type: 'GET',
+        dataType: 'json',
+        cache: false,
+        url: me.getWidgetData()['url'],
+        data: me.getWidgetData(),
+        success: function(data){
+            if (data['success']) {
+                me.makeEditor();
+                me.setText(data['text']);
+                me.openEditor();
+            } else {
+                showMessage(me.getElement(), data['message']);
+            }
+        }
+    });
+};
+
+TextPropertyEditor.prototype.saveData = function(){
+    var data = this.getWidgetData();
+    data['text'] = this.getText();
+    var me = this;
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        cache: false,
+        url: me.getWidgetData()['url'],
+        data: data,
+        success: function(data) {
+            if (data['success']) {
+                me.showAlert(gettext('saved'));
+                setTimeout(function(){
+                    me.clearMessages();
+                    me.hideDialog();
+                }, 1000);
+            } else {
+                me.showError(data['message']);
+            }
+        }
+    });
+};
+
+TextPropertyEditor.prototype.decorate = function(element){
+    this._element = element;
+    var me = this;
+    setupButtonEventHandlers(element, function(){ me.startOpeningEditor() });
+};
 
 /**
  * A button on which user can click

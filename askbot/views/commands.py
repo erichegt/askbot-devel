@@ -825,6 +825,34 @@ def toggle_group_profile_property(request):
 
 @csrf.csrf_exempt
 @decorators.ajax_only
+@decorators.admins_only
+def edit_object_property_text(request):
+    model_name = CharField().clean(request.REQUEST['model_name'])
+    object_id = IntegerField().clean(request.REQUEST['object_id'])
+    property_name = CharField().clean(request.REQUEST['property_name'])
+
+    accessible_fields = (
+        ('GroupProfile', 'preapproved_emails'),
+        ('GroupProfile', 'preapproved_email_domains')
+    )
+
+    if (model_name, property_name) not in accessible_fields:
+        raise exceptions.PermissionDenied()
+
+    query_set = models.get_model(model_name).objects.filter(id=object_id)
+    if request.method == 'POST':
+        text = CharField().clean(request.POST['text'])
+        params = dict()
+        params[str(property_name)] = text #dammit str()
+        query_set.update(**params)
+    elif request.method == 'GET':
+        return {'text': getattr(query_set[0], property_name)}
+    else:
+        raise exceptions.PermissionDenied()
+
+
+@csrf.csrf_exempt
+@decorators.ajax_only
 @decorators.post_only
 def join_or_leave_group(request):
     """only current user can join/leave group"""
