@@ -65,6 +65,7 @@ class RssIndividualQuestionFeed(Feed):
         chain_elements.append(
             Post.objects.get_comments().filter(parent=item)
         )
+
         answers = Post.objects.get_answers().filter(thread = item.thread)
         for answer in answers:
             chain_elements.append([answer,])
