@@ -363,9 +363,13 @@ class GroupProfile(models.Model):
     is_open = models.BooleanField(default = False)
     #preapproved email addresses and domain names to auto-join groups
     #trick - the field is padded with space and all tokens are space separated
-    preapproved_emails = models.TextField(null = True, blank = True)
+    preapproved_emails = models.TextField(
+                            null = True, blank = True, default = ''
+                        )
     #only domains - without the '@' or anything before them
-    preapproved_email_domains = models.TextField(null = True, blank = True)
+    preapproved_email_domains = models.TextField(
+                            null = True, blank = True, default = ''
+                        )
 
     class Meta:
         app_label = 'askbot'
@@ -382,13 +386,17 @@ class GroupProfile(models.Model):
             return True
 
         #relying on a specific method of storage
-        email_match_re = re.compile(r'\s%s\s' % user.email)
-        if email_match_re.search(self.preapproved_emails):
-            return True
+        if self.preapproved_emails:
+            email_match_re = re.compile(r'\s%s\s' % user.email)
+            if email_match_re.search(self.preapproved_emails):
+                return True
 
-        email_domain = user.email.split('@')[1]
-        domain_match_re = re.compile(r'\s%s\s' % email_domain)
-        return domain_match_re.search(self.preapproved_email_domains)
+        if self.preapproved_email_domains:
+            email_domain = user.email.split('@')[1]
+            domain_match_re = re.compile(r'\s%s\s' % email_domain)
+            return domain_match_re.search(self.preapproved_email_domains)
+
+        return False
 
     def clean(self):
         """called in `save()`
