@@ -1114,8 +1114,12 @@ def user_mark_tags(
     #to make it impossible to "like" and "dislike" something at the same time
     #but the subscribed set is independent - e.g. you can dislike a topic
     #and still subscribe for it.
-    if reason == 'subscribed':#don't touch good/bad marks
+    if reason == 'subscribed':
+        #don't touch good/bad marks
         marked_ts = marked_ts.filter(reason = 'subscribed')
+    else:
+        #and in this case don't touch subscribed tags
+        marked_ts = marked_ts.exclude(reason = 'subscribed')
 
     #todo: use the user api methods here instead of the straight ORM
     cleaned_tagnames = list() #those that were actually updated

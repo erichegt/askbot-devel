@@ -100,7 +100,7 @@ function pickedTags(){
     
     var interestingTags = {};
     var ignoredTags = {};
-    var subscribedTags {};
+    var subscribedTags = {};
     var interestingTagDetailBox = new TagDetailBox('interesting');
     var ignoredTagDetailBox = new TagDetailBox('ignored');
     var subscribedTagDetailBox = new TagDetailBox('subscribed');
@@ -245,7 +245,9 @@ function pickedTags(){
             var input_sel = '#interestingTagInput';
             to_tag_container = $('div .tags.interesting');
         } else if (reason === 'subscribed') {
-            var input_sel = $('div .tags.subscribed');
+            var input_sel = '#subscribedTagInput';
+            to_target = subscribedTags;
+            to_tag_container = $('div .tags.subscribed');
         } else {
             return;
         }
@@ -253,9 +255,9 @@ function pickedTags(){
         var tagnames = getUniqueWords($(input_sel).attr('value'));
 
         if (reason !== 'subscribed') {//for "subscribed" we do not remove
-            $.each(tagnames, function(idx, tagname){
-                if (tagname in from_target){
-                    unpickTag(from_target,tagname,reason,false);
+            $.each(tagnames, function(idx, tagname) {
+                if (tagname in from_target) {
+                    unpickTag(from_target, tagname, reason, false);
                 }
             });
         }

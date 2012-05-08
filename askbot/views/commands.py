@@ -584,14 +584,18 @@ def api_get_questions(request):
 @decorators.post_only
 @decorators.ajax_login_required
 def set_tag_filter_strategy(request):
-    """saves data in the ``User.display_tag_filter_strategy``
+    """saves data in the ``User.[email/display]_tag_filter_strategy``
     for the current user
     """
     filter_type = request.POST['filter_type']
     filter_value = int(request.POST['filter_value'])
-    assert(filter_type == 'display')
-    assert(filter_value in dict(const.TAG_DISPLAY_FILTER_STRATEGY_CHOICES))
-    request.user.display_tag_filter_strategy = filter_value
+    assert(filter_type in 'display', 'email')
+    if filter_type == 'display':
+        assert(filter_value in dict(const.TAG_DISPLAY_FILTER_STRATEGY_CHOICES))
+        request.user.display_tag_filter_strategy = filter_value
+    else:
+        assert(filter_value in dict(const.TAG_EMAIL_FILTER_STRATEGY_CHOICES))
+        request.user.email_tag_filter_strategy = filter_value
     request.user.save()
     return HttpResponse('', mimetype = "application/json")
 
