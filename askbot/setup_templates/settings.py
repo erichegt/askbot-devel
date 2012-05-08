@@ -184,7 +184,7 @@ CACHE_TIMEOUT = 6000
 CACHE_PREFIX = 'askbot' #make this unique
 CACHE_MIDDLEWARE_ANONYMOUS_ONLY = True
 #If you use memcache you may want to uncomment the following line to enable memcached based sessions
-#SESSION_ENGINE = 'django.contrib.sessions.backends.cache_db'
+#SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
@@ -227,3 +227,5 @@ CSRF_COOKIE_NAME = 'askbot_csrf'
 #CSRF_COOKIE_DOMAIN = ''
 
 STATICFILES_DIRS = ( os.path.join(ASKBOT_ROOT, 'skins'),)
+
+RECAPTCHA_USE_SSL = True
