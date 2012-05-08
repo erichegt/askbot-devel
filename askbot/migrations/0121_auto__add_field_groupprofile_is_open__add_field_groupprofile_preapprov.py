@@ -15,15 +15,21 @@ class Migration(SchemaMigration):
 
         # Adding field 'GroupProfile.preapproved_emails'
         db.add_column('askbot_groupprofile', 'preapproved_emails',
-                      self.gf('django.db.models.fields.TextField')(null=True),
+                      self.gf('django.db.models.fields.TextField')(default='', null=True, blank=True),
                       keep_default=False)
 
         # Adding field 'GroupProfile.preapproved_email_domains'
         db.add_column('askbot_groupprofile', 'preapproved_email_domains',
-                      self.gf('django.db.models.fields.TextField')(null=True),
+                      self.gf('django.db.models.fields.TextField')(default='', null=True, blank=True),
                       keep_default=False)
 
+        # Adding unique constraint on 'GroupMembership', fields ['group', 'user']
+        db.create_unique('askbot_groupmembership', ['group_id', 'user_id'])
+
     def backwards(self, orm):
+        # Removing unique constraint on 'GroupMembership', fields ['group', 'user']
+        db.delete_unique('askbot_groupmembership', ['group_id', 'user_id'])
+
         # Deleting field 'GroupProfile.is_open'
         db.delete_column('askbot_groupprofile', 'is_open')
 
@@ -115,7 +121,7 @@ class Migration(SchemaMigration):
             'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'user_favorite_questions'", 'to': "orm['auth.User']"})
         },
         'askbot.groupmembership': {
-            'Meta': {'object_name': 'GroupMembership'},
+            'Meta': {'unique_together': "(('group', 'user'),)", 'object_name': 'GroupMembership'},
             'group': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'user_memberships'", 'to': "orm['askbot.Tag']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'group_memberships'", 'to': "orm['auth.User']"})
@@ -127,8 +133,8 @@ class Migration(SchemaMigration):
             'is_open': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'logo_url': ('django.db.models.fields.URLField', [], {'max_length': '200', 'null': 'True'}),
             'moderate_email': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
-            'preapproved_email_domains': ('django.db.models.fields.TextField', [], {'null': 'True'}),
-            'preapproved_emails': ('django.db.models.fields.TextField', [], {'null': 'True'})
+            'preapproved_email_domains': ('django.db.models.fields.TextField', [], {'default': "''", 'null': 'True', 'blank': 'True'}),
+            'preapproved_emails': ('django.db.models.fields.TextField', [], {'default': "''", 'null': 'True', 'blank': 'True'})
         },
         'askbot.markedtag': {
             'Meta': {'object_name': 'MarkedTag'},
@@ -317,6 +323,7 @@ class Migration(SchemaMigration):
             'show_country': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'silver': ('django.db.models.fields.SmallIntegerField', [], {'default': '0'}),
             'status': ('django.db.models.fields.CharField', [], {'default': "'w'", 'max_length': '2'}),
+            'subscribed_tags': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'}),
             'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'}),
             'website': ('django.db.models.fields.URLField', [], {'max_length': '200', 'blank': 'True'})
