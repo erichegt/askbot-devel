@@ -98,6 +98,7 @@ TEMPLATE_LOADERS = (
 
 MIDDLEWARE_CLASSES = (
     #'django.middleware.gzip.GZipMiddleware',
+    'askbot.middleware.locale.LocaleMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     #'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.common.CommonMiddleware',
