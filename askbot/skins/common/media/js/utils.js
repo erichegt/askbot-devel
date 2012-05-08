@@ -588,26 +588,23 @@ TextPropertyEditor.prototype.clearMessages = function(){
 };
 
 TextPropertyEditor.prototype.getAlert = function(){
-    if (this._alert) {
-        return this._alert;
-    } else {
-        var box = new AlertBox();
-        this._alert = box;
-        this._editor.find('.modal-body').prepend(box.getElement());
-        return box;
-    }
+    var box = new AlertBox();
+    var modal_body = this._editor.find('.modal-body');
+    modal_body.prepend(box.getElement());
+    return box;
 };
 
 TextPropertyEditor.prototype.showAlert = function(text){
+    this.clearMessages();
     var box = this.getAlert();
-    box.setError(false);
     box.setText(text);
+    return box;
 };
 
 TextPropertyEditor.prototype.showError = function(text){
-    var box = this.getAlert();
+    var box = this.showAlert(text);
     box.setError(true);
-    box.setText(text);
+    return box;
 };
 
 TextPropertyEditor.prototype.setText = function(text){
@@ -633,7 +630,7 @@ TextPropertyEditor.prototype.startOpeningEditor = function(){
         success: function(data){
             if (data['success']) {
                 me.makeEditor();
-                me.setText(data['text']);
+                me.setText($.trim(data['text']));
                 me.openEditor();
             } else {
                 showMessage(me.getElement(), data['message']);

@@ -1,6 +1,5 @@
 import re
 from django import forms
-from askbot import models
 from askbot import const
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext_lazy, string_concat
@@ -143,6 +142,17 @@ class CountedWordsField(forms.CharField):
             )
         return value
 
+
+class DomainNameField(forms.CharField):
+    def clean(self, value):
+        #find a better regex, taking into account tlds
+        domain_re = re.compile(r'[a-zA-Z\d]+(\.[a-zA-Z\d]+)+')
+        if domain_re.match(value):
+            return value
+        else:
+            raise forms.ValidationError('%s is not a valid domain name' % value)
+
+
 class TitleField(forms.CharField):
     def __init__(self, *args, **kwargs):
         super(TitleField, self).__init__(*args, **kwargs)
@@ -245,6 +255,7 @@ class TagNamesField(forms.CharField):
 
     def need_mandatory_tags(self):
         """true, if list of mandatory tags is not empty"""
+        from askbot import models
         return askbot_settings.TAGS_ARE_REQUIRED and len(models.tag.get_mandatory_tags()) > 0
 
     def tag_string_matches(self, tag_string, mandatory_tag):
@@ -257,6 +268,7 @@ class TagNamesField(forms.CharField):
     def mandatory_tag_missing(self, tag_strings):
         """true, if mandatory tag is not present in the list
         of ``tag_strings``"""
+        from askbot import models
         mandatory_tags = models.tag.get_mandatory_tags()
         for mandatory_tag in mandatory_tags:
             for tag_string in tag_strings:
@@ -265,6 +277,7 @@ class TagNamesField(forms.CharField):
         return True
 
     def clean(self, value):
+        from askbot import models
         value = super(TagNamesField, self).clean(value)
         data = value.strip()
         if len(data) < 1:
@@ -1086,6 +1099,7 @@ class EditUserEmailFeedsForm(forms.Form):
                         )
 
     def set_initial_values(self, user=None):
+        from askbot import models
         KEY_MAP = dict([(v, k) for k, v in self.FORM_TO_MODEL_MAP.iteritems()])
         if user != None:
             settings = models.EmailFeedSetting.objects.filter(subscriber=user)
@@ -1133,6 +1147,7 @@ class EditUserEmailFeedsForm(forms.Form):
         """
             with save_unbound==True will bypass form validation and save initial values
         """
+        from askbot import models
         changed = False
         for form_field, feed_type in self.FORM_TO_MODEL_MAP.items():
             s, created = models.EmailFeedSetting.objects.get_or_create(

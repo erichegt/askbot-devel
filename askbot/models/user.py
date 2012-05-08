@@ -1,15 +1,19 @@
 import datetime
 import logging
+import re
 from django.db import models
 from django.db.backends.dummy.base import IntegrityError
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.contrib.auth.models import User
+from django.core import exceptions
+from django.forms import EmailField, URLField
 from django.utils.translation import ugettext as _
 from django.utils.html import strip_tags
 from askbot import const
 from askbot.utils import functions
 from askbot.models.tag import Tag
+from askbot.forms import DomainNameField
 
 class ResponseAndMentionActivityManager(models.Manager):
     def get_query_set(self):
@@ -359,9 +363,9 @@ class GroupProfile(models.Model):
     is_open = models.BooleanField(default = False)
     #preapproved email addresses and domain names to auto-join groups
     #trick - the field is padded with space and all tokens are space separated
-    preapproved_emails = models.TextField(null = True)
+    preapproved_emails = models.TextField(null = True, blank = True)
     #only domains - without the '@' or anything before them
-    preapproved_email_domains = models.TextField(null = True)
+    preapproved_email_domains = models.TextField(null = True, blank = True)
 
     class Meta:
         app_label = 'askbot'
@@ -378,8 +382,37 @@ class GroupProfile(models.Model):
             return True
 
         #relying on a specific method of storage
-        if (' %s ' % user.email) in self.preapproved_emails:
+        email_match_re = re.compile(r'\s%s\s' % user.email)
+        if email_match_re.search(self.preapproved_emails):
             return True
 
         email_domain = user.email.split('@')[1]
-        return (' %s ' % email_domain) in self.preapproved_email_domains
+        domain_match_re = re.compile(r'\s%s\s' % email_domain)
+        return domain_match_re.search(self.preapproved_email_domains)
+
+    def clean(self):
+        """called in `save()`
+        """
+        emails = functions.split_list(self.preapproved_emails)
+        email_field = EmailField()
+        try:
+            map(lambda v: email_field.clean(v), emails)
+        except exceptions.ValidationError:
+            raise exceptions.ValidationError(
+                _('Please give a list of valid email addresses.')
+            )
+        self.preapproved_emails = ' ' + '\n'.join(emails) + ' '
+
+        domains = functions.split_list(self.preapproved_email_domains)
+        domain_field = DomainNameField()
+        try:
+            map(lambda v: domain_field.clean(v), domains)
+        except exceptions.ValidationError:
+            raise exceptions.ValidationError(
+                _('Please give a list of valid email domain names.')
+            )
+        self.preapproved_email_domains = ' ' + '\n'.join(domains) + ' '
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        super(GroupProfile, self).save(*args, **kwargs)

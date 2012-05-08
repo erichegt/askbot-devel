@@ -839,14 +839,13 @@ def edit_object_property_text(request):
     if (model_name, property_name) not in accessible_fields:
         raise exceptions.PermissionDenied()
 
-    query_set = models.get_model(model_name).objects.filter(id=object_id)
+    obj = models.get_model(model_name).objects.get(id=object_id)
     if request.method == 'POST':
         text = CharField().clean(request.POST['text'])
-        params = dict()
-        params[str(property_name)] = text #dammit str()
-        query_set.update(**params)
+        setattr(obj, property_name, text)
+        obj.save()
     elif request.method == 'GET':
-        return {'text': getattr(query_set[0], property_name)}
+        return {'text': getattr(obj, property_name)}
     else:
         raise exceptions.PermissionDenied()
 
