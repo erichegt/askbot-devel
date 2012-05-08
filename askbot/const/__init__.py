@@ -249,10 +249,15 @@ POST_STATUS = {
 INCLUDE_ALL = 0
 EXCLUDE_IGNORED = 1
 INCLUDE_INTERESTING = 2
-TAG_FILTER_STRATEGY_CHOICES = (
-    (INCLUDE_ALL, _('off')),
-    (EXCLUDE_IGNORED, _('exclude ignored')),
-    (INCLUDE_INTERESTING, _('only selected')),
+TAG_DISPLAY_FILTER_STRATEGY_CHOICES = (
+    (INCLUDE_ALL, _('show all tags')),
+    (EXCLUDE_IGNORED, _('exclude ignored tags')),
+    (INCLUDE_INTERESTING, _('only interesting tags')),
+)
+TAG_EMAIL_FILTER_STRATEGY_CHOICES = (
+    (INCLUDE_ALL, _('email for all tags')),
+    (EXCLUDE_IGNORED, _('exclude ignored tags')),
+    (INCLUDE_INTERESTING, _('only subscribed tags')),
 )
 
 NOTIFICATION_DELIVERY_SCHEDULE_CHOICES = (

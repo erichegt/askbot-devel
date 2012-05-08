@@ -559,7 +559,8 @@ body.anon {
         margin-right:18px;
     }
 
-    #displayTagFilterControl label { /*Especial width just for the display tag filter box in index page*/
+    #displayTagFilterControl label,
+    #emailTagFilterControl label { /*Especial width just for the tag filter boxes in index page*/
         width:160px;
     }
 
@@ -587,13 +588,13 @@ body.anon {
     }
 
     .inputs{
-        #interestingTagInput, #ignoredTagInput{
+        #interestingTagInput, #ignoredTagInput, #subscribedTagInput{
             width:153px;
             padding-left:5px;
             border:#c9c9b5 1px solid;
             height:25px;
         }
-        #interestingTagAdd, #ignoredTagAdd{
+        #interestingTagAdd, #ignoredTagAdd, #subscribedTagAdd {
             background:url(../images/small-button-blue.png) repeat-x top;
             border:0;
             color:@button-label;
@@ -609,7 +610,7 @@ body.anon {
              
             
        }
-        #interestingTagAdd:hover, #ignoredTagAdd:hover{
+       #interestingTagAdd:hover, #ignoredTagAdd:hover, #subscribedTag:hover {
             background:url(../images/small-button-blue.png) repeat-x bottom;
        }
     }

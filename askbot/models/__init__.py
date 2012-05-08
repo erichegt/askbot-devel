@@ -99,17 +99,18 @@ User.add_to_class('about', models.TextField(blank=True))
 #interesting tags and ignored tags are to store wildcard tag selections only
 User.add_to_class('interesting_tags', models.TextField(blank = True))
 User.add_to_class('ignored_tags', models.TextField(blank = True))
+User.add_to_class('subscribed_tags', models.TextField(blank = True))
 User.add_to_class(
     'email_tag_filter_strategy',
     models.SmallIntegerField(
-        choices=const.TAG_FILTER_STRATEGY_CHOICES,
+        choices=const.TAG_DISPLAY_FILTER_STRATEGY_CHOICES,
         default=const.EXCLUDE_IGNORED
     )
 )
 User.add_to_class(
     'display_tag_filter_strategy',
     models.SmallIntegerField(
-        choices=const.TAG_FILTER_STRATEGY_CHOICES,
+        choices=const.TAG_EMAIL_FILTER_STRATEGY_CHOICES,
         default=const.INCLUDE_ALL
     )
 )
@@ -210,8 +211,12 @@ def user_has_affinity_to_question(self, question = None, affinity_type = None):
     affinity_type can be either "like" or "dislike"
     """
     if affinity_type == 'like':
-        tag_selection_type = 'good'
-        wildcards = self.interesting_tags.split()
+        if askbot_settings.SUBSCRIBED_TAG_SELECTOR_ENABLED:
+            tag_selection_type = 'subscribed'
+            wildcards = self.subscribed_tags.split()
+        else:
+            tag_selection_type = 'good'
+            wildcards = self.interesting_tags.split()
     elif affinity_type == 'dislike':
         tag_selection_type = 'bad'
         wildcards = self.ignored_tags.split()
@@ -1087,7 +1092,10 @@ def user_mark_tags(
     cleaned_wildcards = list()
     assert(action in ('add', 'remove'))
     if action == 'add':
-        assert(reason in ('good', 'bad'))
+        if askbot_settings.SUBSCRIBED_TAG_SELECTOR_ENABLED:
+            assert(reason in ('good', 'bad', 'subscribed'))
+        else:
+            assert(reason in ('good', 'bad'))
     if wildcards:
         cleaned_wildcards = self.update_wildcard_tag_selections(
             action = action,
@@ -1102,6 +1110,17 @@ def user_mark_tags(
                                     user = self,
                                     tag__name__in = tagnames
                                 )
+    #Marks for "good" and "bad" reasons are exclusive,
+    #to make it impossible to "like" and "dislike" something at the same time
+    #but the subscribed set is independent - e.g. you can dislike a topic
+    #and still subscribe for it.
+    if reason == 'subscribed':
+        #don't touch good/bad marks
+        marked_ts = marked_ts.filter(reason = 'subscribed')
+    else:
+        #and in this case don't touch subscribed tags
+        marked_ts = marked_ts.exclude(reason = 'subscribed')
+
     #todo: use the user api methods here instead of the straight ORM
     cleaned_tagnames = list() #those that were actually updated
     if action == 'remove':
@@ -1123,7 +1142,8 @@ def user_mark_tags(
             cleaned_tagnames.extend(marked_names)
             cleaned_tagnames.extend(new_marks)
         else:
-            marked_ts.update(reason=reason)
+            if reason in ('good', 'bad'):#to maintain exclusivity of 'good' and 'bad'
+                marked_ts.update(reason=reason)
             cleaned_tagnames = tagnames
 
     return cleaned_tagnames, cleaned_wildcards
@@ -1945,20 +1965,26 @@ def user_get_tag_filtered_questions(self, questions = None):
                         thread__tags__in = ignored_tags
                     ).exclude(
                         thread__tags__in = ignored_by_wildcards
-                    )
+                    ).distinct()
     elif self.email_tag_filter_strategy == const.INCLUDE_INTERESTING:
+        if askbot_settings.SUBSCRIBED_TAG_SELECTOR_ENABLED:
+            reason = 'subscribed'
+            wk = self.subscribed_tags.strip().split()
+        else:
+            reason = 'good'
+            wk = self.interesting_tags.strip().split()
+
         selected_tags = Tag.objects.filter(
-                                user_selections__reason = 'good',
+                                user_selections__reason = reason,
                                 user_selections__user = self
                             )
 
-        wk = self.interesting_tags.strip().split()
         selected_by_wildcards = Tag.objects.get_by_wildcards(wk)
 
         tag_filter = models.Q(thread__tags__in = list(selected_tags)) \
                     | models.Q(thread__tags__in = list(selected_by_wildcards))
 
-        return questions.filter( tag_filter )
+        return questions.filter( tag_filter ).distinct()
     else:
         return questions
 
@@ -2293,29 +2319,40 @@ def user_update_wildcard_tag_selections(
     """updates the user selection of wildcard tags
     and saves the user object to the database
     """
+    if askbot_settings.SUBSCRIBED_TAG_SELECTOR_ENABLED:
+        assert reason in ('good', 'bad', 'subscribed')
+    else:
+        assert reason in ('good', 'bad')
+
     new_tags = set(wildcards)
     interesting = set(self.interesting_tags.split())
     ignored = set(self.ignored_tags.split())
+    subscribed = set(self.subscribed_tags.split())
 
-    target_set = interesting
-    other_set = ignored
     if reason == 'good':
-        pass
+        target_set = interesting
+        other_set = ignored
     elif reason == 'bad':
         target_set = ignored
         other_set = interesting
+    elif reason == 'subscribed':
+        target_set = subscribed
+        other_set = None
     else:
         assert(action == 'remove')
 
     if action == 'add':
         target_set.update(new_tags)
-        other_set.difference_update(new_tags)
+        if reason in ('good', 'bad'):
+            other_set.difference_update(new_tags)
     else:
         target_set.difference_update(new_tags)
-        other_set.difference_update(new_tags)
+        if reason in ('good', 'bad'):
+            other_set.difference_update(new_tags)
 
     self.interesting_tags = ' '.join(interesting)
     self.ignored_tags = ' '.join(ignored)
+    self.subscribed_tags = ' '.join(subscribed)
     self.save()
     return new_tags
 
@@ -2938,10 +2975,14 @@ def complete_pending_tag_subscriptions(sender, request, *args, **kwargs):
     """save pending tag subscriptions saved in the session"""
     if 'subscribe_for_tags' in request.session:
         (pure_tag_names, wildcards) = request.session.pop('subscribe_for_tags')
+        if askbot_settings.SUBSCRIBED_TAG_SELECTOR_ENABLED:
+            reason = 'subscribed'
+        else:
+            reason = 'good'
         request.user.mark_tags(
                     pure_tag_names,
                     wildcards,
-                    reason = 'good',
+                    reason = reason,
                     action = 'add'
                 )
         request.user.message_set.create(
