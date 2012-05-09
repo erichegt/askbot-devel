@@ -130,7 +130,7 @@ class Setting(models.Model, CachedObjectMixin):
         key = self.cache_key(*args, **kwargs)
         #TODO: fix this with Django's > 1.3 CACHE dict setting support
         length = getattr(settings, 'LIVESETTINGS_CACHE_TIMEOUT', settings.CACHE_TIMEOUT)
-        keyedcache.cache_set(key, value=val, length=length)
+        cache_set(key, value=val, length=length)
 
     class Meta:
         unique_together = ('site', 'group', 'key')
@@ -177,7 +177,7 @@ class LongSetting(models.Model, CachedObjectMixin):
         key = self.cache_key(*args, **kwargs)
         #TODO: fix this with Django's > 1.3 CACHE dict setting support
         length = getattr(settings, 'LIVESETTINGS_CACHE_TIMEOUT', settings.CACHE_TIMEOUT)
-        keyedcache.cache_set(key, value=val, length=length)
+        cache_set(key, value=val, length=length)
 
     class Meta:
         unique_together = ('site', 'group', 'key')
