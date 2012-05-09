@@ -1915,7 +1915,7 @@ var WMD = function(){
     WrappedElement.call(this);
     this._markdown = undefined;
     this._enabled_buttons = 'bold italic link blockquote code ' +
-        'image ol ul heading hr';
+        'image attachment ol ul heading hr';
     this._is_previewer_enabled = true;
 };
 inherits(WMD, WrappedElement);

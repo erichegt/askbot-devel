@@ -2478,7 +2478,7 @@ if(!Attacklab.wmd)
 			mergeEnv(top["wmd_options"]);
 			Attacklab.full = true;
 			
-			var defaultButtons = "bold italic link blockquote code image ol ul heading hr";
+			var defaultButtons = "bold italic link blockquote code image attachment ol ul heading hr";
 			Attacklab.wmd_env.buttons = Attacklab.wmd_env.buttons || defaultButtons;
 		};
 		Attacklab.loadEnv();
