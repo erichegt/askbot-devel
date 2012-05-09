@@ -190,8 +190,31 @@ class ThreadManager(models.Manager):
                 qs = qs.filter(posts__post_type='question', posts__author__in=query_users) # TODO: unify with search_state.author ?
 
         tags = search_state.unified_tags()
-        for tag in tags:
-            qs = qs.filter(tags__name=tag) # Tags or AND-ed here, not OR-ed (i.e. we fetch only threads with all tags)
+        if len(tags) > 0:
+
+            if askbot_settings.TAG_SEARCH_INPUT_ENABLED:
+                #todo: this may be gone or disabled per option
+                #"tag_search_box_enabled"
+                existing_tags = set(
+                    Tag.objects.filter(
+                        name__in = tags
+                    ).values_list(
+                        'name',
+                        flat = True
+                    )
+                )
+
+                non_existing_tags = set(tags) - existing_tags
+                meta_data['non_existing_tags'] = list(non_existing_tags)
+                tags = existing_tags
+            else:
+                meta_data['non_existing_tags'] = list()
+
+            #construct filter for the tag search
+            for tag in tags:
+                qs = qs.filter(tags__name=tag) # Tags or AND-ed here, not OR-ed (i.e. we fetch only threads with all tags)
+        else:
+            meta_data['non_existing_tags'] = list()
 
         if search_state.scope == 'unanswered':
             qs = qs.filter(closed = False) # Do not show closed questions in unanswered section

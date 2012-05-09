@@ -216,7 +216,6 @@ QSutils.add_search_tag = function(query_string, tag){
     return this.patch_query_string(query_string, 'tags:' + tag_string);
 };
 
-
 /* **************************************************** */
 
 /* some google closure-like code for the ui elements */

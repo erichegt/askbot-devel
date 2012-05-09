@@ -76,6 +76,9 @@ def questions(request, **kwargs):
 
     qs, meta_data = models.Thread.objects.run_advanced_search(request_user=request.user, search_state=search_state)
 
+    if meta_data['non_existing_tags']:
+        search_state = search_state.remove_tags(meta_data['non_existing_tags'])
+
     paginator = Paginator(qs, page_size)
     if paginator.num_pages < search_state.page:
         search_state.page = 1
@@ -129,10 +132,7 @@ def questions(request, **kwargs):
     if request.is_ajax():
         q_count = paginator.count
 
-        if search_state.tags:
-            question_counter = ungettext('%(q_num)s question, tagged', '%(q_num)s questions, tagged', q_count)
-        else:
-            question_counter = ungettext('%(q_num)s question', '%(q_num)s questions', q_count)
+        question_counter = ungettext('%(q_num)s question', '%(q_num)s questions', q_count)
         question_counter = question_counter % {'q_num': humanize.intcomma(q_count),}
 
         if q_count > page_size:
@@ -166,6 +166,7 @@ def questions(request, **kwargs):
             'query_string': search_state.query_string(),
             'page_size' : page_size,
             'questions': questions_html.replace('\n',''),
+            'non_existing_tags': meta_data['non_existing_tags']
         }
         ajax_data['related_tags'] = [{
             'name': tag.name,
