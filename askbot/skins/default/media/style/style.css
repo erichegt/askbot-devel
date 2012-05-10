@@ -148,7 +148,7 @@ a:hover {
 }
 h1 {
   font-size: 24px;
-  padding: 10px 0 5px 0px;
+  padding: 0px 0 5px 0px;
 }
 /* ----- Extra space above for messages ----- */
 body.user-messages {
@@ -179,7 +179,7 @@ body.user-messages {
   text-align: center;
   background-color: #f5dd69;
   border-top: #fff 1px solid;
-  font-family: 'Yanone Kaffeesatz', sans-serif;
+  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
 }
 .notify p.notification {
   margin-top: 6px;
@@ -206,7 +206,7 @@ body.user-messages {
 #header {
   margin-top: 0px;
   background: #16160f;
-  font-family: 'Yanone Kaffeesatz', sans-serif;
+  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
 }
 .content-wrapper {
   /* wrapper positioning class */
@@ -295,6 +295,9 @@ body.user-messages {
 #metaNav #navUsers {
   background: -125px -5px url(../images/sprites.png) no-repeat;
 }
+#metaNav #navGroups {
+  background: -125px -5px url(../images/sprites.png) no-repeat;
+}
 #metaNav #navBadges {
   background: -210px -5px url(../images/sprites.png) no-repeat;
 }
@@ -318,7 +321,7 @@ body.user-messages {
   border-bottom: #d3d3c2 1px solid;
   border-top: #fcfcfc 1px solid;
   margin-bottom: 10px;
-  font-family: 'Yanone Kaffeesatz', sans-serif;
+  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
 }
 #secondaryHeader #homeButton {
   border-right: #afaf9e 1px solid;
@@ -481,6 +484,8 @@ body.anon #searchBar .searchInputCancelable {
 }
 .box p {
   margin-bottom: 4px;
+  color: #707070;
+  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
 }
 .box p.info-box-follow-up-links {
   text-align: right;
@@ -497,14 +502,14 @@ body.anon #searchBar .searchInputCancelable {
   color: #656565;
   padding-right: 10px;
   margin-bottom: 10px;
-  font-family: 'Yanone Kaffeesatz', sans-serif;
+  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
 }
 .box h3 {
   color: #4a757f;
   font-size: 18px;
   text-align: left;
   font-weight: normal;
-  font-family: 'Yanone Kaffeesatz', sans-serif;
+  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
   padding-left: 0px;
 }
 .box .contributorback {
@@ -516,12 +521,13 @@ body.anon #searchBar .searchInputCancelable {
   display: block;
   float: right;
   text-align: left;
-  font-family: 'Yanone Kaffeesatz', sans-serif;
+  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
   width: 80px;
   margin-right: 18px;
 }
-.box #displayTagFilterControl label {
-  /*Especial width just for the display tag filter box in index page*/
+.box #displayTagFilterControl label,
+.box #emailTagFilterControl label {
+  /*Especial width just for the tag filter boxes in index page*/
 
   width: 160px;
 }
@@ -547,14 +553,21 @@ body.anon #searchBar .searchInputCancelable {
   font-size: 15px;
 }
 .box .inputs #interestingTagInput,
-.box .inputs #ignoredTagInput {
+.box .inputs #ignoredTagInput,
+.box .inputs #subscribedTagInput,
+.box .inputs #ab-tag-search {
   width: 153px;
   padding-left: 5px;
   border: #c9c9b5 1px solid;
   height: 25px;
 }
+.box .inputs #ab-tag-search {
+  width: 135px;
+}
 .box .inputs #interestingTagAdd,
-.box .inputs #ignoredTagAdd {
+.box .inputs #ignoredTagAdd,
+.box .inputs #subscribedTagAdd,
+.box .inputs #ab-tag-search-add {
   background: url(../images/small-button-blue.png) repeat-x top;
   border: 0;
   color: #4a757f;
@@ -576,8 +589,13 @@ body.anon #searchBar .searchInputCancelable {
   -moz-box-shadow: 1px 1px 2px #808080;
   box-shadow: 1px 1px 2px #808080;
 }
+.box .inputs #ab-tag-search-add {
+  width: 47px;
+  margin-left: 3px;
+}
 .box .inputs #interestingTagAdd:hover,
-.box .inputs #ignoredTagAdd:hover {
+.box .inputs #ignoredTagAdd:hover,
+.box .inputs #subscribedTag:hover {
   background: url(../images/small-button-blue.png) repeat-x bottom;
 }
 .box img.gravatar {
@@ -590,7 +608,7 @@ body.anon #searchBar .searchInputCancelable {
   line-height: 34px;
   text-align: center;
   border: 0;
-  font-family: 'Yanone Kaffeesatz', sans-serif;
+  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
   color: #4a757f;
   font-weight: normal;
   font-size: 21px;
@@ -637,6 +655,10 @@ body.anon #searchBar .searchInputCancelable {
 }
 .box .notify-sidebar #question-subscribe-sidebar {
   margin: 7px 0 0 3px;
+}
+.users-page .box label {
+  display: inline;
+  float: none;
 }
 .statsWidget p {
   color: #707070;
@@ -730,8 +752,7 @@ body.anon #searchBar .searchInputCancelable {
 .tabsC .label {
   float: left;
   color: #646464;
-  margin-top: 4px;
-  margin-right: 5px;
+  margin: 4px 5px 0px 8px;
 }
 .main-page .tabsA .label {
   margin-left: 8px;
@@ -776,14 +797,14 @@ body.anon #searchBar .searchInputCancelable {
   float: left;
   margin-bottom: 8px;
   padding-top: 6px;
-  font-family: 'Yanone Kaffeesatz', sans-serif;
+  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
 }
 #listSearchTags {
   float: left;
   margin-top: 3px;
   color: #707070;
   font-size: 16px;
-  font-family: 'Yanone Kaffeesatz', sans-serif;
+  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
 }
 ul#searchTags {
   margin-left: 10px;
@@ -797,7 +818,7 @@ ul#searchTags {
   margin: 5px 0 10px 0;
   padding: 0px;
   float: left;
-  font-family: 'Yanone Kaffeesatz', sans-serif;
+  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
 }
 .search-tips a {
   text-decoration: underline;
@@ -810,6 +831,9 @@ ul#searchTags {
   background-color: #FFF;
   padding: 0;
   width: 100%;
+}
+.main-page #question-list {
+  margin-top: 10px;
 }
 .short-summary {
   position: relative;
@@ -829,7 +853,7 @@ ul#searchTags {
   padding-left: 0;
   margin-bottom: 6px;
   display: block;
-  font-family: 'Yanone Kaffeesatz', sans-serif;
+  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
 }
 .short-summary a {
   color: #464646;
@@ -840,7 +864,7 @@ ul#searchTags {
   font-family: Arial;
   padding-right: 4px;
 }
-.short-summary .userinfo .relativetime,
+.short-summary .userinfo .timeago,
 .short-summary span.anonymous {
   font-size: 11px;
   clear: both;
@@ -854,12 +878,12 @@ ul#searchTags {
 .short-summary .counts {
   float: right;
   margin: 4px 0 0 5px;
-  font-family: 'Yanone Kaffeesatz', sans-serif;
+  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
 }
 .short-summary .counts .item-count {
   padding: 0px 5px 0px 5px;
   font-size: 25px;
-  font-family: 'Yanone Kaffeesatz', sans-serif;
+  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
 }
 .short-summary .counts .votes div,
 .short-summary .counts .views div,
@@ -1173,7 +1197,7 @@ ul#related-tags li {
 /* ----- Ask and Edit Question Form template----- */
 .section-title {
   color: #7ea9b3;
-  font-family: 'Yanone Kaffeesatz', sans-serif;
+  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
   font-weight: bold;
   font-size: 24px;
 }
@@ -1199,7 +1223,7 @@ ul#related-tags li {
   margin: 0px;
   padding: 0px 0 0 5px;
   border: #cce6ec 3px solid;
-  width: 725px;
+  width: 719px;
 }
 .ask-page div#question-list,
 .edit-question-page div#question-list {
@@ -1264,7 +1288,7 @@ ul#related-tags li {
   background: url(../images/medium-button.png) top repeat-x;
   height: 34px;
   border: 0;
-  font-family: 'Yanone Kaffeesatz', sans-serif;
+  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
   color: #4a757f;
   font-weight: normal;
   font-size: 21px;
@@ -1288,27 +1312,44 @@ ul#related-tags li {
   -moz-text-shadow: 0px 1px 0px #c6d9dd;
   -webkit-text-shadow: 0px 1px 0px #c6d9dd;
 }
+.wmd-container {
+  border: #cce6ec 3px solid;
+}
+.users-page .wmd-container {
+  width: 200px;
+}
+.ask-page .wmd-container,
+.question-page .wmd-container,
+.edit-question-page .wmd-container,
+.edit-answer-page .wmd-container {
+  width: 723px;
+}
+.ask-page #editor,
+.question-page #editor,
+.edit-question-page #editor,
+.edit-answer-page #editor {
+  width: 710px;
+  padding: 6px;
+}
 #editor {
-  /*adjustment for editor preview*/
+  /* adjustment for editor preview */
 
+  display: block;
   font-size: 100%;
   min-height: 200px;
   line-height: 18px;
   margin: 0;
-  border-left: #cce6ec 3px solid;
-  border-bottom: #cce6ec 3px solid;
-  border-right: #cce6ec 3px solid;
-  border-top: 0;
-  padding: 10px;
-  margin-bottom: 10px;
-  width: 717px;
+  border: 0;
+}
+.users-page #editor {
+  width: 192px;
 }
 #id_title {
   width: 100%;
 }
 .wmd-preview {
-  margin: 3px 0 5px 0;
-  padding: 6px;
+  margin: 0;
+  padding: 5px;
   background-color: #F5F5F5;
   min-height: 20px;
   overflow: auto;
@@ -1320,6 +1361,9 @@ ul#related-tags li {
   line-height: 1.4;
   font-size: 14px;
 }
+.wmd-preview p:last-child {
+  margin-bottom: 0;
+}
 .wmd-preview pre {
   background-color: #E7F1F8;
 }
@@ -1328,6 +1372,9 @@ ul#related-tags li {
 }
 .wmd-preview IMG {
   max-width: 600px;
+}
+.user-page .wmd-buttons {
+  width: 725px;
 }
 .preview-toggle {
   width: 100%;
@@ -1383,7 +1430,7 @@ ul#related-tags li {
   margin: 0px;
   padding: 0px 0 0 5px;
   border: #cce6ec 3px solid;
-  width: 725px;
+  width: 719px;
   margin-bottom: 10px;
 }
 .edit-question-page #id_summary,
@@ -1403,7 +1450,7 @@ ul#related-tags li {
 /* ----- Question template ----- */
 .question-page h1 {
   padding-top: 0px;
-  font-family: 'Yanone Kaffeesatz', sans-serif;
+  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
 }
 .question-page h1 a {
   color: #464646;
@@ -1421,7 +1468,7 @@ ul#related-tags li {
   margin-left: 0px !important;
 }
 .question-page p.rss a {
-  font-family: 'Yanone Kaffeesatz', sans-serif;
+  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
   vertical-align: top;
 }
 .question-page .question-content {
@@ -1586,7 +1633,7 @@ ul#related-tags li {
 }
 .question-page #questionCount {
   float: left;
-  font-family: 'Yanone Kaffeesatz', sans-serif;
+  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
   line-height: 15px;
 }
 .question-page .question-img-upvote,
@@ -1632,13 +1679,11 @@ ul#related-tags li {
   color: #7ea9b3;
   width: 200px;
   float: left;
-  font-family: 'Yanone Kaffeesatz', sans-serif;
+  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
 }
 .question-page .comments {
   font-size: 12px;
   clear: both;
-  /* A small hack to solve 1px problem on webkit browsers */
-
 }
 .question-page .comments div.controls {
   clear: both;
@@ -1687,11 +1732,6 @@ ul#related-tags li {
   padding-left: 2px;
   padding-top: 3px;
   border: #cce6ec 3px solid;
-}
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  .question-page .comments textarea {
-    padding-left: 3px !important;
-  }
 }
 .question-page .comments input {
   margin-left: 10px;
@@ -1870,7 +1910,7 @@ ul#related-tags li {
   cursor: pointer;
 }
 .question-page .vote-number {
-  font-family: 'Yanone Kaffeesatz', sans-serif;
+  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
   padding: 0px 0 5px 0;
   font-size: 25px;
   font-weight: bold;
@@ -1948,7 +1988,7 @@ ul#related-tags li {
   margin-top: 10px;
 }
 .question-page #fmanswer h2 {
-  font-family: 'Yanone Kaffeesatz', sans-serif;
+  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
   color: #7ea9b3;
   font-size: 24px;
 }
@@ -1993,7 +2033,6 @@ ul#related-tags li {
 /* -----Content pages, Login, About, FAQ, Users----- */
 .openid-signin,
 .meta,
-.users-page,
 .user-profile-edit-page {
   font-size: 13px;
   line-height: 1.3;
@@ -2001,7 +2040,6 @@ ul#related-tags li {
 }
 .openid-signin p,
 .meta p,
-.users-page p,
 .user-profile-edit-page p {
   font-size: 13px;
   color: #707070;
@@ -2012,7 +2050,6 @@ ul#related-tags li {
 }
 .openid-signin h2,
 .meta h2,
-.users-page h2,
 .user-profile-edit-page h2 {
   color: #525252;
   padding-left: 0px;
@@ -2115,6 +2152,9 @@ ul#related-tags li {
 .user-profile-page .cancel:hover {
   background: url(../images/small-button-cancel.png) repeat-x bottom !important;
 }
+.openid-signin form {
+  margin-bottom: 5px;
+}
 #email-input-fs,
 #local_login_buttons,
 #password-fs,
@@ -2199,20 +2239,15 @@ ul#related-tags li {
   font-size: 120%;
 }
 /* People page */
-.tabBar-user {
-  width: 375px;
-}
+/*.users-page .tabBar{
+    width:375px;
+}*/
 .user {
-  padding: 5px;
+  padding: 5px 10px 5px 0;
   line-height: 140%;
   width: 166px;
-  border: #eee 1px solid;
+  height: 32px;
   margin-bottom: 5px;
-  border-radius: 3px;
-  -ms-border-radius: 3px;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
-  -khtml-border-radius: 3px;
 }
 .user .user-micro-info {
   color: #525252;
@@ -2280,7 +2315,7 @@ a:hover.medal {
 }
 .user-profile-page h2 {
   padding: 10px 0px 10px 0px;
-  font-family: 'Yanone Kaffeesatz', sans-serif;
+  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
 }
 .user-details {
   font-size: 13px;
@@ -2310,7 +2345,7 @@ a:hover.medal {
   margin-top: -2px;
   font-size: 15px;
   cursor: pointer;
-  font-family: 'Yanone Kaffeesatz', sans-serif;
+  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
   background: url(../images/small-button-blue.png) repeat-x top;
   border-radius: 4px;
   -ms-border-radius: 4px;
@@ -2346,13 +2381,13 @@ a:hover.medal {
   display: none;
 }
 .count {
-  font-family: 'Yanone Kaffeesatz', sans-serif;
+  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
   font-size: 200%;
   font-weight: 700;
   color: #777777;
 }
 .scoreNumber {
-  font-family: 'Yanone Kaffeesatz', sans-serif;
+  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
   font-size: 35px;
   font-weight: 800;
   color: #777;
@@ -2463,7 +2498,7 @@ a:hover.medal {
   color: #525252;
 }
 .revision h3 {
-  font-family: 'Yanone Kaffeesatz', sans-serif;
+  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
   font-size: 21px;
   padding-left: 0px;
 }
@@ -2570,7 +2605,7 @@ ins {
   padding: 6px 0 0 0;
   background: #16160f;
   font-size: 16px;
-  font-family: 'Yanone Kaffeesatz', sans-serif;
+  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
 }
 #ground p {
   margin-bottom: 0;
@@ -2714,7 +2749,7 @@ span.form-error {
   padding: 0px;
   margin: 0px;
 }
-.relativetime {
+.timeago {
   font-weight: bold;
   text-decoration: none;
 }
@@ -2935,6 +2970,9 @@ button::-moz-focus-inner {
   -khtml-border-radius: 5px;
   -webkit-border-radius: 5px;
 }
+.list-table {
+  border-spacing: 0;
+}
 .list-table td {
   vertical-align: top;
 }
@@ -3144,7 +3182,6 @@ img.flag {
 .main-page img.flag {
   vertical-align: text-bottom;
 }
-
 /* Pretty printing styles. Used with prettify.js. */
 a.edit {
   padding-left: 3px;
@@ -3246,4 +3283,111 @@ body.anon.lang-es #searchBar .searchInput {
 }
 body.anon.lang-es #searchBar .searchInputCancelable {
   width: 390px;
+}
+/* user groups */
+#user-groups ul {
+  margin-bottom: 0px;
+}
+#user-groups .delete-icon {
+  float: none;
+  display: inline;
+  color: #525252;
+  padding: 0 3px 0 3px;
+  background: #ccc;
+  border-radius: 4px;
+  line-height: inherit;
+  -moz-border-radius: 4px;
+  -khtml-border-radius: 4px;
+  -webkit-border-radius: 4px;
+}
+#user-groups .delete-icon:hover {
+  color: white;
+  background: #b32f2f;
+}
+.users-page .wmd-prompt-dialog {
+  background: #ccc;
+}
+.group-wiki .content > p:last-child {
+  margin-bottom: 5px;
+}
+.group-wiki .group-logo {
+  float: left;
+  margin: 0 5px 3px 0;
+}
+.group-wiki .follow-toggle.group-join-btn {
+  width: 150px;
+  margin: 4px auto 10px auto;
+  display: block;
+}
+.group-wiki .controls {
+  margin: 0 0 10px 0;
+}
+img.group-logo {
+  height: 60px;
+  /* important to align with the line spacing */
+
+}
+#groups-list {
+  margin-left: 0px;
+}
+#groups-list li {
+  display: inline;
+  list-style-type: none;
+  list-style-position: inside;
+  float: left;
+  text-align: center;
+}
+#groups-list .group-logo,
+#groups-list .group-name {
+  display: block;
+}
+#reject-edit-modal input,
+#reject-edit-modal textarea {
+  width: 514px;
+}
+input.tipped-input,
+textarea.tipped-input {
+  padding-left: 5px;
+}
+.tipped-input.blank {
+  color: #707070;
+}
+.select-box {
+  margin: 0;
+}
+.select-box li {
+  list-style-type: none;
+  list-style-position: inside;
+  padding-left: 7px;
+  font-size: 14px;
+  line-height: 25px;
+}
+.select-box li.selected,
+.select-box li.selected:hover {
+  background-color: #fcf8e3;
+  color: #c09853;
+}
+.select-box li:hover {
+  background-color: #cecece;
+  color: white;
+}
+/* fixes for bootstrap */
+.caret {
+  margin-bottom: 7px;
+}
+.btn-group {
+  text-align: left;
+}
+.btn-toolbar {
+  margin: 0;
+}
+.modal-footer {
+  text-align: left;
+}
+.modal p {
+  font-size: 14px;
+}
+.modal-body > textarea {
+  width: 515px;
+  margin-bottom: 0px;
 }
