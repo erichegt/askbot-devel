@@ -54,6 +54,7 @@ LANGUAGE_CHOICES = (
             ('zh_TW', _("Chinese (Taiwan)")),
         )
 
+"""
 settings.register(
     values.StringValue(
         GENERAL_SKIN_SETTINGS,
@@ -63,6 +64,7 @@ settings.register(
         description = _('Select Language'),
     )
 )
+"""
 
 settings.register(
     values.BooleanValue(
