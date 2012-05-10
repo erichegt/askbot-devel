@@ -1743,8 +1743,8 @@ class PostRevision(models.Model):
                 return False
 
             #if sent by email to group and group does not want moderation
-            if self.by_email and self.email:
-                group_name = self.email.split('@')[0]
+            if self.by_email and self.email_address:
+                group_name = self.email_address.split('@')[0]
                 try:
                     group = Tag.objects.get(name = group_name, deleted = False)
                     return group.group.profile.moderate_email
