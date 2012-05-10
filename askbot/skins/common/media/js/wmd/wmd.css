@@ -10,12 +10,9 @@
 #wmd-button-bar 
 {
 	background: url(images/editor-toolbar-background.png) repeat-x bottom;
-    height:36px;
-    border-left:#cce6ec 3px solid;
-    border-top:#cce6ec 3px solid;
-    border-right:#cce6ec 3px solid;
-    float:left;
-    width:730px;
+    height: 30px;
+    border: 0;
+    display: block;
 }
 
 #wmd-input 
@@ -39,10 +36,7 @@
 #wmd-button-row 
 {
 	position: relative; 
-	margin-left: 5px;
-	margin-right: 5px;
-	margin-bottom: 0px;
-	margin-top: 10px;
+    margin: 10px 2px 0 2px;
 	padding: 0px;  
 	height: 20px;
 }
@@ -51,9 +45,9 @@
 {
 	width: 1px; 
 	height: 20px; 
-	margin-left: 14px;
-	
-	position: absolute;
+	margin-left: 2px;
+    margin-right: 4px;
+	/*position: absolute;*/
 	background-color: Silver;
 	display: inline-block; 
 	list-style: none;
@@ -66,7 +60,7 @@
 	margin-left: 5px;
 	margin-right: 5px;
 	
-	position: absolute;
+	/*position: absolute;*/
 	background-image: url(images/wmd-buttons.png);
 	background-repeat: no-repeat;
 	background-position: 0px 0px;

@@ -62,9 +62,13 @@ def upload(request):#ajax upload file to a question or answer
 
         request.user.assert_can_upload_file()
 
+        #todo: build proper form validation
+        file_name_prefix = request.POST.get('file_name_prefix', '')
+        if file_name_prefix not in ('', 'group_logo_'):
+            raise exceptions.PermissionDenied('invalid upload file name prefix')
+        
         # check file type
         f = request.FILES['file-upload']
-        
         #todo: extension checking should be replaced with mimetype checking
         #and this must be part of the form validation
         file_extension = os.path.splitext(f.name)[1].lower()
@@ -75,7 +79,9 @@ def upload(request):#ajax upload file to a question or answer
             raise exceptions.PermissionDenied(msg)
 
         # generate new file name and storage object
-        file_storage, new_file_name, file_url = store_file(f)
+        file_storage, new_file_name, file_url = store_file(
+                                            f, file_name_prefix
+                                        )
         # check file size
         # byte
         size = file_storage.size(new_file_name)
@@ -451,6 +457,7 @@ def edit_answer(request, id):
             revision_form = forms.RevisionForm(answer, latest_revision)
             form = forms.EditAnswerForm(answer, latest_revision)
         data = {
+            'page_class': 'edit-answer-page',
             'active_tab': 'questions',
             'answer': answer,
             'revision_form': revision_form,
@@ -533,9 +540,10 @@ def __generate_comments_json(obj, user):#non-view generates json data for the po
 
 
         comment_owner = comment.author
+        tz = template_filters.TIMEZONE_STR
         comment_data = {'id' : comment.id,
             'object_id': obj.id,
-            'comment_age': diff_date(comment.added_at),
+            'comment_added_at': str(comment.added_at.replace(microsecond = 0)) + tz,
             'html': comment.html,
             'user_display_name': comment_owner.username,
             'user_url': comment_owner.get_profile_url(),
@@ -599,7 +607,7 @@ def edit_comment(request):
     return {
         'id' : comment_post.id,
         'object_id': comment_post.parent.id,
-        'comment_age': diff_date(comment_post.added_at),
+        'comment_added_at': str(comment_post.added_at.replace(microsecond = 0)),
         'html': comment_post.html,
         'user_display_name': comment_post.author.username,
         'user_url': comment_post.author.get_profile_url(),

@@ -35,14 +35,45 @@
         <input id="ignoredTagInput" autocomplete="off" type="text"/>&nbsp;
         <input id="ignoredTagAdd" type="submit" value="{% trans %}add{% endtrans%}"/>
     </div>
+    {% if settings.SUBSCRIBED_TAG_SELECTOR_ENABLED %}
+        <h2>{% trans %}Subscribed tags{% endtrans %}</h2>
+        {{
+            macros.tag_list_widget(
+                subscribed_tag_names,
+                deletable = True,
+                css_class = 'subscribed marked-tags',
+                search_state = search_state
+            )
+        }}
+        {# todo: add this via javascript 
+            "remove '%(tag_name)s' from the list of ignored tags"|
+            format(tag_name = tag_name)
+        #}
+        <div class="inputs">
+            <input id="subscribedTagInput" autocomplete="off" type="text"/>&nbsp;
+            <input id="subscribedTagAdd" type="submit" value="{% trans %}add{% endtrans%}"/>
+        </div>
+    {% endif %}
     <h3>{% trans %}Display tag filter{% endtrans%}</h3>
     <div id="displayTagFilterControl">
         {{
             macros.radio_select(
                 name = "display_tag_filter_strategy",
                 value = request.user.display_tag_filter_strategy,
-                choices = tag_filter_strategy_choices
+                choices = display_tag_filter_strategy_choices
             )
         }}
     </div>
+    {% if settings.SUBSCRIBED_TAG_SELECTOR_ENABLED %}
+        <h3>{% trans %}Email tag filter{% endtrans%}</h3>
+        <div id="emailTagFilterControl">
+            {{
+                macros.radio_select(
+                    name = "email_tag_filter_strategy",
+                    value = request.user.email_tag_filter_strategy,
+                    choices = email_tag_filter_strategy_choices
+                )
+            }}
+        </div>
+    {% endif %}
 </div>

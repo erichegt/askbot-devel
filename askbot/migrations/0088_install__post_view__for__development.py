@@ -8,6 +8,8 @@ import askbot
 
 
 class Migration(SchemaMigration):
+    """This migration was for development only and now it
+    is effectively a no-op"""
 
     def forwards(self, orm):
 #        create_post_view_sql = open(

@@ -1,7 +1,15 @@
 Changes in Askbot
 =================
 
-0.7.41, 0.7.24 (April 21, 2012)
+Future version
+--------------
+* User groups (Evgeny)
+* Public/Private/Hidden reputation (Evgeny)
+* Enabling/disabling the badges system (Evgeny)
+* Created a basic post moderation feature (Evgeny)
+* Created a way to specify reasons for rejecting posts in a modal dialog (Evgeny)
+
+0.7.41, 0.7.42 (April 21, 2012)
 -------------------------------
 * Bug fixes
 

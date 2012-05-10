@@ -1,9 +1,8 @@
-div#login-icons {padding:20px 0 0 0;}
+div#login-icons {padding: 0;}
 ul.login-icons {width: 450px; margin:0;padding:0;text-align:left; list-style-type:none; display:block;}
 ul.login-icons li {display:inline;} 
 ul.large input {height: 40px; width: 90px;border:1px solid #ccc;margin:0 5px 5px 0;}
-.openid-signin h1 {margin-top: -15px; padding-bottom: 10px;}
-.openid-signin h2 {margin-top:15px;}
+.openid-signin h1 {padding-bottom: 10px;}
 .openid-signin h2#account-recovery-heading {margin-bottom:2px;}
 #account-recovery-form p.hint a {color:#1b79bd; text-decoration: none;}
 #account-recovery-form p.hint a:hover {text-decoration: underline;}

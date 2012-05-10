@@ -22,6 +22,9 @@
     <script type="text/javascript">
         var viewUserID = {{view_user.id}};
         askbot['data']['viewUserName'] = '{{ view_user.username }}';
+        askbot['data']['viewUserId'] = {{view_user.id}};
+        askbot['urls']['edit_group_membership'] = '{% url edit_group_membership %}';
+        askbot['urls']['get_groups_list'] = '{% url get_groups_list %}';
     </script>
     {% if request.user|can_moderate_user(view_user) %}
         <script type='text/javascript' src='{{"/js/jquery.form.js"|media}}'></script>

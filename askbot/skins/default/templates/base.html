@@ -6,6 +6,7 @@
         <title>{% block title %}{% endblock %} - {{ settings.APP_TITLE|escape }}</title>
         {% include "meta/html_head_meta.html" %}
         <link rel="shortcut icon" href="{{ settings.SITE_FAVICON|media }}" />
+        {% block before_css %}{% endblock %}
         {% include "meta/html_head_stylesheets.html" %}
         {% block forestyle %}{% endblock %}
         {% include "meta/html_head_javascript.html" %}

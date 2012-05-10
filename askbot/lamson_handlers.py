@@ -3,9 +3,10 @@ from lamson.routing import route, stateless
 from lamson.server import Relay
 from django.utils.translation import ugettext as _
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.conf import settings
-from askbot.models import ReplyAddress
+from django.conf import settings as django_settings
+from askbot.models import ReplyAddress, Tag
 from askbot.utils import mail
+from askbot.conf import settings as askbot_settings
 
 
 #we might end up needing to use something like this
@@ -55,7 +56,12 @@ def is_attachment(part):
     attachment"""
     return get_disposition(part) == 'attachment'
 
-def process_attachment(part):
+def is_inline_attachment(part):
+    """True if part content disposition is
+    inline"""
+    return get_disposition(part) == 'inline'
+
+def format_attachment(part):
     """takes message part and turns it into SimpleUploadedFile object"""
     att_info = get_attachment_info(part) 
     name = att_info.get('filename', None)
@@ -73,33 +79,67 @@ def is_body(part):
             return True
     return False
 
-def get_body(message):
-    """returns plain text body of the message"""
-    body = message.body()
-    if body:
-        return body
-    for part in message.walk():
-        if is_body(part):
-            return part.body
+def get_part_type(part):
+    if is_body(part):
+        return 'body'
+    elif is_attachment(part):
+        return 'attachment'
+    elif is_inline_attachment(part):
+        return 'inline'
 
-def get_attachments(message):
-    """returns a list of file attachments
-    represented by StringIO objects"""
-    attachments = list()
-    for part in message.walk():
-        if is_attachment(part):
-            attachments.append(process_attachment(part))
-    return attachments
+def get_parts(message):
+    """returns list of tuples (<part_type>, <formatted_part>),
+    where <part-type> is one of 'body', 'attachment', 'inline'
+    and <formatted-part> - will be in the directly usable form:
+    * if it is 'body' - then it will be unicode text
+    * for attachment - it will be django's SimpleUploadedFile instance
 
-@route('ask@(host)')
+    There may be multiple 'body' parts as well as others
+    usually the body is split when there are inline attachments present.
+    """
+
+    parts = list()
+
+    if message.body():
+        parts.append(('body', message.body()))
+
+    for part in message.walk():
+        part_type = get_part_type(part)
+        if part_type == 'body':
+            part_content = part.body
+        elif part_type in ('attachment', 'inline'):
+            part_content = format_attachment(part)
+        else:
+            continue
+        parts.append((part_type, part_content))
+    return parts
+
+@route('(addr)@(host)', addr = '.+')
 @stateless
-def ASK(message, host = None):
-    body = get_body(message)
-    attachments = get_attachments(message)
+def ASK(message, host = None, addr = None):
+    if addr.startswith('reply-'):
+        return
+    parts = get_parts(message)
     from_address = message.From
     subject = message['Subject']#why lamson does not give it normally?
-    mail.process_emailed_question(from_address, subject, body, attachments)
-
+    if addr == 'ask':
+        mail.process_emailed_question(from_address, subject, parts)
+    else:
+        if askbot_settings.GROUP_EMAIL_ADDRESSES_ENABLED == False:
+            return
+        try:
+            group_tag = Tag.group_tags.get(
+                deleted = False,
+                name_iexact = addr
+            )
+            mail.process_emailed_question(
+                from_address, subject, parts, tags = [group_tag.name, ]
+            )
+        except Tag.DoesNotExist:
+            #do nothing because this handler will match all emails
+            return
+        except Tag.MultipleObjectsReturned:
+            return
 
 @route('reply-(address)@(host)', address='.+')
 @stateless
@@ -108,7 +148,7 @@ def PROCESS(message, address = None, host = None):
     and make a post to askbot based on the contents of
     the email, including the text body and the file attachments"""
     try:
-        for rule in settings.LAMSON_FORWARD:
+        for rule in django_settings.LAMSON_FORWARD:
             if re.match(rule['pattern'], message.base['to']):
                 relay = Relay(host=rule['host'], 
                            port=rule['port'], debug=1)
@@ -123,26 +163,11 @@ def PROCESS(message, address = None, host = None):
                                         address = address,
                                         allowed_from_email = message.From
                                     )
-        separator = _("======= Reply above this line. ====-=-=")
-        parts = get_body(message).split(separator)
-        attachments = get_attachments(message)
-        if len(parts) != 2 :
-            error = _("Your message was malformed. Please make sure to qoute \
-                the original notification you received at the end of your reply.")
+        parts = get_parts(message)
+        if reply_address.was_used:
+            reply_address.edit_post(parts)
         else:
-            reply_part = parts[0]
-            reply_part = '\n'.join(reply_part.splitlines(True)[:-3])
-            #the function below actually posts to the forum
-            if reply_address.was_used:
-                reply_address.edit_post(
-                    reply_part.strip(),
-                    attachments = attachments
-                )
-            else:
-                reply_address.create_reply(
-                    reply_part.strip(),
-                    attachments = attachments
-                )
+            reply_address.create_reply(parts)
     except ReplyAddress.DoesNotExist:
         error = _("You were replying to an email address\
          unknown to the system or you were replying from a different address from the one where you\

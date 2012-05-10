@@ -1,5 +1,6 @@
 {% extends "two_column_body.html" %}
 {% import "authopenid/authopenid_macros.html" as login_macros %}
+{% from "macros.html" import timeago %}
 <!-- signin.html -->
 {% block title %}{% spaceless %}{% trans %}User login{% endtrans %}{% endspaceless %}{% endblock %}
 {% block forestyle %}
@@ -169,7 +170,7 @@
                 </td>
                 <td>
                     {% if login_method.last_used_timestamp %}
-                        {{login_method.last_used_timestamp|diff_date}}
+                        {{ timeago(login_method.last_used_timestamp) }}
                     {% endif %}
                 </td>
                 <td>

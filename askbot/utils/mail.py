@@ -7,6 +7,7 @@ import logging
 from django.core import mail
 from django.conf import settings as django_settings
 from django.core.exceptions import PermissionDenied
+from django.forms import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import string_concat
 from askbot import exceptions
@@ -197,78 +198,112 @@ def bounce_email(email, subject, reason = None, body_text = None):
         body_text = error_message
     )
 
-def process_attachments(attachments):
-    """saves file attachments and adds
-    
-    cheap way of dealing with the attachments
-    just insert them inline, however it might
-    be useful to keep track of the uploaded files separately
-    and deal with them as with resources of their own value"""
-    if attachments:
-        content = ''
-        for att in attachments:
-            file_storage, file_name, file_url = store_file(att)
-            chunk = '[%s](%s) ' % (att.name, file_url)
-            file_extension = os.path.splitext(att.name)[1]
-            #todo: this is a hack - use content type
-            if file_extension.lower() in ('.png', '.jpg', '.gif'):
-                chunk = '\n\n!' + chunk
-            content += '\n\n' + chunk
-        return content
+def extract_reply(text):
+    """take the part above the separator
+    and discard the last line above the separator"""
+    if const.REPLY_SEPARATOR_REGEX.search(text):
+        text = const.REPLY_SEPARATOR_REGEX.split(text)[0]
+        return '\n'.join(text.splitlines(True)[:-3])
     else:
-        return ''
+        return text
+
+def process_attachment(attachment):
+    """will save a single
+    attachment and return
+    link to file in the markdown format and the
+    file storage object
+    """
+    file_storage, file_name, file_url = store_file(attachment)
+    markdown_link = '[%s](%s) ' % (attachment.name, file_url)
+    file_extension = os.path.splitext(attachment.name)[1]
+    #todo: this is a hack - use content type
+    if file_extension.lower() in ('.png', '.jpg', '.jpeg', '.gif'):
+        markdown_link = '!' + markdown_link
+    return markdown_link, file_storage
+
+def process_parts(parts):
+    """Process parts will upload the attachments and parse out the
+    body, if body is multipart. Secondly - links to attachments
+    will be added to the body of the question.
+    Returns ready to post body of the message and the list 
+    of uploaded files.
+    """
+    body_markdown = ''
+    stored_files = list()
+    attachments_markdown = ''
+    for (part_type, content) in parts:
+        if part_type == 'attachment':
+            markdown, stored_file = process_attachment(content)
+            stored_files.append(stored_file)
+            attachments_markdown += '\n\n' + markdown
+        elif part_type == 'body':
+            body_markdown += '\n\n' + content
+        elif part_type == 'inline':
+            markdown, stored_file = process_attachment(content)
+            stored_files.append(stored_file)
+            body_markdown += markdown
+
+    #if the response separator is present - 
+    #split the body with it, and discard the "so and so wrote:" part
+    body_markdown = extract_reply(body_markdown)
+
+    body_markdown += attachments_markdown
+    return body_markdown.strip(), stored_files
 
 
-
-def process_emailed_question(from_address, subject, body, attachments = None):
+def process_emailed_question(from_address, subject, parts, tags = None):
     """posts question received by email or bounces the message"""
     #a bunch of imports here, to avoid potential circular import issues
     from askbot.forms import AskByEmailForm
     from askbot.models import User
-    data = {
-        'sender': from_address,
-        'subject': subject,
-        'body_text': body
-    }
-    form = AskByEmailForm(data)
-    if form.is_valid():
-        email_address = form.cleaned_data['email']
-        try:
+
+    try:
+        #todo: delete uploaded files when posting by email fails!!!
+        body, stored_files = process_parts(parts)
+        data = {
+            'sender': from_address,
+            'subject': subject,
+            'body_text': body
+        }
+        form = AskByEmailForm(data)
+        if form.is_valid():
+            email_address = form.cleaned_data['email']
             user = User.objects.get(
                         email__iexact = email_address
                     )
-        except User.DoesNotExist:
-            bounce_email(email_address, subject, reason = 'unknown_user')
-        except User.MultipleObjectsReturned:
-            bounce_email(email_address, subject, reason = 'problem_posting')
+            tagnames = form.cleaned_data['tagnames']
+            title = form.cleaned_data['title']
+            body_text = form.cleaned_data['body_text']
 
-        tagnames = form.cleaned_data['tagnames']
-        title = form.cleaned_data['title']
-        body_text = form.cleaned_data['body_text']
+            #defect - here we might get "too many tags" issue
+            if tags:
+                tagnames += ' ' + ' '.join(tags)
 
-        try:
-            body_text += process_attachments(attachments)
             user.post_question(
                 title = title,
                 tags = tagnames,
-                body_text = body_text
+                body_text = body_text,
+                by_email = True,
+                email_address = from_address
             )
-        except PermissionDenied, error:
-            bounce_email(
-                email_address,
-                subject,
-                reason = 'permission_denied',
-                body_text = unicode(error)
-            )
-    else:
-        #error_list = list()
-        #for field_errors in form.errors.values():
-        #    error_list.extend(field_errors)
+        else:
+            raise ValidationError()
 
+    except User.DoesNotExist:
+        bounce_email(email_address, subject, reason = 'unknown_user')
+    except User.MultipleObjectsReturned:
+        bounce_email(email_address, subject, reason = 'problem_posting')
+    except PermissionDenied, error:
+        bounce_email(
+            email_address,
+            subject,
+            reason = 'permission_denied',
+            body_text = unicode(error)
+        )
+    except ValidationError:
         if from_address:
             bounce_email(
                 from_address,
                 subject,
                 reason = 'problem_posting',
-                #body_text = '\n*'.join(error_list)
             )

@@ -1,9 +1,8 @@
 import re
 from django import forms
-from askbot import models
 from askbot import const
 from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import ungettext_lazy
+from django.utils.translation import ungettext_lazy, string_concat
 from django.utils.text import get_text_list
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
@@ -20,6 +19,14 @@ def cleanup_dict(dictionary, key, empty_value):
     """
     if key in dictionary and dictionary[key] == empty_value:
         del dictionary[key]
+
+def format_form_errors(form):
+    if form.errors:
+        errors = form.errors.values()
+        if len(errors) == 1:
+            return errors[0]
+        else:
+            return 'hahahahah'
 
 def clean_marked_tagnames(tagnames):
     """return two strings - one containing tagnames
@@ -92,6 +99,59 @@ class CountryField(forms.ChoiceField):
         if value == 'unknown':
             return None
         return value
+
+class CountedWordsField(forms.CharField):
+    
+    def __init__(
+        self, min_words = 0, max_words = 9999, field_name = None,
+        *args, **kwargs
+    ):
+        self.min_words = min_words
+        self.max_words = max_words
+        self.field_name = field_name
+        super(CountedWordsField, self).__init__(*args, **kwargs)
+
+    def clean(self, value):
+        #todo: this field must be adapted to work with Chinese, etc.
+        #for that we'll have to count characters instead of words
+        if value is None:
+            value = ''
+
+        value = value.strip()
+
+        word_count = len(value.split())
+        if word_count < self.min_words:
+            msg = ungettext_lazy(
+                'must be > %d word',
+                'must be > %d words',
+                self.min_words - 1
+            ) % (self.min_words - 1)
+            #todo - space is not used in Chinese
+            raise forms.ValidationError(
+                string_concat(self.field_name, ' ', msg)
+            )
+
+        if word_count > self.max_words:
+            msg = ungettext_lazy(
+                'must be < %d word',
+                'must be < %d words',
+                self.max_words + 1
+            ) % (self.max_words + 1)
+            raise forms.ValidationError(
+                string_concat(self.field_name, ' ', msg)
+            )
+        return value
+
+
+class DomainNameField(forms.CharField):
+    def clean(self, value):
+        #find a better regex, taking into account tlds
+        domain_re = re.compile(r'[a-zA-Z\d]+(\.[a-zA-Z\d]+)+')
+        if domain_re.match(value):
+            return value
+        else:
+            raise forms.ValidationError('%s is not a valid domain name' % value)
+
 
 class TitleField(forms.CharField):
     def __init__(self, *args, **kwargs):
@@ -195,6 +255,7 @@ class TagNamesField(forms.CharField):
 
     def need_mandatory_tags(self):
         """true, if list of mandatory tags is not empty"""
+        from askbot import models
         return askbot_settings.TAGS_ARE_REQUIRED and len(models.tag.get_mandatory_tags()) > 0
 
     def tag_string_matches(self, tag_string, mandatory_tag):
@@ -207,6 +268,7 @@ class TagNamesField(forms.CharField):
     def mandatory_tag_missing(self, tag_strings):
         """true, if mandatory tag is not present in the list
         of ``tag_strings``"""
+        from askbot import models
         mandatory_tags = models.tag.get_mandatory_tags()
         for mandatory_tag in mandatory_tags:
             for tag_string in tag_strings:
@@ -215,6 +277,7 @@ class TagNamesField(forms.CharField):
         return True
 
     def clean(self, value):
+        from askbot import models
         value = super(TagNamesField, self).clean(value)
         data = value.strip()
         if len(data) < 1:
@@ -876,6 +939,10 @@ class EditAnswerForm(forms.Form):
         self.fields['text'].initial = revision.text
         self.fields['wiki'].initial = answer.wiki
 
+class EditTagWikiForm(forms.Form):
+    text = forms.CharField(required = False)
+    tag_id = forms.IntegerField()
+
 class EditUserForm(forms.Form):
     email = forms.EmailField(
                     label=u'Email',
@@ -966,7 +1033,7 @@ class EditUserForm(forms.Form):
 
 class TagFilterSelectionForm(forms.ModelForm):
     email_tag_filter_strategy = forms.ChoiceField(
-        choices = const.TAG_FILTER_STRATEGY_CHOICES,
+        choices = const.TAG_DISPLAY_FILTER_STRATEGY_CHOICES,
         initial = const.EXCLUDE_IGNORED,
         label = _('Choose email tag filter'),
         widget = forms.RadioSelect
@@ -1032,6 +1099,7 @@ class EditUserEmailFeedsForm(forms.Form):
                         )
 
     def set_initial_values(self, user=None):
+        from askbot import models
         KEY_MAP = dict([(v, k) for k, v in self.FORM_TO_MODEL_MAP.iteritems()])
         if user != None:
             settings = models.EmailFeedSetting.objects.filter(subscriber=user)
@@ -1079,6 +1147,7 @@ class EditUserEmailFeedsForm(forms.Form):
         """
             with save_unbound==True will bypass form validation and save initial values
         """
+        from askbot import models
         changed = False
         for form_field, feed_type in self.FORM_TO_MODEL_MAP.items():
             s, created = models.EmailFeedSetting.objects.get_or_create(
@@ -1135,3 +1204,32 @@ class SimpleEmailSubscribeForm(forms.Form):
         else:
             email_settings_form = EFF(initial=EFF.NO_EMAIL_INITIAL)
         email_settings_form.save(user, save_unbound=True)
+
+class GroupLogoURLForm(forms.Form):
+    """form for saving group logo url"""
+    group_id = forms.IntegerField()
+    image_url = forms.CharField()
+
+class EditGroupMembershipForm(forms.Form):
+    """a form for adding or removing users
+    to and from user groups"""
+    user_id = forms.IntegerField()
+    group_name = forms.CharField()
+    action = forms.CharField()
+
+    def clean_action(self):
+        """allowed actions are 'add' and 'remove'"""
+        action = self.cleaned_data['action']
+        if action not in ('add', 'remove'):
+            del self.cleaned_data['action']
+            raise forms.ValidationError('invalid action')
+        return action
+
+class EditRejectReasonForm(forms.Form):
+    reason_id = forms.IntegerField(required = False)
+    title = CountedWordsField(
+        min_words = 1, max_words = 4, field_name = _('Title')
+    )
+    details = CountedWordsField(
+        min_words = 6, field_name = _('Description')
+    )

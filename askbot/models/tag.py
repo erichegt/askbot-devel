@@ -82,6 +82,53 @@ class TagManager(BaseQuerySetManager):
     def get_query_set(self):
         return TagQuerySet(self.model)
 
+#todo: implement this
+#class GroupTagQuerySet(models.query.QuerySet):
+#    """Custom query set for the group"""
+#    def __init__(self, model):
+def clean_group_name(name):
+    """group names allow spaces,
+    tag names do not, so we use this method
+    to replace spaces with dashes"""
+    return re.sub('\s+', '-', name.strip())
+
+class GroupTagManager(TagManager):
+    """manager for group tags"""
+
+#    def get_query_set(self):
+#        return GroupTagQuerySet(self.model)
+
+    def get_or_create(self, group_name = None, user = None):
+        """creates a group tag or finds one, if exists"""
+        #todo: here we might fill out the group profile
+
+        #replace spaces with dashes
+        group_name = clean_group_name(group_name)
+        try:
+            tag = self.get(name = group_name)
+        except self.model.DoesNotExist:
+            tag = self.model(name = group_name, created_by = user)
+            tag.save()
+            from askbot.models.user import GroupProfile
+            group_profile = GroupProfile(group_tag = tag)
+            group_profile.save()
+        return tag
+
+    #todo: maybe move this to query set
+    def get_for_user(self, user = None):
+        return self.filter(user_memberships__user = user)
+
+    #todo: remove this when the custom query set is done
+    def get_all(self):
+        return self.annotate(
+            member_count = models.Count('user_memberships')
+        ).filter(
+            member_count__gt = 0
+        )
+
+    def get_by_name(self, group_name = None):
+        return self.get(name = clean_group_name(group_name))
+
 class Tag(models.Model):
     name            = models.CharField(max_length=255, unique=True)
     created_by      = models.ForeignKey(User, related_name='created_tags')
@@ -92,7 +139,14 @@ class Tag(models.Model):
     deleted_at  = models.DateTimeField(null=True, blank=True)
     deleted_by  = models.ForeignKey(User, null=True, blank=True, related_name='deleted_tags')
 
+    tag_wiki = models.OneToOneField(
+                                'Post',
+                                null=True,
+                                related_name = 'described_tag'
+                            )
+
     objects = TagManager()
+    group_tags = GroupTagManager()
 
     class Meta:
         app_label = 'askbot'
@@ -103,7 +157,11 @@ class Tag(models.Model):
         return self.name
 
 class MarkedTag(models.Model):
-    TAG_MARK_REASONS = (('good', _('interesting')), ('bad', _('ignored')))
+    TAG_MARK_REASONS = (
+        ('good', _('interesting')),
+        ('bad', _('ignored')),
+        ('subscribed', _('subscribed')),
+    )
     tag = models.ForeignKey('Tag', related_name='user_selections')
     user = models.ForeignKey(User, related_name='tag_selections')
     reason = models.CharField(max_length=16, choices=TAG_MARK_REASONS)

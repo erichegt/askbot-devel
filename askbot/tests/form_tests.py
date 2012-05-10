@@ -47,6 +47,7 @@ class AskByEmailFormTests(AskbotTestCase):
             'subject': '[tag-one] where is titanic?',
             'body_text': 'where is titanic?'
         }
+
     def test_subject_line(self):
         """loops through various forms of the subject line
         and makes sure that tags and title are parsed out"""

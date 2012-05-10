@@ -1,8 +1,6 @@
 import datetime
-
 from django.db import models
 from django.contrib.auth.models import User
-
 
 class BaseQuerySetManager(models.Manager):
     """a base class that allows chainable qustom filters
@@ -44,9 +42,7 @@ class BaseQuerySetManager(models.Manager):
 
 
 class AnonymousContent(models.Model):
-    """
-        Base class for AnonymousQuestion and AnonymousAnswer
-    """
+    """Base class for AnonymousQuestion and AnonymousAnswer"""
     session_key = models.CharField(max_length=40)  #session id for anonymous questions
     wiki = models.BooleanField(default=False)
     added_at = models.DateTimeField(default=datetime.datetime.now)

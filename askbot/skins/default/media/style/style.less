@@ -151,7 +151,7 @@ a:hover {
 
 h1 {
     font-size: 24px;
-    padding: 10px 0 5px 0px;
+    padding: 0px 0 5px 0px;
 }
 
 
@@ -310,6 +310,10 @@ body.user-messages {
     }
 
     #navUsers{
+        .sprites(-125px,-5px)
+    }
+
+    #navGroups{
         .sprites(-125px,-5px)
     }
 
@@ -504,6 +508,8 @@ body.anon {
 
     p {
         margin-bottom: 4px;
+        color: @info-text;
+        font-family:@main-font;
     }
 
     p.info-box-follow-up-links {
@@ -548,7 +554,8 @@ body.anon {
         margin-right:18px;
     }
 
-    #displayTagFilterControl label { /*Especial width just for the display tag filter box in index page*/
+    #displayTagFilterControl label,
+    #emailTagFilterControl label { /*Especial width just for the tag filter boxes in index page*/
         width:160px;
     }
 
@@ -576,22 +583,36 @@ body.anon {
     }
 
     .inputs{
-        #interestingTagInput, #ignoredTagInput{
+        #interestingTagInput,
+        #ignoredTagInput,
+        #subscribedTagInput,
+        #ab-tag-search {
             width:153px;
             padding-left:5px;
             border:#c9c9b5 1px solid;
             height:25px;
         }
-        #interestingTagAdd, #ignoredTagAdd{
+        #ab-tag-search {
+            width: 135px;
+        }
+        #interestingTagAdd,
+        #ignoredTagAdd,
+        #subscribedTagAdd,
+        #ab-tag-search-add {
             border:0;
             font-weight:bold;
             margin-top:-2px;
             .button-style(30px,27px,12px);
             .rounded-corners(4px);
-             .text-shadow(0px,1px,0px,#E6F6FA);      
-       }
-        #interestingTagAdd:hover, #ignoredTagAdd:hover{
+        }
+       #interestingTagAdd:hover,
+       #ignoredTagAdd:hover,
+       #ab-tag-search-add:hover {
             .button-style-hover;
+       }
+       #ab-tag-search-add {
+            width: 47px;
+            margin-left: 3px;
        }
     }
     
@@ -643,6 +664,11 @@ body.anon {
     }
 }
 
+.users-page .box label {
+    display: inline;
+    float: none;
+}
+
 .statsWidget p{
     color:@info-text;
     font-size:16px;
@@ -672,7 +698,7 @@ body.anon {
 
 #tips{
     li{
-        color:@info-text;
+       color:@info-text;
        font-size:13px;
        list-style-image: url(../images/tips.png);
     }
@@ -742,8 +768,7 @@ body.anon {
 .tabsA .label, .tabsC .label {
     float: left;
     color: #646464;
-    margin-top:4px;
-    margin-right:5px;
+    margin:4px 5px 0px 8px;
 }
 
 .main-page .tabsA .label {
@@ -837,6 +862,10 @@ ul#searchTags {
     width: 100%;
 }
 
+.main-page #question-list {
+    margin-top: 10px;
+}
+
 .short-summary {
     position: relative;
     filter: inherit;
@@ -870,7 +899,7 @@ ul#searchTags {
     }
     
 
-    .userinfo .relativetime, span.anonymous 
+    .userinfo .timeago, span.anonymous 
      {
         font-size: 11px;
         clear:both;
@@ -1263,11 +1292,11 @@ ul#related-tags li {
         margin: 0px;
         padding: 0px 0 0 5px;
         border:#cce6ec 3px solid;
-        width:725px;
+        width:719px;
     }
 }
 
-.ask-page, .edit-question-page{
+.ask-page, .edit-question-page {
 
     div#question-list {
          float: none;
@@ -1338,24 +1367,37 @@ ul#related-tags li {
     .button-style-hover;
     .text-shadow(0px, 1px, 0px, #c6d9dd)
 }
-#editor { /*adjustment for editor preview*/
+
+.wmd-container {
+    border:#cce6ec 3px solid;
+}
+.users-page .wmd-container {
+    width: 200px;
+}
+.ask-page,
+.question-page,
+.edit-question-page,
+.edit-answer-page {
+    .wmd-container {
+        width: 723px;
+    }
+    #editor {
+        width: 710px;
+        padding: 6px;
+    }
+}
+
+#editor { /* adjustment for editor preview */
+    display: block;
     font-size: 100%;
     min-height: 200px;
     line-height: 18px;
-    margin:0;
-    border-left:#cce6ec 3px solid;
-    border-bottom:#cce6ec 3px solid;
-    border-right:#cce6ec 3px solid;
-    border-top:0;
-    padding:10px;
-    margin-bottom:10px;
-    width:710px;
+    margin: 0;
+    border: 0;
 }
 
-@media screen and (-webkit-min-device-pixel-ratio:0){
-    #editor{
-        width:717px;
-    }
+.users-page #editor {
+    width: 192px;
 }
 
 #id_title {
@@ -1363,8 +1405,8 @@ ul#related-tags li {
 }
 
 .wmd-preview {
-    margin: 3px 0 5px 0;
-    padding: 6px;
+    margin: 0;
+    padding: 5px;
     background-color: #F5F5F5;
     min-height: 20px;
     overflow: auto;
@@ -1372,9 +1414,13 @@ ul#related-tags li {
     font-family:@body-font;
 
     p{
-        margin-bottom:14px;
-       line-height:1.4;
-       font-size:14px;
+       margin-bottom: 14px;
+       line-height: 1.4;
+       font-size: 14px;
+    }
+
+    p:last-child{
+        margin-bottom: 0;
     }
 }
 
@@ -1389,6 +1435,10 @@ ul#related-tags li {
 
 .wmd-preview IMG {
     max-width: 600px;
+}
+
+.user-page .wmd-buttons {
+    width: 725px;
 }
 
 .preview-toggle {
@@ -1443,7 +1493,7 @@ ul#related-tags li {
         margin: 0px;
         padding: 0px 0 0 5px;
         border:#cce6ec 3px solid;
-        width:725px;
+        width: 719px;
         margin-bottom:10px;
     }
     #id_summary{
@@ -1754,13 +1804,6 @@ ul#related-tags li {
             border:#cce6ec 3px solid;
         }
         
-        /* A small hack to solve 1px problem on webkit browsers */
-        @media screen and (-webkit-min-device-pixel-ratio:0){
-            textarea{
-                padding-left:3px !important;
-            }
-        }
-
         input {
             margin-left: 10px;
             margin-top: 1px;
@@ -2072,7 +2115,6 @@ ul#related-tags li {
 
 .openid-signin,
 .meta,
-.users-page,
 .user-profile-edit-page,
 {
     font-size:13px;
@@ -2138,6 +2180,10 @@ ul#related-tags li {
     }
 }
 
+.openid-signin form {
+    margin-bottom: 5px;
+}
+
 #email-input-fs,#local_login_buttons,#password-fs,#openid-fs{
     margin-top:10px;
     #id_email,#id_username,#id_password{
@@ -2192,17 +2238,16 @@ ul#related-tags li {
 
 /* People page */
 
-.tabBar-user{
+/*.users-page .tabBar{
     width:375px;
-}
+}*/
 
 .user {
-    padding: 5px;
+    padding: 5px 10px 5px 0;
     line-height: 140%;
     width: 166px;
-    border:#eee 1px solid;
+    height: 32px;
     margin-bottom:5px;
-    .rounded-corners(3px);
     .user-micro-info{
         color:@info-text-dark;
     }
@@ -2742,7 +2787,7 @@ span.form-error {
     margin: 0px;
 }
 
-.relativetime {
+.timeago {
     font-weight: bold;
     text-decoration: none;
 }
@@ -3010,8 +3055,11 @@ button::-moz-focus-inner {
     -webkit-border-radius: 5px;
 }
 
-.list-table td {
-    vertical-align: top;
+.list-table {
+    td { 
+        vertical-align: top;
+    }
+    border-spacing: 0;
 }
 
 /* these need to go */
@@ -3324,12 +3372,128 @@ body.anon.lang-es {
         }
     }
 }
-a.re_expand{
-  color: #616161;
-  text-decoration:none;
+
+/* user groups */
+#user-groups ul {
+    margin-bottom: 0px;
+}
+#user-groups .delete-icon {
+    float: none;
+    display: inline;
+    color: #525252;
+    padding: 0 3px 0 3px;
+    background: #ccc;
+    border-radius: 4px;
+    line-height:inherit;
+    -moz-border-radius: 4px;
+    -khtml-border-radius: 4px;
+    -webkit-border-radius: 4px;
+}
+#user-groups .delete-icon:hover {
+    color: white;
+    background: #b32f2f;
 }
 
-a.re_expand .re_content{
-  display:none;
-  margin-left:77px;
+.users-page {
+    .wmd-prompt-dialog {
+        background: #ccc;
+    }
+}
+
+.group-wiki {
+    .content {
+        > p:last-child {
+            margin-bottom: 5px;
+        }
+    }
+    .group-logo {
+        float: left;
+        margin: 0 5px 3px 0;
+    }
+    .follow-toggle.group-join-btn {
+        width: 150px;
+        margin: 4px auto 10px auto;
+        display: block;
+    }
+    .controls {
+        margin: 0 0 10px 0;
+    }
+}
+
+img.group-logo {
+    height: 60px;/* important to align with the line spacing */
+}
+
+#groups-list {
+    margin-left: 0px;
+    li {
+        display: inline;
+        list-style-type: none;
+        list-style-position: inside;
+        float: left;
+        text-align: center;
+    }
+    .group-logo, .group-name {
+        display: block;
+    }
+}
+
+
+#reject-edit-modal {
+    input, textarea {
+        width: 514px;
+    }
+}
+
+input.tipped-input,
+textarea.tipped-input {
+    padding-left: 5px;
+}
+
+.tipped-input.blank {
+    color: @info-text;
+}
+
+.select-box {
+
+    margin: 0;
+
+    li {
+        list-style-type: none;        
+        list-style-position: inside;
+        padding-left: 7px;
+        font-size: 14px;
+        line-height: 25px;
+    }
+    li.selected,
+    li.selected:hover {
+        background-color: #fcf8e3;
+        color: #c09853;
+    }
+
+    li:hover {
+        background-color: #cecece;
+        color: white;
+    }
+}
+
+/* fixes for bootstrap */
+.caret {
+    margin-bottom: 7px;
+}
+.btn-group {
+    text-align: left;
+}
+.btn-toolbar {
+    margin: 0;
+}
+.modal-footer {
+    text-align: left;
+}
+.modal p {
+    font-size: 14px;
+}
+.modal-body > textarea {
+    width: 515px;
+    margin-bottom: 0px;
 }

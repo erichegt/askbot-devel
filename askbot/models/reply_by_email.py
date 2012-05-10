@@ -3,13 +3,14 @@ import random
 import string
 from django.db import models
 from django.contrib.auth.models import User
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as _
 from askbot.models.post import Post
 from askbot.models.base import BaseQuerySetManager
 from askbot.conf import settings as askbot_settings
 from askbot.utils import mail
 
 class ReplyAddressManager(BaseQuerySetManager):
+    """A manager for the :class:`ReplyAddress` model"""
 
     def get_unused(self, address, allowed_from_email):
         return self.get(
@@ -19,6 +20,7 @@ class ReplyAddressManager(BaseQuerySetManager):
         )
     
     def create_new(self, post, user):
+        """creates a new reply address"""
         reply_address = ReplyAddress(
             post = post,
             user = user,
@@ -34,6 +36,8 @@ class ReplyAddressManager(BaseQuerySetManager):
 			
 
 class ReplyAddress(models.Model):
+    """Stores a reply address for the post
+    and the user"""
     address = models.CharField(max_length = 25, unique = True)
     post = models.ForeignKey(
                             Post,
@@ -60,35 +64,53 @@ class ReplyAddress(models.Model):
         """True if was used"""
         return self.used_at != None
 
-    def edit_post(self, content, attachments = None):
+    def edit_post(self, parts):
         """edits the created post upon repeated response
         to the same address"""
         assert self.was_used == True
-        content += mail.process_attachments(attachments)
+        content, stored_files = mail.process_parts(parts)
         self.user.edit_post(
             post = self.response_post,
             body_text = content,
-            revision_comment = _('edited by email')
+            revision_comment = _('edited by email'),
+            by_email = True
         )
         self.response_post.thread.invalidate_cached_data()
 
-    def create_reply(self, content, attachments = None):
+    def create_reply(self, parts):
         """creates a reply to the post which was emailed
         to the user
         """
         result = None
-        content += mail.process_attachments(attachments)
+        #todo: delete stored files if this function fails
+        content, stored_files = mail.process_parts(parts)
 
         if self.post.post_type == 'answer':
-            result = self.user.post_comment(self.post, content)
+            result = self.user.post_comment(
+                                        self.post,
+                                        content,
+                                        by_email = True
+                                    )
         elif self.post.post_type == 'question':
             wordcount = len(content)/6#this is a simplistic hack
             if wordcount > askbot_settings.MIN_WORDS_FOR_ANSWER_BY_EMAIL:
-                result = self.user.post_answer(self.post, content)
+                result = self.user.post_answer(
+                                            self.post,
+                                            content,
+                                            by_email = True
+                                        )
             else:
-                result = self.user.post_comment(self.post, content)
+                result = self.user.post_comment(
+                                            self.post,
+                                            content,
+                                            by_email = True
+                                        )
         elif self.post.post_type == 'comment':
-            result = self.user.post_comment(self.post.parent, content)
+            result = self.user.post_comment(
+                                    self.post.parent,
+                                    content,
+                                    by_email = True
+                                )
         result.thread.invalidate_cached_data()
         self.response_post = result
         self.used_at = datetime.now()
