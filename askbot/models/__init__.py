@@ -1420,6 +1420,7 @@ def user_edit_comment(
                         edited_by = self,
                         by_email = by_email
                     )
+    comment_post.thread.invalidate_cached_data()
 
 def user_edit_post(self,
                 post = None,
