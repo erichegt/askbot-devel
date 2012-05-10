@@ -553,19 +553,17 @@ class QuestionPageRedirectTests(AskbotTestCase):
 
         url = reverse('question', kwargs={'id': self.q.id})
         resp = self.client.get(url)
-        url = url + self.q.slug
-        self.assertRedirects(resp, expected_url=url)
-
-        resp = self.client.get(url)
-        self.assertEqual(200, resp.status_code)
-        self.assertEqual(self.q, resp.context['question'])
+        self.assertRedirects(
+            resp,
+            expected_url=self.q.get_absolute_url()
+        )
 
         url = reverse('question', kwargs={'id': 101})
         resp = self.client.get(url)
-        url = reverse('question', kwargs={'id': self.q.id}) + self.q.slug  # redirect uses the new question.id !
+        url = reverse('question', kwargs={'id': self.q.id}) + self.q.slug + '/'# redirect uses the new question.id !
         self.assertRedirects(resp, expected_url=url)
 
-        url = reverse('question', kwargs={'id': 101}) + self.q.slug
+        url = reverse('question', kwargs={'id': 101}) + self.q.slug + '/'
         resp = self.client.get(url)
         self.assertEqual(200, resp.status_code)
         self.assertEqual(self.q, resp.context['question'])
@@ -578,7 +576,7 @@ class QuestionPageRedirectTests(AskbotTestCase):
 
         url = reverse('question', kwargs={'id': self.q.id})
         resp = self.client.get(url, data={'answer': self.a.id})
-        url = url + self.q.slug
+        url = self.q.get_absolute_url()
         self.assertRedirects(resp, expected_url=url + '?answer=%d' % self.a.id)
 
         resp = self.client.get(url, data={'answer': self.a.id})
@@ -586,7 +584,8 @@ class QuestionPageRedirectTests(AskbotTestCase):
         self.assertEqual(self.q, resp.context['question'])
         self.assertEqual(self.a, resp.context['show_post'])
 
-        url = reverse('question', kwargs={'id': 101}) + self.q.slug
+        #test redirect from old question
+        url = reverse('question', kwargs={'id': 101}) + self.q.slug + '/'
         resp = self.client.get(url, data={'answer': 201})
         self.assertRedirects(resp, expected_url=self.a.get_absolute_url())
 
@@ -597,10 +596,9 @@ class QuestionPageRedirectTests(AskbotTestCase):
         self.assertEqual(self.a, resp.context['show_post'])
         self.assertEqual(self.c, resp.context['show_comment'])
 
-        url = reverse('question', kwargs={'id': self.q.id})
+        url = self.q.get_absolute_url()
         resp = self.client.get(url, data={'comment': self.c.id})
-        url = url + self.q.slug
-        self.assertRedirects(resp, expected_url=url + '?comment=%d' % self.c.id)
+        self.assertEqual(200, resp.status_code)
 
         resp = self.client.get(url, data={'comment': self.c.id})
         self.assertEqual(200, resp.status_code)
@@ -608,6 +606,7 @@ class QuestionPageRedirectTests(AskbotTestCase):
         self.assertEqual(self.a, resp.context['show_post'])
         self.assertEqual(self.c, resp.context['show_comment'])
 
-        url = reverse('question', kwargs={'id': 101}) + self.q.slug
-        resp = self.client.get(url, data={'comment': 301})
-        self.assertRedirects(resp, expected_url=self.c.get_absolute_url())
+        url = self.q.get_absolute_url()
+        #point to a non-existing comment
+        resp = self.client.get(url, data={'comment': 100301})
+        self.assertRedirects(resp, expected_url = self.q.get_absolute_url())

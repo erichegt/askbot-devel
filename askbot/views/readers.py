@@ -359,7 +359,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
         return HttpResponseRedirect(reverse('index'))
 
     #redirect if slug in the url is wrong
-    if request.path.split('/')[-1] != question_post.slug:
+    if request.path.split('/')[-2] != question_post.slug:
         logging.debug('no slug match!')
         question_url = '?'.join((
                             question_post.get_absolute_url(),
@@ -392,7 +392,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
                 'deleted and is no longer accessible'
             )
             request.user.message_set.create(message = error_message)
-            return HttpResponseRedirect(reverse('question', kwargs = {'id': id}))
+            return HttpResponseRedirect(question_post.thread.get_absolute_url())
 
         if str(show_comment.thread._question_post().id) != str(id):
             return HttpResponseRedirect(show_comment.get_absolute_url())

@@ -518,12 +518,14 @@ class Post(models.Model):
 
     def get_absolute_url(self, no_slug = False, question_post=None, thread=None):
         from askbot.utils.slug import slugify
+        #todo: the url generation function is pretty bad -
+        #the trailing slash is entered in three places here + in urls.py
         if not hasattr(self, '_thread_cache') and thread:
             self._thread_cache = thread
         if self.is_answer():
             if not question_post:
                 question_post = self.thread._question_post()
-            return u'%(base)s%(slug)s?answer=%(id)d#post-id-%(id)d' % {
+            return u'%(base)s%(slug)s/?answer=%(id)d#post-id-%(id)d' % {
                 'base': urlresolvers.reverse('question', args=[question_post.id]),
                 'slug': django_urlquote(slugify(self.thread.title)),
                 'id': self.id
@@ -531,9 +533,9 @@ class Post(models.Model):
         elif self.is_question():
             url = urlresolvers.reverse('question', args=[self.id])
             if thread:
-                url += django_urlquote(slugify(thread.title))
+                url += django_urlquote(slugify(thread.title)) + '/'
             elif no_slug is False:
-                url += django_urlquote(self.slug)
+                url += django_urlquote(self.slug) + '/'
             return url
         elif self.is_comment():
             origin_post = self.get_origin_post()
