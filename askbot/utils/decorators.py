@@ -87,7 +87,7 @@ def ajax_only(view_func):
             if data is None:
                 data = {}
         except Exception, e:
-            if isinstance(e, Exception):
+            if hasattr(e, 'messages'):
                 if len(e.messages) > 1:
                     message = u'<ul>' + \
                         u''.join( 
