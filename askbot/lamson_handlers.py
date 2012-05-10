@@ -130,7 +130,7 @@ def ASK(message, host = None, addr = None):
         try:
             group_tag = Tag.group_tags.get(
                 deleted = False,
-                name_iexact = addr
+                name__iexact = addr
             )
             mail.process_emailed_question(
                 from_address, subject, parts, tags = [group_tag.name, ]

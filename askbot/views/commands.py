@@ -110,7 +110,7 @@ def manage_inbox(request):
                             mail.send_mail(
                                 subject_line = _('your post was not accepted'),
                                 body_text = unicode(body_text),
-                                recipient_list = [post.author,]
+                                recipient_list = [post.author.email,]
                             )
                             memo.delete()
 
@@ -589,7 +589,7 @@ def set_tag_filter_strategy(request):
     """
     filter_type = request.POST['filter_type']
     filter_value = int(request.POST['filter_value'])
-    assert(filter_type in 'display', 'email')
+    assert(filter_type in ('display', 'email'))
     if filter_type == 'display':
         assert(filter_value in dict(const.TAG_DISPLAY_FILTER_STRATEGY_CHOICES))
         request.user.display_tag_filter_strategy = filter_value
