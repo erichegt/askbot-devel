@@ -58,8 +58,14 @@ class ConfigSettings(object):
         self.update(key, self.get_default(key))
 
     def update(self, key, value):
-        setting = config_get(self.__group_map[key], key) 
-        setting.update(value)
+        try:
+            setting = config_get(self.__group_map[key], key) 
+            setting.update(value)
+        except:
+            from askbot.deps.livesettings.models import Setting
+            setting = Setting.objects.get(key=key)
+            setting.value = value
+            setting.save()
         #self.prime_cache()
 
     def register(self, value):
