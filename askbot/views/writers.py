@@ -603,11 +603,12 @@ def edit_comment(request):
 
     is_deletable = template_filters.can_delete_comment(comment_post.author, comment_post)
     is_editable = template_filters.can_edit_comment(comment_post.author, comment_post)
+    tz = template_filters.TIMEZONE_STR
 
     return {
         'id' : comment_post.id,
         'object_id': comment_post.parent.id,
-        'comment_added_at': str(comment_post.added_at.replace(microsecond = 0)),
+        'comment_added_at': str(comment_post.added_at.replace(microsecond = 0)) + tz,
         'html': comment_post.html,
         'user_display_name': comment_post.author.username,
         'user_url': comment_post.author.get_profile_url(),
