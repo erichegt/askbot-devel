@@ -58,7 +58,7 @@ settings.register(#this field is not editable manually
         FLATPAGES,
         'CATEGORY_TREE',
         description = 'Category tree',#no need to translate
-        default = '[[]]',#empty array of arrays in json
-        hidden = True
+        default = '',#empty array of arrays in json
+        #hidden = True
     )
 )
