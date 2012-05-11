@@ -291,8 +291,6 @@ def ask(request):#view used to ask a new question
             level = len(match.group(1))/2 + 1
 
             if level > clevel:
-                import pdb
-                pdb.set_trace()
                 subtree_path.append(0)#
             elif level < clevel:
                 subtree_path = subtree_path[:level+1]
