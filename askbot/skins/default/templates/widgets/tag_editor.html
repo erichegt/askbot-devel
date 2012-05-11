@@ -1,0 +1,27 @@
+{% import "macros.html" as macros %}
+<div class="tag-editor">
+    {{ macros.tag_list_widget(
+                        tag_names,
+                        deletable = True,
+                        make_links = False
+                    )
+    }}
+    <div class="clearfix"></div>
+    <input 
+        id="id_tags"
+        name="tags"
+        type="hidden"
+        value="{% if tag_names %}{{tag_names|join(' ')}}{% endif %}"
+    />
+    <span class="form-error" style="display:block;"></span>
+    <p class="enter-tags-prompt"
+        {% if tag_names %}style="display:none"{% endif %}
+    >
+        {% trans %}Please label your question with the categories below:{% endtrans %}
+    </p>
+    {# 
+        tag input is hidden because we want to edit the list visually 
+        we also want to eventually allow multiword tags, which are
+        not easy to enter into a simple input box
+    #}
+</div>

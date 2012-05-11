@@ -833,6 +833,7 @@ TwoStateToggle.prototype.decorate = function(element){
 var SelectBox = function(){
     WrappedElement.call(this);
     this._items = [];
+    this._select_handler = function(){};//empty default
 };
 inherits(SelectBox, WrappedElement);
 
@@ -842,10 +843,19 @@ SelectBox.prototype.removeItem = function(id){
     item.remove();
 };
 
+SelectBox.prototype.removeAllItems = function() {
+    $(this._element.find('li')).remove();
+};
+
 SelectBox.prototype.getItem = function(id){
     return $(this._element.find('li[data-item-id="' + id + '"]'));
 };
 
+SelectBox.prototype.setItemClass = function(id, css_class) {
+    this.getItem(id).addClass(css_class);
+};
+
+/** @todo: rename to setItem?? have a problem when id's are all say 0 */
 SelectBox.prototype.addItem = function(id, title, details){
     /*this._items.push({
         id: id,
@@ -858,36 +868,54 @@ SelectBox.prototype.addItem = function(id, title, details){
         if (li.length !== 1){
             li = this.makeElement('li');
             new_li = true;
+            this._element.append(li);
         }
         li.attr('data-item-id', id)
             .attr('data-original-title', details)
             .html(title);
-        if (new_li){
-            this._element.append(li);
-        }
         this.selectItem($(li));
         var me = this;
         setupButtonEventHandlers(
             $(li),
-            function(){
-                me.selectItem($(li));
-            }
+            me.getSelectHandler($(li))
         );
     }
 };
 
 SelectBox.prototype.getSelectedItemData = function(){
     var item = $(this._element.find('li.selected')[0]);
-    return {
-        id: item.attr('data-item-id'),
-        title: item.html(),
-        details: item.attr('data-original-title')
-    };
+    if (item.length === 0) {
+        return null;
+    } else {
+        return {
+            id: item.attr('data-item-id'),
+            title: item.html(),
+            details: item.attr('data-original-title')
+        };
+    }
 };
 
 SelectBox.prototype.selectItem = function(item){
-    this._element.find('li').removeClass('selected');
+    this.clearSelection();
     item.addClass('selected');
+};
+
+SelectBox.prototype.clearSelection = function(){
+    this._element.find('li').removeClass('selected');
+};
+
+SelectBox.prototype.setSelectHandler = function(handler) {
+    this._select_handler = handler;
+};
+
+SelectBox.prototype.getSelectHandler = function(item) {
+    var me = this;
+    var handler = this._select_handler;
+    return function(){
+        me.selectItem(item);
+        var data = me.getSelectedItemData();
+        handler(data);
+    };
 };
 
 SelectBox.prototype.decorate = function(element){
@@ -896,9 +924,7 @@ SelectBox.prototype.decorate = function(element){
     this._element.find('li').each(function(itx, item){
         setupButtonEventHandlers(
             $(item),
-            function(){
-                me.selectItem($(item));
-            }
+            me.getSelectHandler($(item))
         );
     });
 };

@@ -20,12 +20,29 @@ def get_mandatory_tags():
     """returns list of mandatory tags,
     or an empty list, if there aren't any"""
     from askbot.conf import settings as askbot_settings
-    raw_mandatory_tags = askbot_settings.MANDATORY_TAGS.strip()
-    if len(raw_mandatory_tags) == 0:
-        return []
+    #TAG_SOURCE setting is hidden
+    #and only is accessible via livesettings overrides
+    if askbot_settings.TAG_SOURCE == 'category-tree':
+        return []#hack: effectively we disable the mandatory tags feature
     else:
-        split_re = re.compile(const.TAG_SPLIT_REGEX)
-        return split_re.split(raw_mandatory_tags)
+        #todo - in the future clean this up
+        #we might need to have settings:
+        #* prepopulated tags - json structure - either a flat list or a tree
+        #  if structure is tree - then use some multilevel selector for choosing tags
+        #  if it is a list - then make users click on tags to select them
+        #* use prepopulated tags (boolean)
+        #* tags are required
+        #* regular users can create tags (boolean)
+        #the category tree and the mandatory tag lists can be merged
+        #into the same setting - and mandatory tags should use json
+        #keep in mind that in the future multiword tags will be allowed
+        raw_mandatory_tags = askbot_settings.MANDATORY_TAGS.strip()
+        if len(raw_mandatory_tags) == 0:
+            return []
+        else:
+            split_re = re.compile(const.TAG_SPLIT_REGEX)
+            return split_re.split(raw_mandatory_tags)
+
 
 class TagQuerySet(models.query.QuerySet):
     def get_valid_tags(self, page_size):

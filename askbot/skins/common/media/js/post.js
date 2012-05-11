@@ -2384,6 +2384,181 @@ GroupJoinButton.prototype.getHandler = function(){
     };
 };
 
+var TagEditor = function() {
+    WrappedElement.call(this);
+};
+inherits(TagEditor, WrappedElement);
+
+TagEditor.prototype.getSelectedTags = function() {
+    return $.trim(this._tags_input.val()).split(/\s+/);
+};
+
+TagEditor.prototype.setSelectedTags = function(tag_names) {
+    this._tags_input.val($.trim(tag_names.join(' ')));
+};
+
+TagEditor.prototype.addSelectedTag = function(tag_name) {
+    var tag_names = this._tags_input.val();
+    this._tags_input.val(tag_names + ' ' + tag_name);
+    this._prompt.hide();
+};
+
+TagEditor.prototype.removeSelectedTag = function(tag_name) {
+    var tag_names = this.getSelectedTags();
+    var idx = $.inArray(tag_name, tag_names);
+    if (idx !== -1) {
+        tag_names.splice(idx, 1)
+        if (tag_names.length === 0) {
+            this._prompt.show();
+        }
+    }
+    this.setSelectedTags(tag_names);
+};
+
+TagEditor.prototype.getAddTagHandler = function() {
+    var me = this;
+    var tags_container = this._tags_container;
+    return function(tag_name) {
+        var tag_name = tag_name.replace(/\s+/, ' ').toLowerCase();
+        if ($.inArray(tag_name, me.getSelectedTags()) !== -1) {
+            return;
+        }
+        var tag = new Tag();
+        tag.setName(tag_name);
+        tag.setDeletable(true);
+        tag.setLinkable(true);
+        tag.setDeleteHandler(function(){
+            me.removeSelectedTag(tag_name);
+            tag.dispose();
+        });
+        tags_container.append(tag.getElement());
+        me.addSelectedTag(tag_name);
+    };
+};
+
+TagEditor.prototype.decorate = function(element) {
+    this._element = element;
+    this._tags_input = element.find('input[name="tags"]');
+    this._tags_container = element.find('ul.tags');
+    this._prompt = element.find('.enter-tags-prompt');
+};
+
+var CategorySelector = function() {
+    WrappedElement.call(this);
+    this._data = null;
+    this._is_editable = false;
+    this._select_handler = function(){};//dummy default
+};
+inherits(CategorySelector, WrappedElement);
+
+CategorySelector.prototype.setData = function(data) {
+    this._data = data;
+};
+
+CategorySelector.prototype.setEditable = function(is_editable) {
+    this._is_editable = is_editable;
+};
+
+CategorySelector.prototype.populateCategoryLevel = function(source_path) {
+    var level = source_path.length - 1;
+    if (level > 3) {
+        return;
+    }
+    //traverse the tree down to items pointed to by the path
+    var data = this._data[0];
+    for (var i = 1; i < source_path.length; i++) {
+        data = data[1][source_path[i]];
+    }
+
+    var items = data[1];
+
+    //clear current and above selectors
+    for (var i = level; i < 3; i++) {
+        this._selectors[i].removeAllItems();
+    }
+
+    //populate current selector
+    var selector = this._selectors[level];
+    $.each(items, function(idx, item) {
+        var tag_name = item[0];
+        selector.addItem(idx, tag_name, '');//first and last are dummy values
+        if (item[1].length > 0) {
+            selector.setItemClass(idx, 'tree');
+        }
+    });
+
+    selector.clearSelection();
+};
+
+CategorySelector.prototype.maybeAddEditButton = function(selector) {
+    return;
+};
+
+CategorySelector.prototype.getSelectedPath = function(selected_level) {
+    var path = [0];//root
+    /* 
+     * upper limit capped by current clicked level
+     * we ignore all selection above the current level
+     */
+    for (var i = 0; i < selected_level + 1; i++) {
+        var data = this._selectors[i].getSelectedItemData();
+        if (data){
+            path.push(parseInt(data['id']));
+        } else {
+            return path;
+        }
+    }
+    return path;
+};
+
+/** getter and setter are not symmetric */
+CategorySelector.prototype.setSelectHandler = function(handler) {
+    this._select_handler = handler;
+};
+
+CategorySelector.prototype.getSelectHandlerInternal = function() {
+    return this._select_handler;
+};
+
+CategorySelector.prototype.getSelectHandler = function(level) {
+    var me = this;
+    return function(item_data) {
+        //1) run the assigned select handler
+        var tag_name = item_data['title']
+        me.getSelectHandlerInternal()(tag_name);
+        //2) if appropriate, populate the higher level
+        if (level < 2) {
+            var current_path = me.getSelectedPath(level);
+            me.populateCategoryLevel(current_path);
+        }
+    }
+};
+
+CategorySelector.prototype.decorate = function(element) {
+    this._element = element;
+    this._selectors = [];
+
+    var selector0 = new SelectBox();
+    selector0.decorate(element.find('.cat-col-0'));
+    selector0.setSelectHandler(this.getSelectHandler(0));
+    this.maybeAddEditButton(selector0);
+    this._selectors.push(selector0);
+
+    var selector1 = new SelectBox();
+    selector1.decorate(element.find('.cat-col-1'));
+    selector1.setSelectHandler(this.getSelectHandler(1));
+    this.maybeAddEditButton(selector1);
+    this._selectors.push(selector1)
+
+    var selector2 = new SelectBox();
+    selector2.decorate(element.find('.cat-col-2'));
+    selector2.setSelectHandler(this.getSelectHandler(2));
+    this.maybeAddEditButton(selector2);
+    this._selectors.push(selector2);
+
+    this.populateCategoryLevel([0]);
+};
+
 $(document).ready(function() {
     $('[id^="comments-for-"]').each(function(index, element){
         var comments = new PostCommentsWidget();

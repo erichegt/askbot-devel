@@ -26,6 +26,7 @@ from django.views.decorators import csrf
 
 from askbot import forms
 from askbot import models
+from askbot.conf import settings as askbot_settings
 from askbot.skins.loaders import render_into_skin
 from askbot.utils import decorators
 from askbot.utils.functions import diff_date
@@ -259,12 +260,47 @@ def ask(request):#view used to ask a new question
         'is_anonymous': request.REQUEST.get('is_anonymous', False),
     }
 
+    if askbot_settings.TAG_SOURCE == 'category-tree':
+        category_tree_data = askbot_settings.CATEGORY_TREE
+    else:
+        category_tree_data = None
+
+    cat_tree = [
+        ['dummy', 
+            [
+                ['tires', [
+                        ['michelin', [
+                                ['trucks', []],
+                                ['cars', []],
+                                ['motorcycles', []]
+                            ]
+                        ],
+                        ['good year', []],
+                        ['honda', []],
+                    ]
+                ],
+                ['abandonment', []],
+                ['chile', []],
+                ['vulcanization', []],
+            ]
+        ]
+    ]
+    """
+    cat_tree = [
+        ['dummy', []]
+    ]
+    """
+    category_tree_data = simplejson.dumps(cat_tree)
+        
     data = {
         'active_tab': 'ask',
         'page_class': 'ask-page',
         'form' : form,
         'mandatory_tags': models.tag.get_mandatory_tags(),
         'email_validation_faq_url':reverse('faq') + '#validate',
+        'use_category_selector': (askbot_settings.TAG_SOURCE == 'category-tree'),
+        'category_tree_data': category_tree_data,
+        'tag_names': list()#need to keep context in sync with edit_question for tag editor
     }
     return render_into_skin('ask.html', data, request)
 
@@ -401,6 +437,7 @@ def edit_question(request, id):
             'revision_form': revision_form,
             'mandatory_tags': models.tag.get_mandatory_tags(),
             'form' : form,
+            'tag_names': question.thread.get_tag_names()
         }
         return render_into_skin('question_edit.html', data, request)
 

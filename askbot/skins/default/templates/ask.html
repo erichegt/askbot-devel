@@ -27,6 +27,22 @@
     {% if mandatory_tags %}
         {% include "meta/mandatory_tags_js.html" %}
     {% endif %}
+    {% if use_category_selector %}
+        <script type='text/javascript'>
+            (function(){
+                var selector = new CategorySelector();
+                selector.setData(JSON.parse("{{category_tree_data|escapejs}}"));
+                if (askbot['data']['userIsAdminOrMod']) {
+                    selector.setEditable(true);
+                }
+                selector.decorate($('.category-selector'));
+
+                var tag_editor = new TagEditor();
+                tag_editor.decorate($('.tag-editor'));
+                selector.setSelectHandler(tag_editor.getAddTagHandler());
+            })();
+        </script>
+    {% endif %}
     <script type='text/javascript'>
         askbot['urls']['api_get_questions'] = '{% url api_get_questions %}';
         {% if settings.ENABLE_MATHJAX or settings.MARKUP_CODE_FRIENDLY %}

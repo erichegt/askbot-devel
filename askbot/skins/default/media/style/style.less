@@ -3538,6 +3538,37 @@ textarea.tipped-input {
     }
 }
 
+/* category selector */
+.category-selector {
+    td {
+        vertical-align: top;
+    }
+    li {
+        position: relative;
+        width: 232px;
+        color: #525252;
+    }
+    li.selected.tree:after {
+        content: ">";
+        position: absolute;
+        right: 5px;
+        font-weight: bold;
+        color: #C09853;
+    }
+}
+
+/* tag editor */
+.tag-editor {
+    height: 25px;
+    .enter-tags-prompt {
+        margin: 0px 10px;
+        color: #525252;
+    }
+    ul.tags {
+        margin: 15px 0 0 5px;
+    }
+}
+
 /* fixes for bootstrap */
 .caret {
     margin-bottom: 7px;
