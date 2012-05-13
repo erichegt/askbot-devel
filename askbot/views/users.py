@@ -57,7 +57,6 @@ def owner_or_moderator_required(f):
 
 def users(request, by_group = False, group_id = None, group_slug = None):
     """Users view, including listing of users by group"""
-    users = models.User.objects.all()
     group = None
     group_email_moderation_enabled = False
     user_can_join_group = False
@@ -80,11 +79,15 @@ def users(request, by_group = False, group_id = None, group_slug = None):
                 except models.Tag.DoesNotExist:
                     raise Http404
                 if group_slug == slugify(group.name):
-                    users = models.User.objects.filter(
+                    group_users = models.User.objects.filter(
                         group_memberships__group__id = group_id
                     )
                     if request.user.is_authenticated():
-                        user_is_group_member = bool(users.filter(id = request.user.id).count())
+                        user_is_group_member = bool(
+                                                    group_users.filter(
+                                                        id = request.user.id
+                                                    ).count()
+                                                )
                 else:
                     group_page_url = reverse(
                                         'users_by_group',
@@ -102,13 +105,13 @@ def users(request, by_group = False, group_id = None, group_slug = None):
     if askbot_settings.KARMA_MODE == 'private' and sortby == 'reputation':
         sortby = 'newest'
 
-    suser = request.REQUEST.get('query',  "")
     try:
         page = int(request.GET.get('page', '1'))
     except ValueError:
         page = 1
 
-    if suser == "":
+    search_query = request.REQUEST.get('query',  "")
+    if search_query == "":
         if sortby == "newest":
             order_by_parameter = '-date_joined'
         elif sortby == "last":
@@ -120,21 +123,18 @@ def users(request, by_group = False, group_id = None, group_slug = None):
             order_by_parameter = '-reputation'
 
         objects_list = Paginator(
-                            users.order_by(order_by_parameter),
+                            models.User.objects.order_by(order_by_parameter),
                             const.USERS_PAGE_SIZE
                         )
         base_url = request.path + '?sort=%s&' % sortby
     else:
         sortby = "reputation"
+        matching_users = models.get_users_by_text_query(search_query)
         objects_list = Paginator(
-                            users.filter(
-                                username__icontains = suser
-                            ).order_by(
-                                '-reputation'
-                            ),
+                            matching_users.order_by('-reputation'),
                             const.USERS_PAGE_SIZE
                         )
-        base_url = request.path + '?name=%s&sort=%s&' % (suser, sortby)
+        base_url = request.path + '?name=%s&sort=%s&' % (search_query, sortby)
 
     try:
         users_page = objects_list.page(page)
@@ -157,8 +157,7 @@ def users(request, by_group = False, group_id = None, group_slug = None):
         'page_class': 'users-page',
         'users' : users_page,
         'group': group,
-        'suser' : suser,
-        'keywords' : suser,
+        'search_query' : search_query,
         'tab_id' : sortby,
         'paginator_context' : paginator_context,
         'group_email_moderation_enabled': group_email_moderation_enabled,

@@ -50,8 +50,8 @@
     </div>
 </div>
 <div class="clean"></div>
-{% if suser %}
-    <p>{% trans %}users matching query {{suser}}:{% endtrans %}</p>
+{% if search_query %}
+    <p>{% trans %}users matching query {{search_query}}:{% endtrans %}</p>
 {% endif %}
 {% if not users.object_list %}
     <p><span>{% trans %}Nothing found.{% endtrans %}</span></p>
