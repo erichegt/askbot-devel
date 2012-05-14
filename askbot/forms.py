@@ -162,7 +162,7 @@ class TitleField(forms.CharField):
                             )
         self.max_length = 255
         self.label  = _('title')
-        self.help_text = _('please enter a descriptive title for your question')
+        self.help_text = _('Please enter a descriptive title for your question')
         self.initial = ''
 
     def clean(self, value):

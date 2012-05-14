@@ -2401,7 +2401,7 @@ TagEditor.prototype.setSelectedTags = function(tag_names) {
 TagEditor.prototype.addSelectedTag = function(tag_name) {
     var tag_names = this._hidden_tags_input.val();
     this._hidden_tags_input.val(tag_names + ' ' + tag_name);
-    this._prompt.hide();
+    $('.acResults').hide();//a hack to hide the autocompleter
 };
 
 TagEditor.prototype.removeSelectedTag = function(tag_name) {
@@ -2409,9 +2409,6 @@ TagEditor.prototype.removeSelectedTag = function(tag_name) {
     var idx = $.inArray(tag_name, tag_names);
     if (idx !== -1) {
         tag_names.splice(idx, 1)
-        if (tag_names.length === 0) {
-            this._prompt.show();
-        }
     }
     this.setSelectedTags(tag_names);
 };
@@ -2429,6 +2426,7 @@ TagEditor.prototype.addTag = function(tag_name) {
     tag.setDeleteHandler(function(){
         me.removeSelectedTag(tag_name);
         tag.dispose();
+        $('.acResults').hide();//a hack to hide the autocompleter
     });
     this._tags_container.append(tag.getElement());
     this.addSelectedTag(tag_name);
@@ -2513,7 +2511,6 @@ TagEditor.prototype.decorate = function(element) {
     this._element = element;
     this._hidden_tags_input = element.find('input[name="tags"]');//this one is hidden
     this._tags_container = element.find('ul.tags');
-    this._prompt = element.find('.enter-tags-prompt');
 
     var visible_tags_input = element.find('.new-tags-input');
     this._visible_tags_input = visible_tags_input;
@@ -2521,7 +2518,9 @@ TagEditor.prototype.decorate = function(element) {
     var me = this;
     var tagsAc = new AutoCompleter({
         url: askbot['urls']['get_tag_list'],
-        onItemSelect: function(){ me.completeTagInput() },
+        onItemSelect: function(){
+            me.completeTagInput();
+        },
         preloadData: true,
         minChars: 1,
         useCache: true,
@@ -2531,6 +2530,11 @@ TagEditor.prototype.decorate = function(element) {
     });
     tagsAc.decorate(visible_tags_input);
     visible_tags_input.keyup(this.getTagInputKeyHandler());
+
+    element.click(function(e) {
+        visible_tags_input.focus();
+        return false;
+    });
 };
 
 var CategorySelector = function() {

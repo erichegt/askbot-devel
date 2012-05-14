@@ -18,8 +18,9 @@
 {% if post_type == 'question' %}
     <div class="form-item">
         {% if use_category_selector %}
-            {% include "widgets/tag_editor.html" %}
             {% include "widgets/three_column_category_selector.html" %}
+            <div class="tags-desc">{% trans %}Tags{% endtrans %}</div>
+            {% include "widgets/tag_editor.html" %}
         {% else %}
             {% if tags_are_required %}
                 <label for=id_tags">

@@ -1373,6 +1373,14 @@ ul#related-tags li {
     margin-bottom: 5px;
 }
 
+.ask-page {
+    .title-desc, .tags-desc {
+        color: @info-text;
+        font-style: italic;
+        font-size: 16px;
+    }
+}
+
 #fmanswer input.submit,
 .ask-page input.submit,
 .edit-question-page input.submit {
@@ -3540,32 +3548,53 @@ textarea.tipped-input {
 
 /* category selector */
 .category-selector {
+    border-spacing: 0;
+    ul.select-box {
+        height: 150px;
+        width: 235px;
+        overflow: auto;
+        border: #ccc 3px solid;
+    }
     td {
         vertical-align: top;
     }
     li {
         position: relative;
-        width: 232px;
-        color: #525252;
+        color: @info-text;
     }
     li.selected.tree:after {
-        content: ">";
+        content: ">>";
         position: absolute;
         right: 5px;
         font-weight: bold;
         color: #C09853;
     }
+    th {
+        color: @info-text;
+        font-style: italic;
+        font-size: 16px;
+        font-weight: normal;
+        padding-top: 5px;
+        text-align: left;
+    }
 }
 
 /* tag editor */
 .tag-editor {
-    height: 25px;
-    .enter-tags-prompt {
-        margin: 0px 10px;
-        color: #525252;
-    }
+    height: 36px;
+    border: #ccc 3px solid;
+    padding-left: 8px;
     ul.tags {
-        margin: 15px 0 0 5px;
+        margin: 7px 0 0 0;
+        li {
+            margin-top: 1px;
+        }
+    }
+    input.new-tags-input {
+        line-height: 16px;
+        font-size: 15px;
+        font-color: @info-text;
+        border-style: none;
     }
 }
 
