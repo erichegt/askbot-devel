@@ -216,7 +216,6 @@ QSutils.add_search_tag = function(query_string, tag){
     return this.patch_query_string(query_string, 'tags:' + tag_string);
 };
 
-
 /* **************************************************** */
 
 /* some google closure-like code for the ui elements */
@@ -716,16 +715,6 @@ TwoStateToggle.prototype.isOn = function(){
     return this._element.hasClass('on');
 };
 
-TwoStateToggle.prototype.setOn = function(is_on){
-    if (is_on){
-        this._element.addClass('on');
-        this._element.html(this._state_messages['on-state']);
-    } else {
-        this._element.removeClass('on');
-        this._element.html(this._state_messages['off-state']);
-    }
-};
-
 TwoStateToggle.prototype.getDefaultHandler = function(){
     var me = this;
     return function(){
@@ -739,7 +728,11 @@ TwoStateToggle.prototype.getDefaultHandler = function(){
             data: data,
             success: function(data) {
                 if (data['success']) {
-                    me.setOn('is_enabled');
+                    if ( data['is_enabled'] ) {
+                        me.setState('on-state');
+                    } else {
+                        me.setState('off-state');
+                    }
                 } else {
                     showMessage(me.getElement(), data['message']);
                 }
@@ -748,22 +741,29 @@ TwoStateToggle.prototype.getDefaultHandler = function(){
     };
 };
 
+TwoStateToggle.prototype.isCheckBox = function(){
+    var element = this._element;
+    return element.attr('type') === 'checkbox';
+};
+
 TwoStateToggle.prototype.setState = function(state){
     var element = this._element;
     this._state = state;
     if (element) {
-        if (
-            element.attr('nodeName') === 'INPUT' && 
-            element.attr('type') === 'checkbox'
-        ) {
+        this.resetStyles();
+        element.addClass(state);
+        if (state === 'on-state') {
+            element.addClass('on');
+        } else if (state === 'off-state') {
+            element.removeClass('on');
+        }
+        if ( this.isCheckBox() ) {
             if (state === 'on-state') {
                 element.attr('checked', true);
             } else if (state === 'off-state') {
                 element.attr('checked', false);
             }
         } else {
-            this.resetStyles();
-            element.addClass(state);
             this._element.html(this._state_messages[state]);
         }
     }

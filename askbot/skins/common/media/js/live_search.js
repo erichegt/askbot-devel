@@ -1,3 +1,55 @@
+var TagWarningBox = function(){
+    WrappedElement.call(this);
+    this._tags = [];
+};
+inherits(TagWarningBox, WrappedElement);
+
+TagWarningBox.prototype.createDom = function(){
+    this._element = this.makeElement('div');
+    this._element
+        .css('display', 'block')
+        .css('margin', '0 0 13px 2px');
+    this._element.addClass('non-existing-tags');
+    this._warning = this.makeElement('p');
+    this._element.append(this._warning);
+    this._tag_container = this.makeElement('ul');
+    this._tag_container.addClass('tags');
+    this._element.append(this._tag_container);
+    this._element.append($('<div class="clearfix"></div>'));
+    this._element.hide();
+};
+
+TagWarningBox.prototype.clear = function(){
+    this._tags = [];
+    if (this._tag_container){
+        this._tag_container.empty();
+    }
+    this._warning.hide();
+    this._element.hide();
+};
+
+TagWarningBox.prototype.addTag = function(tag_name){
+   var tag = new Tag();
+   tag.setName(tag_name);
+   tag.setLinkable(false);
+   tag.setDeletable(false);
+   var elem = this.getElement();
+   this._tag_container.append(tag.getElement());
+   this._tag_container.css('display', 'block');
+   this._tags.push(tag);
+   elem.show();
+};
+
+TagWarningBox.prototype.showWarning = function(){
+    this._warning.html(
+        ngettext(
+            'Sorry, this tag does not exist',
+            'Sorry, these tags do not exist',
+            this._tags.length
+        )
+    );
+    this._warning.show();
+};
 
 var liveSearch = function(query_string) {
     var query = $('input#keywords');
@@ -7,6 +59,70 @@ var liveSearch = function(query_string) {
     var q_list_sel = 'question-list';//id of question listing div
     var search_url = askbot['urls']['questions'];
     var x_button = $('input[name=reset_query]');
+    var tag_warning_box = new TagWarningBox();
+
+    //the tag search input is optional in askbot
+    $('#ab-tag-search').parent().before(
+        tag_warning_box.getElement()
+    );
+
+    var run_tag_search = function(){
+        var search_tags = $('#ab-tag-search').val().split(/\s+/);
+        if (search_tags.length === 0) {
+            return;
+        }
+        /** @todo: the questions/ might need translation... */
+        query_string = '/questions/scope:all/sort:activity-desc/page:1/'
+        $.each(search_tags, function(idx, tag) {
+            query_string = QSutils.add_search_tag(query_string, search_tags);
+        });
+        var url = search_url + query_string;
+        $.ajax({
+            url: url,
+            dataType: 'json',
+            success: function(data, text_status, xhr){
+                render_result(data, text_status, xhr);
+                $('#ab-tag-search').val('');
+            },
+        });
+        updateHistory(url);
+    };
+
+    var activate_tag_search_input = function(){
+        //the autocomplete is set up in tag_selector.js
+        var button = $('#ab-tag-search-add');
+        if (button.length === 0){//may be absent
+            return;
+        }
+        var ac = new AutoCompleter({
+            url: askbot['urls']['get_tag_list'],
+            preloadData: true,
+            minChars: 1,
+            useCache: true,
+            matchInside: true,
+            maxCacheLength: 100,
+            maxItemsToShow: 20,
+            onItemSelect: run_tag_search,
+            delay: 10
+        });
+        ac.decorate($('#ab-tag-search'));
+        setupButtonEventHandlers(button, run_tag_search);
+        //var tag_search_input = $('#ab-tag-search');
+        //tag_search_input.keydown(
+        //    makeKeyHandler(13, run_tag_search)
+        //);
+    };
+
+    var render_tag_warning = function(tag_list){
+        if ( !tag_list ) {
+            return;
+        }
+        tag_warning_box.clear();
+        $.each(tag_list, function(idx, tag_name){
+            tag_warning_box.addTag(tag_name);
+        });
+        tag_warning_box.showWarning();
+    };
 
     var refresh_x_button = function(){
         if(query_val().length > 0){
@@ -69,6 +185,10 @@ var liveSearch = function(query_string) {
             },
             cache: false
         });
+        updateHistory(url);
+    };
+
+    var updateHistory = function(url) {
         var context = { state:1, rand:Math.random() };
         History.pushState( context, "Questions", url );
         setTimeout(function (){
@@ -195,6 +315,7 @@ var liveSearch = function(query_string) {
             }
             render_related_tags(data['related_tags'], data['query_string']);
             render_relevance_sort_tab(data['query_string']);
+            render_tag_warning(data['non_existing_tags']);
             set_active_sort_tab(data['query_data']['sort_order'], data['query_string']);
             if(data['feed_url']){
                 // Change RSS URL
@@ -214,11 +335,11 @@ var liveSearch = function(query_string) {
             var askHrefBase = askButton.attr('href').split('?')[0];
             askButton.attr('href', askHrefBase + data['query_data']['ask_query_string']); /* INFO: ask_query_string should already be URL-encoded! */
 
-
             query.focus();
 
             var old_list = $('#' + q_list_sel);
             var new_list = $('<div></div>').hide().html(data['questions']);
+            new_list.find('.timeago').timeago();
             old_list.stop(true).after(new_list).fadeOut(200, function() {
                 //show new div with a fadeIn effect
                 old_list.remove();
@@ -259,6 +380,8 @@ var liveSearch = function(query_string) {
             main_page_eval_handle = setTimeout(eval_query, 400);
         }
     });
+
+    activate_tag_search_input();
 
     $("form#searchForm").submit(function(event) {
         // if user clicks the button the s(h)e probably wants page reload,

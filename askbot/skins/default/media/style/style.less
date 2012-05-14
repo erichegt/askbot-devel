@@ -516,6 +516,8 @@ body.anon {
 
     p {
         margin-bottom: 4px;
+        color: @info-text;
+        font-family:@main-font;
     }
 
     p.info-box-follow-up-links {
@@ -588,13 +590,22 @@ body.anon {
     }
 
     .inputs{
-        #interestingTagInput, #ignoredTagInput, #subscribedTagInput{
+        #interestingTagInput,
+        #ignoredTagInput,
+        #subscribedTagInput,
+        #ab-tag-search {
             width:153px;
             padding-left:5px;
             border:#c9c9b5 1px solid;
             height:25px;
         }
-        #interestingTagAdd, #ignoredTagAdd, #subscribedTagAdd {
+        #ab-tag-search {
+            width: 135px;
+        }
+        #interestingTagAdd,
+        #ignoredTagAdd,
+        #subscribedTagAdd,
+        #ab-tag-search-add {
             background:url(../images/small-button-blue.png) repeat-x top;
             border:0;
             color:@button-label;
@@ -605,10 +616,12 @@ body.anon {
             margin-top:-2px;
             cursor:pointer;
             .rounded-corners(4px);
-             .text-shadow(0px,1px,0px,#E6F6FA);
-             .box-shadow(1px, 1px, 2px, #808080);
-             
-            
+            .text-shadow(0px,1px,0px,#E6F6FA);
+            .box-shadow(1px, 1px, 2px, #808080);
+       }
+       #ab-tag-search-add {
+            width: 47px;
+            margin-left: 3px;
        }
        #interestingTagAdd:hover, #ignoredTagAdd:hover, #subscribedTag:hover {
             background:url(../images/small-button-blue.png) repeat-x bottom;
@@ -1286,7 +1299,7 @@ ul#related-tags li {
 
 #askFormBar {
     display:inline-block;
-    padding: 4px 7px 5px 0px;
+    padding: 4px 7px 0px 0px;
     margin-top:0px;
     
     p{
@@ -1309,10 +1322,8 @@ ul#related-tags li {
 .ask-page, .edit-question-page {
 
     div#question-list {
-         float: none;
         border-bottom:#f0f0ec 1px solid;
-        float:left;
-        margin-bottom:10px;
+        float: none;
         a{
             line-height:30px;
         }
@@ -1359,6 +1370,7 @@ ul#related-tags li {
 .title-desc {
     color: @info-text;
     font-size: 13px;
+    margin-bottom: 5px;
 }
 
 #fmanswer input.submit,
@@ -2212,6 +2224,10 @@ ul#related-tags li {
     .cancel:hover{
         background:url(../images/small-button-cancel.png) repeat-x bottom !important;
     }
+}
+
+.openid-signin form {
+    margin-bottom: 5px;
 }
 
 #email-input-fs,#local_login_buttons,#password-fs,#openid-fs{

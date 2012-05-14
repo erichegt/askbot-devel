@@ -367,6 +367,8 @@ urlpatterns = patterns('',
     ),
 )
 
+#todo - this url below won't work, because it is defined above
+#therefore the stackexchange urls feature won't work
 if getattr(settings, 'ASKBOT_USE_STACKEXCHANGE_URLS', False):
     urlpatterns += (url(
         r'^%s(?P<id>\d+)/' % _('questions/'), 

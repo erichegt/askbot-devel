@@ -201,6 +201,15 @@ settings.register(
 )
 
 settings.register(
+    livesettings.BooleanValue(
+        FORUM_DATA_RULES,
+        'TAG_SEARCH_INPUT_ENABLED',
+        default = False,
+        description = _('Enable separate tag search box on main page')
+    )
+)
+
+settings.register(
     livesettings.IntegerValue(
         FORUM_DATA_RULES,
         'MAX_COMMENTS_TO_SHOW',
