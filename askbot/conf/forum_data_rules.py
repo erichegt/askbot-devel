@@ -130,7 +130,7 @@ settings.register(
 
 TAG_SOURCE_CHOICES = (
     ('category-tree', _('category tree')),
-    ('mandatory-tags', _('mandatory tags')),
+    ('user-input', _('user input')),
 )
 
 settings.register(
@@ -138,9 +138,9 @@ settings.register(
         FORUM_DATA_RULES,
         'TAG_SOURCE',
         description = _('Source of tags'),
-        hidden = True,
+        #hidden = True,
         choices = TAG_SOURCE_CHOICES,
-        default = 'mandatory-tags'
+        default = 'user-input'
     )
 )
 

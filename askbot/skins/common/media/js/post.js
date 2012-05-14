@@ -2386,20 +2386,21 @@ GroupJoinButton.prototype.getHandler = function(){
 
 var TagEditor = function() {
     WrappedElement.call(this);
+    this._has_hot_backspace = false;
 };
 inherits(TagEditor, WrappedElement);
 
 TagEditor.prototype.getSelectedTags = function() {
-    return $.trim(this._tags_input.val()).split(/\s+/);
+    return $.trim(this._hidden_tags_input.val()).split(/\s+/);
 };
 
 TagEditor.prototype.setSelectedTags = function(tag_names) {
-    this._tags_input.val($.trim(tag_names.join(' ')));
+    this._hidden_tags_input.val($.trim(tag_names.join(' ')));
 };
 
 TagEditor.prototype.addSelectedTag = function(tag_name) {
-    var tag_names = this._tags_input.val();
-    this._tags_input.val(tag_names + ' ' + tag_name);
+    var tag_names = this._hidden_tags_input.val();
+    this._hidden_tags_input.val(tag_names + ' ' + tag_name);
     this._prompt.hide();
 };
 
@@ -2415,32 +2416,121 @@ TagEditor.prototype.removeSelectedTag = function(tag_name) {
     this.setSelectedTags(tag_names);
 };
 
+TagEditor.prototype.addTag = function(tag_name) {
+    var tag_name = tag_name.replace(/\s+/, ' ').toLowerCase();
+    if ($.inArray(tag_name, this.getSelectedTags()) !== -1) {
+        return;
+    }
+    var tag = new Tag();
+    tag.setName(tag_name);
+    tag.setDeletable(true);
+    tag.setLinkable(true);
+    var me = this;
+    tag.setDeleteHandler(function(){
+        me.removeSelectedTag(tag_name);
+        tag.dispose();
+    });
+    this._tags_container.append(tag.getElement());
+    this.addSelectedTag(tag_name);
+};
+
 TagEditor.prototype.getAddTagHandler = function() {
     var me = this;
-    var tags_container = this._tags_container;
     return function(tag_name) {
-        var tag_name = tag_name.replace(/\s+/, ' ').toLowerCase();
-        if ($.inArray(tag_name, me.getSelectedTags()) !== -1) {
-            return;
-        }
-        var tag = new Tag();
-        tag.setName(tag_name);
-        tag.setDeletable(true);
-        tag.setLinkable(true);
-        tag.setDeleteHandler(function(){
-            me.removeSelectedTag(tag_name);
-            tag.dispose();
-        });
-        tags_container.append(tag.getElement());
-        me.addSelectedTag(tag_name);
+        me.addTag(tag_name);
+        me.clearNewTagInput();
     };
 };
 
+TagEditor.prototype.getRawNewTagValue = function() {
+    return this._visible_tags_input.val();//without trimming
+};
+
+TagEditor.prototype.clearNewTagInput = function() {
+    return this._visible_tags_input.val('');
+};
+
+TagEditor.prototype.editLastTag = function() {
+    //delete rendered tag
+    var tc = this._tags_container;
+    tc.find('li:last').remove();
+    //remove from hidden tags input
+    var tags = this.getSelectedTags();
+    var last_tag = tags.pop();
+    this.setSelectedTags(tags);
+    //populate the tag editor
+    this._visible_tags_input.val(last_tag);
+    putCursorAtEnd(this._visible_tags_input);
+};
+
+TagEditor.prototype.setHotBackspace = function(is_hot) {
+    this._has_hot_backspace = is_hot;
+};
+
+TagEditor.prototype.hasHotBackspace = function() {
+    return this._has_hot_backspace;
+};
+
+TagEditor.prototype.completeTagInput = function() {
+    var tag_name = $.trim(this._visible_tags_input.val());
+    if (tag_name.length > 0) {
+        this.addTag(tag_name);
+        this.clearNewTagInput();
+    }
+};
+
+TagEditor.prototype.getTagInputKeyHandler = function() {
+    var new_tags = this._visible_tags_input;
+    var me = this;
+    return function(e) {
+        if (e.shiftKey) {
+            return;
+        }
+        var key = e.which || e.keyCode;
+        var text = me.getRawNewTagValue();
+        //space 32, backspace 8, enter 13
+        if (key == 32 || key == 13) {
+            var tag_name = $.trim(text);
+            if (tag_name.length > 0) {
+                me.completeTagInput();
+            }
+        } else if (key == 8 && text.length == 0) {
+            if (me.hasHotBackspace() === true) {
+                me.editLastTag();
+            } else {
+                me.setHotBackspace(true);
+            }
+        }
+
+        if (key !== 8) {
+            me.setHotBackspace(false);
+        }
+        return false;
+    };
+}
+
 TagEditor.prototype.decorate = function(element) {
     this._element = element;
-    this._tags_input = element.find('input[name="tags"]');
+    this._hidden_tags_input = element.find('input[name="tags"]');//this one is hidden
     this._tags_container = element.find('ul.tags');
     this._prompt = element.find('.enter-tags-prompt');
+
+    var visible_tags_input = element.find('.new-tags-input');
+    this._visible_tags_input = visible_tags_input;
+
+    var me = this;
+    var tagsAc = new AutoCompleter({
+        url: askbot['urls']['get_tag_list'],
+        onItemSelect: function(){ me.completeTagInput() },
+        preloadData: true,
+        minChars: 1,
+        useCache: true,
+        matchInside: true,
+        maxCacheLength: 100,
+        delay: 10
+    });
+    tagsAc.decorate(visible_tags_input);
+    visible_tags_input.keyup(this.getTagInputKeyHandler());
 };
 
 var CategorySelector = function() {
