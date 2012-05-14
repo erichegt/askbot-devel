@@ -655,9 +655,9 @@ body.anon #searchBar .searchInputCancelable {
   background-image: -o-linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
   background-image: linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
   text-decoration: none;
-  text-shadow: 0px 1px 0px #e6f6fa;
-  -moz-text-shadow: 0px 1px 0px #e6f6fa;
-  -webkit-text-shadow: 0px 1px 0px #e6f6fa;
+  text-shadow: 0px 1px 0px #c6d9dd;
+  -moz-text-shadow: 0px 1px 0px #c6d9dd;
+  -webkit-text-shadow: 0px 1px 0px #c6d9dd;
 }
 .box .inputs #ab-tag-search-add {
   width: 47px;
