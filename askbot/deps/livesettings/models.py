@@ -131,7 +131,6 @@ class Setting(models.Model, CachedObjectMixin):
 
         self.cache_set()
 
-<<<<<<< Updated upstream
     def cache_set(self, *args, **kwargs):
         val = kwargs.pop('value', self)
         key = self.cache_key(*args, **kwargs)
@@ -139,8 +138,6 @@ class Setting(models.Model, CachedObjectMixin):
         length = getattr(settings, 'LIVESETTINGS_CACHE_TIMEOUT', settings.CACHE_TIMEOUT)
         cache_set(key, value=val, length=length)
 
-=======
->>>>>>> Stashed changes
     class Meta:
         unique_together = ('site', 'group', 'key')
 
@@ -181,7 +178,6 @@ class LongSetting(models.Model, CachedObjectMixin):
         super(LongSetting, self).save(force_insert=force_insert, force_update=force_update)
         self.cache_set()
 
-<<<<<<< Updated upstream
     def cache_set(self, *args, **kwargs):
         val = kwargs.pop('value', self)
         key = self.cache_key(*args, **kwargs)
@@ -189,8 +185,6 @@ class LongSetting(models.Model, CachedObjectMixin):
         length = getattr(settings, 'LIVESETTINGS_CACHE_TIMEOUT', settings.CACHE_TIMEOUT)
         cache_set(key, value=val, length=length)
 
-=======
->>>>>>> Stashed changes
     class Meta:
         unique_together = ('site', 'group', 'key')
 
