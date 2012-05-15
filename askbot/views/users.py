@@ -55,9 +55,53 @@ def owner_or_moderator_required(f):
         return f(request, profile_owner, context)
     return wrapped_func
 
-def users(request):
+def users(request, by_group = False, group_id = None, group_slug = None):
+    """Users view, including listing of users by group"""
+    users = models.User.objects.all()
+    group = None
+    group_email_moderation_enabled = False
+    user_can_join_group = False
+    user_is_group_member = False
+    if by_group == True:
+        if askbot_settings.GROUPS_ENABLED == False:
+            raise Http404
+        if group_id:
+            if all((group_id, group_slug)) == False:
+                return HttpResponseRedirect('groups')
+            else:
+                try:
+                    group = models.Tag.group_tags.get(id = group_id)
+                    group_email_moderation_enabled = \
+                        (
+                            askbot_settings.GROUP_EMAIL_ADDRESSES_ENABLED \
+                            and askbot_settings.ENABLE_CONTENT_MODERATION
+                        )
+                    user_can_join_group = group.group_profile.can_accept_user(request.user)
+                except models.Tag.DoesNotExist:
+                    raise Http404
+                if group_slug == slugify(group.name):
+                    users = models.User.objects.filter(
+                        group_memberships__group__id = group_id
+                    )
+                    if request.user.is_authenticated():
+                        user_is_group_member = bool(users.filter(id = request.user.id).count())
+                else:
+                    group_page_url = reverse(
+                                        'users_by_group',
+                                        kwargs = {
+                                            'group_id': group.id,
+                                            'group_slug': slugify(group.name)
+                                        }
+                                    )
+                    return HttpResponseRedirect(group_page_url)
+            
+
     is_paginated = True
+
     sortby = request.GET.get('sort', 'reputation')
+    if askbot_settings.KARMA_MODE == 'private' and sortby == 'reputation':
+        sortby = 'newest'
+
     suser = request.REQUEST.get('query',  "")
     try:
         page = int(request.GET.get('page', '1'))
@@ -76,23 +120,21 @@ def users(request):
             order_by_parameter = '-reputation'
 
         objects_list = Paginator(
-                            models.User.objects.all().order_by(
-                                                order_by_parameter
-                                            ),
+                            users.order_by(order_by_parameter),
                             const.USERS_PAGE_SIZE
                         )
-        base_url = reverse('users') + '?sort=%s&' % sortby
+        base_url = request.path + '?sort=%s&' % sortby
     else:
         sortby = "reputation"
         objects_list = Paginator(
-                            models.User.objects.filter(
-                                                username__icontains = suser
-                                            ).order_by(
-                                                '-reputation'
-                                            ),
+                            users.filter(
+                                username__icontains = suser
+                            ).order_by(
+                                '-reputation'
+                            ),
                             const.USERS_PAGE_SIZE
                         )
-        base_url = reverse('users') + '?name=%s&sort=%s&' % (suser, sortby)
+        base_url = request.path + '?name=%s&sort=%s&' % (suser, sortby)
 
     try:
         users_page = objects_list.page(page)
@@ -114,10 +156,14 @@ def users(request):
         'active_tab': 'users',
         'page_class': 'users-page',
         'users' : users_page,
+        'group': group,
         'suser' : suser,
         'keywords' : suser,
         'tab_id' : sortby,
-        'paginator_context' : paginator_context
+        'paginator_context' : paginator_context,
+        'group_email_moderation_enabled': group_email_moderation_enabled,
+        'user_can_join_group': user_can_join_group,
+        'user_is_group_member': user_is_group_member
     }
     return render_into_skin('users.html', data, request)
 
@@ -275,6 +321,9 @@ def user_stats(request, user, context):
     if request.user != user:
         question_filter['is_anonymous'] = False
 
+    if askbot_settings.ENABLE_CONTENT_MODERATION:
+        question_filter['approved'] = True
+
     #
     # Questions
     #
@@ -394,7 +443,7 @@ def user_stats(request, user, context):
         'votes_total_per_day': votes_total,
 
         'user_tags' : user_tags,
-
+        'user_groups': models.Tag.group_tags.get_for_user(user = user),
         'badges': badges,
         'total_badges' : len(badges),
     }
@@ -563,20 +612,32 @@ def user_responses(request, user, context):
     as well as mentions of the user
 
     user - the profile owner
+
+    the view has two sub-views - "forum" - i.e. responses
+    and "flags" - moderation items for mods only
     """
 
-    section = 'forum'
-    if request.user.is_moderator() or request.user.is_administrator():
-        if 'section' in request.GET and request.GET['section'] == 'flags':
-            section = 'flags'
+    #1) select activity types according to section
+    section = request.GET.get('section', 'forum')
+    if section == 'flags' and not\
+        (request.user.is_moderator() or request.user.is_administrator()):
+        raise Http404
 
     if section == 'forum':
         activity_types = const.RESPONSE_ACTIVITY_TYPES_FOR_DISPLAY
         activity_types += (const.TYPE_ACTIVITY_MENTION,)
-    else:
-        assert(section == 'flags')
+    elif section == 'flags':
         activity_types = (const.TYPE_ACTIVITY_MARK_OFFENSIVE,)
+        if askbot_settings.ENABLE_CONTENT_MODERATION:
+            activity_types += (
+                const.TYPE_ACTIVITY_MODERATED_NEW_POST,
+                const.TYPE_ACTIVITY_MODERATED_POST_EDIT
+            )
+    else:
+        raise Http404
 
+    #2) load the activity notifications according to activity types
+    #todo: insert pagination code here
     memo_set = models.ActivityAuditStatus.objects.filter(
                     user = request.user,
                     activity__activity_type__in = activity_types
@@ -590,17 +651,17 @@ def user_responses(request, user, context):
                     '-activity__active_at'
                 )[:const.USER_VIEW_DATA_SIZE]
 
-    #todo: insert pagination code here
-
+    #3) "package" data for the output
     response_list = list()
     for memo in memo_set:
+        #a monster query chain below
         response = {
             'id': memo.id,
             'timestamp': memo.activity.active_at,
             'user': memo.activity.user,
             'is_new': memo.is_new(),
             'response_url': memo.activity.get_absolute_url(),
-            'response_snippet': memo.activity.get_preview(),
+            'response_snippet': memo.activity.get_snippet(),
             'response_title': memo.activity.question.thread.title,
             'response_type': memo.activity.get_activity_type_display(),
             'response_id': memo.activity.question.id,
@@ -609,13 +670,14 @@ def user_responses(request, user, context):
         }
         response_list.append(response)
 
+    #4) sort by response id
     response_list.sort(lambda x,y: cmp(y['response_id'], x['response_id']))
-    last_response_id = None #flag to know if the response id is different
-    last_response_index = None #flag to know if the response index in the list is different
-    filtered_response_list = list()
 
+    #5) group responses by thread (response_id is really the question post id)
+    last_response_id = None #flag to know if the response id is different
+    filtered_response_list = list()
     for i, response in enumerate(response_list):
-        #todo: agrupate users
+        #todo: group responses by the user as well
         if response['response_id'] == last_response_id:
             original_response = dict.copy(filtered_response_list[len(filtered_response_list)-1])
             original_response['nested_responses'].append(response)
@@ -623,13 +685,11 @@ def user_responses(request, user, context):
         else:
             filtered_response_list.append(response)
             last_response_id = response['response_id']
-            last_response_index = i
 
-    response_list = filtered_response_list
-    
-    response_list.sort(lambda x,y: cmp(y['timestamp'], x['timestamp']))
-    filtered_response_list = list()
+    #6) sort responses by time
+    filtered_response_list.sort(lambda x,y: cmp(y['timestamp'], x['timestamp']))
 
+    reject_reasons = models.PostFlagReason.objects.all().order_by('title');
     data = {
         'active_tab':'users',
         'page_class': 'user-profile-page',
@@ -637,7 +697,8 @@ def user_responses(request, user, context):
         'inbox_section':section,
         'tab_description' : _('comments and answers to others questions'),
         'page_title' : _('profile - responses'),
-        'responses' : response_list,
+        'post_reject_reasons': reject_reasons,
+        'responses' : filtered_response_list,
     }
     context.update(data)
     return render_into_skin('user_profile/user_inbox.html', context, request)
@@ -804,6 +865,20 @@ def user(request, id, slug=None, tab_name=None):
     if not tab_name:
         tab_name = request.GET.get('sort', 'stats')
 
+    if askbot_settings.KARMA_MODE == 'public':
+        can_show_karma = True
+    elif askbot_settings.KARMA_MODE == 'hidden':
+        can_show_karma = False
+    else:
+        if request.user.is_administrator_or_moderator() \
+            or request.user == profile_owner:
+            can_show_karma = True
+        else:
+            can_show_karma = False
+
+    if can_show_karma == False and tab_name == 'reputation':
+        raise Http404
+
     user_view_func = USER_VIEW_CALL_TABLE.get(tab_name, user_stats)
 
     search_state = SearchState( # Non-default SearchState with user data set
@@ -818,6 +893,7 @@ def user(request, id, slug=None, tab_name=None):
 
     context = {
         'view_user': profile_owner,
+        'can_show_karma': can_show_karma,
         'search_state': search_state,
         'user_follow_feature_on': ('followit' in django_settings.INSTALLED_APPS),
     }
@@ -833,3 +909,18 @@ def update_has_custom_avatar(request):
             request.session['avatar_data_updated_at'] = datetime.datetime.now()
             return HttpResponse(simplejson.dumps({'status':'ok'}), mimetype='application/json')
     return HttpResponseForbidden()
+
+def groups(request, id = None, slug = None):
+    """output groups page
+    """
+    if askbot_settings.GROUPS_ENABLED == False:
+        raise Http404
+    groups = models.Tag.group_tags.get_all()
+    can_edit = request.user.is_authenticated() and \
+            request.user.is_administrator_or_moderator()
+    data = {
+        'groups': groups,
+        'can_edit': can_edit,
+        'active_tab': 'users'
+    }
+    return render_into_skin('groups.html', data, request)

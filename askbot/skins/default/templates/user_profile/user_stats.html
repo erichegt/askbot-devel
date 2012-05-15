@@ -6,6 +6,25 @@
 {% endblock %}
 {% block usercontent %}
     {% include "user_profile/user_info.html" %}
+    {% if settings.GROUPS_ENABLED %}
+    <div id="user-groups">
+        <h2>{% trans 
+                username = view_user.username
+            %}{{username}}'s groups{% endtrans %}
+        </h2>
+        <ul id="groups-list">
+        {% if user_groups %}
+            {% for group in user_groups %}
+            <li>
+                {{ macros.user_group(group) }}
+            </li>
+            {% endfor %}
+        {% endif %}
+        </ul>
+        <div class="clearfix"></div>
+        <a id="add-group">{% trans %}add group{% endtrans %}</a>
+    </div>
+    {% endif %}
     <a name="questions"></a>
     {% spaceless %}
         <h2>{% trans counter=question_count %}<span class="count">{{counter}}</span> Question{% pluralize %}<span class="count">{{counter}}</span> Questions{% endtrans %}</h2>
@@ -92,6 +111,7 @@
             </tr>
         </table>
     </div>
+    {% if settings.BADGES_MODE == 'public' %}
     <a name="badges"></a>
     {% spaceless %}
     <h2>{% trans counter=total_badges %}<span class="count">{{counter}}</span> Badge{% pluralize %}<span class="count">{{counter}}</span> Badges{% endtrans %}</h2>
@@ -131,26 +151,13 @@
             </tr>
         </table>
     </div>
+    {% endif %}
 {% endblock %}
 {% block endjs %}
     {{ super() }}
     <script type="text/javascript">
         $(document).ready(function(){
-            $('.badge-context-toggle').each(function(idx, elem){
-                var context_list = $(elem).parent().next('ul');
-                if (context_list.children().length > 0){
-                    $(elem).addClass('active');
-                    var toggle_display = function(){
-                        if (context_list.css('display') == 'none'){
-                            $('.badge-context-list').hide();{# hide all context lists #}
-                            context_list.show();
-                        } else {
-                            context_list.hide();
-                        }
-                    };
-                    $(elem).click(toggle_display);
-                }
-            });
+            setup_badge_details_toggle();
         });
     </script>
 {% endblock %}

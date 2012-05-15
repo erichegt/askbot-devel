@@ -1,0 +1,18 @@
+{% import "macros.html" as macros %}
+{% extends 'one_column_body.html' %}
+{% block title %}{% trans %}Groups{% endtrans %}{% endblock %}
+{% block content %}
+    <h1 class="section-title">{% trans %}Groups{% endtrans %}</h1>
+    {% if can_edit %}
+    <p id="group-add-tip">
+        {% trans %}Tip: to create a new group - please go to some user profile and add the new group there. That user will be the first member of the group{% endtrans %}
+    </p>
+    {% endif %}
+    <ul id="groups-list">
+    {% for group in groups %}
+        <li>
+            {{ macros.user_group(group) }}
+        </li>
+    {% endfor %}
+    </ul>
+{% endblock %}

@@ -19,6 +19,7 @@ CLOSE_REASONS = (
 )
 
 LONG_TIME = 60*60*24*30 #30 days is a lot of time
+DATETIME_FORMAT = '%I:%M %p, %d %b %Y'
 
 TYPE_REPUTATION = (
     (1, 'gain_by_upvoted'),
@@ -50,6 +51,11 @@ POST_SORT_METHODS = (
     ('votes-asc', _('least voted')),
     ('relevance-desc', _('relevance')),
 )
+
+POST_TYPES = ('answer', 'comment', 'question', 'tag_wiki', 'reject_reason')
+
+REPLY_SEPARATOR_TEMPLATE = '==== %(user_action)s %(instruction)s -=-=='
+REPLY_SEPARATOR_REGEX = re.compile('==== .* -=-==', re.MULTILINE)
 
 ANSWER_SORT_METHODS = (#no translations needed here
     'latest', 'oldest', 'votes'
@@ -117,6 +123,12 @@ TYPE_ACTIVITY_EMAIL_UPDATE_SENT = 18
 TYPE_ACTIVITY_MENTION = 19
 TYPE_ACTIVITY_UNANSWERED_REMINDER_SENT = 20
 TYPE_ACTIVITY_ACCEPT_ANSWER_REMINDER_SENT = 21
+TYPE_ACTIVITY_CREATE_TAG_WIKI = 22
+TYPE_ACTIVITY_UPDATE_TAG_WIKI = 23
+TYPE_ACTIVITY_MODERATED_NEW_POST = 24
+TYPE_ACTIVITY_MODERATED_POST_EDIT = 25
+TYPE_ACTIVITY_CREATE_REJECT_REASON = 26
+TYPE_ACTIVITY_UPDATE_REJECT_REASON = 27
 #TYPE_ACTIVITY_EDIT_QUESTION = 17
 #TYPE_ACTIVITY_EDIT_ANSWER = 18
 
@@ -149,6 +161,27 @@ TYPE_ACTIVITY = (
         _('reminder about accepting the best answer sent'),
     ),
     (TYPE_ACTIVITY_MENTION, _('mentioned in the post')),
+    (
+        TYPE_ACTIVITY_CREATE_TAG_WIKI,
+        _('created tag description'),
+    ),
+    (
+        TYPE_ACTIVITY_UPDATE_TAG_WIKI,
+        _('updated tag description')
+    ),
+    (TYPE_ACTIVITY_MODERATED_NEW_POST, _('made a new post')),
+    (
+        TYPE_ACTIVITY_MODERATED_POST_EDIT,
+        _('made an edit')
+    ),
+    (
+        TYPE_ACTIVITY_CREATE_REJECT_REASON,
+        _('created post reject reason'),
+    ),
+    (
+        TYPE_ACTIVITY_UPDATE_REJECT_REASON,
+        _('updated post reject reason')
+    ),
 )
 
 
@@ -216,10 +249,15 @@ POST_STATUS = {
 INCLUDE_ALL = 0
 EXCLUDE_IGNORED = 1
 INCLUDE_INTERESTING = 2
-TAG_FILTER_STRATEGY_CHOICES = (
-    (INCLUDE_ALL, _('off')),
-    (EXCLUDE_IGNORED, _('exclude ignored')),
-    (INCLUDE_INTERESTING, _('only selected')),
+TAG_DISPLAY_FILTER_STRATEGY_CHOICES = (
+    (INCLUDE_ALL, _('show all tags')),
+    (EXCLUDE_IGNORED, _('exclude ignored tags')),
+    (INCLUDE_INTERESTING, _('only interesting tags')),
+)
+TAG_EMAIL_FILTER_STRATEGY_CHOICES = (
+    (INCLUDE_ALL, _('email for all tags')),
+    (EXCLUDE_IGNORED, _('exclude ignored tags')),
+    (INCLUDE_INTERESTING, _('only subscribed tags')),
 )
 
 NOTIFICATION_DELIVERY_SCHEDULE_CHOICES = (

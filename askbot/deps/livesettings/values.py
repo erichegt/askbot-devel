@@ -6,6 +6,7 @@ from decimal import Decimal
 from django import forms
 from django.conf import settings as django_settings
 from django.core.exceptions import ImproperlyConfigured
+from django.core.cache import cache
 from django.utils import simplejson
 from django.utils.datastructures import SortedDict
 from django.utils.encoding import smart_str
@@ -149,6 +150,7 @@ class Value(object):
             - `hidden` - If true, then render a hidden field.
             - `default` - If given, then this Value will return that default whenever it has no assocated `Setting`.
             - `update_callback` - if given, then this value will call the callback whenever updated
+            - `clear_cache` - if `True` - clear all the caches on updates
         """
         self.group = group
         self.key = key
@@ -159,6 +161,7 @@ class Value(object):
         self.hidden = kwargs.pop('hidden', False)
         self.update_callback = kwargs.pop('update_callback', None)
         self.requires = kwargs.pop('requires', None)
+        self.clear_cache = kwargs.pop('clear_cache', False)
         if self.requires:
             reqval = kwargs.pop('requiresvalue', key)
             if not is_list_or_tuple(reqval):
@@ -366,6 +369,9 @@ class Value(object):
                     s.save()
 
                 signals.configuration_value_changed.send(self, old_value=current_value, new_value=new_value, setting=self)
+                
+                if self.clear_cache:
+                    cache.clear()
 
                 return True
         else:

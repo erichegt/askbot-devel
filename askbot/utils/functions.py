@@ -18,6 +18,25 @@ def enumerate_string_list(strings):
     numbered_strings = enumerate(strings, start = 1)
     return [ '%d) %s' % item for item in numbered_strings ]
 
+def pad_string(text):
+    """Inserts one space between words,
+    including one space before the first word
+    and after the last word.
+    String without words is collapsed to ''
+    """
+    words = text.strip().split()
+    if len(words) > 0:
+        return ' ' + ' '.join(words) + ' '
+    else:
+        return ''
+
+def split_list(text):
+    """Takes text, representing a loosely formatted
+    list (comma, semicolon, empty space separated
+    words) and returns a list() of words.
+    """
+    text = text.replace(',', ' ').replace(';', ' ')
+    return text.strip().split()
 
 def is_iterable(thing):
     if hasattr(thing, '__iter__'):

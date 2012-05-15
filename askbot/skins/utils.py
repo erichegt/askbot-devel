@@ -73,7 +73,9 @@ def get_path_to_skin(skin):
 def get_skin_choices():
     """returns a tuple for use as a set of
     choices in the form"""
-    skin_names = list(reversed(get_available_skins().keys()))
+    available_skins = get_available_skins().keys()
+    available_skins.remove('common')
+    skin_names = list(reversed(available_skins))
     return zip(skin_names, skin_names)
 
 def resolve_skin_for_media(media=None, preferred_skin = None):
@@ -192,25 +194,6 @@ def update_media_revision(skin = None):
     current_hash = hasher.get_hash_of_dirs(media_dirs)
 
     if current_hash != askbot_settings.MEDIA_RESOURCE_REVISION_HASH:
-        try:
-            askbot_settings.update('MEDIA_RESOURCE_REVISION', resource_revision + 1)
-            logging.debug('media revision worked for MEDIA_RESOURCE_REVISION')
-        except Exception, e:
-            logging.critical(e.message)
-            safe_settings_update('MEDIA_RESOURCE_REVISION', resource_revision + 1)
-
-        try:
-            askbot_settings.update('MEDIA_RESOURCE_REVISION_HASH', current_hash)
-            logging.debug('media revision worked for MEDIA_RESOURCE_REVISION_HASH')
-        except Exception, e:
-            logging.critical(e.message)
-            safe_settings_update('MEDIA_RESOURCE_REVISION_HASH', current_hash)
+        askbot_settings.update('MEDIA_RESOURCE_REVISION', resource_revision + 1)
+        askbot_settings.update('MEDIA_RESOURCE_REVISION_HASH', current_hash)
         logging.debug('MEDIA_RESOURCE_REVISION changed')
-
-
-def safe_settings_update(key, value):
-    '''Fallback when IntegrityError bug raises'''
-    from askbot.deps.livesettings.models import Setting
-    setting = Setting.objects.get(key=key)
-    setting.value = value
-    setting.save()

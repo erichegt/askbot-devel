@@ -9,6 +9,7 @@ from django.core import cache  # import cache, not from cache import cache, to b
 from django.core.urlresolvers import reverse
 from django.utils.hashcompat import md5_constructor
 from django.utils.translation import ugettext as _
+from django.utils.translation import ungettext
 
 import askbot
 import askbot.conf
@@ -61,7 +62,18 @@ class ThreadManager(models.Manager):
     def create(self, *args, **kwargs):
         raise NotImplementedError
 
-    def create_new(self, title, author, added_at, wiki, text, tagnames=None, is_anonymous=False):
+    def create_new(
+                self,
+                title,
+                author,
+                added_at,
+                wiki,
+                text,
+                tagnames = None,
+                is_anonymous = False,
+                by_email = False,
+                email_address = None
+            ):
         # TODO: Some of this code will go to Post.objects.create_new
 
         thread = super(
@@ -74,6 +86,7 @@ class ThreadManager(models.Manager):
             last_activity_by=author
         )
 
+        #todo: code below looks like ``Post.objects.create_new()``
         question = Post(
             post_type='question',
             thread=thread,
@@ -102,6 +115,8 @@ class ThreadManager(models.Manager):
             text = text,
             comment = const.POST_STATUS['default_version'],
             revised_at = added_at,
+            by_email = by_email,
+            email_address = email_address
         )
 
         # INFO: Question has to be saved before update_tags() is called
@@ -155,7 +170,13 @@ class ThreadManager(models.Manager):
         from askbot.conf import settings as askbot_settings # Avoid circular import
 
         # TODO: add a possibility to see deleted questions
-        qs = self.filter(posts__post_type='question', posts__deleted=False) # (***) brings `askbot_post` into the SQL query, see the ordering section below
+        qs = self.filter(
+                posts__post_type='question', 
+                posts__deleted=False,
+            ) # (***) brings `askbot_post` into the SQL query, see the ordering section below
+
+        if askbot_settings.ENABLE_CONTENT_MODERATION:
+            qs = qs.filter(approved = True)
 
         meta_data = {}
 
@@ -169,8 +190,31 @@ class ThreadManager(models.Manager):
                 qs = qs.filter(posts__post_type='question', posts__author__in=query_users) # TODO: unify with search_state.author ?
 
         tags = search_state.unified_tags()
-        for tag in tags:
-            qs = qs.filter(tags__name=tag) # Tags or AND-ed here, not OR-ed (i.e. we fetch only threads with all tags)
+        if len(tags) > 0:
+
+            if askbot_settings.TAG_SEARCH_INPUT_ENABLED:
+                #todo: this may be gone or disabled per option
+                #"tag_search_box_enabled"
+                existing_tags = set(
+                    Tag.objects.filter(
+                        name__in = tags
+                    ).values_list(
+                        'name',
+                        flat = True
+                    )
+                )
+
+                non_existing_tags = set(tags) - existing_tags
+                meta_data['non_existing_tags'] = list(non_existing_tags)
+                tags = existing_tags
+            else:
+                meta_data['non_existing_tags'] = list()
+
+            #construct filter for the tag search
+            for tag in tags:
+                qs = qs.filter(tags__name=tag) # Tags or AND-ed here, not OR-ed (i.e. we fetch only threads with all tags)
+        else:
+            meta_data['non_existing_tags'] = list()
 
         if search_state.scope == 'unanswered':
             qs = qs.filter(closed = False) # Do not show closed questions in unanswered section
@@ -205,8 +249,19 @@ class ThreadManager(models.Manager):
         if request_user and request_user.is_authenticated():
             #mark questions tagged with interesting tags
             #a kind of fancy annotation, would be nice to avoid it
-            interesting_tags = Tag.objects.filter(user_selections__user=request_user, user_selections__reason='good')
-            ignored_tags = Tag.objects.filter(user_selections__user=request_user, user_selections__reason='bad')
+            interesting_tags = Tag.objects.filter(
+                user_selections__user = request_user,
+                user_selections__reason = 'good'
+            )
+            ignored_tags = Tag.objects.filter(
+                user_selections__user = request_user,
+                user_selections__reason = 'bad'
+            )
+            if askbot_settings.SUBSCRIBED_TAG_SELECTOR_ENABLED:
+                meta_data['subscribed_tag_names'] = Tag.objects.filter(
+                    user_selections__user = request_user,
+                    user_selections__reason = 'subscribed'
+                ).values_list('name', flat = True)
 
             meta_data['interesting_tag_names'] = [tag.name for tag in interesting_tags]
             meta_data['ignored_tag_names'] = [tag.name for tag in ignored_tags]
@@ -331,6 +386,11 @@ class Thread(models.Model):
                                             blank=True
                                         )
 
+    #denormalized data: the core approval of the posts is made
+    #in the revisions. In the revisions there is more data about
+    #approvals - by whom and when
+    approved = models.BooleanField(default=True, db_index=True)
+
     accepted_answer = models.ForeignKey(Post, null=True, blank=True, related_name='+')
     answer_accepted_at = models.DateTimeField(null=True, blank=True)
     added_at = models.DateTimeField(default = datetime.datetime.now)
@@ -416,6 +476,21 @@ class Thread(models.Model):
         else:
             return self.title
 
+    def format_for_email(self):
+        """experimental function: output entire thread for email"""
+        question, answers, junk = self.get_cached_post_data()
+        output = question.format_for_email_as_subthread()
+        if answers:
+            answer_heading = ungettext(
+                                    '%(count)d answer:',
+                                    '%(count)d answers:',
+                                    len(answers)
+                                ) % {'count': len(answers)}
+            output += '<p>%s</p>' % answer_heading
+            for answer in answers:
+                output += answer.format_for_email_as_subthread()
+        return output
+
     def tagname_meta_generator(self):
         return u','.join([unicode(tag) for tag in self.get_tag_names()])
 
@@ -456,7 +531,7 @@ class Thread(models.Model):
         #self.invalidate_cached_thread_content_fragment()
         self.update_summary_html()
 
-    def get_cached_post_data(self, sort_method = None):
+    def get_cached_post_data(self, sort_method = 'votes'):
         """returns cached post data, as calculated by
         the method get_post_data()"""
         key = self.get_post_data_cache_key(sort_method)
@@ -466,7 +541,7 @@ class Thread(models.Model):
             cache.cache.set(key, post_data, const.LONG_TIME)
         return post_data
 
-    def get_post_data(self, sort_method = None):
+    def get_post_data(self, sort_method = 'votes'):
         """returns question, answers as list and a list of post ids
         for the given thread
         the returned posts are pre-stuffed with the comments
@@ -475,9 +550,9 @@ class Thread(models.Model):
         """
         thread_posts = self.posts.all().order_by(
                     {
-                        "latest":"-added_at",
-                        "oldest":"added_at",
-                        "votes":"-score"
+                        'latest':'-added_at',
+                        'oldest':'added_at',
+                        'votes':'-score'
                     }[sort_method]
                 )
         #1) collect question, answer and comment posts and list of post id's
@@ -489,6 +564,8 @@ class Thread(models.Model):
         for post in thread_posts:
             #pass through only deleted question posts
             if post.deleted and post.post_type != 'question':
+                continue
+            if post.approved == False:#hide posts on the moderation queue
                 continue
 
             post_to_author[post.id] = post.author_id
@@ -633,7 +710,7 @@ class Thread(models.Model):
         previous_tags = list(self.tags.all())
 
         previous_tagnames = set([tag.name for tag in previous_tags])
-        updated_tagnames = set(t for t in tagnames.split(' '))
+        updated_tagnames = set(t for t in tagnames.strip().split(' '))
 
         removed_tagnames = previous_tagnames - updated_tagnames
         added_tagnames = updated_tagnames - previous_tagnames
@@ -708,7 +785,7 @@ class Thread(models.Model):
 
         thread_question = self._question_post()
 
-        self.tagnames = tagnames
+        self.tagnames = tagnames.strip()
         self.save()
 
         # Update the Question itself

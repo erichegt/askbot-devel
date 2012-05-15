@@ -50,7 +50,7 @@ urlpatterns = patterns('',
     url(
         r'^%s(?P<id>\d+)/%s$' % (_('answers/'), _('revisions/')), 
         views.readers.revisions, 
-        kwargs = {'object_name': 'Answer'},
+        kwargs = {'post_type': 'answer'},
         name='answer_revisions'
     ),
 
@@ -116,7 +116,7 @@ urlpatterns = patterns('',
     url(
         r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('revisions/')), 
         views.readers.revisions, 
-        kwargs = {'object_name': 'Question'},
+        kwargs = {'post_type': 'question'},
         name='question_revisions'
     ),
     url(
@@ -159,6 +159,7 @@ urlpatterns = patterns('',
         views.readers.tags, 
         name='tags'
     ),
+    #todo: collapse these three urls and use an extra json data var
     url(#ajax only
         r'^%s%s$' % ('mark-tag/', 'interesting/'),
         views.commands.mark_tag,
@@ -170,6 +171,12 @@ urlpatterns = patterns('',
         views.commands.mark_tag,
         kwargs={'reason':'bad','action':'add'},
         name='mark_ignored_tag'
+    ),
+    url(#ajax only
+        r'^%s%s$' % ('mark-tag/', 'subscribed/'),
+        views.commands.mark_tag,
+        kwargs={'reason':'subscribed','action':'add'},
+        name='mark_subscribed_tag'
     ),
     url(#ajax only
         r'^unmark-tag/',
@@ -193,6 +200,41 @@ urlpatterns = patterns('',
         name = 'get_tag_list'
     ),
     url(
+        r'^load-tag-wiki-text/',
+        views.commands.load_tag_wiki_text,
+        name = 'load_tag_wiki_text'
+    ),
+    url(#ajax only
+        r'^save-tag-wiki-text/',
+        views.commands.save_tag_wiki_text,
+        name = 'save_tag_wiki_text'
+    ),
+    url(#ajax only
+        r'^save-group-logo-url/',
+        views.commands.save_group_logo_url,
+        name = 'save_group_logo_url'
+    ),
+    url(#ajax only
+        r'^delete-group-logo/',
+        views.commands.delete_group_logo,
+        name = 'delete_group_logo'
+    ),
+    url(#ajax only
+        r'^toggle-group-profile-property/',
+        views.commands.toggle_group_profile_property,
+        name = 'toggle_group_profile_property'
+    ),
+    url(#ajax only
+        r'^edit-object-property-text/',
+        views.commands.edit_object_property_text,
+        name = 'edit_object_property_text'
+    ),
+    url(
+        r'^get-groups-list/',
+        views.commands.get_groups_list,
+        name = 'get_groups_list'
+    ),
+    url(
         r'^swap-question-with-answer/',
         views.commands.swap_question_with_answer,
         name = 'swap_question_with_answer'
@@ -207,11 +249,17 @@ urlpatterns = patterns('',
         views.users.users, 
         name='users'
     ),
+    url(
+        r'^%s%s(?P<group_id>\d+)/(?P<group_slug>.*)/$' % (_('users/'), _('by-group/')),
+        views.users.users, 
+        kwargs = {'by_group': True},
+        name = 'users_by_group'
+    ),
     #todo: rename as user_edit, b/c that's how template is named
     url(
         r'^%s(?P<id>\d+)/%s$' % (_('users/'), _('edit/')),
         views.users.edit_user,
-        name='edit_user'
+        name ='edit_user'
     ),
     url(
         r'^%s(?P<id>\d+)/(?P<slug>.+)/%s$' % (
@@ -226,6 +274,11 @@ urlpatterns = patterns('',
         r'^%s(?P<id>\d+)/(?P<slug>.+)/$' % _('users/'),
         views.users.user,
         name='user_profile'
+    ),
+    url(
+        r'^%s$' % _('groups/'),
+        views.users.groups,
+        name='groups'
     ),
     url(
         r'^%s$' % _('users/update_has_custom_avatar/'),
@@ -248,9 +301,29 @@ urlpatterns = patterns('',
         name='read_message'
     ),
     url(#ajax only
-        r'^manage_inbox/$',
+        r'^manage-inbox/$',
         views.commands.manage_inbox,
         name='manage_inbox'
+    ),
+    url(#ajax only
+        r'^save-post-reject-reason/$',
+        views.commands.save_post_reject_reason,
+        name='save_post_reject_reason'
+    ),
+    url(#ajax only
+        r'^delete-post-reject-reason/$',
+        views.commands.delete_post_reject_reason,
+        name='delete_post_reject_reason'
+    ),
+    url(#ajax only
+        r'^edit-group-membership/$',
+        views.commands.edit_group_membership,
+        name='edit_group_membership'
+    ),
+    url(#ajax only
+        r'^join-or-leave-group/$',
+        views.commands.join_or_leave_group,
+        name = 'join_or_leave_group'
     ),
     url(
         r'^feeds/(?P<url>.*)/$', 
@@ -294,6 +367,8 @@ urlpatterns = patterns('',
     ),
 )
 
+#todo - this url below won't work, because it is defined above
+#therefore the stackexchange urls feature won't work
 if getattr(settings, 'ASKBOT_USE_STACKEXCHANGE_URLS', False):
     urlpatterns += (url(
         r'^%s(?P<id>\d+)/' % _('questions/'), 

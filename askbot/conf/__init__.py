@@ -3,8 +3,10 @@ import askbot
 import askbot.conf.minimum_reputation
 import askbot.conf.vote_rules
 import askbot.conf.reputation_changes
+import askbot.conf.karma_and_badges_visibility
 import askbot.conf.email
 import askbot.conf.forum_data_rules
+import askbot.conf.moderation
 import askbot.conf.flatpages
 import askbot.conf.site_settings
 import askbot.conf.license
@@ -17,6 +19,7 @@ import askbot.conf.sidebar_profile
 import askbot.conf.leading_sidebar
 import askbot.conf.spam_and_moderation
 import askbot.conf.user_settings
+import askbot.conf.group_settings
 import askbot.conf.markup
 import askbot.conf.social_sharing
 import askbot.conf.badges

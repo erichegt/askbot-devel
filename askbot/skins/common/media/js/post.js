@@ -1542,9 +1542,11 @@ Comment.prototype.setContent = function(data){
     this._comment_body.append(this._user_link);
 
     this._comment_body.append(' (');
-    this._comment_age = $('<span class="age"></span>');
-    this._comment_age.html(this._data['comment_age']);
-    this._comment_body.append(this._comment_age);
+    this._comment_added_at = $('<abbr class="timeago"></abbr>');
+    this._comment_added_at.html(this._data['comment_added_at']);
+    this._comment_added_at.attr('title', this._data['comment_added_at']);
+    this._comment_added_at.timeago();
+    this._comment_body.append(this._comment_added_at);
     this._comment_body.append(')');
 
     if (this._editable){
@@ -1567,8 +1569,8 @@ Comment.prototype.dispose = function(){
     if (this._user_link){
         this._user_link.remove();
     }
-    if (this._comment_age){
-        this._comment_age.remove();
+    if (this._comment_added_at){
+        this._comment_added_at.remove();
     }
     if (this._delete_icon){
         this._delete_icon.dispose();
@@ -1904,6 +1906,481 @@ QASwapper.prototype.startSwapping = function(){
             break;
         }
     }
+};
+
+/**
+ * @constructor
+ */
+var WMD = function(){
+    WrappedElement.call(this);
+    this._markdown = undefined;
+    this._enabled_buttons = 'bold italic link blockquote code ' +
+        'image attachment ol ul heading hr';
+    this._is_previewer_enabled = true;
+};
+inherits(WMD, WrappedElement);
+
+WMD.prototype.setEnabledButtons = function(buttons){
+    this._enabled_buttons = buttons;
+};
+
+WMD.prototype.setPreviewerEnabled = function(state){
+    this._is_previewer_enabled = state;
+    if (this._previewer){
+        this._previewer.hide();
+    }
+};
+
+WMD.prototype.setEscapeHandler = function(handler){
+    this._escape_handler = handler;
+};
+
+WMD.prototype.createDom = function(){
+    this._element = this.makeElement('div');
+    var clearfix = this.makeElement('div').addClass('clearfix');
+    this._element.append(clearfix);
+
+    var wmd_container = this.makeElement('div');
+    wmd_container.addClass('wmd-container');
+    this._element.append(wmd_container);
+
+    var wmd_buttons = this.makeElement('div')
+                        .attr('id', 'wmd-button-bar')
+                        .addClass('wmd-panel');
+    wmd_container.append(wmd_buttons);
+
+    var editor = this.makeElement('textarea')
+                        .attr('id', 'editor');
+    wmd_container.append(editor);
+    this._textarea = editor;
+
+    if (this._markdown){
+        editor.val(this._markdown);
+    }
+
+    var previewer = this.makeElement('div')
+                        .attr('id', 'previewer')
+                        .addClass('wmd-preview');
+    wmd_container.append(previewer);
+    this._previewer = previewer;
+    if (this._is_previewer_enabled === false) {
+        previewer.hide();
+    }
+};
+
+WMD.prototype.setMarkdown = function(text){
+    this._markdown = text;
+    if (this._textarea){
+        this._textarea.val(text);
+    }
+};
+
+WMD.prototype.getMarkdown = function(){
+    return this._textarea.val();
+};
+
+WMD.prototype.start = function(){
+    Attacklab.Util.startEditor(true, this._enabled_buttons);
+    this._textarea.keyup(makeKeyHandler(27, this._escape_handler));
+};
+
+/**
+ * @constructor
+ */
+var TagWikiEditor = function(){
+    WrappedElement.call(this);
+    this._state = 'display';//'edit' or 'display'
+    this._content_backup  = '';
+    this._is_editor_loaded = false;
+    this._enabled_editor_buttons = null;
+    this._is_previewer_enabled = false;
+};
+inherits(TagWikiEditor, WrappedElement);
+
+TagWikiEditor.prototype.backupContent = function(){
+    this._content_backup = this._content_box.contents();
+};
+
+TagWikiEditor.prototype.setEnabledEditorButtons = function(buttons){
+    this._enabled_editor_buttons = buttons;
+};
+
+TagWikiEditor.prototype.setPreviewerEnabled = function(state){
+    this._is_previewer_enabled = state;
+    if (this.isEditorLoaded()){
+        this._editor.setPreviewerEnabled(this._is_previewer_enabled);
+    }
+};
+
+TagWikiEditor.prototype.setContent = function(content){
+    this._content_box.empty();
+    this._content_box.append(content);
+};
+
+TagWikiEditor.prototype.setState = function(state){
+    if (state === 'edit'){
+        this._state = state;
+        this._edit_btn.hide();
+        this._cancel_btn.show();
+        this._save_btn.show();
+        this._cancel_sep.show();
+    } else if (state === 'display'){
+        this._state = state;
+        this._edit_btn.show();
+        this._cancel_btn.hide();
+        this._cancel_sep.hide();
+        this._save_btn.hide();
+    }
+};
+
+TagWikiEditor.prototype.restoreContent = function(){
+    var content_box = this._content_box;
+    content_box.empty();
+    $.each(this._content_backup, function(idx, element){
+        content_box.append(element);
+    });
+};
+
+TagWikiEditor.prototype.getTagId = function(){
+    return this._tag_id;
+};
+
+TagWikiEditor.prototype.isEditorLoaded = function(){
+    return this._is_editor_loaded;
+};
+
+TagWikiEditor.prototype.setEditorLoaded = function(){
+    return this._is_editor_loaded = true;
+};
+
+/**
+ * loads initial data for the editor input and activates
+ * the editor
+ */
+TagWikiEditor.prototype.startActivatingEditor = function(){
+    var editor = this._editor;
+    var me = this;
+    $.ajax({
+        type: 'GET',
+        url: askbot['urls']['load_tag_wiki_text'],
+        data: {tag_id: me.getTagId()},
+        cache: false,
+        success: function(data){
+            me.backupContent();
+            editor.setMarkdown(data);
+            me.setContent(editor.getElement());
+            me.setState('edit');
+            if (me.isEditorLoaded() === false){
+                editor.start();
+                me.setEditorLoaded();
+            }
+        }
+    });
+};
+
+TagWikiEditor.prototype.saveData = function(){
+    var me = this;
+    var text = this._editor.getMarkdown();
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        url: askbot['urls']['save_tag_wiki_text'],
+        data: {tag_id: me.getTagId(), text: text},
+        cache: false,
+        success: function(data){
+            if (data['success']){
+                me.setState('display');
+                me.setContent(data['html']);
+            } else {
+                showMessage(me.getElement(), data['message']);
+            }
+        }
+    });
+};
+
+TagWikiEditor.prototype.cancelEdit = function(){
+    this.restoreContent(); 
+    this.setState('display');
+};
+
+TagWikiEditor.prototype.decorate = function(element){
+    //expect <div id='group-wiki-{{id}}'><div class="content"/><a class="edit"/></div>
+    this._element = element;
+    var edit_btn = element.find('.edit-description');
+    this._edit_btn = edit_btn;
+
+    //adding two buttons...
+    var save_btn = this.makeElement('a');
+    save_btn.html(gettext('save'));
+    edit_btn.after(save_btn);
+    save_btn.hide();
+    this._save_btn = save_btn;
+
+    var cancel_btn = this.makeElement('a');
+    cancel_btn.html(gettext('cancel'));
+    save_btn.after(cancel_btn);
+    cancel_btn.hide();
+    this._cancel_btn = cancel_btn;
+
+    this._cancel_sep = $('<span> | </span>');
+    cancel_btn.before(this._cancel_sep);
+    this._cancel_sep.hide();
+
+    this._content_box = element.find('.content');
+    this._tag_id = element.attr('id').split('-').pop();
+
+    var me = this;
+    var editor = new WMD();
+    if (this._enabled_editor_buttons){
+        editor.setEnabledButtons(this._enabled_editor_buttons);
+    }
+    editor.setPreviewerEnabled(this._is_previewer_enabled);
+    editor.setEscapeHandler(function(){me.cancelEdit()});
+    this._editor = editor;
+    setupButtonEventHandlers(edit_btn, function(){ me.startActivatingEditor() });
+    setupButtonEventHandlers(cancel_btn, function(){me.cancelEdit()});
+    setupButtonEventHandlers(save_btn, function(){me.saveData()});
+};
+
+var ImageChanger = function(){
+    WrappedElement.call(this);
+    this._image_element = undefined;
+    this._delete_button = undefined;
+    this._save_url = undefined;
+    this._delete_url = undefined;
+    this._messages = undefined;
+};
+inherits(ImageChanger, WrappedElement);
+
+ImageChanger.prototype.setImageElement = function(image_element){
+    this._image_element = image_element;
+};
+
+ImageChanger.prototype.setMessages = function(messages){
+    this._messages = messages;
+};
+
+ImageChanger.prototype.setDeleteButton = function(delete_button){
+    this._delete_button = delete_button;
+};
+
+ImageChanger.prototype.setSaveUrl = function(url){
+    this._save_url = url;
+};
+
+ImageChanger.prototype.setDeleteUrl = function(url){
+    this._delete_url = url;
+};
+
+ImageChanger.prototype.setAjaxData = function(data){
+    this._ajax_data = data;
+};
+
+ImageChanger.prototype.showImage = function(image_url){
+    this._image_element.attr('src', image_url);
+    this._image_element.show();
+};
+
+ImageChanger.prototype.deleteImage = function(){
+    this._image_element.attr('src', '');
+    this._image_element.css('display', 'none');
+
+    var me = this;
+    var delete_url = this._delete_url;
+    var data = this._ajax_data;
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        url: delete_url,
+        data: data,
+        cache: false,
+        success: function(data){
+            if (data['success'] === true){
+                showMessage(me.getElement(), data['message'], 'after');
+            }
+        }
+    });
+};
+
+ImageChanger.prototype.saveImageUrl = function(image_url){
+    var me = this;
+    var data = this._ajax_data;
+    data['image_url'] = image_url;
+    var save_url = this._save_url;
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        url: save_url,
+        data: data,
+        cache: false,
+        success: function(data){
+            if (!data['success']){
+                showMessage(me.getElement(), data['message'], 'after');
+            }
+        }
+    });
+};
+
+ImageChanger.prototype.startDialog = function(){
+    //reusing the wmd's file uploader
+    var me = this;
+    var change_image_text = this._messages['change_image'];
+    var change_image_button = this._element;
+    Attacklab.Util.prompt(
+        "<h3>" + gettext('Enter the logo url or upload an image') + '</h3>',
+        'http://',
+        function(image_url){
+            if (image_url){
+                me.saveImageUrl(image_url);
+                me.showImage(image_url);
+                change_image_button.html(change_image_text);
+                me.showDeleteButton();
+            }
+        },
+        'image'
+    );
+};
+
+ImageChanger.prototype.showDeleteButton = function(){
+    this._delete_button.show();
+    this._delete_button.prev().show();
+};
+
+ImageChanger.prototype.hideDeleteButton = function(){
+    this._delete_button.hide();
+    this._delete_button.prev().hide();
+};
+
+
+ImageChanger.prototype.startDeleting = function(){
+    if (confirm(gettext('Do you really want to remove the image?'))){
+        this.deleteImage();
+        this._element.html(this._messages['add_image']);
+        this.hideDeleteButton();
+        this._delete_button.hide();
+        var sep = this._delete_button.prev();
+        sep.hide();
+    };
+};
+
+/**
+ * decorates an element that will serve as the image changer button
+ */
+ImageChanger.prototype.decorate = function(element){
+    this._element = element;
+    var me = this;
+    setupButtonEventHandlers(
+        element,
+        function(){
+            me.startDialog();
+        }
+    );
+    setupButtonEventHandlers(
+        this._delete_button,
+        function(){
+            me.startDeleting();
+        }
+    )
+};
+
+var UserGroupProfileEditor = function(){
+    TagWikiEditor.call(this);
+};
+inherits(UserGroupProfileEditor, TagWikiEditor);
+
+UserGroupProfileEditor.prototype.toggleEmailModeration = function(){
+    var btn = this._moderate_email_btn;
+    var group_id = this.getTagId();
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        cache: false,
+        data: {group_id: group_id},
+        url: askbot['urls']['toggle_group_email_moderation'],
+        success: function(data){
+            if (data['success']){
+                btn.html(data['new_button_text']);
+            } else {
+                showMessage(btn, data['message']);
+            }
+        }
+    });
+};
+
+UserGroupProfileEditor.prototype.decorate = function(element){
+    this.setEnabledEditorButtons('bold italic link ol ul');
+    this.setPreviewerEnabled(false);
+    UserGroupProfileEditor.superClass_.decorate.call(this, element);
+    var change_logo_btn = element.find('.change-logo');
+    this._change_logo_btn = change_logo_btn;
+
+    var moderate_email_toggle = new TwoStateToggle();
+    moderate_email_toggle.setPostData({
+        group_id: this.getTagId(),
+        property_name: 'moderate_email'
+    });
+    var moderate_email_btn = element.find('#moderate-email');
+    this._moderate_email_btn = moderate_email_btn;
+    moderate_email_toggle.decorate(moderate_email_btn);
+
+    var open_group_toggle = new TwoStateToggle();
+    open_group_toggle.setPostData({
+        group_id: this.getTagId(),
+        property_name: 'is_open'
+    });
+    var open_group_btn = element.find('#open-or-close-group');
+    open_group_toggle.decorate(open_group_btn);
+
+    var email_editor = new TextPropertyEditor();
+    email_editor.decorate(element.find('#preapproved-emails'));
+
+    var domain_editor = new TextPropertyEditor();
+    domain_editor.decorate(element.find('#preapproved-email-domains'));
+
+    var logo_changer = new ImageChanger();
+    logo_changer.setImageElement(element.find('.group-logo'));
+    logo_changer.setAjaxData({
+        group_id: this.getTagId()
+    });
+    logo_changer.setSaveUrl(askbot['urls']['save_group_logo_url']);
+    logo_changer.setDeleteUrl(askbot['urls']['delete_group_logo_url']);
+    logo_changer.setMessages({
+        change_image: gettext('change logo'),
+        add_image: gettext('add logo')
+    });
+    var delete_logo_btn = element.find('.delete-logo');
+    logo_changer.setDeleteButton(delete_logo_btn);
+    logo_changer.decorate(change_logo_btn);
+};
+
+var GroupJoinButton = function(group_id){
+    TwoStateToggle.call(this);
+    this._group_id = group_id;
+};
+inherits(GroupJoinButton, TwoStateToggle);
+
+GroupJoinButton.prototype.getPostData = function(){
+    return { group_id: this._group_id };
+};
+
+GroupJoinButton.prototype.getHandler = function(){
+    var me = this;
+    return function(){
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            cache: false,
+            data: me.getPostData(),
+            url: askbot['urls']['join_or_leave_group'],
+            success: function(data){
+                if (data['success']){
+                    me.setOn(data['is_member']);
+                } else {
+                    showMessage(me.getElement(), data['message']);
+                }
+            }
+        });
+    };
 };
 
 $(document).ready(function() {

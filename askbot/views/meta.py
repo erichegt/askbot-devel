@@ -111,6 +111,8 @@ def privacy(request):
 
 def badges(request):#user status/reputation system
     #todo: supplement database data with the stuff from badges.py
+    if askbot_settings.BADGES_MODE != 'public':
+        raise Http404
     known_badges = badge_data.BADGES.keys()
     badges = BadgeData.objects.filter(slug__in = known_badges).order_by('slug')
     my_badges = []

@@ -12,7 +12,7 @@ from askbot.conf.super_groups import CONTENT_AND_UI
 
 GENERAL_SKIN_SETTINGS = ConfigurationGroup(
                     'GENERAL_SKIN_SETTINGS',
-                    _('Logos and HTML <head> parts'),
+                    _('Skin, logos and HTML <head> parts'),
                     super_group = CONTENT_AND_UI
                 )
 
@@ -54,6 +54,7 @@ LANGUAGE_CHOICES = (
             ('zh_TW', _("Chinese (Taiwan)")),
         )
 
+"""
 settings.register(
     values.StringValue(
         GENERAL_SKIN_SETTINGS,
@@ -63,6 +64,7 @@ settings.register(
         description = _('Select Language'),
     )
 )
+"""
 
 settings.register(
     values.BooleanValue(

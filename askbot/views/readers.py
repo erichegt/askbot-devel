@@ -76,6 +76,9 @@ def questions(request, **kwargs):
 
     qs, meta_data = models.Thread.objects.run_advanced_search(request_user=request.user, search_state=search_state)
 
+    if meta_data['non_existing_tags']:
+        search_state = search_state.remove_tags(meta_data['non_existing_tags'])
+
     paginator = Paginator(qs, page_size)
     if paginator.num_pages < search_state.page:
         search_state.page = 1
@@ -129,10 +132,7 @@ def questions(request, **kwargs):
     if request.is_ajax():
         q_count = paginator.count
 
-        if search_state.tags:
-            question_counter = ungettext('%(q_num)s question, tagged', '%(q_num)s questions, tagged', q_count)
-        else:
-            question_counter = ungettext('%(q_num)s question', '%(q_num)s questions', q_count)
+        question_counter = ungettext('%(q_num)s question', '%(q_num)s questions', q_count)
         question_counter = question_counter % {'q_num': humanize.intcomma(q_count),}
 
         if q_count > page_size:
@@ -166,6 +166,7 @@ def questions(request, **kwargs):
             'query_string': search_state.query_string(),
             'page_size' : page_size,
             'questions': questions_html.replace('\n',''),
+            'non_existing_tags': meta_data['non_existing_tags']
         }
         ajax_data['related_tags'] = [{
             'name': tag.name,
@@ -182,8 +183,9 @@ def questions(request, **kwargs):
             'contributors' : contributors,
             'context' : paginator_context,
             'is_unanswered' : False,#remove this from template
-            'interesting_tag_names': meta_data.get('interesting_tag_names',None),
-            'ignored_tag_names': meta_data.get('ignored_tag_names',None),
+            'interesting_tag_names': meta_data.get('interesting_tag_names', None),
+            'ignored_tag_names': meta_data.get('ignored_tag_names', None),
+            'subscribed_tag_names': meta_data.get('subscribed_tag_names', None),
             'language_code': translation.get_language(),
             'name_of_anonymous_user' : models.get_name_of_anonymous_user(),
             'page_class': 'main-page',
@@ -200,7 +202,8 @@ def questions(request, **kwargs):
             'tags' : related_tags,
             'tag_list_type' : tag_list_type,
             'font_size' : extra_tags.get_tag_font_size(related_tags),
-            'tag_filter_strategy_choices': const.TAG_FILTER_STRATEGY_CHOICES,
+            'display_tag_filter_strategy_choices': const.TAG_DISPLAY_FILTER_STRATEGY_CHOICES,
+            'email_tag_filter_strategy_choices': const.TAG_EMAIL_FILTER_STRATEGY_CHOICES,
             'update_avatar_data': schedules.should_update_avatar_data(request),
             'query_string': search_state.query_string(),
             'search_state': search_state,
@@ -356,7 +359,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
         return HttpResponseRedirect(reverse('index'))
 
     #redirect if slug in the url is wrong
-    if request.path.split('/')[-1] != question_post.slug:
+    if request.path.split('/')[-2] != question_post.slug:
         logging.debug('no slug match!')
         question_url = '?'.join((
                             question_post.get_absolute_url(),
@@ -389,7 +392,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
                 'deleted and is no longer accessible'
             )
             request.user.message_set.create(message = error_message)
-            return HttpResponseRedirect(reverse('question', kwargs = {'id': id}))
+            return HttpResponseRedirect(question_post.thread.get_absolute_url())
 
         if str(show_comment.thread._question_post().id) != str(id):
             return HttpResponseRedirect(show_comment.get_absolute_url())
@@ -552,15 +555,12 @@ def question(request, id):#refactor - long subroutine. display question body, an
     #print datetime.datetime.now() - before
     return result
 
-def revisions(request, id, object_name=None):
-    if object_name == 'Question':
-        post = get_object_or_404(models.Post, post_type='question', id=id)
-    else:
-        post = get_object_or_404(models.Post, post_type='answer', id=id)
+def revisions(request, id, post_type = None):
+    assert post_type in ('question', 'answer')
+    post = get_object_or_404(models.Post, post_type=post_type, id=id)
     revisions = list(models.PostRevision.objects.filter(post=post))
     revisions.reverse()
     for i, revision in enumerate(revisions):
-        revision.html = revision.as_html()
         if i == 0:
             revision.diff = revisions[i].html
             revision.summary = _('initial version')

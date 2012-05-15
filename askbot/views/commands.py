@@ -10,18 +10,20 @@ from django.core import exceptions
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect, Http404, HttpResponseBadRequest
-from django.forms import ValidationError
+from django.forms import ValidationError, IntegerField, CharField
 from django.shortcuts import get_object_or_404
 from django.views.decorators import csrf
 from django.utils import simplejson
 from django.utils.translation import ugettext as _
+from django.utils.translation import string_concat
 from askbot import models
 from askbot import forms
 from askbot.conf import should_show_sort_by_relevance
 from askbot.conf import settings as askbot_settings
 from askbot.utils import decorators
 from askbot.utils import url_utils
-from askbot.skins.loaders import render_into_skin
+from askbot.utils import mail
+from askbot.skins.loaders import render_into_skin, get_template
 from askbot import const
 import logging
 
@@ -41,7 +43,12 @@ def manage_inbox(request):
                 post_data = simplejson.loads(request.raw_post_data)
                 if request.user.is_authenticated():
                     activity_types = const.RESPONSE_ACTIVITY_TYPES_FOR_DISPLAY
-                    activity_types += (const.TYPE_ACTIVITY_MENTION, const.TYPE_ACTIVITY_MARK_OFFENSIVE,)
+                    activity_types += (
+                        const.TYPE_ACTIVITY_MENTION,
+                        const.TYPE_ACTIVITY_MARK_OFFENSIVE,
+                        const.TYPE_ACTIVITY_MODERATED_NEW_POST,
+                        const.TYPE_ACTIVITY_MODERATED_POST_EDIT
+                    )
                     user = request.user
                     memo_set = models.ActivityAuditStatus.objects.filter(
                         id__in = post_data['memo_list'],
@@ -58,20 +65,54 @@ def manage_inbox(request):
                         memo_set.update(status = models.ActivityAuditStatus.STATUS_SEEN)
                     elif action_type == 'remove_flag':
                         for memo in memo_set:
-                            request.user.flag_post(post = memo.activity.content_object, cancel_all = True)
-                    elif action_type == 'close':
-                        for memo in memo_set:
-                            if memo.activity.content_object.post_type == "question":
-                                request.user.close_question(question = memo.activity.content_object, reason = 7)
+                            activity_type = memo.activity.activity_type
+                            if activity_type == const.TYPE_ACTIVITY_MARK_OFFENSIVE:
+                                request.user.flag_post(
+                                    post = memo.activity.content_object,
+                                    cancel_all = True
+                                )
+                            elif activity_type in \
+                                (
+                                    const.TYPE_ACTIVITY_MODERATED_NEW_POST,
+                                    const.TYPE_ACTIVITY_MODERATED_POST_EDIT
+                                ):
+                                post_revision = memo.activity.content_object
+                                request.user.approve_post_revision(post_revision)
                                 memo.delete()
+
+                    #elif action_type == 'close':
+                    #    for memo in memo_set:
+                    #        if memo.activity.content_object.post_type == "question":
+                    #            request.user.close_question(question = memo.activity.content_object, reason = 7)
+                    #            memo.delete()
                     elif action_type == 'delete_post':
                         for memo in memo_set:
-                            request.user.delete_post(post = memo.activity.content_object)
+                            content_object = memo.activity.content_object
+                            if isinstance(content_object, models.PostRevision):
+                                post = content_object.post
+                            else:
+                                post = content_object
+                            request.user.delete_post(post)
+                            reject_reason = models.PostFlagReason.objects.get(
+                                                    id = post_data['reject_reason_id']
+                                                )
+                            body_text = string_concat(
+                                _('Your post (copied in the end),'),
+                                '<br/>',
+                                _('was rejected for the following reason:'),
+                                '<br/><br/>',
+                                reject_reason.details.html,
+                                '<br/><br/>',
+                                _('Here is your original post'),
+                                '<br/><br/>',
+                                post.text
+                            )
+                            mail.send_mail(
+                                subject_line = _('your post was not accepted'),
+                                body_text = unicode(body_text),
+                                recipient_list = [post.author,]
+                            )
                             memo.delete()
-                    else:
-                        raise exceptions.PermissionDenied(
-                            _('Oops, apologies - there was some error')
-                        )
 
                     user.update_response_counts()
 
@@ -439,7 +480,49 @@ def get_tag_list(request):
                         'name', flat = True
                     )
     output = '\n'.join(tag_names)
-    return HttpResponse(output, mimetype = "text/plain")
+    return HttpResponse(output, mimetype = 'text/plain')
+
+@decorators.get_only
+def load_tag_wiki_text(request):
+    """returns text of the tag wiki in markdown format"""
+    tag = get_object_or_404(models.Tag, id = request.GET['tag_id'])
+    tag_wiki_text = getattr(tag.tag_wiki, 'text', '').strip()
+    return HttpResponse(tag_wiki_text, mimetype = 'text/plain')
+
+@csrf.csrf_exempt
+@decorators.ajax_only
+@decorators.post_only
+def save_tag_wiki_text(request):
+    """if tag wiki text does not exist,
+    creates a new record, otherwise edits an existing
+    tag wiki record"""
+    form = forms.EditTagWikiForm(request.POST)
+    if form.is_valid():
+        tag_id = form.cleaned_data['tag_id']
+        text = form.cleaned_data['text'] or ' '#a hack to save blank data
+        tag = models.Tag.objects.get(id = tag_id)
+        if tag.tag_wiki:
+            request.user.edit_post(tag.tag_wiki, body_text = text)
+            tag_wiki = tag.tag_wiki
+        else:
+            tag_wiki = request.user.post_tag_wiki(tag, body_text = text)
+        return {'html': tag_wiki.html}
+    else:
+        raise ValueError('invalid post data')
+            
+
+@decorators.get_only
+def get_groups_list(request):
+    """returns names of group tags
+    for the autocomplete function"""
+    group_names = models.Tag.group_tags.get_all().filter(
+                                    deleted = False
+                                ).values_list(
+                                    'name', flat = True
+                                )
+    group_names = map(lambda v: v.replace('-', ' '), group_names)
+    output = '\n'.join(group_names)
+    return HttpResponse(output, mimetype = 'text/plain')
 
 @csrf.csrf_protect
 def subscribe_for_tags(request):
@@ -501,14 +584,18 @@ def api_get_questions(request):
 @decorators.post_only
 @decorators.ajax_login_required
 def set_tag_filter_strategy(request):
-    """saves data in the ``User.display_tag_filter_strategy``
+    """saves data in the ``User.[email/display]_tag_filter_strategy``
     for the current user
     """
     filter_type = request.POST['filter_type']
     filter_value = int(request.POST['filter_value'])
-    assert(filter_type == 'display')
-    assert(filter_value in dict(const.TAG_FILTER_STRATEGY_CHOICES))
-    request.user.display_tag_filter_strategy = filter_value
+    assert(filter_type in ('display', 'email'))
+    if filter_type == 'display':
+        assert(filter_value in dict(const.TAG_DISPLAY_FILTER_STRATEGY_CHOICES))
+        request.user.display_tag_filter_strategy = filter_value
+    else:
+        assert(filter_value in dict(const.TAG_EMAIL_FILTER_STRATEGY_CHOICES))
+        request.user.email_tag_filter_strategy = filter_value
     request.user.save()
     return HttpResponse('', mimetype = "application/json")
 
@@ -643,3 +730,182 @@ def read_message(request):#marks message a read
             if request.user.is_authenticated():
                 request.user.delete_messages()
     return HttpResponse('')
+
+
+@csrf.csrf_exempt
+@decorators.ajax_only
+@decorators.post_only
+@decorators.admins_only
+def edit_group_membership(request):
+    form = forms.EditGroupMembershipForm(request.POST)
+    if form.is_valid():
+        group_name = form.cleaned_data['group_name']
+        user_id = form.cleaned_data['user_id']
+        try:
+            user = models.User.objects.get(id = user_id)
+        except models.User.DoesNotExist:
+            raise exceptions.PermissionDenied(
+                'user with id %d not found' % user_id
+            )
+
+        action = form.cleaned_data['action']
+        #warning: possible race condition
+        if action == 'add':
+            group_params = {'group_name': group_name, 'user': user}
+            group = models.Tag.group_tags.get_or_create(**group_params)
+            request.user.edit_group_membership(user, group, 'add')
+            template = get_template('widgets/group_snippet.html')
+            return {
+                'name': group.name,
+                'description': getattr(group.tag_wiki, 'text', ''),
+                'html': template.render({'group': group})
+            }
+        elif action == 'remove':
+            try:
+                group = models.Tag.group_tags.get_by_name(group_name = group_name)
+                request.user.edit_group_membership(user, group, 'remove')
+            except models.Tag.DoesNotExist:
+                raise exceptions.PermissionDenied()
+        else:
+            raise exceptions.PermissionDenied()
+    else:
+        raise exceptions.PermissionDenied()
+
+
+@csrf.csrf_exempt
+@decorators.ajax_only
+@decorators.post_only
+@decorators.admins_only
+def save_group_logo_url(request):
+    """saves urls for the group logo"""
+    form = forms.GroupLogoURLForm(request.POST)    
+    if form.is_valid():
+        group_id = form.cleaned_data['group_id']
+        image_url = form.cleaned_data['image_url']
+        group = models.Tag.group_tags.get(id = group_id)
+        group.group_profile.logo_url = image_url
+        group.group_profile.save()
+    else:
+        raise ValueError('invalid data found when saving group logo')
+
+
+@csrf.csrf_exempt
+@decorators.ajax_only
+@decorators.post_only
+@decorators.admins_only
+def delete_group_logo(request):
+    group_id = IntegerField().clean(int(request.POST['group_id']))
+    group = models.Tag.group_tags.get(id = group_id)
+    group.group_profile.logo_url = None
+    group.group_profile.save()
+
+
+@csrf.csrf_exempt
+@decorators.ajax_only
+@decorators.post_only
+@decorators.admins_only
+def delete_post_reject_reason(request):
+    reason_id = IntegerField().clean(int(request.POST['reason_id']))
+    reason = models.PostFlagReason.objects.get(id = reason_id)
+    reason.delete()
+
+
+@csrf.csrf_exempt
+@decorators.ajax_only
+@decorators.post_only
+@decorators.admins_only
+def toggle_group_profile_property(request):
+    #todo: this might be changed to more general "toggle object property"
+    group_id = IntegerField().clean(int(request.POST['group_id']))
+    property_name = CharField().clean(request.POST['property_name'])
+    assert property_name in ('is_open', 'moderate_email')
+
+    group = models.Tag.objects.get(id = group_id)
+    new_value = not getattr(group.group_profile, property_name)
+    setattr(group.group_profile, property_name, new_value)
+    group.group_profile.save()
+    return {'is_enabled': new_value}
+
+
+@csrf.csrf_exempt
+@decorators.ajax_only
+@decorators.admins_only
+def edit_object_property_text(request):
+    model_name = CharField().clean(request.REQUEST['model_name'])
+    object_id = IntegerField().clean(request.REQUEST['object_id'])
+    property_name = CharField().clean(request.REQUEST['property_name'])
+
+    accessible_fields = (
+        ('GroupProfile', 'preapproved_emails'),
+        ('GroupProfile', 'preapproved_email_domains')
+    )
+
+    if (model_name, property_name) not in accessible_fields:
+        raise exceptions.PermissionDenied()
+
+    obj = models.get_model(model_name).objects.get(id=object_id)
+    if request.method == 'POST':
+        text = CharField().clean(request.POST['text'])
+        setattr(obj, property_name, text)
+        obj.save()
+    elif request.method == 'GET':
+        return {'text': getattr(obj, property_name)}
+    else:
+        raise exceptions.PermissionDenied()
+
+
+@csrf.csrf_exempt
+@decorators.ajax_only
+@decorators.post_only
+def join_or_leave_group(request):
+    """only current user can join/leave group"""
+    if request.user.is_anonymous():
+        raise exceptions.PermissionDenied()
+
+    group_id = IntegerField().clean(request.POST['group_id'])
+    group = models.Tag.objects.get(id = group_id)
+
+    if request.user.is_group_member(group):
+        action = 'remove'
+        is_member = False
+    else:
+        action = 'add'
+        is_member = True
+    request.user.edit_group_membership(
+        user = request.user,
+        group = group,
+        action = action
+    )
+    return {'is_member': is_member}
+
+
+@csrf.csrf_exempt
+@decorators.ajax_only
+@decorators.post_only
+@decorators.admins_only
+def save_post_reject_reason(request):
+    """saves post reject reason and returns the reason id
+    if reason_id is not given in the input - a new reason is created,
+    otherwise a reason with the given id is edited and saved
+    """
+    form = forms.EditRejectReasonForm(request.POST)
+    if form.is_valid():
+        title = form.cleaned_data['title']
+        details = form.cleaned_data['details']
+        if form.cleaned_data['reason_id'] is None:
+            reason = request.user.create_post_reject_reason(
+                title = title, details = details
+            )
+        else:
+            reason_id = form.cleaned_data['reason_id']
+            reason = models.PostFlagReason.objects.get(id = reason_id)
+            request.user.edit_post_reject_reason(
+                reason, title = title, details = details
+            )
+        return {
+            'reason_id': reason.id,
+            'title': title,
+            'details': details
+        }
+    else:
+        raise Exception(forms.format_form_errors(form))

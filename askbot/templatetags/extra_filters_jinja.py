@@ -1,4 +1,5 @@
 import datetime
+import pytz
 import re
 import time
 import urllib
@@ -34,6 +35,16 @@ def absolutize_urls_func(text):
     text = url_re3.sub(replacement, text)
     return url_re4.sub(replacement, text)
 absolutize_urls = register.filter(absolutize_urls_func)
+
+TIMEZONE_STR = pytz.timezone(
+                    django_settings.TIME_ZONE
+                ).localize(
+                    datetime.datetime.now()
+                ).strftime('%z')
+
+@register.filter
+def add_tz_offset(datetime_object):
+    return str(datetime_object) + ' ' + TIMEZONE_STR
 
 @register.filter
 def strip_path(url):

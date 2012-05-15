@@ -18,8 +18,14 @@ def get_info_on_moderation_items(user):
     if not(user.is_moderator() or user.is_administrator()):
         return None
 
+    content_types = (
+        const.TYPE_ACTIVITY_MARK_OFFENSIVE,
+        const.TYPE_ACTIVITY_MODERATED_NEW_POST,
+        const.TYPE_ACTIVITY_MODERATED_POST_EDIT,
+    )
+
     messages = models.ActivityAuditStatus.objects.filter(
-        activity__activity_type = const.TYPE_ACTIVITY_MARK_OFFENSIVE,
+        activity__activity_type__in = content_types,
         user = user
     )
 
