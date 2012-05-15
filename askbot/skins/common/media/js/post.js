@@ -2427,6 +2427,7 @@ TagEditor.prototype.addTag = function(tag_name) {
         me.removeSelectedTag(tag_name);
         tag.dispose();
         $('.acResults').hide();//a hack to hide the autocompleter
+        me.fixHeight();
     });
     this._tags_container.append(tag.getElement());
     this.addSelectedTag(tag_name);
@@ -2437,6 +2438,7 @@ TagEditor.prototype.getAddTagHandler = function() {
     return function(tag_name) {
         me.addTag(tag_name);
         me.clearNewTagInput();
+        me.fixHeight();
     };
 };
 
@@ -2477,6 +2479,27 @@ TagEditor.prototype.completeTagInput = function() {
     }
 };
 
+TagEditor.prototype.saveHeight = function() {
+    return;
+    var elem = this._visible_tags_input;
+    this._height = elem.offset().top;
+};
+
+TagEditor.prototype.fixHeight = function() {
+    return;
+    var new_height = this._visible_tags_input.offset().top;
+    //@todo: replace this by real measurement
+    var element_height = parseInt(
+        this._element.css('height').replace('px', '')
+    );
+    if (new_height > this._height) {
+        this._element.css('height', element_height + 28);//magic number!!!
+    } else if (new_height < this._height) {
+        this._element.css('height', element_height - 28);//magic number!!!
+    }
+    this.saveHeight();
+};
+
 TagEditor.prototype.getTagInputKeyHandler = function() {
     var new_tags = this._visible_tags_input;
     var me = this;
@@ -2484,6 +2507,7 @@ TagEditor.prototype.getTagInputKeyHandler = function() {
         if (e.shiftKey) {
             return;
         }
+        me.saveHeight();
         var key = e.which || e.keyCode;
         var text = me.getRawNewTagValue();
         //space 32, backspace 8, enter 13
@@ -2503,6 +2527,7 @@ TagEditor.prototype.getTagInputKeyHandler = function() {
         if (key !== 8) {
             me.setHotBackspace(false);
         }
+        me.fixHeight();
         return false;
     };
 }
@@ -2514,6 +2539,7 @@ TagEditor.prototype.decorate = function(element) {
 
     var visible_tags_input = element.find('.new-tags-input');
     this._visible_tags_input = visible_tags_input;
+    this.saveHeight();
 
     var me = this;
     var tagsAc = new AutoCompleter({
