@@ -5,7 +5,7 @@ from south.v2 import SchemaMigration
 from django.db import models
 
 class Migration(SchemaMigration):
-    
+
     def forwards(self, orm):
 
         # Removing unique constraint on 'BadgeData', fields ['type', 'name']
@@ -34,10 +34,10 @@ class Migration(SchemaMigration):
         except:
             db.rollback_transaction()
 
-    
-    
+
+
     def backwards(self, orm):
-        
+
         # Adding field 'BadgeData.multiple'
         db.add_column('askbot_badgedata', 'multiple', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True), keep_default=False)
 
@@ -55,8 +55,8 @@ class Migration(SchemaMigration):
 
         # Removing unique constraint on 'BadgeData', fields ['slug']
         db.delete_unique('askbot_badgedata', ['slug'])
-    
-    
+
+
     models = {
         'askbot.activity': {
             'Meta': {'object_name': 'Activity', 'db_table': "u'activity'"},
@@ -335,5 +335,5 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         }
     }
-    
+
     complete_apps = ['askbot']

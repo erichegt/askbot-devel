@@ -11,7 +11,8 @@ import sys
 import os
 import re
 import askbot
-from django.db import transaction
+import south
+from django.db import transaction, connection
 from django.conf import settings as django_settings
 from django.core.exceptions import ImproperlyConfigured
 from askbot.utils.loading import load_module
@@ -166,7 +167,7 @@ def try_import(module_name, pypi_package_name, short_message = False):
     try:
         load_module(module_name)
     except ImportError, error:
-        message = 'Error: ' + unicode(error) 
+        message = 'Error: ' + unicode(error)
         message += '\n\nPlease run: >pip install %s' % pypi_package_name
         if short_message == False:
             message += '\n\nTo install all the dependencies at once, type:'
@@ -306,10 +307,10 @@ class SettingsTester(object):
             )
         if len(self.messages) != 0:
             raise AskbotConfigError(
-                '\n\nTime to do some maintenance of your settings.py:\n\n* ' + 
+                '\n\nTime to do some maintenance of your settings.py:\n\n* ' +
                 '\n\n* '.join(self.messages)
             )
-            
+
 def test_staticfiles():
     """tests configuration of the staticfiles app"""
     errors = list()
@@ -350,7 +351,7 @@ def test_staticfiles():
     if static_url is None or str(static_url).strip() == '':
         errors.append(
             'Add STATIC_URL setting to your settings.py file. '
-            'The setting must be a url at which static files ' 
+            'The setting must be a url at which static files '
             'are accessible.'
         )
     url = urlparse(static_url).path
@@ -407,7 +408,7 @@ def test_staticfiles():
             '    python manage.py collectstatic\n'
         )
 
-            
+
     print_errors(errors)
     if django_settings.STATICFILES_STORAGE == \
         'django.contrib.staticfiles.storage.StaticFilesStorage':
@@ -479,8 +480,6 @@ def test_avatar():
             '-e git+git://github.com/ericflo/django-avatar.git#egg=avatar',
             short_message = True
         )
-        
-    
 
 def run_startup_tests():
     """function that runs

@@ -38,6 +38,7 @@ Programming and documentation
 * `Radim Řehůřek <https://github.com/piskvorky>`_
 * `monkut <https://github.com/monkut>`_
 * `Jim Tittsler <http://wikieducator.org/User:JimTittsler>`_
+* Silvio Heuberger
 
 Translations
 ------------

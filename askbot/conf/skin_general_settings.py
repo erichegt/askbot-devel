@@ -30,6 +30,42 @@ settings.register(
     )
 )
 
+LANGUAGE_CHOICES = (
+            ('en', _("English")),
+            ('es', _("Spanish")),
+            ('ca', _("Catalan")),
+            ('de', _("German")),
+            ('el', _("Greek")),
+            ('fi', _("Finnish")),
+            ('fr', _("French")),
+            ('hi', _("Hindi")),
+            ('hu', _("Hungarian")),
+            ('it', _("Italian")),
+            ('ja', _("Japanese")),
+            ('ko', _("Korean")),
+            ('pt', _("Portuguese")),
+            ('pt_BR', _("Brazilian Portuguese")),
+            ('ro', _("Romanian")),
+            ('ru', _("Russian")),
+            ('sr', _("Serbian")),
+            ('tr', _("Turkish")),
+            ('vi', _("Vietnamese")),
+            ('zh_CN', _("Chinese")),
+            ('zh_TW', _("Chinese (Taiwan)")),
+        )
+
+"""
+settings.register(
+    values.StringValue(
+        GENERAL_SKIN_SETTINGS,
+        'ASKBOT_LANGUAGE',
+        default = 'en',
+        choices =  LANGUAGE_CHOICES,
+        description = _('Select Language'),
+    )
+)
+"""
+
 settings.register(
     values.BooleanValue(
         GENERAL_SKIN_SETTINGS,
@@ -198,7 +234,7 @@ settings.register(
         description = _('Apply custom style sheet (CSS)'),
         help_text = _(
                     'Check if you want to change appearance '
-                    'of your form by adding custom style sheet rules ' 
+                    'of your form by adding custom style sheet rules '
                     '(please see the next item)'
                     ),
         default = False
@@ -214,7 +250,7 @@ settings.register(
                     '<strong>To use this function</strong>, check '
                     '"Apply custom style sheet" option above. '
                     'The CSS rules added in this window will be applied '
-                    'after the default style sheet rules. ' 
+                    'after the default style sheet rules. '
                     'The custom style sheet will be served dynamically at '
                     'url "&lt;forum url&gt;/custom.css", where '
                     'the "&lt;forum url&gt; part depends (default is '

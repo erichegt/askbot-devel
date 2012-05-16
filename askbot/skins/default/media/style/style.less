@@ -154,6 +154,7 @@ h1 {
     padding: 0px 0 5px 0px;
 }
 
+
 /* ----- Extra space above for messages ----- */
 
 body.user-messages {
@@ -467,24 +468,15 @@ body.anon {
 
 
 #askButton{ /* check blocks/secondary_header.html and widgets/ask_button.html*/
-    background: url(../images/bigbutton.png) repeat-x bottom;
     line-height:44px;
-    text-align:center;
-    width:200px;
-    height:42px;
-    font-size:23px;
-    color:@button-label;
-    margin-top:7px;
+    margin-top:6px;
     float:right;
     text-transform:uppercase;
-    .rounded-corners(5px);
-    .box-shadow(1px, 1px, 2px, #636363)
+    .button-style(200px, 42px, 23px);
 }
 
 #askButton:hover{
-    text-decoration:none;
-    background: url(../images/bigbutton.png) repeat-x top;
-    .text-shadow(0px, 1px, 0px, #c6d9dd)
+    .button-style-hover;
 }
 
 /* ----- Content layout, check two_column_body.html or one_column_body.html ----- */
@@ -537,6 +529,7 @@ body.anon {
         padding-right:10px;
         margin-bottom:10px;
         font-family:@main-font;
+        width:190px;
     }
     h3{
         color:#4a757f;
@@ -606,25 +599,20 @@ body.anon {
         #ignoredTagAdd,
         #subscribedTagAdd,
         #ab-tag-search-add {
-            background:url(../images/small-button-blue.png) repeat-x top;
             border:0;
-            color:@button-label;
             font-weight:bold;
-            font-size:12px;
-            width:30px;
-            height:27px;
             margin-top:-2px;
-            cursor:pointer;
+            .button-style(30px, 27px, 14px);
             .rounded-corners(4px);
-            .text-shadow(0px,1px,0px,#E6F6FA);
-            .box-shadow(1px, 1px, 2px, #808080);
+        }
+       #interestingTagAdd:hover,
+       #ignoredTagAdd:hover,
+       #ab-tag-search-add:hover {
+            .button-style-hover;
        }
        #ab-tag-search-add {
             width: 47px;
             margin-left: 3px;
-       }
-       #interestingTagAdd:hover, #ignoredTagAdd:hover, #subscribedTag:hover {
-            background:url(../images/small-button-blue.png) repeat-x bottom;
        }
     }
     
@@ -635,28 +623,17 @@ body.anon {
 /* widgets for question template */
 
     a.followed, a.follow{
-        background: url(../images/medium-button.png) top repeat-x;
-        height:34px;
         line-height:34px;
-        text-align:center;
         border:0;
-        font-family:@main-font;
-        color:@button-label;
         font-weight:normal;
-        font-size:21px;
         margin-top:3px;
-
         display:block;
-        width:120px;
-        text-decoration:none;
-        .rounded-corners(4px);
-        .box-shadow(1px, 1px, 2px, #636363);
+        .button-style(120px,34px,21px);
         .center;
     }
 
     a.followed:hover, a.follow:hover{
-        text-decoration:none;
-        background: url(../images/medium-button.png) bottom repeat-x;
+        .button-style-hover;
         .text-shadow(0px, 1px, 0px, #c6d9dd);
     }
 
@@ -1159,7 +1136,7 @@ ul#related-tags {
 ul.tags li {
     float:left;
     display: block;
-    margin: 0 8px 0 0;
+    margin: 0 8px 8px 0;
     padding: 0;
     height:20px;
 }
@@ -1385,24 +1362,16 @@ ul#related-tags li {
 .ask-page input.submit,
 .edit-question-page input.submit {
     float: left;
-    background: url(../images/medium-button.png) top repeat-x;
-    height:34px;
-    border:0;
-    font-family:@main-font;
-    color:@button-label;
     font-weight:normal;
-    font-size:21px;
     margin-top:3px;
-    .rounded-corners(4px);
-    .box-shadow(1px, 1px, 2px, #636363);
+    .button-style(160px,34px,21px);
     margin-right:7px;
 }
 
 #fmanswer input.submit:hover,
 .ask-page input.submit:hover,
 .edit-question-page input.submit:hover{
-    text-decoration:none;
-    background: url(../images/medium-button.png) bottom repeat-x;
+    .button-style-hover;
     .text-shadow(0px, 1px, 0px, #c6d9dd)
 }
 
@@ -1855,24 +1824,14 @@ ul#related-tags li {
             width: 100px;
         }
         button{
-            background:url(../images/small-button-blue.png) repeat-x top;
-            border:0;
-            color:@button-label;
-            font-family:@body-font;
-            font-size:13px;
-            width:100px;
-            font-weight:bold;
-            height:27px;
             line-height:25px;
             margin-bottom:5px;
-            cursor:pointer;
-            .rounded-corners(4px);
-             .text-shadow(0px,1px,0px,#E6F6FA);
-             .box-shadow(1px, 1px, 2px, #808080);
+            .button-style(100px, 27px, 12px);
+            font-family:@body-font;
+            font-weight:bold;
         }
         button:hover{
-            background: url(../images/small-button-blue.png) bottom repeat-x;
-            .text-shadow(0px, 1px, 0px, #c6d9dd);
+            .button-style-hover;
         }
         .counter {
             display: inline-block;
@@ -2017,6 +1976,10 @@ ul#related-tags li {
         text-align: center;
         padding-top: 2px;
         margin:10px 10px 0px 3px;
+        /* smalls IE fixes */
+        *margin:0; 
+        *height:210px;
+        *width:30px;
     }
 
     .vote-buttons IMG {
@@ -2213,23 +2176,13 @@ ul#related-tags li {
         font-size:14px;
     }
     input.submit{
-        background:url(../images/small-button-blue.png) repeat-x top;
-        border:0;
-        color:@button-label;
-        font-weight:bold;
-        font-size:13px;
-        font-family:@body-font;
-        height:26px;
+        font-weight:normal;
         margin:5px 0px;
-        width:100px;
-        cursor:pointer;
-        .rounded-corners(4px);
-        .text-shadow(0px,1px,0px,#E6F6FA);
-        .box-shadow(1px, 1px, 2px, #808080);
+        .button-style(100px,26px,15px);
+        font-family:@body-font;
     }
     input.submit:hover{
-        background:url(../images/small-button-blue.png) repeat-x bottom;
-        text-decoration:none;
+        .button-style-hover;
     }
     .cancel{
         background:url(../images/small-button-cancel.png) repeat-x top !important;
@@ -2256,25 +2209,19 @@ ul#related-tags li {
         width:200px;
     }
     .submit-b{
-        background:url(../images/small-button-blue.png) repeat-x top;
-        border:0;
-        color:@button-label;
-        font-weight:bold;
-        font-size:13px;
+        .button-style(100px,24px,15px);
         font-family:@body-font;
-        height:24px;
-        margin-top:-2px;
-        padding-left:10px;
+        font-weight:bold;
         padding-right:10px;
-        cursor:pointer;
-        .rounded-corners(4px);
-        .text-shadow(0px,1px,0px,#E6F6FA);
-        .box-shadow(1px, 1px, 2px, #808080)
+        border:0;
     }
+
     .submit-b:hover{
-        background:url(../images/small-button-blue.png) repeat-x bottom;
+        .button-style-hover;
     }
 }
+
+
 .openid-input {
     background: url(../images/openid.gif) no-repeat;
     padding-left: 15px;
@@ -2418,23 +2365,14 @@ a:hover.medal {
 
 .follow-toggle,.submit {
     border:0 !important;
-    color:@button-label;
     font-weight:bold;
-    font-size:12px;
-    height:26px;
     line-height:26px;
     margin-top:-2px;
-    font-size:15px;
-    cursor:pointer;
-    font-family:@main-font;
-    background:url(../images/small-button-blue.png) repeat-x top;
-    .rounded-corners(4px);
-    .text-shadow(0px,1px,0px,#E6F6FA);
-    .box-shadow(1px, 1px, 2px, #808080)
+    .button-style(100px,26px,14px);
 }
 
 .follow-toggle:hover, .submit:hover {
-    background:url(../images/small-button-blue.png) repeat-x bottom;
+    .button-style-hover;
     text-decoration:none !important;
 }
 
