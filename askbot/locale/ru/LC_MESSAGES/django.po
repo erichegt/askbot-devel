@@ -4914,7 +4914,7 @@ msgstr "%(seen)s неуместных сообщений"
 #: skins/default/templates/main_page/headline.html:2
 #: skins/default/templates/main_page/headline.html:18
 msgid "Questions"
-msgstr "Вопросы"
+msgstr "вопросы"
 
 #: skins/default/templates/privacy.html:3
 #: skins/default/templates/privacy.html:5 views/meta.py:106
@@ -8117,7 +8117,7 @@ msgstr "Тэги"
 #: skins/common/templates/widgets/tag_selector.html:19
 #: skins/common/templates/widgets/tag_selector.html:36
 msgid "add"
-msgstr "добавить"
+msgstr "доб."
 
 #: skins/default/templates/ask.html:4
 #: skins/default/templates/widgets/ask_button.html:5
