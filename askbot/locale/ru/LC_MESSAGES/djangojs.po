@@ -40,7 +40,7 @@ msgstr[2] ""
 #: skins/default/media/js/post.js:546
 msgid "<div>Following</div><div class=\"unfollow\">Unfollow</div>"
 msgstr ""
-"<div>Есть закладка!</div><div class=\"unfollow\">Убрать закладку</div>\n"
+"<div>Есть закладка!</div><div class=\"unfollow\">Убрать закладку</div>"
 
 #: skins/default/media/js/post.js:1684 skins/common/media/js/post.js:1874
 msgid "Please enter question title (>10 characters)"

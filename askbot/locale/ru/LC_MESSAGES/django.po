@@ -43,7 +43,7 @@ msgstr "новые вопросы"
 #: forms.py:74
 msgid "select country"
 msgstr ""
-"выберите страну\n"
+"выберите страну"
 
 #: forms.py:83
 msgid "Country"
@@ -74,7 +74,7 @@ msgstr "заголовок должен иметь хотя бы 10 букв"
 #: forms.py:119 forms.py:149
 msgid "content"
 msgstr ""
-"основное содержание\n"
+"основное содержание"
 
 #: forms.py:125
 msgid "question content must be > 10 characters"
@@ -1448,7 +1448,7 @@ msgstr ""
 
 #: conf/minimum_reputation.py:166
 msgid "Lock posts"
-"Блокировать сообщения"
+msgstr "Блокировать сообщения"
 
 #: conf/minimum_reputation.py:175
 msgid "Remove rel=nofollow from own homepage"
@@ -3457,10 +3457,11 @@ msgstr[2] ""
 #, python-format
 msgid "one bronze badge"
 msgid_plural "%(count)d bronze badges"
+msgstr[0] ""
 "%(count)d бронзовая награда"
-msgstr[1] ""
+msgstr[1]
 "%(count)d бронзовых медалей"
-msgstr[2] ""
+msgstr[2]
 "%(count)d бронзовых медалей"
 
 #: models/__init__.py:1754 models/__init__.py:1905
@@ -3942,7 +3943,7 @@ msgstr ""
 #: skins/default/templates/widgets/footer.html:39
 msgid "faq"
 msgstr ""
-"Часто задаваемые вопросы\n"
+"Часто задаваемые вопросы"
 
 #: skins/default/templates/404.jinja.html:20
 msgid "if you believe this error 404 should not have occured, please"
@@ -4149,8 +4150,7 @@ msgstr ""
 
 #: skins/default/templates/badges.html:15
 msgid "silver badge description"
-"Серебряная медаль\n"
-"серебряная награда: как правило, присуждается за большой вклад"
+msgstr "серебряная награда: как правило, присуждается за большой вклад"
 
 #: skins/default/templates/badges.html:18
 #: skins/default/templates/badges.html:54
@@ -5716,7 +5716,7 @@ msgid ""
 "of your provider if you wish to do so."
 msgstr ""
 "Тем не менее может Вам может понадобиться отдельно выйти из системы сайтов - "
-"провайдеров методов авторизации.\n"
+"провайдеров методов авторизации."
 
 #: skins/default/templates/authopenid/macros.html:53
 #: skins/common/templates/authopenid/authopenid_macros.html:63
@@ -6885,7 +6885,7 @@ msgstr ""
 #, python-format
 msgid "%(username)s's network is empty"
 msgstr ""
-" Окружение %(username)s пусто\n"
+" Окружение %(username)s пусто"
 
 #: skins/default/templates/user_profile/user_recent.html:4
 #: skins/default/templates/user_profile/user_tabs.html:27
@@ -7897,15 +7897,16 @@ msgstr ""
 msgid "Sorry, to flag posts a minimum reputation of %(min_rep)d is required"
 msgid_plural ""
 "Sorry, to flag posts a minimum reputation of %(min_rep)d is required"
-msgstr[0] "К сожалению, для изменения тегов требуется %(min_rep)s баллов кармы"
-msgstr[1] "К сожалению, для изменения тегов требуется %(min_rep)s баллов кармы"
-msgstr[2] "К сожалению, для изменения тегов требуется %(min_rep)s баллов кармы"
+msgstr[0] "Для отметки неуместных сообщений требуется %(min_rep)d балл кармы"
+msgstr[1] "Для отметки неуместных сообщений требуется %(min_rep)d балла кармы"
+msgstr[2] "Для отметки неуместных сообщений требуется %(min_rep)d баллов кармы"
 
 #: models/__init__.py:862
 msgid "you don't have the permission to remove all flags"
 msgstr "у вас нету прав чтобы удалить все обжалованные сообщения"
 
 #: models/__init__.py:863
+#, fuzzy
 msgid "no flags for this entry"
 msgstr "без заметок на эту запись"
 
@@ -8129,7 +8130,7 @@ msgstr "Задайте Ваш вопрос"
 msgid ""
 "Below is the list of available badges and number \n"
 "    of times each type of badge has been awarded. Have ideas about fun \n"
-"badges? Please, give us your <a href='%%(feedback_faq_url)s'>feedback</a>\n"
+"badges? Please, give us your <a href='%(feedback_faq_url)s'>feedback</a>\n"
 msgstr ""
 "Ниже приведен список доступных наград и число награждений каждой из них. "
 "Есть идея о новой классной награде? Тогда отправьте её нам через <a "
@@ -8220,7 +8221,7 @@ msgstr ""
 #: skins/default/templates/faq_static.html:80
 #, python-format
 msgid ""
-"Please <a href='%%(ask_question_url)s'>ask</a> your question, help make our "
+"Please <a href='%(ask_question_url)s'>ask</a> your question, help make our "
 "community better!"
 msgstr ""
 "Задайте свой вопрос в %(ask_question_url)s!"
