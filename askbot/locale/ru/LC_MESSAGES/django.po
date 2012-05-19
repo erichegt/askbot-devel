@@ -2148,7 +2148,7 @@ msgstr "новые"
 #: skins/default/templates/question/answer_tab_bar.html:15
 msgid "oldest"
 msgstr ""
-"бывалые"
+"старые"
 
 #: const/__init__.py:43 const/__init__.py:45
 msgid "active"
@@ -2192,9 +2192,15 @@ msgstr "все"
 msgid "unanswered"
 msgstr "неотвеченные"
 
+msgid "Unanswered"
+msgstr "неотвеченные"
+
 #: const/__init__.py:59 skins/default/templates/main_page/tab_bar.html:82
 #: const/__init__.py:65
 msgid "favorite"
+msgstr "закладки"
+
+msgid "Followed"
 msgstr "закладки"
 
 #: const/__init__.py:70
@@ -2339,12 +2345,21 @@ msgstr "теги изменены"
 msgid "off"
 msgstr "отключить"
 
+msgid "show all tags"
+msgstr "отключить"
+
 #: const/__init__.py:218 const/__init__.py:221
 msgid "exclude ignored"
 msgstr "исключить игнорируемые"
 
+msgid "exclude ignored tags"
+msgstr "исключить игнорируемые"
+
 #: const/__init__.py:219 const/__init__.py:222
 msgid "only selected"
+msgstr "только избранные"
+
+msgid "only interesting tags"
 msgstr "только избранные"
 
 #: const/__init__.py:223 const/__init__.py:226
@@ -6339,6 +6354,9 @@ msgstr "Игнорируемые теги"
 #: skins/default/templates/blocks/tag_selector.html:36
 #: skins/common/templates/widgets/tag_selector.html:38
 msgid "Display tag filter"
+msgstr "Фильтр по тегам"
+
+msgid "Show only questions from"
 msgstr "Фильтр по тегам"
 
 #: skins/default/templates/main_page/content.html:13
