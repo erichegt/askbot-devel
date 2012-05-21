@@ -51,7 +51,8 @@ class ReplyAddress(models.Model):
                         )#the emailed post
     reply_action = models.CharField(
                         max_length = 32,
-                        choices = REPLY_ACTION_CHOICES
+                        choices = REPLY_ACTION_CHOICES,
+                        default = 'auto_answer_or_comment'
                     )
     response_post = models.ForeignKey(
                             Post,
