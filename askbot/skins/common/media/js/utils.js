@@ -786,9 +786,7 @@ TwoStateToggle.prototype.decorate = function(element){
     this.toggleUrl = element.attr('data-toggle-url');
 
     //detect state and save it
-    if (
-        element.attr('nodeName') === 'INPUT' && element.attr('type', 'checkbox')
-    ) {
+    if (this.isCheckBox()) {
         this._state = element.attr('checked') ? 'state-on' : 'state-off';
     } else {
         var text = $.trim(element.html());

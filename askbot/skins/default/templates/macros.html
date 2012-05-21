@@ -9,7 +9,7 @@
 {%- macro follow_toggle(follow, name, alias, id) -%}
     {# follow - boolean; name - object type name; alias - e.g. users name; id - object id #}
     <div 
-        class="follow-toggle" 
+        class="follow-toggle follow-user-toggle" 
         id="follow-{{ name }}-{{ id }}"
     >
         {% if follow %}
@@ -221,22 +221,50 @@ poor design of the data or methods on data objects #}
 </ul>
 {%- endmacro -%}
 
-{%- macro user_group(group) -%}
-    {% if group.group_profile.logo_url %}
-    <a href="{% url users_by_group group.id, group.name|replace('-', ' ')|slugify %}">
-        <img class="group-logo" src="{{group.group_profile.logo_url}}" alt='{% trans name=group.name|escape %}logo for user group "{{name}}"{% endtrans %}' />
-    </a>
-    {% endif %}
-    <div class="group-name">
-        <a 
+{%- macro user_group(group, membership_info) -%}
+    <td>
+        <a class="group-name"
             href="{% url users_by_group group.id, group.name|replace('-', ' ')|slugify %}"
         >{{ group.name|escape }}</a>
-    </div>
-    <!--div id="group-{{group.id}}-description">
+    </td>
+    <td>
+    <span class="group-description">
     {% if group.tag_wiki %}
-        {{ group.tag_wiki.html }}
+        {{ group.tag_wiki.summary }}
     {% endif %}
-    </div-->
+    </span>
+    </td>
+    <td>
+    {% if membership_info %}
+        {{ group_join_button(
+                group_id = group.id,
+                can_join = membership_info['can_join'],
+                is_member = membership_info['is_member']
+            )
+        }}
+    {% endif %}
+    </td>
+{%- endmacro -%}
+
+{%- macro group_join_button(group_id = None, can_join = False, is_member = False) -%}
+    {% if can_join or is_member %}
+        <button 
+            class="group-join-btn follow-toggle {% if is_member %}on on-state{% endif %}"
+            data-group-id="{{group_id}}"
+            data-off-prompt-text="{% trans %}Leave this group{% endtrans %}"
+            data-on-prompt-text="{% trans %}Join this group{% endtrans %}"
+            data-on-state-text="{% trans %}You are a member{% endtrans %}"
+            data-off-state-text="{% trans %}Join this group{% endtrans %}"
+        >
+            {% if is_member %}
+                {% trans %}You are a member{% endtrans %}
+            {% else %}
+                {% if can_join %}
+                    {% trans %}Join this group{% endtrans %}
+                {% endif %}
+            {% endif %}
+        </button>
+    {% endif %}
 {%- endmacro -%}
 
 {# todo: remove the extra content argument to make its usage more explicit #}

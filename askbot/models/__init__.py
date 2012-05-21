@@ -1,9 +1,10 @@
 from askbot import startup_procedures
 startup_procedures.run()
 
-import logging
-import hashlib
+import collections
 import datetime
+import hashlib
+import logging
 import urllib
 from django.core.urlresolvers import reverse, NoReverseMatch
 from django.db.models import signals as django_signals
@@ -2015,6 +2016,35 @@ def get_profile_link(self):
 
     return mark_safe(profile_link)
 
+def user_get_groups_membership_info(self, groups):
+    """returts a defaultdict with values that are
+    dictionaries with the following keys and values:
+    * key: can_join, value: True if user can join group
+    * key: is_member, value: True if user is member of group
+
+    ``groups`` is a group tag query set
+    """
+    groups = groups.select_related('group_profile')
+
+    group_ids = groups.values_list('id', flat = True)
+    memberships = GroupMembership.objects.filter(
+                                user__id = self.id,
+                                group__id__in = group_ids
+                            )
+
+    info = collections.defaultdict(
+        lambda: {'can_join': False, 'is_member': False}
+    )
+    for membership in memberships:
+        info[membership.group_id]['is_member'] = True
+
+    for group in groups:
+        info[group.id]['can_join'] = group.group_profile.can_accept_user(self)
+
+    return info
+        
+
+
 def user_get_karma_summary(self):
     """returns human readable sentence about
     status of user's karma"""
@@ -2396,6 +2426,7 @@ User.add_to_class('get_absolute_url', user_get_absolute_url)
 User.add_to_class('get_avatar_url', user_get_avatar_url)
 User.add_to_class('get_default_avatar_url', user_get_default_avatar_url)
 User.add_to_class('get_gravatar_url', user_get_gravatar_url)
+User.add_to_class('get_groups_membership_info', user_get_groups_membership_info)
 User.add_to_class('get_anonymous_name', user_get_anonymous_name)
 User.add_to_class('update_avatar_type', user_update_avatar_type)
 User.add_to_class('post_question', user_post_question)

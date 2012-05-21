@@ -13,7 +13,7 @@ import datetime
 import logging
 import operator
 
-from django.db.models import Count, Q
+from django.db.models import Count
 from django.conf import settings as django_settings
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
@@ -422,6 +422,13 @@ def user_stats(request, user, context):
     badges = badges_dict.items()
     badges.sort(key=operator.itemgetter(1), reverse=True)
 
+    user_groups = models.Tag.group_tags.get_for_user(user = user)
+
+    if request.user == user:
+        groups_membership_info = user.get_groups_membership_info(user_groups)
+    else:
+        groups_membership_info = collections.defaultdict()
+
     data = {
         'active_tab':'users',
         'page_class': 'user-profile-page',
@@ -443,7 +450,8 @@ def user_stats(request, user, context):
         'votes_total_per_day': votes_total,
 
         'user_tags' : user_tags,
-        'user_groups': models.Tag.group_tags.get_for_user(user = user),
+        'user_groups': user_groups,
+        'groups_membership_info': groups_membership_info,
         'badges': badges,
         'total_badges' : len(badges),
     }
@@ -689,7 +697,7 @@ def user_responses(request, user, context):
     #6) sort responses by time
     filtered_response_list.sort(lambda x,y: cmp(y['timestamp'], x['timestamp']))
 
-    reject_reasons = models.PostFlagReason.objects.all().order_by('title');
+    reject_reasons = models.PostFlagReason.objects.all().order_by('title')
     data = {
         'active_tab':'users',
         'page_class': 'user-profile-page',
@@ -915,12 +923,38 @@ def groups(request, id = None, slug = None):
     """
     if askbot_settings.GROUPS_ENABLED == False:
         raise Http404
-    groups = models.Tag.group_tags.get_all()
-    can_edit = request.user.is_authenticated() and \
+
+    #6 lines of input cleaning code
+    if request.user.is_authenticated():
+        scope = request.GET.get('sort', 'all-groups')
+        if scope not in ('all-groups', 'my-groups'):
+            scope = 'all-groups'
+    else:
+        scope = 'all-groups'
+
+    if scope == 'all-groups':
+        groups = models.Tag.group_tags.get_all()
+    else:
+        groups = models.Tag.group_tags.get_for_user(
+                                        user = request.user
+                                    )
+
+    groups = groups.select_related('group_profile')
+
+    user_can_add_groups = request.user.is_authenticated() and \
             request.user.is_administrator_or_moderator()
+
+    groups_membership_info = collections.defaultdict()
+    if request.user.is_authenticated():
+        #collect group memberhship information
+        groups_membership_info = request.user.get_groups_membership_info(groups)
+
     data = {
         'groups': groups,
-        'can_edit': can_edit,
-        'active_tab': 'users'
+        'groups_membership_info': groups_membership_info,
+        'user_can_add_groups': user_can_add_groups,
+        'active_tab': 'groups',#todo vars active_tab and tab_name are too similar
+        'tab_name': scope,
+        'page_class': 'groups-page'
     }
     return render_into_skin('groups.html', data, request)

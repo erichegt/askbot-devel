@@ -1216,7 +1216,9 @@ ul#related-tags li {
     color: #1A1A1A;
 }
 
-.users-page h1, .tags-page h1 {
+.users-page h1,
+.tags-page h1,
+.groups-page h1 {
     float: left;
 }
 
@@ -3425,18 +3427,13 @@ img.group-logo {
 
 #groups-list {
     margin-left: 0px;
-    li {
-        display: inline;
-        list-style-type: none;
-        list-style-position: inside;
-        float: left;
-        text-align: center;
+    .group-name {
+        padding-right: 20px;
     }
-    .group-logo, .group-name {
-        display: block;
+    td {
+        padding-bottom: 5px;
     }
 }
-
 
 #reject-edit-modal {
     input, textarea {

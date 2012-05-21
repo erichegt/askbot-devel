@@ -1,3 +1,4 @@
+{% import "macros.html" as macros %}
 <div id="group-wiki-{{group.id}}" class="box group-wiki">
     <h2>{% trans %}Group info{% endtrans %}</h2>
     <img class="group-logo" 
@@ -13,23 +14,12 @@
         {% endif %}
     </div>
     <div class="clearfix"></div>
-    {% if user_can_join_group or user_is_group_member %}
-        <button 
-            class="group-join-btn follow-toggle {% if user_is_group_member %}on on-state{% endif %}"
-            data-off-prompt-text="{% trans %}Leave this group{% endtrans %}"
-            data-on-prompt-text="{% trans %}Join this group{% endtrans %}"
-            data-on-state-text="{% trans %}You are a member{% endtrans %}"
-            data-off-state-text="{% trans %}Join this group{% endtrans %}"
-        >
-            {% if user_is_group_member %}
-                {% trans %}You are a member{% endtrans %}
-            {% else %}
-                {% if user_can_join_group %}
-                    {% trans %}Join this group{% endtrans %}
-                {% endif %}
-            {% endif %}
-        </button>
-    {% endif %}
+        {{ macros.group_join_button(
+                group_id = group.id,
+                can_join = user_can_join_group,
+                is_member = user_is_group_member
+            )
+        }}
     {% if request.user.is_authenticated() and request.user.is_administrator() %}
     <div class="controls">
         <a class="edit-description"

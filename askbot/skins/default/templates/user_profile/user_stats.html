@@ -12,15 +12,13 @@
                 username = view_user.username
             %}{{username}}'s groups{% endtrans %}
         </h2>
-        <ul id="groups-list">
-        {% if user_groups %}
+        <table id="groups-list">
             {% for group in user_groups %}
-            <li>
-                {{ macros.user_group(group) }}
-            </li>
+            <tr>
+                {{ macros.user_group(group, groups_membership_info[group.id]) }}
+            </tr>
             {% endfor %}
-        {% endif %}
-        </ul>
+        </table>
         <div class="clearfix"></div>
         <a id="add-group">{% trans %}add group{% endtrans %}</a>
     </div>
@@ -156,8 +154,13 @@
 {% block endjs %}
     {{ super() }}
     <script type="text/javascript">
+        askbot['urls']['join_or_leave_group'] = '{% url join_or_leave_group %}';
         $(document).ready(function(){
             setup_badge_details_toggle();
+            $.each($('.group-join-btn'), function(idx, elem){
+                var group_join_btn = new GroupJoinButton();
+                group_join_btn.decorate($(elem));
+            });
         });
     </script>
 {% endblock %}
