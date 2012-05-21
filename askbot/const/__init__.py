@@ -55,6 +55,10 @@ POST_SORT_METHODS = (
 POST_TYPES = ('answer', 'comment', 'question', 'tag_wiki', 'reject_reason')
 
 REPLY_SEPARATOR_TEMPLATE = '==== %(user_action)s %(instruction)s -=-=='
+REPLY_WITH_COMMENT_TEMPLATE = _(
+    'Note: to reply with a comment, '
+    'please use <a href="mailto://%(addr)s">this link</a>'
+)
 REPLY_SEPARATOR_REGEX = re.compile('==== .* -=-==', re.MULTILINE)
 
 ANSWER_SORT_METHODS = (#no translations needed here

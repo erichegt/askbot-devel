@@ -2545,6 +2545,7 @@ def format_instant_notification_email(
                                         to_user = None,
                                         from_user = None,
                                         post = None,
+                                        reply_with_comment_address = None,
                                         update_type = None,
                                         template = None,
                                     ):
@@ -2641,6 +2642,9 @@ def format_instant_notification_email(
                         'user_action': user_action,
                         'instruction': _('To reply, PLEASE WRITE ABOVE THIS LINE.')
                     }
+        if post.post_type == 'question' and reply_with_comment_address:
+            data = {'addr': reply_with_comment_address}
+            reply_separator += '<br>' + const.REPLY_WITH_COMMENT_TEMPLATE % data
     else:
         reply_separator = user_action
                     
@@ -2689,26 +2693,42 @@ def send_instant_notifications_about_activity_in_post(
     origin_post = post.get_origin_post()
     for user in recipients:
       
-        subject_line, body_text = format_instant_notification_email(
-                            to_user = user,
-                            from_user = update_activity.user,
-                            post = post,
-                            update_type = update_type,
-                            template = get_template('instant_notification.html')
-                        )
-      
         #todo: this could be packaged as an "action" - a bundle
         #of executive function with the activity log recording
         #TODO check user reputation
         headers = mail.thread_headers(post, origin_post, update_activity.activity_type)
+        reply_with_comment_address = None#only used for questions in some cases
         if askbot_settings.REPLY_BY_EMAIL:
-            reply_address = "noreply"
+            reply_addr = "noreply"
             if user.reputation >= askbot_settings.MIN_REP_TO_POST_BY_EMAIL:
-                reply_address = ReplyAddress.objects.create_new(post, user).address
-            reply_to = 'reply-%s@%s' % (reply_address, askbot_settings.REPLY_BY_EMAIL_HOSTNAME)
+
+                reply_args = {
+                    'post': post,
+                    'user': user,
+                    'reply_action': 'post_comment'
+                }
+                if post.post_type in ('answer', 'comment'):
+                    reply_addr = ReplyAddress.objects.create_new(**reply_args)
+                elif post.post_type == 'question':
+                    reply_with_comment_address = ReplyAddress.objects.create_new(**reply_args)
+                    #default action is to post answer
+                    reply_args['reply_action'] = 'post_answer'
+                    reply_addr = ReplyAddress.objects.create_new(**reply_args)
+
+            reply_to = 'reply-%s@%s' % (reply_addr, askbot_settings.REPLY_BY_EMAIL_HOSTNAME)
             headers.update({'Reply-To': reply_to})
         else:
             reply_to = django_settings.DEFAULT_FROM_EMAIL
+
+        subject_line, body_text = format_instant_notification_email(
+                            to_user = user,
+                            from_user = update_activity.user,
+                            post = post,
+                            reply_with_comment_address = reply_with_comment_address,
+                            update_type = update_type,
+                            template = get_template('instant_notification.html')
+                        )
+      
         mail.send_mail(
             subject_line = subject_line,
             body_text = body_text,

@@ -1,9 +1,10 @@
 from datetime import datetime
 import random
 import string
+import logging
 from django.db import models
 from django.contrib.auth.models import User
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 from askbot.models.post import Post
 from askbot.models.base import BaseQuerySetManager
 from askbot.conf import settings as askbot_settings
@@ -35,6 +36,11 @@ class ReplyAddressManager(BaseQuerySetManager):
         return reply_address
 			
 
+REPLY_ACTION_CHOICES = (
+    ('post_answer', _('Post an answer')),
+    ('post_comment', _('Post a comment')),
+    ('auto_answer_or_comment', _('Answer or comment, depending on the size of post'))
+)
 class ReplyAddress(models.Model):
     """Stores a reply address for the post
     and the user"""
@@ -43,6 +49,10 @@ class ReplyAddress(models.Model):
                             Post,
                             related_name = 'reply_addresses'
                         )#the emailed post
+    reply_action = models.CharField(
+                        max_length = 32,
+                        choices = REPLY_ACTION_CHOICES
+                    )
     response_post = models.ForeignKey(
                             Post,
                             null = True,
@@ -92,19 +102,32 @@ class ReplyAddress(models.Model):
                                         by_email = True
                                     )
         elif self.post.post_type == 'question':
-            wordcount = len(content)/6#this is a simplistic hack
-            if wordcount > askbot_settings.MIN_WORDS_FOR_ANSWER_BY_EMAIL:
+            if self.reply_action == 'auto_answer_or_comment':
+                wordcount = len(content)/6#todo: this is a simplistic hack
+                if wordcount > askbot_settings.MIN_WORDS_FOR_ANSWER_BY_EMAIL:
+                    reply_action = 'post_answer'
+                else:
+                    reply_action = 'post_comment'
+            else:
+                reply_action = self.reply_action
+
+            if reply_action == 'post_answer':
                 result = self.user.post_answer(
                                             self.post,
                                             content,
                                             by_email = True
                                         )
-            else:
+            elif reply_action == 'post_comment':
                 result = self.user.post_comment(
                                             self.post,
                                             content,
                                             by_email = True
                                         )
+            else:
+                logging.critical(
+                    'Unexpected reply action: "%s", post by email failed' % reply_action
+                )
+                return None#todo: there may be a better action to take here...
         elif self.post.post_type == 'comment':
             result = self.user.post_comment(
                                     self.post.parent,
