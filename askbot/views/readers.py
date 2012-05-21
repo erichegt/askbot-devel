@@ -552,7 +552,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
         'show_comment_position': show_comment_position,
     }
 
-    print render_into_skin('question.html', data, request)
+    return render_into_skin('question.html', data, request)
 
 def revisions(request, id, post_type = None):
     assert post_type in ('question', 'answer')
