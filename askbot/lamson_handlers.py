@@ -209,6 +209,7 @@ def ASK(message, host = None, addr = None):
 def VALIDATE_EMAIL(
     parts = None,
     reply_address_object = None,
+    from_address = None,
     **kwargs
 ):
     """process the validation email and save
