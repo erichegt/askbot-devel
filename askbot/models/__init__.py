@@ -3102,7 +3102,7 @@ def send_welcome_email(user, **kwargs):
             user = user,
             subject_line = _('Welcome to %(site_name)s') % data,
             data = data,
-            template_name = 'email/welcome_email_lamson_on.html'
+            template_name = 'email/welcome_lamson_on.html'
         )
 
 
