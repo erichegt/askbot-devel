@@ -8,14 +8,30 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+        # Adding field 'Post.is_private'
+        db.add_column('askbot_post', 'is_private',
+                      self.gf('django.db.models.fields.BooleanField')(default=False),
+                      keep_default=False)
+
         # Adding field 'ReplyAddress.reply_action'
         db.add_column('askbot_replyaddress', 'reply_action',
                       self.gf('django.db.models.fields.CharField')(default='auto_answer_or_comment', max_length=32),
                       keep_default=False)
 
+        # Changing field 'ReplyAddress.post'
+        db.alter_column('askbot_replyaddress', 'post_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['askbot.Post']))
+
+        try:
+            # Adding field 'User.interesting_tags'
+            db.add_column(u'auth_user', 'email_signature', self.gf('django.db.models.fields.TextField')(blank=True, default = ''), keep_default=False)
+        except:
+            pass
+
     def backwards(self, orm):
-        # Deleting field 'ReplyAddress.reply_action'
+        db.delete_column('askbot_post', 'is_private')
         db.delete_column('askbot_replyaddress', 'reply_action')
+        db.delete_column('auth_user', 'email_signature')
+        db.alter_column('askbot_replyaddress', 'post_id', self.gf('django.db.models.fields.related.ForeignKey')(default=None, to=orm['askbot.Post']))
 
     models = {
         'askbot.activity': {
@@ -133,6 +149,7 @@ class Migration(SchemaMigration):
             'html': ('django.db.models.fields.TextField', [], {'null': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'is_anonymous': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'is_private': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'last_edited_at': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
             'last_edited_by': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'last_edited_posts'", 'null': 'True', 'to': "orm['auth.User']"}),
             'locked': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
@@ -193,7 +210,7 @@ class Migration(SchemaMigration):
             'allowed_from_email': ('django.db.models.fields.EmailField', [], {'max_length': '150'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'post': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'reply_addresses'", 'to': "orm['askbot.Post']"}),
-            'reply_action': ('django.db.models.fields.CharField', [], {'max_length': '32'}),
+            'reply_action': ('django.db.models.fields.CharField', [], {'default': "'auto_answer_or_comment'", 'max_length': '32'}),
             'response_post': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'edit_addresses'", 'null': 'True', 'to': "orm['askbot.Post']"}),
             'used_at': ('django.db.models.fields.DateTimeField', [], {'default': 'None', 'null': 'True'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"})

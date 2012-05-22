@@ -1,12 +1,15 @@
 import re
-from lamson.routing import route, stateless
-from lamson.server import Relay
-from django.utils.translation import ugettext as _
+import functools
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.conf import settings as django_settings
+from django.template import Context
+from django.utils.translation import ugettext as _
+from lamson.routing import route, stateless
+from lamson.server import Relay
 from askbot.models import ReplyAddress, Tag
 from askbot.utils import mail
 from askbot.conf import settings as askbot_settings
+from askbot.skins.loaders import get_template
 
 
 #we might end up needing to use something like this
@@ -114,11 +117,70 @@ def get_parts(message):
         parts.append((part_type, part_content))
     return parts
 
+def process_reply(func):
+    @functools.wraps(func)
+    def wrapped(message, host = None, address = None):
+        """processes forwarding rules, and run the handler
+        in the case of error, send a bounce email
+        """
+        try:
+            for rule in django_settings.LAMSON_FORWARD:
+                if re.match(rule['pattern'], message.base['to']):
+                    relay = Relay(host=rule['host'], 
+                               port=rule['port'], debug=1)
+                    relay.deliver(message)
+                    return
+        except AttributeError:
+            pass
+
+        error = None
+        try:
+            reply_address = ReplyAddress.objects.get(
+                                            address = address,
+                                            allowed_from_email = message.From
+                                        )
+
+            #here is the business part of this function
+            func(
+                from_address = message.From,
+                subject_line = message['Subject'],
+                parts = get_parts(message),
+                reply_address_object = reply_address
+            )
+
+        except ReplyAddress.DoesNotExist:
+            error = _("You were replying to an email address\
+             unknown to the system or you were replying from a different address from the one where you\
+             received the notification.")
+        except Exception, e:
+            import sys
+            sys.stderr.write(str(e))
+            import traceback
+            sys.stderr.write(traceback.format_exc())
+
+        if error is not None:
+            template = get_template('email/reply_by_email_error.html')
+            body_text = template.render(Context({'error':error}))
+            mail.send_mail(
+                subject_line = "Error posting your reply",
+                body_text = body_text,
+                recipient_list = [message.From],
+            )        
+
+    return wrapped
+
 @route('(addr)@(host)', addr = '.+')
 @stateless
 def ASK(message, host = None, addr = None):
+    """lamson handler for asking by email,
+    to the forum in general and to a specific group"""
+
+    #we need to exclude some other emails by prefix
     if addr.startswith('reply-'):
         return
+    if addr.startswith('welcome-'):
+        return
+
     parts = get_parts(message)
     from_address = message.From
     subject = message['Subject']#why lamson does not give it normally?
@@ -141,52 +203,69 @@ def ASK(message, host = None, addr = None):
         except Tag.MultipleObjectsReturned:
             return
 
+@route('welcome-(address)@host', address='.+')
+@stateless
+@process_reply
+def VALIDATE_EMAIL(
+    parts = None,
+    reply_address_object = None,
+    **kwargs
+):
+    """process the validation email and save
+    the email signature
+    todo: go a step further and
+    """
+    content, stored_files = mail.process_parts(parts)
+    reply_code = reply_address_object.address
+    if reply_code in content:
+
+        #extract the signature
+        tail = list()
+        for line in reversed(content.splitlines()):
+            if reply_code in line:
+                break
+            tail.append(line)
+        signature = '\n'.join(reversed(tail))
+
+        #save the signature and mark email as valid
+        user = reply_address_object.user
+        user.email_signature = signature
+        user.email_isvalid = True
+        user.save()
+
+        data = {
+            'site_name': askbot_settings.APP_SHORT_NAME,
+            'site_url': askbot_settings.APP_URL,
+            'ask_address': 'ask@' + askbot_settings.REPLY_BY_EMAIL_HOSTNAME
+        }
+        template = get_template('email/re_welcome_lamson_on.html')
+
+        mail.send_mail(
+            subject_line = _('Re: Welcome to %(site_name)s') % data,
+            body_text = template.render(Context(data)),
+            recipient_list = [from_address,]
+        )
+
+    else:
+        raise ValueError(
+            _(
+                'Please reply to the welcome email '
+                'without editing it'
+            )
+        )
+
 @route('reply-(address)@(host)', address='.+')
 @stateless
-def PROCESS(message, address = None, host = None):
+@process_reply
+def PROCESS(
+    parts = None,
+    reply_address_object = None,
+    **kwargs
+):
     """handler to process the emailed message
     and make a post to askbot based on the contents of
     the email, including the text body and the file attachments"""
-    try:
-        for rule in django_settings.LAMSON_FORWARD:
-            if re.match(rule['pattern'], message.base['to']):
-                relay = Relay(host=rule['host'], 
-                           port=rule['port'], debug=1)
-                relay.deliver(message)
-                return
-    except AttributeError:
-        pass
-
-    error = None
-    try:
-        reply_address = ReplyAddress.objects.get(
-                                        address = address,
-                                        allowed_from_email = message.From
-                                    )
-        parts = get_parts(message)
-        if reply_address.was_used:
-            reply_address.edit_post(parts)
-        else:
-            reply_address.create_reply(parts)
-    except ReplyAddress.DoesNotExist:
-        error = _("You were replying to an email address\
-         unknown to the system or you were replying from a different address from the one where you\
-         received the notification.")
-    except Exception, e:
-        import sys
-        sys.stderr.write(str(e))
-        import traceback
-        sys.stderr.write(traceback.format_exc())
-
-    if error is not None:
-        from askbot.utils import mail
-        from django.template import Context
-        from askbot.skins.loaders import get_template
-
-        template = get_template('reply_by_email_error.html')
-        body_text = template.render(Context({'error':error}))
-        mail.send_mail(
-            subject_line = "Error posting your reply",
-            body_text = body_text,
-            recipient_list = [message.From],
-        )        
+    if reply_address_object.was_used:
+        reply_address_object.edit_post(parts)
+    else:
+        reply_address_object.create_reply(parts)

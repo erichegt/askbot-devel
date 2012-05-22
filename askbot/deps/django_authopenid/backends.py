@@ -10,6 +10,7 @@ from django.utils.translation import ugettext as _
 from askbot.deps.django_authopenid.models import UserAssociation
 from askbot.deps.django_authopenid import util
 from askbot.conf import settings as askbot_settings
+from askbot.models.signals import user_registered
 
 log = logging.getLogger('configuration')
 
@@ -62,6 +63,7 @@ def ldap_authenticate(username, password):
                 user.is_superuser = False
                 user.is_active = True
                 user.save()
+                user_registered.send(None, user = user)
 
                 log.info('Created New User : [{0}]'.format(exact_username))
             return user
@@ -157,11 +159,13 @@ class AuthBackend(object):
                         if created:
                             user.set_password(password)
                             user.save()
+                            user_registered.send(None, user = user)
                         else:
                             #have username collision - so make up a more unique user name
                             #bug: - if user already exists with the new username - we are in trouble
                             new_username = '%s@%s' % (username, provider_name)
                             user = User.objects.create_user(new_username, '', password)
+                            user_registered.send(None, user = user)
                             message = _(
                                 'Welcome! Please set email address (important!) in your '
                                 'profile and adjust screen name, if necessary.'

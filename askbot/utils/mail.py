@@ -300,6 +300,10 @@ def process_emailed_question(from_address, subject, parts, tags = None):
             user = User.objects.get(
                         email__iexact = email_address
                     )
+
+            if user.email_isvalid == False:
+                raise PermissionDenied('Lacking email signature')
+
             tagnames = form.cleaned_data['tagnames']
             title = form.cleaned_data['title']
             body_text = form.cleaned_data['body_text']
@@ -308,10 +312,15 @@ def process_emailed_question(from_address, subject, parts, tags = None):
             if tags:
                 tagnames += ' ' + ' '.join(tags)
 
+            stripped_body_text = user.strip_email_signature(body_text)
+            if stripped_body_text == body_text and user.email_signature:
+                #todo: send an email asking to update the signature
+                raise ValueError('email signature changed')
+
             user.post_question(
                 title = title,
                 tags = tagnames.strip(),
-                body_text = body_text,
+                body_text = stripped_body_text,
                 by_email = True,
                 email_address = from_address
             )

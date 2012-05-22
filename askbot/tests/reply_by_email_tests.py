@@ -1,6 +1,6 @@
 from django.utils.translation import ugettext as _
 from askbot.models import ReplyAddress
-from askbot.lamson_handlers import PROCESS
+from askbot.lamson_handlers import PROCESS, get_parts
 from askbot import const
 
 
@@ -21,7 +21,7 @@ class MockPart(object):
         self.body = body
         self.content_encoding = {'Content-Type':('text/plain',)}
 
-class MockMessage(object):
+class MockMessage(dict):
 
     def __init__(self, body, from_email):
         self._body = body
@@ -61,7 +61,10 @@ class EmailProcessingTests(AskbotTestCase):
         self.comment = self.post_comment(user = self.u2, parent_post = self.answer)
 
     def test_process_correct_answer_comment(self):
-        addr = ReplyAddress.objects.create_new( self.answer, self.u1).address
+        addr = ReplyAddress.objects.create_new(
+                                    post = self.answer,
+                                    user = self.u1
+                                ).address
         reply_separator = const.REPLY_SEPARATOR_TEMPLATE % {
                                     'user_action': 'john did something',
                                     'instruction': 'reply above this line'
@@ -71,7 +74,8 @@ class EmailProcessingTests(AskbotTestCase):
             "wrote something \n\n%s\nlorem ipsum " % (reply_separator),
             "user1@domain.com"
         )
-        PROCESS(msg, addr, '')
+        msg['Subject'] = 'test subject'
+        PROCESS(msg, address = addr)
         self.assertEquals(self.answer.comments.count(), 2)
         self.assertEquals(self.answer.comments.all().order_by('-pk')[0].text.strip(), "This is a test reply")
 
@@ -101,20 +105,29 @@ class ReplyAddressModelTests(AskbotTestCase):
     
     def test_address_creation(self):
         self.assertEquals(ReplyAddress.objects.all().count(), 0)
-        result = ReplyAddress.objects.create_new( self.answer, self.u1)
+        result = ReplyAddress.objects.create_new(
+                                        post = self.answer,
+                                        user = self.u1
+                                    )
         self.assertTrue(len(result.address) >= 12 and len(result.address) <= 25)
         self.assertEquals(ReplyAddress.objects.all().count(), 1)
 
 
     def test_create_answer_reply(self):
-        result = ReplyAddress.objects.create_new( self.answer, self.u1)
+        result = ReplyAddress.objects.create_new(
+                                        post = self.answer,
+                                        user = self.u1
+                                    )
         post = result.create_reply(TEST_EMAIL_PARTS)
         self.assertEquals(post.post_type, "comment")
         self.assertEquals(post.text, TEST_CONTENT)
         self.assertEquals(self.answer.comments.count(), 2)
 
     def test_create_comment_reply(self):
-        result = ReplyAddress.objects.create_new( self.comment, self.u1)
+        result = ReplyAddress.objects.create_new(
+                                        post = self.comment,
+                                        user = self.u1
+                                    )
         post = result.create_reply(TEST_EMAIL_PARTS)
         self.assertEquals(post.post_type, "comment")
         self.assertEquals(post.text, TEST_CONTENT)
@@ -122,13 +135,19 @@ class ReplyAddressModelTests(AskbotTestCase):
         
 
     def test_create_question_comment_reply(self):
-        result = ReplyAddress.objects.create_new( self.question, self.u3)
+        result = ReplyAddress.objects.create_new(
+                                        post = self.question,
+                                        user = self.u3
+                                    )
         post = result.create_reply(TEST_EMAIL_PARTS)
         self.assertEquals(post.post_type, "comment")
         self.assertEquals(post.text, TEST_CONTENT)
 
     def test_create_question_answer_reply(self):
-        result = ReplyAddress.objects.create_new( self.question, self.u3)
+        result = ReplyAddress.objects.create_new(
+                                        post = self.question,
+                                        user = self.u3
+                                    )
         post = result.create_reply(TEST_LONG_EMAIL_PARTS)
         self.assertEquals(post.post_type, "answer")
         self.assertEquals(post.text, TEST_LONG_CONTENT)

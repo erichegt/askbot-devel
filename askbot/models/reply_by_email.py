@@ -20,13 +20,10 @@ class ReplyAddressManager(BaseQuerySetManager):
             used_at__isnull = True
         )
     
-    def create_new(self, post, user):
+    def create_new(self, **kwargs):
         """creates a new reply address"""
-        reply_address = ReplyAddress(
-            post = post,
-            user = user,
-            allowed_from_email = user.email
-        )
+        kwargs['allowed_from_email'] = kwargs['user'].email
+        reply_address = ReplyAddress(**kwargs)
         while True:
             reply_address.address = ''.join(random.choice(string.letters +
                 string.digits) for i in xrange(random.randint(12, 25))).lower()
@@ -39,7 +36,8 @@ class ReplyAddressManager(BaseQuerySetManager):
 REPLY_ACTION_CHOICES = (
     ('post_answer', _('Post an answer')),
     ('post_comment', _('Post a comment')),
-    ('auto_answer_or_comment', _('Answer or comment, depending on the size of post'))
+    ('auto_answer_or_comment', _('Answer or comment, depending on the size of post')),
+    ('validate_email', _('Validate email and record signature')),
 )
 class ReplyAddress(models.Model):
     """Stores a reply address for the post
@@ -47,6 +45,7 @@ class ReplyAddress(models.Model):
     address = models.CharField(max_length = 25, unique = True)
     post = models.ForeignKey(
                             Post,
+                            null = True,#reply not necessarily to posts
                             related_name = 'reply_addresses'
                         )#the emailed post
     reply_action = models.CharField(
