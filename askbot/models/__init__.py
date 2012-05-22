@@ -53,6 +53,26 @@ def get_admins_and_moderators():
         models.Q(is_superuser=True) | models.Q(status='m')
     )
 
+def get_users_by_text_query(search_query):
+    """Runs text search in user names and profile.
+    For postgres, search also runs against user group names.
+    """
+    import askbot
+    if 'postgresql_psycopg2' in askbot.get_database_engine_name():
+        from askbot.search import postgresql
+        return postgresql.run_full_text_search(User.objects.all(), search_query)
+    else:
+        return User.objects.filter(
+            models.Q(username__icontains=search_query) |
+            models.Q(about__icontains=search_query)
+        )
+    #if askbot.get_database_engine_name().endswith('mysql') \
+    #    and mysql.supports_full_text_search():
+    #    return User.objects.filter(
+    #        models.Q(username__search = search_query) |
+    #        models.Q(about__search = search_query)
+    #    )
+
 User.add_to_class(
             'status',
             models.CharField(
