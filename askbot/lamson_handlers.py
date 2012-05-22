@@ -229,8 +229,9 @@ def VALIDATE_EMAIL(
             tail.insert(0, line)
 
         #strip off the leading quoted lines, there could be one or two
-        while tail[0].startswith('>'):
-            line.pop(0)
+        #also strip empty lines
+        while tail[0].startswith('>') or tail[0].strip() == '':
+            tail.pop(0)
 
         signature = '\n'.join(tail)
 
