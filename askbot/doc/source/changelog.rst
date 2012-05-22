@@ -1,6 +1,11 @@
 Changes in Askbot
 =================
 
+Development version
+-------------------
+* Welcome email for the case when replying by email is enabled (Evgeny)
+* Detection of email signature based on the response to the welome email (Evgeny)
+
 0.7.43 (May 14, 2012)
 ---------------------
 * User groups (Evgeny)
