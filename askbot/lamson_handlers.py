@@ -203,7 +203,7 @@ def ASK(message, host = None, addr = None):
         except Tag.MultipleObjectsReturned:
             return
 
-@route('welcome-(address)@host', address='.+')
+@route('welcome-(address)@(host)', address='.+')
 @stateless
 @process_reply
 def VALIDATE_EMAIL(
@@ -222,10 +222,16 @@ def VALIDATE_EMAIL(
         #extract the signature
         tail = list()
         for line in reversed(content.splitlines()):
+            #scan backwards from the end until the magic line
             if reply_code in line:
                 break
-            tail.append(line)
-        signature = '\n'.join(reversed(tail))
+            tail.insert(0, line)
+
+        #strip off the leading quoted lines, there could be one or two
+        while tail[0].startswith('>'):
+            line.pop(0)
+
+        signature = '\n'.join(tail)
 
         #save the signature and mark email as valid
         user = reply_address_object.user
