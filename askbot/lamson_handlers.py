@@ -103,13 +103,17 @@ def get_parts(message):
 
     parts = list()
 
+    simple_body = ''
     if message.body():
-        parts.append(('body', message.body()))
+        simple_body = message.body()
+        parts.append(('body', simple_body))
 
     for part in message.walk():
         part_type = get_part_type(part)
         if part_type == 'body':
             part_content = part.body
+            if part_content == simple_body:
+                continue#avoid duplication
         elif part_type in ('attachment', 'inline'):
             part_content = format_attachment(part)
         else:
