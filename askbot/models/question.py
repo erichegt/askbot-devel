@@ -142,16 +142,8 @@ class ThreadManager(models.Manager):
                 models.Q(posts__deleted=False, posts__text__search = search_query)
             )
         elif 'postgresql_psycopg2' in askbot.get_database_engine_name():
-            rank_clause = "ts_rank(askbot_thread.text_search_vector, plainto_tsquery(%s))"
-            search_query = '&'.join(search_query.split())
-            extra_params = (search_query,)
-            extra_kwargs = {
-                'select': {'relevance': rank_clause},
-                'where': ['askbot_thread.text_search_vector @@ plainto_tsquery(%s)'],
-                'params': extra_params,
-                'select_params': extra_params,
-            }
-            return qs.extra(**extra_kwargs)
+            from askbot.search import postgresql
+            return postgresql.run_full_text_search(qs, search_query)
         else:
             return qs.filter(
                 models.Q(title__icontains=search_query) |

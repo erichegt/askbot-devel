@@ -55,6 +55,10 @@ POST_SORT_METHODS = (
 POST_TYPES = ('answer', 'comment', 'question', 'tag_wiki', 'reject_reason')
 
 REPLY_SEPARATOR_TEMPLATE = '==== %(user_action)s %(instruction)s -=-=='
+REPLY_WITH_COMMENT_TEMPLATE = _(
+    'Note: to reply with a comment, '
+    'please use <a href="mailto://%(addr)s">this link</a>'
+)
 REPLY_SEPARATOR_REGEX = re.compile('==== .* -=-==', re.MULTILINE)
 
 ANSWER_SORT_METHODS = (#no translations needed here
@@ -129,6 +133,7 @@ TYPE_ACTIVITY_MODERATED_NEW_POST = 24
 TYPE_ACTIVITY_MODERATED_POST_EDIT = 25
 TYPE_ACTIVITY_CREATE_REJECT_REASON = 26
 TYPE_ACTIVITY_UPDATE_REJECT_REASON = 27
+TYPE_ACTIVITY_VALIDATION_EMAIL_SENT = 28
 #TYPE_ACTIVITY_EDIT_QUESTION = 17
 #TYPE_ACTIVITY_EDIT_ANSWER = 18
 
@@ -181,6 +186,10 @@ TYPE_ACTIVITY = (
     (
         TYPE_ACTIVITY_UPDATE_REJECT_REASON,
         _('updated post reject reason')
+    ),
+    (
+        TYPE_ACTIVITY_VALIDATION_EMAIL_SENT,
+        'sent email address validation message'#don't translate, internal
     ),
 )
 

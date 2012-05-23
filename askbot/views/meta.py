@@ -87,7 +87,7 @@ def feedback(request):
                 data['email'] = form.cleaned_data.get('email',None)
             data['message'] = form.cleaned_data['message']
             data['name'] = form.cleaned_data.get('name',None)
-            template = get_template('feedback_email.txt', request)
+            template = get_template('email/feedback_email.txt', request)
             message = template.render(RequestContext(request, data))
             mail_moderators(_('Q&A forum feedback'), message)
             msg = _('Thanks for the feedback!')

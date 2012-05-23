@@ -144,21 +144,29 @@ def mail_moderators(
         if raise_on_failure == True:
             raise exceptions.EmailNotSent(unicode(error))
 
-ASK_BY_EMAIL_USAGE = _(
-"""<p>To ask by email, please:</p>
-<ul>
-    <li>Format the subject line as: [Tag1; Tag2] Question title</li>
-    <li>Type details of your question into the email body</li>
-</ul>
-<p>Note that tags may consist of more than one word, and tags
-may be separated by a semicolon or a comma</p>
-"""
+INSTRUCTIONS_PREAMBLE = _('<p>To ask by email, please:</p>')
+QUESTION_TITLE_INSTRUCTION = _(
+    '<li>Type title in the subject line</li>'
+)
+QUESTION_DETAILS_INSTRUCTION = _(
+    '<li>Type details of your question into the email body</li>'
+)
+OPTIONAL_TAGS_INSTRUCTION = _(
+"""<li>The beginning of the subject line can contain tags,
+<em>enclosed in the square brackets</em> like so: [Tag1; Tag2]</li>"""
+)
+REQUIRED_TAGS_INSTRUCTION = _(
+"""<li>In the beginning of the subject add at least one tag
+<em>enclosed in the brackets</em> like so: [Tag1; Tag2].</li>"""
+)
+TAGS_INSTRUCTION_FOOTNOTE = _(
+"""<p>Note that a tag may consist of more than one word, to separate
+the tags, use a semicolon or a comma, for example, [One tag; Other tag]</p>"""
 )
 
 def bounce_email(email, subject, reason = None, body_text = None):
     """sends a bounce email at address ``email``, with the subject
     line ``subject``, accepts several reasons for the bounce:
-
     * ``'problem_posting'``, ``unknown_user`` and ``permission_denied``
     * ``body_text`` in an optional parameter that allows to append
       extra text to the message
@@ -168,7 +176,28 @@ def bounce_email(email, subject, reason = None, body_text = None):
             '<p>Sorry, there was an error posting your question '
             'please contact the %(site)s administrator</p>'
         ) % {'site': askbot_settings.APP_SHORT_NAME}
-        error_message = string_concat(error_message, ASK_BY_EMAIL_USAGE)
+
+        if askbot_settings.TAGS_ARE_REQUIRED:
+            error_message = string_concat(
+                                    INSTRUCTIONS_PREAMBLE,
+                                    '<ul>',
+                                    QUESTION_TITLE_INSTRUCTION,
+                                    REQUIRED_TAGS_INSTRUCTION,
+                                    QUESTION_DETAILS_INSTRUCTION,
+                                    '</ul>',
+                                    TAGS_INSTRUCTION_FOOTNOTE
+                                )
+        else:
+            error_message = string_concat(
+                                    INSTRUCTIONS_PREAMBLE,
+                                    '<ul>',
+                                        QUESTION_TITLE_INSTRUCTION,
+                                        QUESTION_DETAILS_INSTRUCTION,
+                                        OPTIONAL_TAGS_INSTRUCTION,
+                                    '</ul>',
+                                    TAGS_INSTRUCTION_FOOTNOTE
+                                )
+
     elif reason == 'unknown_user':
         error_message = _(
             '<p>Sorry, in order to post questions on %(site)s '
@@ -271,6 +300,10 @@ def process_emailed_question(from_address, subject, parts, tags = None):
             user = User.objects.get(
                         email__iexact = email_address
                     )
+
+            if user.email_isvalid == False:
+                raise PermissionDenied('Lacking email signature')
+
             tagnames = form.cleaned_data['tagnames']
             title = form.cleaned_data['title']
             body_text = form.cleaned_data['body_text']
@@ -279,10 +312,15 @@ def process_emailed_question(from_address, subject, parts, tags = None):
             if tags:
                 tagnames += ' ' + ' '.join(tags)
 
+            stripped_body_text = user.strip_email_signature(body_text)
+            if stripped_body_text == body_text and user.email_signature:
+                #todo: send an email asking to update the signature
+                raise ValueError('email signature changed')
+
             user.post_question(
                 title = title,
                 tags = tagnames.strip(),
-                body_text = body_text,
+                body_text = stripped_body_text,
                 by_email = True,
                 email_address = from_address
             )

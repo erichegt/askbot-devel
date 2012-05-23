@@ -46,6 +46,11 @@ function ajaxFileUpload(imageUrl, startUploadHandler)
               success: function (data, status)
               {
                   var fileURL = $(data).find('file_url').text();
+                  /*
+                   * hopefully a fix for the "fakepath" issue
+                   * https://www.mediawiki.org/wiki/Special:Code/MediaWiki/83225
+                   */
+                  fileURL = fileURL.replace(/\w:.*\\(.*)$/,'$1');
                   var error = $(data).find('error').text();
                   if(error != ''){
                       alert(error);

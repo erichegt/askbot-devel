@@ -68,6 +68,7 @@ def questions(request, **kwargs):
     List of Questions, Tagged questions, and Unanswered questions.
     matching search query or user selection
     """
+    #before = datetime.datetime.now()
     if request.method != 'GET':
         return HttpResponseNotAllowed(['GET'])
 
@@ -311,7 +312,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
     """
     #process url parameters
     #todo: fix inheritance of sort method from questions
-    before = datetime.datetime.now()
+    #before = datetime.datetime.now()
     default_sort_method = request.session.get('questions_sort_method', 'votes')
     form = ShowQuestionForm(request.GET, default_sort_method)
     form.full_clean()#always valid
@@ -551,9 +552,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
         'show_comment_position': show_comment_position,
     }
 
-    result = render_into_skin('question.html', data, request)
-    #print datetime.datetime.now() - before
-    return result
+    return render_into_skin('question.html', data, request)
 
 def revisions(request, id, post_type = None):
     assert post_type in ('question', 'answer')

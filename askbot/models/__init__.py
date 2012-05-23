@@ -1,9 +1,10 @@
 from askbot import startup_procedures
 startup_procedures.run()
 
-import logging
-import hashlib
+import collections
 import datetime
+import hashlib
+import logging
 import urllib
 from django.core.urlresolvers import reverse, NoReverseMatch
 from django.db.models import signals as django_signals
@@ -51,6 +52,26 @@ def get_admins_and_moderators():
     return User.objects.filter(
         models.Q(is_superuser=True) | models.Q(status='m')
     )
+
+def get_users_by_text_query(search_query):
+    """Runs text search in user names and profile.
+    For postgres, search also runs against user group names.
+    """
+    import askbot
+    if 'postgresql_psycopg2' in askbot.get_database_engine_name():
+        from askbot.search import postgresql
+        return postgresql.run_full_text_search(User.objects.all(), search_query)
+    else:
+        return User.objects.filter(
+            models.Q(username__icontains=search_query) |
+            models.Q(about__icontains=search_query)
+        )
+    #if askbot.get_database_engine_name().endswith('mysql') \
+    #    and mysql.supports_full_text_search():
+    #    return User.objects.filter(
+    #        models.Q(username__search = search_query) |
+    #        models.Q(about__search = search_query)
+    #    )
 
 User.add_to_class(
             'status',
@@ -100,6 +121,7 @@ User.add_to_class('about', models.TextField(blank=True))
 User.add_to_class('interesting_tags', models.TextField(blank = True))
 User.add_to_class('ignored_tags', models.TextField(blank = True))
 User.add_to_class('subscribed_tags', models.TextField(blank = True))
+User.add_to_class('email_signature', models.TextField(blank = True))
 User.add_to_class(
     'email_tag_filter_strategy',
     models.SmallIntegerField(
@@ -182,6 +204,13 @@ def user_update_avatar_type(self):
     else:
             self.avatar_type = _check_gravatar(self.gravatar)
     self.save()
+
+def user_strip_email_signature(self, text):
+    """strips email signature from the end of the text"""
+    text = '\n'.join(text.splitlines())#normalize the line endings
+    if text.endswith(self.email_signature):
+        return text[0:-len(self.email_signature)]
+    return text
 
 def _check_gravatar(gravatar):
     gravatar_url = "http://www.gravatar.com/avatar/%s?d=404" % gravatar
@@ -2015,6 +2044,35 @@ def get_profile_link(self):
 
     return mark_safe(profile_link)
 
+def user_get_groups_membership_info(self, groups):
+    """returts a defaultdict with values that are
+    dictionaries with the following keys and values:
+    * key: can_join, value: True if user can join group
+    * key: is_member, value: True if user is member of group
+
+    ``groups`` is a group tag query set
+    """
+    groups = groups.select_related('group_profile')
+
+    group_ids = groups.values_list('id', flat = True)
+    memberships = GroupMembership.objects.filter(
+                                user__id = self.id,
+                                group__id__in = group_ids
+                            )
+
+    info = collections.defaultdict(
+        lambda: {'can_join': False, 'is_member': False}
+    )
+    for membership in memberships:
+        info[membership.group_id]['is_member'] = True
+
+    for group in groups:
+        info[group.id]['can_join'] = group.group_profile.can_accept_user(self)
+
+    return info
+        
+
+
 def user_get_karma_summary(self):
     """returns human readable sentence about
     status of user's karma"""
@@ -2396,6 +2454,8 @@ User.add_to_class('get_absolute_url', user_get_absolute_url)
 User.add_to_class('get_avatar_url', user_get_avatar_url)
 User.add_to_class('get_default_avatar_url', user_get_default_avatar_url)
 User.add_to_class('get_gravatar_url', user_get_gravatar_url)
+User.add_to_class('strip_email_signature', user_strip_email_signature)
+User.add_to_class('get_groups_membership_info', user_get_groups_membership_info)
 User.add_to_class('get_anonymous_name', user_get_anonymous_name)
 User.add_to_class('update_avatar_type', user_update_avatar_type)
 User.add_to_class('post_question', user_post_question)
@@ -2514,6 +2574,7 @@ def format_instant_notification_email(
                                         to_user = None,
                                         from_user = None,
                                         post = None,
+                                        reply_with_comment_address = None,
                                         update_type = None,
                                         template = None,
                                     ):
@@ -2610,6 +2671,9 @@ def format_instant_notification_email(
                         'user_action': user_action,
                         'instruction': _('To reply, PLEASE WRITE ABOVE THIS LINE.')
                     }
+        if post.post_type == 'question' and reply_with_comment_address:
+            data = {'addr': reply_with_comment_address}
+            reply_separator += '<br>' + const.REPLY_WITH_COMMENT_TEMPLATE % data
     else:
         reply_separator = user_action
                     
@@ -2658,26 +2722,45 @@ def send_instant_notifications_about_activity_in_post(
     origin_post = post.get_origin_post()
     for user in recipients:
       
-        subject_line, body_text = format_instant_notification_email(
-                            to_user = user,
-                            from_user = update_activity.user,
-                            post = post,
-                            update_type = update_type,
-                            template = get_template('instant_notification.html')
-                        )
-      
         #todo: this could be packaged as an "action" - a bundle
         #of executive function with the activity log recording
         #TODO check user reputation
         headers = mail.thread_headers(post, origin_post, update_activity.activity_type)
+        reply_with_comment_address = None#only used for questions in some cases
         if askbot_settings.REPLY_BY_EMAIL:
-            reply_address = "noreply"
+            reply_addr = "noreply"
             if user.reputation >= askbot_settings.MIN_REP_TO_POST_BY_EMAIL:
-                reply_address = ReplyAddress.objects.create_new(post, user).address
-            reply_to = 'reply-%s@%s' % (reply_address, askbot_settings.REPLY_BY_EMAIL_HOSTNAME)
+
+                reply_args = {
+                    'post': post,
+                    'user': user,
+                    'reply_action': 'post_comment'
+                }
+                if post.post_type in ('answer', 'comment'):
+                    reply_addr = ReplyAddress.objects.create_new(**reply_args)
+                elif post.post_type == 'question':
+                    reply_with_comment_address = ReplyAddress.objects.create_new(**reply_args)
+                    #default action is to post answer
+                    reply_args['reply_action'] = 'post_answer'
+                    reply_addr = ReplyAddress.objects.create_new(**reply_args)
+
+            reply_to = 'reply-%s@%s' % (
+                            reply_addr,
+                            askbot_settings.REPLY_BY_EMAIL_HOSTNAME
+                        )
             headers.update({'Reply-To': reply_to})
         else:
             reply_to = django_settings.DEFAULT_FROM_EMAIL
+
+        subject_line, body_text = format_instant_notification_email(
+                            to_user = user,
+                            from_user = update_activity.user,
+                            post = post,
+                            reply_with_comment_address = reply_with_comment_address,
+                            update_type = update_type,
+                            template = get_template('instant_notification.html')
+                        )
+      
         mail.send_mail(
             subject_line = subject_line,
             body_text = body_text,
@@ -2972,6 +3055,57 @@ def record_user_full_updated(instance, **kwargs):
                 )
     activity.save()
 
+def send_respondable_email_validation_message(
+    user = None, subject_line = None, data = None, template_name = None
+):
+    """sends email validation message to the user
+
+    We validate email by getting user's reply
+    to the validation message by email, which also gives
+    an opportunity to extract user's email signature.
+    """
+    reply_address = ReplyAddress.objects.create_new(
+                                    user = user,
+                                    reply_action = 'validate_email'
+                                )
+    data['email_code'] = reply_address.address
+
+    from askbot.skins.loaders import get_template
+    template = get_template(template_name)
+    body_text = template.render(Context(data))
+
+    reply_to_address = 'welcome-%s@%s' % (
+                            reply_address.address,
+                            askbot_settings.REPLY_BY_EMAIL_HOSTNAME
+                        )
+
+    mail.send_mail(
+        subject_line = subject_line,
+        body_text = body_text,
+        recipient_list = [user.email, ],
+        activity_type = const.TYPE_ACTIVITY_VALIDATION_EMAIL_SENT,
+        headers = {'Reply-To': reply_to_address}
+    )
+
+
+def send_welcome_email(user, **kwargs):
+    """sends welcome email to the newly created user
+
+    todo: second branch should send email with a simple
+    clickable link.
+    """
+    if askbot_settings.REPLY_BY_EMAIL:#with this on we also collect signature
+        data = {
+            'site_name': askbot_settings.APP_SHORT_NAME
+        }
+        send_respondable_email_validation_message(
+            user = user,
+            subject_line = _('Welcome to %(site_name)s') % data,
+            data = data,
+            template_name = 'email/welcome_lamson_on.html'
+        )
+
+
 def complete_pending_tag_subscriptions(sender, request, *args, **kwargs):
     """save pending tag subscriptions saved in the session"""
     if 'subscribe_for_tags' in request.session:
@@ -3068,6 +3202,7 @@ signals.delete_question_or_answer.connect(record_delete_question, sender=Post)
 signals.flag_offensive.connect(record_flag_offensive, sender=Post)
 signals.remove_flag_offensive.connect(remove_flag_offensive, sender=Post)
 signals.tags_updated.connect(record_update_tags)
+signals.user_registered.connect(send_welcome_email)
 signals.user_updated.connect(record_user_full_updated, sender=User)
 signals.user_logged_in.connect(complete_pending_tag_subscriptions)#todo: add this to fake onlogin middleware
 signals.user_logged_in.connect(post_anonymous_askbot_content)

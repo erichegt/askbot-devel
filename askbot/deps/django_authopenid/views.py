@@ -78,11 +78,11 @@ from askbot.deps.django_authopenid.backends import AuthBackend
 import logging
 from askbot.utils.forms import get_next_url
 from askbot.utils.http import get_request_info
+from askbot.models.signals import user_logged_in, user_registered
 
 #todo: decouple from askbot
 def login(request,user):
     from django.contrib.auth import login as _login
-    from askbot.models import signals
 
     # get old session key
     session_key = request.session.session_key
@@ -93,7 +93,7 @@ def login(request,user):
     # send signal with old session key as argument
     logging.debug('logged in user %s with session key %s' % (user.username, session_key))
     #todo: move to auth app
-    signals.user_logged_in.send(
+    user_logged_in.send(
                         request = request,
                         user = user,
                         session_key=session_key,
@@ -326,7 +326,7 @@ def signin(request):
                                 request = request,
                                 user = user,
                                 user_identifier = username,
-                                login_provider_name = ldap_provider_name,
+                                login_provider_name = provider_name,
                                 redirect_url = next_url
                             )
 
@@ -829,6 +829,7 @@ def register(request, login_provider_name=None, user_identifier=None):
             email = register_form.cleaned_data['email']
 
             user = User.objects.create_user(username, email)
+            user_registered.send(None, user = user)
             
             logging.debug('creating new openid user association for %s')
 
@@ -951,7 +952,9 @@ def signup_with_password(request):
             email = form.cleaned_data['email']
             provider_name = form.cleaned_data['login_provider']
             
-            User.objects.create_user(username, email, password)
+            new_user = User.objects.create_user(username, email, password)
+            user_registered.send(None, user = new_user)
+
             logging.debug('new user %s created' % username)
             if provider_name != 'local':
                 raise NotImplementedError('must run create external user code')

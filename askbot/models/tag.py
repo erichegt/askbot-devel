@@ -99,21 +99,34 @@ class TagManager(BaseQuerySetManager):
     def get_query_set(self):
         return TagQuerySet(self.model)
 
-#todo: implement this
-#class GroupTagQuerySet(models.query.QuerySet):
-#    """Custom query set for the group"""
-#    def __init__(self, model):
+class GroupTagQuerySet(TagQuerySet):
+    """Custom query set for the group"""
+
+    def get_for_user(self, user = None):
+        return self.filter(user_memberships__user = user)
+
+    def get_all(self):
+        return self.annotate(
+            member_count = models.Count('user_memberships')
+        ).filter(
+            member_count__gt = 0
+        )
+
+    def get_by_name(self, group_name = None):
+        return self.get(name = clean_group_name(group_name))
+
+
 def clean_group_name(name):
     """group names allow spaces,
     tag names do not, so we use this method
     to replace spaces with dashes"""
     return re.sub('\s+', '-', name.strip())
 
-class GroupTagManager(TagManager):
+class GroupTagManager(BaseQuerySetManager):
     """manager for group tags"""
 
-#    def get_query_set(self):
-#        return GroupTagQuerySet(self.model)
+    def get_query_set(self):
+        return GroupTagQuerySet(self.model)
 
     def get_or_create(self, group_name = None, user = None):
         """creates a group tag or finds one, if exists"""
@@ -130,21 +143,6 @@ class GroupTagManager(TagManager):
             group_profile = GroupProfile(group_tag = tag)
             group_profile.save()
         return tag
-
-    #todo: maybe move this to query set
-    def get_for_user(self, user = None):
-        return self.filter(user_memberships__user = user)
-
-    #todo: remove this when the custom query set is done
-    def get_all(self):
-        return self.annotate(
-            member_count = models.Count('user_memberships')
-        ).filter(
-            member_count__gt = 0
-        )
-
-    def get_by_name(self, group_name = None):
-        return self.get(name = clean_group_name(group_name))
 
 class Tag(models.Model):
     name            = models.CharField(max_length=255, unique=True)

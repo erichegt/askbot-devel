@@ -52,8 +52,8 @@
     </div>
     <div class="clearfix"></div>
 </div>
-{% if suser %}
-    <p>{% trans %}users matching query {{suser}}:{% endtrans %}</p>
+{% if search_query %}
+    <p>{% trans %}users matching query {{search_query}}:{% endtrans %}</p>
 {% endif %}
 {% if not users.object_list %}
     <p><span>{% trans %}Nothing found.{% endtrans %}</span></p>
@@ -97,45 +97,45 @@
         {% else %}
             var codeFriendlyMarkdown = false;
         {% endif %}
-        $().ready(function(){
-            {% if group and request.user.is_authenticated() %}
-                var group_join_btn = new GroupJoinButton({{ group.id }});
+        {% if group and request.user.is_authenticated() %}
+            $().ready(function(){
+                var group_join_btn = new GroupJoinButton();
                 group_join_btn.decorate($('.group-join-btn'));
-            {% endif %}
-            //setup WMD editor
-            if (askbot['data']['userIsAdminOrMod'] === true){
-                //todo: this is kind of Attacklab.init ... should not be here
-                Attacklab.wmd = function(){
-                    Attacklab.loadEnv = function(){
-                        var mergeEnv = function(env){
-                            if(!env){
-                                return;
-                            }
-                        
-                            for(var key in env){
-                                Attacklab.wmd_env[key] = env[key];
-                            }
+                //setup WMD editor
+                if (askbot['data']['userIsAdminOrMod'] === true){
+                    //todo: this is kind of Attacklab.init ... should not be here
+                    Attacklab.wmd = function(){
+                        Attacklab.loadEnv = function(){
+                            var mergeEnv = function(env){
+                                if(!env){
+                                    return;
+                                }
+                            
+                                for(var key in env){
+                                    Attacklab.wmd_env[key] = env[key];
+                                }
+                            };
+                            
+                            mergeEnv(Attacklab.wmd_defaults);
+                            mergeEnv(Attacklab.account_options);
+                            mergeEnv(top["wmd_options"]);
+                            Attacklab.full = true;
+                            
+                            var defaultButtons = "bold italic link blockquote code image ol ul heading hr";
+                            Attacklab.wmd_env.buttons = Attacklab.wmd_env.buttons || defaultButtons;
                         };
-                        
-                        mergeEnv(Attacklab.wmd_defaults);
-                        mergeEnv(Attacklab.account_options);
-                        mergeEnv(top["wmd_options"]);
-                        Attacklab.full = true;
-                        
-                        var defaultButtons = "bold italic link blockquote code image ol ul heading hr";
-                        Attacklab.wmd_env.buttons = Attacklab.wmd_env.buttons || defaultButtons;
+                        Attacklab.loadEnv();
                     };
-                    Attacklab.loadEnv();
-                };
-                Attacklab.wmd();
-                Attacklab.wmdBase();
-                var group_editor = new UserGroupProfileEditor();
-                group_editor.decorate($('#group-wiki-{{group.id}}'));
-            }
-            Hilite.exact = false;
-            Hilite.elementid = "main-body";
-            Hilite.debug_referrer = location.href;
-        });
+                    Attacklab.wmd();
+                    Attacklab.wmdBase();
+                    var group_editor = new UserGroupProfileEditor();
+                    group_editor.decorate($('#group-wiki-{{group.id}}'));
+                }
+                Hilite.exact = false;
+                Hilite.elementid = "main-body";
+                Hilite.debug_referrer = location.href;
+            });
+        {% endif %}
     </script>
 {% endblock %}
 <!-- end users.html -->

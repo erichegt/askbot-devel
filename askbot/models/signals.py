@@ -21,6 +21,7 @@ delete_question_or_answer = django.dispatch.Signal(
 flag_offensive = django.dispatch.Signal(providing_args=['instance', 'mark_by'])
 remove_flag_offensive = django.dispatch.Signal(providing_args=['instance', 'mark_by'])
 user_updated = django.dispatch.Signal(providing_args=['instance', 'updated_by'])
+user_registered = django.dispatch.Signal(providing_args=['user',])
 #todo: move this to authentication app
 user_logged_in = django.dispatch.Signal(providing_args=['session'])
 
@@ -65,6 +66,7 @@ def pop_all_db_signal_receivers():
         remove_flag_offensive,
         user_updated,
         user_logged_in,
+        user_registered,
         post_updated,
         award_badges_signal,
         #django signals

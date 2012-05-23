@@ -332,6 +332,11 @@ class Post(models.Model):
     #the reason is that the title and tags belong to thread,
     #but the question body to Post
     is_anonymous = models.BooleanField(default=False)
+    #When is_private == True
+    #the post is visible only to the some privileged users.
+    #The privilege may be defined through groups to which
+    #the thread belongs or in some other way.
+    is_private = models.BooleanField(default=False)
 
     objects = PostManager()
 
