@@ -18,7 +18,7 @@ class Migration(DataMigration):
                                 askbot.get_install_directory(),
                                 'search',
                                 'postgresql',
-                                'user_profile_search_05222012.plsql'
+                                'thread_and_post_models_05222012.plsql'
                             )
             postgresql.setup_full_text_search(script_path)
 

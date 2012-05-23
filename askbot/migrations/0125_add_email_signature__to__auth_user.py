@@ -8,24 +8,14 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding field 'Post.is_private'
-        db.add_column('askbot_post', 'is_private',
-                      self.gf('django.db.models.fields.BooleanField')(default=False),
-                      keep_default=False)
-
-        # Adding field 'ReplyAddress.reply_action'
-        db.add_column('askbot_replyaddress', 'reply_action',
-                      self.gf('django.db.models.fields.CharField')(default='auto_answer_or_comment', max_length=32),
-                      keep_default=False)
-
-        # Changing field 'ReplyAddress.post'
-        db.alter_column('askbot_replyaddress', 'post_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['askbot.Post']))
-
+        try:
+            # Adding field 'User.interesting_tags'
+            db.add_column(u'auth_user', 'email_signature', self.gf('django.db.models.fields.TextField')(blank=True, default = ''), keep_default=False)
+        except:
+            pass
 
     def backwards(self, orm):
-        db.delete_column('askbot_post', 'is_private')
-        db.delete_column('askbot_replyaddress', 'reply_action')
-        db.alter_column('askbot_replyaddress', 'post_id', self.gf('django.db.models.fields.related.ForeignKey')(default=None, to=orm['askbot.Post']))
+        db.delete_column('auth_user', 'email_signature')
 
     models = {
         'askbot.activity': {
