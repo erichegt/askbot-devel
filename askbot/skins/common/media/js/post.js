@@ -2417,6 +2417,16 @@ TagEditor.prototype.removeSelectedTag = function(tag_name) {
     this.setSelectedTags(tag_names);
 };
 
+TagEditor.prototype.getTagDeleteHandler = function(tag){
+    var me = this;
+    return function(){
+        me.removeSelectedTag(tag.getName());
+        tag.dispose();
+        $('.acResults').hide();//a hack to hide the autocompleter
+        me.fixHeight();
+    };
+};
+
 TagEditor.prototype.addTag = function(tag_name) {
     var tag_name = tag_name.replace(/\s+/, ' ').toLowerCase();
     if ($.inArray(tag_name, this.getSelectedTags()) !== -1) {
@@ -2426,13 +2436,7 @@ TagEditor.prototype.addTag = function(tag_name) {
     tag.setName(tag_name);
     tag.setDeletable(true);
     tag.setLinkable(true);
-    var me = this;
-    tag.setDeleteHandler(function(){
-        me.removeSelectedTag(tag_name);
-        tag.dispose();
-        $('.acResults').hide();//a hack to hide the autocompleter
-        me.fixHeight();
-    });
+    tag.setDeleteHandler(this.getTagDeleteHandler(tag));
     this._tags_container.append(tag.getElement());
     this.addSelectedTag(tag_name);
 };
@@ -2540,6 +2544,15 @@ TagEditor.prototype.decorate = function(element) {
     this._element = element;
     this._hidden_tags_input = element.find('input[name="tags"]');//this one is hidden
     this._tags_container = element.find('ul.tags');
+
+    var me = this;
+    this._tags_container.children().each(function(idx, elem){
+        var tag = new Tag();
+        tag.setDeletable(true);
+        tag.setLinkable(false);
+        tag.decorate($(elem));
+        tag.setDeleteHandler(me.getTagDeleteHandler(tag));
+    });
 
     var visible_tags_input = element.find('.new-tags-input');
     this._visible_tags_input = visible_tags_input;

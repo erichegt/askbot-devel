@@ -20,7 +20,9 @@
                     form,
                     post_type='question',
                     edit_title=True,
-                    mandatory_tags = mandatory_tags
+                    mandatory_tags = mandatory_tags,
+                    use_category_selector = use_category_selector,
+                    tag_names = tag_names
                 )
     }}
     <div class="after-editor">
@@ -94,5 +96,21 @@
         
     });
     </script>
+    {% if use_category_selector %}
+    <script type='text/javascript'>
+        (function(){
+            var selector = new CategorySelector();
+            selector.setData(JSON.parse("{{category_tree_data|escapejs}}"));
+            if (askbot['data']['userIsAdminOrMod']) {
+                selector.setEditable(true);
+            }
+            selector.decorate($('.category-selector'));
+
+            var tag_editor = new TagEditor();
+            tag_editor.decorate($('.tag-editor'));
+            selector.setSelectHandler(tag_editor.getAddTagHandler());
+        })();
+    </script>
+    {% endif %}
 {% endblock %}
 <!-- end question_edit.html -->
