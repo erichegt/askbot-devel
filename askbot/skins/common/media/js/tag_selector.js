@@ -256,7 +256,11 @@ function pickedTags(){
             return;
         }
 
-        var tagnames = getUniqueWords($(input_sel).attr('value'));
+        var tags_input =$.trim($(input_sel).attr('value'));
+        if (tags_input === '') {
+            return;
+        }
+        var tagnames = getUniqueWords(tags_input);
 
         if (reason !== 'subscribed') {//for "subscribed" we do not remove
             $.each(tagnames, function(idx, tagname) {
