@@ -2740,10 +2740,15 @@ def send_instant_notifications_about_activity_in_post(
                     reply_addr = ReplyAddress.objects.create_new(
                                                         **reply_args
                                                     ).address
+                    reply_to_with_comment = None
                 elif post.post_type == 'question':
                     reply_with_comment_address = ReplyAddress.objects.create_new(
                                                                         **reply_args
                                                                     ).address
+                    reply_to_with_comment = 'reply-%s@%s' % (
+                                    reply_addr,
+                                    askbot_settings.REPLY_BY_EMAIL_HOSTNAME
+                                )
                     #default action is to post answer
                     reply_args['reply_action'] = 'post_answer'
                     reply_addr = ReplyAddress.objects.create_new(
@@ -2762,7 +2767,7 @@ def send_instant_notifications_about_activity_in_post(
                             to_user = user,
                             from_user = update_activity.user,
                             post = post,
-                            reply_with_comment_address = reply_with_comment_address,
+                            reply_with_comment_address = reply_to_with_comment,
                             update_type = update_type,
                             template = get_template('instant_notification.html')
                         )
