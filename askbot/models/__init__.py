@@ -2737,12 +2737,18 @@ def send_instant_notifications_about_activity_in_post(
                     'reply_action': 'post_comment'
                 }
                 if post.post_type in ('answer', 'comment'):
-                    reply_addr = ReplyAddress.objects.create_new(**reply_args)
+                    reply_addr = ReplyAddress.objects.create_new(
+                                                        **reply_args
+                                                    ).address
                 elif post.post_type == 'question':
-                    reply_with_comment_address = ReplyAddress.objects.create_new(**reply_args)
+                    reply_with_comment_address = ReplyAddress.objects.create_new(
+                                                                        **reply_args
+                                                                    ).address
                     #default action is to post answer
                     reply_args['reply_action'] = 'post_answer'
-                    reply_addr = ReplyAddress.objects.create_new(**reply_args)
+                    reply_addr = ReplyAddress.objects.create_new(
+                                                        **reply_args
+                                                    ).address
 
             reply_to = 'reply-%s@%s' % (
                             reply_addr,
