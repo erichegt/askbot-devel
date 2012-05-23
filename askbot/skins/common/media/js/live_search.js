@@ -267,12 +267,17 @@ var liveSearch = function(query_string) {
         tabs.attr('class', 'off');
         tabs.each(function(index, element){
             var tab = $(element);
-            var tab_name = tab.attr('id').replace(/^by_/,'');
-            if (tab_name in sortButtonData){
-                href = search_url + QSutils.patch_query_string(query_string, 'sort:'+tab_name+'-desc');
-                tab.attr('href', href);
-                tab.attr('title', sortButtonData[tab_name]['desc_tooltip']);
-                tab.html(sortButtonData[tab_name]['label']);
+            if ( tab.attr('id') ) {
+                var tab_name = tab.attr('id').replace(/^by_/,'');
+                if (tab_name in sortButtonData){
+                    href = search_url + QSutils.patch_query_string(
+                                            query_string,
+                                            'sort:' + tab_name + '-desc'
+                                        );
+                    tab.attr('href', href);
+                    tab.attr('title', sortButtonData[tab_name]['desc_tooltip']);
+                    tab.html(sortButtonData[tab_name]['label']);
+                }
             }
         });
         var bits = sort_method.split('-', 2);

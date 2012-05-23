@@ -114,7 +114,7 @@ settings.register(
     IntegerValue(
         REP_CHANGES,
         'REP_LOSS_FOR_RECEIVING_DOWNVOTE',
-        default=-1,
+        default=-10,
         description=_('Loss for owner of post that was downvoted')
     )
 )

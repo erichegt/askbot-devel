@@ -11,45 +11,47 @@
     <link rel="stylesheet" type="text/css" href="{{"/js/wmd/wmd.css"|media}}" />
 {% endblock %}
 {% block content %}
-<h1 class="section-title">
-{% if group %}
-    {% trans name = group.name|replace('-', ' ')|escape %}Users in group {{name}}{% endtrans %}
-{% else %}
-    {% trans %}Users{% endtrans %}
-{% endif %}
-</h1>
-<div class="tabBar">
-    <div class="tabsA">
-    <span class="label">{% trans %}Sort by &raquo;{% endtrans %}</span>
-        {% if settings.KARMA_MODE == 'public' %}
-        <a 
-            id="sort_reputation"
-            href="{{ request.path }}?sort=reputation"
-            {% if tab_id == 'reputation' %}class="on"{% endif %}
-            title="{% trans %}see people with the highest reputation{% endtrans %}"
-        ><span>{% trans %}karma{% endtrans %}</span></a>
-        {% endif %}
-        <a 
-            id="sort_newest"
-            href="{{ request.path }}?sort=newest"
-            {% if tab_id == 'newest' %}class="on"{% endif %}
-            class="off" title="{% trans %}see people who joined most recently{% endtrans %}"
-        ><span>{% trans %}recent{% endtrans %}</span></a>
-        <a 
-            id="sort_last"
-            href="{{ request.path }}?sort=last"
-            {% if tab_id == 'last' %}class="on"{% endif %}
-            class="off" title="{% trans %}see people who joined the site first{% endtrans %}"
-        ><span>{% trans %}oldest{% endtrans %}<span></a>
-        <a 
-            id="sort_user"
-            href="{{ request.path }}?sort=user"
-            {% if tab_id == 'user' %}class="on"{% endif %}
-            title="{% trans %}see people sorted by name{% endtrans %}"
-        ><span>{% trans %}by username{% endtrans %}</span></a>
+<div id="content-header">
+    <h1 class="section-title">
+    {% if group %}
+        {% trans name = group.name|replace('-', ' ')|escape %}Users in group {{name}}{% endtrans %}
+    {% else %}
+        {% trans %}Users{% endtrans %}
+    {% endif %}
+    </h1>
+    <div class="tabBar">
+        <div class="tabsA">
+        <span class="label">{% trans %}Sort by &raquo;{% endtrans %}</span>
+            {% if settings.KARMA_MODE == 'public' %}
+            <a 
+                id="sort_reputation"
+                href="{{ request.path }}?sort=reputation"
+                {% if tab_id == 'reputation' %}class="on"{% endif %}
+                title="{% trans %}see people with the highest reputation{% endtrans %}"
+            ><span>{% trans %}karma{% endtrans %}</span></a>
+            {% endif %}
+            <a 
+                id="sort_newest"
+                href="{{ request.path }}?sort=newest"
+                {% if tab_id == 'newest' %}class="on"{% endif %}
+                class="off" title="{% trans %}see people who joined most recently{% endtrans %}"
+            ><span>{% trans %}recent{% endtrans %}</span></a>
+            <a 
+                id="sort_last"
+                href="{{ request.path }}?sort=last"
+                {% if tab_id == 'last' %}class="on"{% endif %}
+                class="off" title="{% trans %}see people who joined the site first{% endtrans %}"
+            ><span>{% trans %}oldest{% endtrans %}<span></a>
+            <a 
+                id="sort_user"
+                href="{{ request.path }}?sort=user"
+                {% if tab_id == 'user' %}class="on"{% endif %}
+                title="{% trans %}see people sorted by name{% endtrans %}"
+            ><span>{% trans %}by username{% endtrans %}</span></a>
+        </div>
     </div>
+    <div class="clearfix"></div>
 </div>
-<div class="clean"></div>
 {% if suser %}
     <p>{% trans %}users matching query {{suser}}:{% endtrans %}</p>
 {% endif %}
