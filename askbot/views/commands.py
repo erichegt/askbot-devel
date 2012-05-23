@@ -424,7 +424,8 @@ def mark_tag(request, **kwargs):#tagging system
     action = kwargs['action']
     post_data = simplejson.loads(request.raw_post_data)
     raw_tagnames = post_data['tagnames']
-    reason = kwargs.get('reason', None)
+    reason = post_data['reason']
+    assert reason in ('good', 'bad', 'subscribed')
     #separate plain tag names and wildcard tags
 
     tagnames, wildcards = forms.clean_marked_tagnames(raw_tagnames)

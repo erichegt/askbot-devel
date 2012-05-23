@@ -120,10 +120,14 @@ function pickedTags(){
             url = askbot['urls']['unmark_tag'];
         }
 
+        var data = JSON.stringify({
+            tagnames: tagnames,
+            reason: reason
+        });
         var call_settings = {
             type:'POST',
             url:url,
-            data: JSON.stringify({tagnames: tagnames}),
+            data: data,
             dataType: 'json'
         };
         if (callback !== false){
