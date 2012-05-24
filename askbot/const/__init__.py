@@ -59,7 +59,7 @@ REPLY_WITH_COMMENT_TEMPLATE = _(
     'Note: to reply with a comment, '
     'please use <a href="mailto://%(addr)s">this link</a>'
 )
-REPLY_SEPARATOR_REGEX = re.compile('==== .* -=-==', re.MULTILINE)
+REPLY_SEPARATOR_REGEX = re.compile(r'==== .* -=-==', re.MULTILINE|re.DOTALL)
 
 ANSWER_SORT_METHODS = (#no translations needed here
     'latest', 'oldest', 'votes'

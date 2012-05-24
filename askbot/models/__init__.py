@@ -2726,7 +2726,7 @@ def send_instant_notifications_about_activity_in_post(
         #of executive function with the activity log recording
         #TODO check user reputation
         headers = mail.thread_headers(post, origin_post, update_activity.activity_type)
-        reply_with_comment_address = None#only used for questions in some cases
+        reply_to_with_comment = None#only used for questions in some cases
         if askbot_settings.REPLY_BY_EMAIL:
             reply_addr = "noreply"
             if user.reputation >= askbot_settings.MIN_REP_TO_POST_BY_EMAIL:
@@ -2746,7 +2746,7 @@ def send_instant_notifications_about_activity_in_post(
                                                                         **reply_args
                                                                     ).address
                     reply_to_with_comment = 'reply-%s@%s' % (
-                                    reply_addr,
+                                    reply_with_comment_address,
                                     askbot_settings.REPLY_BY_EMAIL_HOSTNAME
                                 )
                     #default action is to post answer
