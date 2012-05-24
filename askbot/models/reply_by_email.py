@@ -74,6 +74,25 @@ class ReplyAddress(models.Model):
         """True if was used"""
         return self.used_at != None
 
+    def extract_user_signature(self, text):
+        if self.address in text:
+            #extract the signature
+            tail = list()
+            for line in reversed(text.splitlines()):
+                #scan backwards from the end until the magic line
+                if self.address in line:
+                    break
+                tail.insert(0, line)
+
+            #strip off the leading quoted lines, there could be one or two
+            #also strip empty lines
+            while tail[0].startswith('>') or tail[0].strip() == '':
+                tail.pop(0)
+
+            return '\n'.join(tail)
+        else:
+            return ''
+
     def edit_post(self, parts):
         """edits the created post upon repeated response
         to the same address"""
@@ -95,6 +114,14 @@ class ReplyAddress(models.Model):
         result = None
         #todo: delete stored files if this function fails
         content, stored_files = mail.process_parts(parts)
+
+        if self.address in content:
+            new_signature = self.extract_user_signature(content)
+            if new_signature != self.user.email_signature:
+                self.user.email_signature = new_signature
+                self.user.email_isvalid = True
+                self.user.save()
+
         content = self.user.strip_email_signature(content)
 
         if self.post.post_type == 'answer':

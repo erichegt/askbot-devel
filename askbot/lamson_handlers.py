@@ -221,27 +221,13 @@ def VALIDATE_EMAIL(
     todo: go a step further and
     """
     content, stored_files = mail.process_parts(parts)
+    #save the signature and mark email as valid
     reply_code = reply_address_object.address
+    user = reply_address_object.user
     if reply_code in content:
-
-        #extract the signature
-        tail = list()
-        for line in reversed(content.splitlines()):
-            #scan backwards from the end until the magic line
-            if reply_code in line:
-                break
-            tail.insert(0, line)
-
-        #strip off the leading quoted lines, there could be one or two
-        #also strip empty lines
-        while tail[0].startswith('>') or tail[0].strip() == '':
-            tail.pop(0)
-
-        signature = '\n'.join(tail)
-
-        #save the signature and mark email as valid
-        user = reply_address_object.user
-        user.email_signature = signature
+        user.email_signature = reply_address_object.extract_user_signature(
+                                                                        content
+                                                                    )
         user.email_isvalid = True
         user.save()
 

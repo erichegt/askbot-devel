@@ -2578,6 +2578,7 @@ def format_instant_notification_email(
                                         from_user = None,
                                         post = None,
                                         reply_with_comment_address = None,
+                                        reply_code = None,
                                         update_type = None,
                                         template = None,
                                     ):
@@ -2694,6 +2695,11 @@ def format_instant_notification_email(
         'reply_separator': reply_separator
     }
     subject_line = _('"%(title)s"') % {'title': origin_post.thread.title}
+
+    content = template.render(Context(update_data))
+    if can_reply:
+        content += '<p style="font-size:8px;color:#aaa'> + reply_code + '</p>'
+
     return subject_line, template.render(Context(update_data))
 
 #todo: action
@@ -2730,8 +2736,8 @@ def send_instant_notifications_about_activity_in_post(
         #TODO check user reputation
         headers = mail.thread_headers(post, origin_post, update_activity.activity_type)
         reply_to_with_comment = None#only used for questions in some cases
+        reply_addr = "noreply"
         if askbot_settings.REPLY_BY_EMAIL:
-            reply_addr = "noreply"
             if user.reputation >= askbot_settings.MIN_REP_TO_POST_BY_EMAIL:
 
                 reply_args = {
@@ -2771,6 +2777,7 @@ def send_instant_notifications_about_activity_in_post(
                             from_user = update_activity.user,
                             post = post,
                             reply_with_comment_address = reply_to_with_comment,
+                            reply_code = reply_addr,
                             update_type = update_type,
                             template = get_template('instant_notification.html')
                         )
