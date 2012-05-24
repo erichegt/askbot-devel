@@ -109,7 +109,7 @@ var notify = function() {
     return {
         show: function(html) {
             if (html) {
-                $("body").css("margin-top", "2.2em");
+                $("body").addClass('user-messages');
                 $(".notify span").html(html);        
             }          
             $(".notify").fadeIn("slow");
@@ -123,7 +123,7 @@ var notify = function() {
                );
             }
             $(".notify").fadeOut("fast");
-            $("body").css("margin-top", "0");
+            $('body').removeClass('user-messages');
             visible = false;
         },     
         isVisible: function() { return visible; }     
