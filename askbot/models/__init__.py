@@ -207,6 +207,9 @@ def user_update_avatar_type(self):
 
 def user_strip_email_signature(self, text):
     """strips email signature from the end of the text"""
+    if self.email_signature == '':
+        return text
+
     text = '\n'.join(text.splitlines())#normalize the line endings
     if text.endswith(self.email_signature):
         return text[0:-len(self.email_signature)]

@@ -79,6 +79,7 @@ class ReplyAddress(models.Model):
         to the same address"""
         assert self.was_used == True
         content, stored_files = mail.process_parts(parts)
+        content = self.user.strip_email_signature(content)
         self.user.edit_post(
             post = self.response_post,
             body_text = content,
@@ -94,6 +95,7 @@ class ReplyAddress(models.Model):
         result = None
         #todo: delete stored files if this function fails
         content, stored_files = mail.process_parts(parts)
+        content = self.user.strip_email_signature(content)
 
         if self.post.post_type == 'answer':
             result = self.user.post_comment(
