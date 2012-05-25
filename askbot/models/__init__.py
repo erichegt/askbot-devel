@@ -2700,7 +2700,7 @@ def format_instant_notification_email(
     if can_reply:
         content += '<p style="font-size:8px;color:#aaa'> + reply_code + '</p>'
 
-    return subject_line, template.render(Context(update_data))
+    return subject_line, content
 
 #todo: action
 def send_instant_notifications_about_activity_in_post(
