@@ -74,65 +74,32 @@ class ReplyAddress(models.Model):
         """True if was used"""
         return self.used_at != None
 
-    def extract_user_signature(self, text):
-        if self.address in text:
-            #extract the signature
-            tail = list()
-            for line in reversed(text.splitlines()):
-                #scan backwards from the end until the magic line
-                if self.address in line:
-                    break
-                tail.insert(0, line)
-
-            #strip off the leading quoted lines, there could be one or two
-            #also strip empty lines
-            while tail[0].startswith('>') or tail[0].strip() == '':
-                tail.pop(0)
-
-            return '\n'.join(tail)
-        else:
-            return ''
-
-    def edit_post(self, parts):
+    def edit_post(self, body_text, stored_files):
         """edits the created post upon repeated response
         to the same address"""
         assert self.was_used == True
-        content, stored_files = mail.process_parts(parts)
-        content = self.user.strip_email_signature(content)
         self.user.edit_post(
             post = self.response_post,
-            body_text = content,
+            body_text = stored_files,
             revision_comment = _('edited by email'),
             by_email = True
         )
         self.response_post.thread.invalidate_cached_data()
 
-    def create_reply(self, parts):
+    def create_reply(self, body_text, stored_files):
         """creates a reply to the post which was emailed
         to the user
         """
         result = None
-        #todo: delete stored files if this function fails
-        content, stored_files = mail.process_parts(parts)
-
-        if self.address in content:
-            new_signature = self.extract_user_signature(content)
-            if new_signature != self.user.email_signature:
-                self.user.email_signature = new_signature
-                self.user.email_isvalid = True
-                self.user.save()
-
-        content = self.user.strip_email_signature(content)
-
         if self.post.post_type == 'answer':
             result = self.user.post_comment(
                                         self.post,
-                                        content,
+                                        body_text,
                                         by_email = True
                                     )
         elif self.post.post_type == 'question':
             if self.reply_action == 'auto_answer_or_comment':
-                wordcount = len(content)/6#todo: this is a simplistic hack
+                wordcount = len(body_text)/6#todo: this is a simplistic hack
                 if wordcount > askbot_settings.MIN_WORDS_FOR_ANSWER_BY_EMAIL:
                     reply_action = 'post_answer'
                 else:
@@ -143,13 +110,13 @@ class ReplyAddress(models.Model):
             if reply_action == 'post_answer':
                 result = self.user.post_answer(
                                             self.post,
-                                            content,
+                                            body_text,
                                             by_email = True
                                         )
             elif reply_action == 'post_comment':
                 result = self.user.post_comment(
                                             self.post,
-                                            content,
+                                            body_text,
                                             by_email = True
                                         )
             else:
@@ -160,7 +127,7 @@ class ReplyAddress(models.Model):
         elif self.post.post_type == 'comment':
             result = self.user.post_comment(
                                     self.post.parent,
-                                    content,
+                                    body_text,
                                     by_email = True
                                 )
         result.thread.invalidate_cached_data()

@@ -250,7 +250,29 @@ def process_attachment(attachment):
         markdown_link = '!' + markdown_link
     return markdown_link, file_storage
 
-def process_parts(parts):
+def extract_user_signature(text, reply_code):
+    """extracts email signature as text trailing
+    the reply code"""
+    if reply_code in text:
+        #extract the signature
+        tail = list()
+        for line in reversed(text.splitlines()):
+            #scan backwards from the end until the magic line
+            if reply_code in line:
+                break
+            tail.insert(0, line)
+
+        #strip off the leading quoted lines, there could be one or two
+        #also strip empty lines
+        while tail[0].startswith('>') or tail[0].strip() == '':
+            tail.pop(0)
+
+        return '\n'.join(tail)
+    else:
+        return ''
+
+
+def process_parts(parts, reply_code = None):
     """Process parts will upload the attachments and parse out the
     body, if body is multipart. Secondly - links to attachments
     will be added to the body of the question.
@@ -274,10 +296,14 @@ def process_parts(parts):
 
     #if the response separator is present - 
     #split the body with it, and discard the "so and so wrote:" part
+    if reply_code:
+        signature = extract_user_signature(body_markdown, reply_code)
+    else:
+        signature = None
     body_markdown = extract_reply(body_markdown)
 
     body_markdown += attachments_markdown
-    return body_markdown.strip(), stored_files
+    return body_markdown.strip(), stored_files, signature
 
 
 def process_emailed_question(from_address, subject, parts, tags = None):
@@ -288,7 +314,7 @@ def process_emailed_question(from_address, subject, parts, tags = None):
 
     try:
         #todo: delete uploaded files when posting by email fails!!!
-        body, stored_files = process_parts(parts)
+        body, stored_files, unused = process_parts(parts)
         data = {
             'sender': from_address,
             'subject': subject,

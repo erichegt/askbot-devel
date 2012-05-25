@@ -220,14 +220,12 @@ def VALIDATE_EMAIL(
     the email signature
     todo: go a step further and
     """
-    content, stored_files = mail.process_parts(parts)
-    #save the signature and mark email as valid
     reply_code = reply_address_object.address
-    user = reply_address_object.user
-    if reply_code in content:
-        user.email_signature = reply_address_object.extract_user_signature(
-                                                                        content
-                                                                    )
+    try:
+        content, stored_files, signature = mail.process_parts(parts, reply_code)
+        user = reply_address_object.user
+        if signature and signature != user.email_signature:
+            user.email_signature = signature
         user.email_isvalid = True
         user.save()
 
@@ -243,8 +241,7 @@ def VALIDATE_EMAIL(
             body_text = template.render(Context(data)),
             recipient_list = [from_address,]
         )
-
-    else:
+    except ValueError:
         raise ValueError(
             _(
                 'Please reply to the welcome email '
@@ -263,7 +260,19 @@ def PROCESS(
     """handler to process the emailed message
     and make a post to askbot based on the contents of
     the email, including the text body and the file attachments"""
+    #split email into bits
+    reply_code = reply_address_object.address
+    body_text, stored_files, signature = mail.process_parts(parts, reply_code)
+
+    #update signature and validate email address
+    user = reply_address_object.user
+    if signature and signature != user.email_signature:
+        user.email_signature = signature
+    user.email_isvalid = True
+    user.save()#todo: actually, saving is not necessary, if nothing changed
+
     if reply_address_object.was_used:
-        reply_address_object.edit_post(parts)
+        action = reply_address_object.edit_post
     else:
-        reply_address_object.create_reply(parts)
+        action = reply_address_object.create_reply
+    action(body_text, stored_files)
