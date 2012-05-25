@@ -2698,7 +2698,7 @@ def format_instant_notification_email(
 
     content = template.render(Context(update_data))
     if can_reply:
-        content += '<p style="font-size:8px;color:#aaa'> + reply_code + '</p>'
+        content += '<p style="font-size:8px;color:#aaa' + reply_code + '</p>'
 
     return subject_line, content
 
