@@ -6,7 +6,7 @@ from askbot import const
 from askbot.conf import settings as askbot_settings
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
-from askbot.utils import mail
+from askbot import mail
 from askbot.utils.classes import ReminderSchedule
 
 DEBUG_THIS_COMMAND = False

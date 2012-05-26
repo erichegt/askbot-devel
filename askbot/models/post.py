@@ -1784,7 +1784,7 @@ class PostRevision(models.Model):
                 self.post.thread.save()
             #above changes will hide post from the public display
             if self.by_email:
-                from askbot.utils.mail import send_mail
+                from askbot.mail import send_mail
                 email_context = {
                     'site': askbot_settings.APP_SHORT_NAME
                 }

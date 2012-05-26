@@ -40,7 +40,7 @@ from askbot.utils.decorators import auto_now_timestamp
 from askbot.utils.slug import slugify
 from askbot.utils.diff import textDiff as htmldiff
 from askbot.utils.url_utils import strip_path
-from askbot.utils import mail
+from askbot import mail
 
 def get_model(model_name):
     """a shortcut for getting model for an askbot app"""

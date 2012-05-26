@@ -22,7 +22,7 @@ from askbot.conf import should_show_sort_by_relevance
 from askbot.conf import settings as askbot_settings
 from askbot.utils import decorators
 from askbot.utils import url_utils
-from askbot.utils import mail
+from askbot import mail
 from askbot.skins.loaders import render_into_skin, get_template
 from askbot import const
 import logging

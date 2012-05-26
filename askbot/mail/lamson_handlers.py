@@ -7,7 +7,7 @@ from django.utils.translation import ugettext as _
 from lamson.routing import route, stateless
 from lamson.server import Relay
 from askbot.models import ReplyAddress, Tag
-from askbot.utils import mail
+from askbot import mail
 from askbot.conf import settings as askbot_settings
 from askbot.skins.loaders import get_template
 

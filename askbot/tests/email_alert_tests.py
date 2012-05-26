@@ -11,7 +11,7 @@ from django.test import TestCase
 from django.test.client import Client
 from askbot.tests import utils
 from askbot import models
-from askbot.utils import mail
+from askbot import mail
 from askbot.conf import settings as askbot_settings
 from askbot import const
 from askbot.models.question import Thread

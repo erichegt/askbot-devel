@@ -28,7 +28,7 @@ from django.views.decorators import csrf
 
 from askbot.utils.slug import slugify
 from askbot.utils.html import sanitize_html
-from askbot.utils.mail import send_mail
+from askbot.mail import send_mail
 from askbot.utils.http import get_request_info
 from askbot.utils import functions
 from askbot import forms
