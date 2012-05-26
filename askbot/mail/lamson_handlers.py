@@ -188,8 +188,11 @@ def ASK(message, host = None, addr = None):
     parts = get_parts(message)
     from_address = message.From
     subject = message['Subject']#why lamson does not give it normally?
+    body_text, stored_files, unused = process_parts(parts)
     if addr == 'ask':
-        mail.process_emailed_question(from_address, subject, parts)
+        mail.process_emailed_question(
+            from_address, subject, body_text, stored_files
+        )
     else:
         if askbot_settings.GROUP_EMAIL_ADDRESSES_ENABLED == False:
             return
@@ -199,7 +202,8 @@ def ASK(message, host = None, addr = None):
                 name__iexact = addr
             )
             mail.process_emailed_question(
-                from_address, subject, parts, tags = [group_tag.name, ]
+                from_address, subject, body_text, stored_files,
+                tags = [group_tag.name, ]
             )
         except Tag.DoesNotExist:
             #do nothing because this handler will match all emails

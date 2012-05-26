@@ -306,7 +306,9 @@ def process_parts(parts, reply_code = None):
     return body_markdown.strip(), stored_files, signature
 
 
-def process_emailed_question(from_address, subject, parts, tags = None):
+def process_emailed_question(
+    from_address, subject, body_text, stored_files, tags = None
+):
     """posts question received by email or bounces the message"""
     #a bunch of imports here, to avoid potential circular import issues
     from askbot.forms import AskByEmailForm
@@ -314,11 +316,10 @@ def process_emailed_question(from_address, subject, parts, tags = None):
 
     try:
         #todo: delete uploaded files when posting by email fails!!!
-        body, stored_files, unused = process_parts(parts)
         data = {
             'sender': from_address,
             'subject': subject,
-            'body_text': body
+            'body_text': body_text
         }
         form = AskByEmailForm(data)
         if form.is_valid():
