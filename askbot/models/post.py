@@ -442,7 +442,7 @@ class Post(models.Model):
         return data
 
     #todo: when models are merged, it would be great to remove author parameter
-    def parse_and_save_post(post, author = None, **kwargs):
+    def parse_and_save(post, author = None, **kwargs):
         """generic method to use with posts to be used prior to saving
         post edit or addition
         """
@@ -450,7 +450,7 @@ class Post(models.Model):
         assert(author is not None)
 
         last_revision = post.html
-        data = post.parse()
+        data = post.parse_post_text()
 
         post.html = data['html']
         newly_mentioned_users = set(data['newly_mentioned_users']) - set([author])
@@ -495,13 +495,6 @@ class Post(models.Model):
                 ping_google()
         except Exception:
             logging.debug('cannot ping google - did you register with them?')
-
-    ######################################
-    # TODO: Rename the methods above instead of doing this assignment
-    parse = parse_post_text
-    parse_and_save = parse_and_save_post
-    ######################################
-
 
     def is_question(self):
         return self.post_type == 'question'
