@@ -2285,7 +2285,11 @@ def user_approve_post_revision(user, post_revision, timestamp = None):
 
     post = post_revision.post
     post.approved = True
-    post.save()
+    #counterintuitive, but we need to call parse_and_save()
+    #because this function extracts newly mentioned users
+    #and sends the post_updated signal, which ultimately triggers
+    #sending of the email update
+    post.parse_and_save(author = post_revision.author)
     if post_revision.post.post_type == 'question':
         thread = post.thread
         thread.approved = True
@@ -2572,13 +2576,13 @@ User.add_to_class(
     user_assert_can_approve_post_revision
 )
 
-#todo: move this to askbot/utils ??
+#todo: move this to askbot/mail ?
 def format_instant_notification_email(
                                         to_user = None,
                                         from_user = None,
                                         post = None,
-                                        reply_with_comment_address = None,
-                                        reply_code = None,
+                                        reply_address = None,
+                                        alt_reply_address = None,
                                         update_type = None,
                                         template = None,
                                     ):
@@ -2625,13 +2629,13 @@ def format_instant_notification_email(
         revisions = post.revisions.all()[:2]
         assert(len(revisions) == 2)
         content_preview = htmldiff(
-                            revisions[1].html,
-                            revisions[0].html,
-                            ins_start = '<b><u style="background-color:#cfc">',
-                            ins_end = '</u></b>',
-                            del_start = '<del style="color:#600;background-color:#fcc">',
-                            del_end = '</del>'
-                        )
+                revisions[1].html,
+                revisions[0].html,
+                ins_start = '<b><u style="background-color:#cfc">',
+                ins_end = '</u></b>',
+                del_start = '<del style="color:#600;background-color:#fcc">',
+                del_end = '</del>'
+            )
         #todo: remove hardcoded style
     else:
         content_preview = post.format_for_email()
@@ -2672,12 +2676,13 @@ def format_instant_notification_email(
 
     if can_reply:
         reply_separator = const.REPLY_SEPARATOR_TEMPLATE % {
-                        'user_action': user_action,
-                        'instruction': _('To reply, PLEASE WRITE ABOVE THIS LINE.')
-                    }
-        if post.post_type == 'question' and reply_with_comment_address:
-            data = {'addr': reply_with_comment_address}
-            reply_separator += '<br>' + const.REPLY_WITH_COMMENT_TEMPLATE % data
+                    'user_action': user_action,
+                    'instruction': _('To reply, PLEASE WRITE ABOVE THIS LINE.')
+                }
+        if post.post_type == 'question' and alt_reply_address:
+            data = {'addr': alt_reply_address}
+            reply_separator += '<br>' + \
+                const.REPLY_WITH_COMMENT_TEMPLATE % data
     else:
         reply_separator = user_action
                     
@@ -2698,9 +2703,53 @@ def format_instant_notification_email(
 
     content = template.render(Context(update_data))
     if can_reply:
-        content += '<p style="font-size:8px;color:#aaa' + reply_code + '</p>'
+        content += '<p style="font-size:8px;color:#aaa">' + \
+                    reply_address + '</p>'
 
     return subject_line, content
+
+def get_reply_to_addresses(user, post):
+    """Returns one or two email addresses that can be
+    used by a given `user` to reply to the `post`
+    the first address - always a real email address,
+    the second address is not ``None`` only for "question" posts.
+
+    When the user is notified of a new question - 
+    i.e. `post` is a "quesiton", he/she
+    will need to choose - whether to give a question or a comment,
+    thus we return the second address - for the comment reply.
+
+    When the post is a "question", the first email address
+    is for posting an "answer", and when post is either
+    "comment" or "answer", the address will be for posting
+    a "comment".
+    """
+    #these variables will contain return values
+    primary_addr = django_settings.DEFAULT_FROM_EMAIL
+    secondary_addr = None
+    if askbot_settings.REPLY_BY_EMAIL:
+        if user.reputation >= askbot_settings.MIN_REP_TO_POST_BY_EMAIL:
+
+            reply_args = {
+                'post': post,
+                'user': user,
+                'reply_action': 'post_comment'
+            }
+            if post.post_type in ('answer', 'comment'):
+                reply_args['reply_action'] = 'post_comment'
+            elif post.post_type == 'question':
+                reply_args['reply_action'] = 'post_question'
+
+            primary_addr = ReplyAddress.objects.create_new(
+                                                    **reply_args
+                                                ).as_email_address()
+
+            if post.post_type == 'question':
+                reply_args['reply_action'] = 'post_comment'
+                secondary_addr = ReplyAddress.objects.create_new(
+                                                    **reply_args
+                                                ).as_email_address()
+    return primary_addr, secondary_addr
 
 #todo: action
 def send_instant_notifications_about_activity_in_post(
@@ -2724,64 +2773,31 @@ def send_instant_notifications_about_activity_in_post(
     if update_activity.activity_type not in acceptable_types:
         return
 
+    #calculate some variables used in the loop below
     from askbot.skins.loaders import get_template
     update_type_map = const.RESPONSE_ACTIVITY_TYPE_MAP_FOR_TEMPLATES
     update_type = update_type_map[update_activity.activity_type]
-
     origin_post = post.get_origin_post()
-    for user in recipients:
-      
-        #todo: this could be packaged as an "action" - a bundle
-        #of executive function with the activity log recording
-        #TODO check user reputation
-        headers = mail.thread_headers(post, origin_post, update_activity.activity_type)
-        reply_to_with_comment = None#only used for questions in some cases
-        reply_addr = "noreply"
-        if askbot_settings.REPLY_BY_EMAIL:
-            if user.reputation >= askbot_settings.MIN_REP_TO_POST_BY_EMAIL:
-
-                reply_args = {
-                    'post': post,
-                    'user': user,
-                    'reply_action': 'post_comment'
-                }
-                if post.post_type in ('answer', 'comment'):
-                    reply_addr = ReplyAddress.objects.create_new(
-                                                        **reply_args
-                                                    ).address
-                    reply_to_with_comment = None
-                elif post.post_type == 'question':
-                    reply_with_comment_address = ReplyAddress.objects.create_new(
-                                                                        **reply_args
-                                                                    ).address
-                    reply_to_with_comment = 'reply-%s@%s' % (
-                                    reply_with_comment_address,
-                                    askbot_settings.REPLY_BY_EMAIL_HOSTNAME
-                                )
-                    #default action is to post answer
-                    reply_args['reply_action'] = 'post_answer'
-                    reply_addr = ReplyAddress.objects.create_new(
-                                                        **reply_args
-                                                    ).address
-
-            reply_to = 'reply-%s@%s' % (
-                            reply_addr,
-                            askbot_settings.REPLY_BY_EMAIL_HOSTNAME
+    headers = mail.thread_headers(
+                            post,
+                            origin_post,
+                            update_activity.activity_type
                         )
-            headers.update({'Reply-To': reply_to})
-        else:
-            reply_to = django_settings.DEFAULT_FROM_EMAIL
+    #send email for all recipients
+    for user in recipients:
+        reply_address, alt_reply_address = get_reply_to_addresses(user, post)
 
         subject_line, body_text = format_instant_notification_email(
                             to_user = user,
                             from_user = update_activity.user,
                             post = post,
-                            reply_with_comment_address = reply_to_with_comment,
-                            reply_code = reply_addr,
+                            reply_address = reply_address,
+                            alt_reply_address = alt_reply_address,
                             update_type = update_type,
                             template = get_template('instant_notification.html')
                         )
       
+        headers['Reply-To'] = reply_address
         mail.send_mail(
             subject_line = subject_line,
             body_text = body_text,
@@ -2790,6 +2806,29 @@ def send_instant_notifications_about_activity_in_post(
             activity_type = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT,
             headers = headers
         )
+
+def send_notification_about_approved_post(post):
+    """notifies author about approved post,
+    assumes that we have the very first revision
+    """
+    #for answerable email
+    if askbot_settings.REPLY_BY_EMAIL:
+        #generate two reply codes (one for edit and one for addition)
+        #to format an answerable email or not answerable email
+        data = {
+            'site_name': askbot_settings.APP_SHORT_NAME,
+            'post': post
+        }
+        from askbot.skins.loaders import get_template
+        template = get_template('zhopa')
+        mail.send_mail(
+            subject_line = _('Your post at %(site_name)s was approved') % data,
+            body_text = template.render(Context(data)),
+            recipient_list = [post.author,],
+            related_object = post,
+            activity_type = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT
+        )
+    
 
 #todo: move to utils
 def calculate_gravatar_hash(instance, **kwargs):

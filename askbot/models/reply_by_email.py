@@ -74,6 +74,15 @@ class ReplyAddress(models.Model):
         """True if was used"""
         return self.used_at != None
 
+    def as_email_address(self, prefix = 'reply-'):
+        """returns email address, prefix is added
+        in front of the code"""
+        return '%s%s@%s' % (
+                        prefix,
+                        self.address,
+                        askbot_settings.REPLY_BY_EMAIL_HOSTNAME
+                    )
+
     def edit_post(self, body_text, stored_files):
         """edits the created post upon repeated response
         to the same address"""

@@ -156,6 +156,10 @@ def record_post_update(
                             post = post,
                             recipients = notification_subscribers,
                         )
+    #if post.post_type in ('question', 'answer'):
+    #    if created and post.was_moderated():
+    #        notify_author_about_approved_post(post)
+            
                         
 @task(ignore_result = True)
 def record_question_visit(
