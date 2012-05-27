@@ -49,6 +49,11 @@
             href="{% url user_profile view_user.id, view_user.username|slugify %}?sort=moderation"
         ><span>{% trans %}moderation{% endtrans %}</span></a>
         {% endif %}
+        {% if custom_tab_slug %}
+        <a id="{{ custom_tab_slug }}" {% if tab_name == custom_tab_slug %}class="on"{% endif %} 
+            href="{% url user_profile view_user.id, view_user.username|slugify %}?sort={{ custom_tab_slug }}"
+        ><span>{{ custom_tab_name }}</span></a>
+        {% endif %}
     </div>
 </div>
 <div class="clean"></div>
