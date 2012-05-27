@@ -57,7 +57,7 @@ def owner_or_moderator_required(f):
 
 def users(request, by_group = False, group_id = None, group_slug = None):
     """Users view, including listing of users by group"""
-    users = models.User.objects.all()
+    users = models.User.objects.exclude(status = 'b')
     group = None
     group_email_moderation_enabled = False
     user_can_join_group = False

@@ -1,6 +1,11 @@
 Changes in Askbot
 =================
 
+In development
+---------------------
+* Hide "website" and "about" section of the blocked user profiles
+  to help prevent user profile spam. (Evgeny)
+
 0.7.43 (May 14, 2012)
 ---------------------
 * User groups (Evgeny)
