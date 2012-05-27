@@ -442,51 +442,55 @@ class Post(models.Model):
         return data
 
     #todo: when models are merged, it would be great to remove author parameter
-    def parse_and_save(post, author = None, **kwargs):
+    def parse_and_save(
+        self, author = None, was_approved = False, by_email = False, **kwargs
+    ):
         """generic method to use with posts to be used prior to saving
         post edit or addition
         """
 
         assert(author is not None)
 
-        last_revision = post.html
-        data = post.parse_post_text()
+        last_revision = self.html
+        data = self.parse_post_text()
 
-        post.html = data['html']
+        self.html = data['html']
         newly_mentioned_users = set(data['newly_mentioned_users']) - set([author])
         removed_mentions = data['removed_mentions']
 
         #a hack allowing to save denormalized .summary field for questions
-        if hasattr(post, 'summary'):
-            post.summary = post.get_snippet()
+        if hasattr(self, 'summary'):
+            self.summary = self.get_snippet()
 
         #delete removed mentions
         for rm in removed_mentions:
             rm.delete()
 
-        created = post.pk is None
+        created = self.pk is None
 
         #this save must precede saving the mention activity
         #because generic relation needs primary key of the related object
-        super(post.__class__, post).save(**kwargs)
+        super(self.__class__, self).save(**kwargs)
         if last_revision:
-            diff = htmldiff(last_revision, post.html)
+            diff = htmldiff(last_revision, self.html)
         else:
-            diff = post.get_snippet()
+            diff = self.get_snippet()
 
-        timestamp = post.get_time_of_last_edit()
+        timestamp = self.get_time_of_last_edit()
 
         #todo: this is handled in signal because models for posts
         #are too spread out
         from askbot.models import signals
         signals.post_updated.send(
-            post = post,
+            post = self,
             updated_by = author,
             newly_mentioned_users = newly_mentioned_users,
             timestamp = timestamp,
             created = created,
+            by_email = by_email,
+            was_approved = was_approved,
             diff = diff,
-            sender = post.__class__
+            sender = self.__class__
         )
 
         try:
@@ -513,6 +517,17 @@ class Post(models.Model):
 
     def needs_moderation(self):
         return self.approved == False
+
+    def should_notify_author_about_publishing(
+        self, was_approved = False, by_email = False
+    ):
+        """True if post is a newly published question or answer
+        which was posted by email and or just approved by the
+        moderator"""
+        if self.post_type in ('question', 'answer'):
+            if self.revisions.count() == 0:#brand new post
+                return was_approved or by_email
+        return False
 
     def get_absolute_url(self, no_slug = False, question_post=None, thread=None):
         from askbot.utils.slug import slugify
@@ -1048,10 +1063,7 @@ class Post(models.Model):
         return self.revisions.order_by('-revised_at')[0]
 
     def get_latest_revision_number(self):
-        if self.is_comment():
-            return 1
-        else:
-            return self.get_latest_revision().revision
+        return self.get_latest_revision().revision
 
     def get_time_of_last_edit(self):
         if self.is_comment():

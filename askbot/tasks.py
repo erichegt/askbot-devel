@@ -25,11 +25,16 @@ from celery.decorators import task
 from askbot.conf import settings as askbot_settings
 from askbot.models import Activity, Post, Thread, User
 from askbot.models import send_instant_notifications_about_activity_in_post
+from askbot.models import notify_author_about_approved_post
 from askbot.models.badges import award_badges_signal
 
 # TODO: Make exceptions raised inside record_post_update_celery_task() ...
 #       ... propagate upwards to test runner, if only CELERY_ALWAYS_EAGER = True
 #       (i.e. if Celery tasks are not deferred but executed straight away)
+
+@task(ignore_result = True)
+def notify_author_about_approved_post_celery_task(post):
+    notify_author_about_approved_post(post)
 
 @task(ignore_result = True)
 def record_post_update_celery_task(
@@ -156,10 +161,7 @@ def record_post_update(
                             post = post,
                             recipients = notification_subscribers,
                         )
-    #if post.post_type in ('question', 'answer'):
-    #    if created and post.was_moderated():
-    #        notify_author_about_approved_post(post)
-            
+
                         
 @task(ignore_result = True)
 def record_question_visit(

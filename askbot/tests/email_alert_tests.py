@@ -949,3 +949,47 @@ class EmailFeedSettingTests(utils.AskbotTestCase):
         new_user.add_missing_askbot_subscriptions()
         data_after = TO_JSON(self.get_user_feeds())
         self.assertEquals(data_before, data_after)
+
+class PostApprovalTests(utils.AskbotTestCase):
+    """test notifications sent to authors when their posts
+    are approved or published"""
+    def setUp(self):
+        assert(
+            django_settings.EMAIL_BACKEND == 'django.core.mail.backends.locmem.EmailBackend'
+        )
+
+    def test_emailed_question_answerable_approval_notification(self):
+        setting_backup = askbot_settings.REPLY_BY_EMAIL
+        askbot_settings.update('REPLY_BY_EMAIL', True)
+        self.u1 = self.create_user('user1', status = 'a')
+        question = self.post_question(user = self.u1, by_email = True)
+        outbox = django.core.mail.outbox
+        self.assertEquals(len(outbox), 1)
+        self.assertEquals(outbox[0].recipients(), [self.u1.email])
+        askbot_settings.update('REPLY_BY_EMAIL', setting_backup)
+
+    def test_moderated_question_answerable_approval_notification(self):
+        setting_backup1 = askbot_settings.REPLY_BY_EMAIL
+        askbot_settings.update('REPLY_BY_EMAIL', True)
+        setting_backup2 = askbot_settings.ENABLE_CONTENT_MODERATION
+        askbot_settings.update('ENABLE_CONTENT_MODERATION', True)
+
+        u1 = self.create_user('user1', status = 'a')
+        question = self.post_question(user = u1, by_email = True)
+
+        self.assertEquals(question.approved, False)
+
+        u2 = self.create_user('admin', status = 'd')
+
+        self.assertEquals(question.revisions.count(), 1)
+        u2.approve_post_revision(question.get_latest_revision())
+
+        outbox = django.core.mail.outbox
+        self.assertEquals(len(outbox), 2)
+        #moderation notification
+        self.assertEquals(outbox[0].recipients(), [u1.email,])
+        self.assertEquals(outbox[1].recipients(), [u1.email,])#approval
+
+        askbot_settings.update('REPLY_BY_EMAIL', setting_backup1)
+        askbot_settings.update('ENABLE_CONTENT_MODERATION', setting_backup2)
+

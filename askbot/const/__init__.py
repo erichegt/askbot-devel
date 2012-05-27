@@ -54,6 +54,7 @@ POST_SORT_METHODS = (
 
 POST_TYPES = ('answer', 'comment', 'question', 'tag_wiki', 'reject_reason')
 
+SIMPLE_REPLY_SEPARATOR_TEMPLATE = '==== %s -=-=='
 REPLY_SEPARATOR_TEMPLATE = '==== %(user_action)s %(instruction)s -=-=='
 REPLY_WITH_COMMENT_TEMPLATE = _(
     'Note: to reply with a comment, '

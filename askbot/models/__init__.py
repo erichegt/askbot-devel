@@ -2289,7 +2289,8 @@ def user_approve_post_revision(user, post_revision, timestamp = None):
     #because this function extracts newly mentioned users
     #and sends the post_updated signal, which ultimately triggers
     #sending of the email update
-    post.parse_and_save(author = post_revision.author)
+    post.parse_and_save(author = post_revision.author, was_approved = True)
+
     if post_revision.post.post_type == 'question':
         thread = post.thread
         thread.approved = True
@@ -2807,26 +2808,61 @@ def send_instant_notifications_about_activity_in_post(
             headers = headers
         )
 
-def send_notification_about_approved_post(post):
+def notify_author_about_approved_post(post):
     """notifies author about approved post,
     assumes that we have the very first revision
     """
-    #for answerable email
+    #for answerable email only for now, because
+    #we don't yet have the template for the read-only notification
     if askbot_settings.REPLY_BY_EMAIL:
         #generate two reply codes (one for edit and one for addition)
         #to format an answerable email or not answerable email
+        reply_options = {
+            'user': post.author,
+            'post': post,
+            'reply_action': 'append_content'
+        }
+        append_content_address = ReplyAddress.objects.create_new(
+                                                        **reply_options
+                                                    ).as_email_address()
+        reply_options['reply_action'] = 'replace_content'
+        replace_content_address = ReplyAddress.objects.create_new(
+                                                        **reply_options
+                                                    ).as_email_address()
+
+        #populate template context variables
+        reply_code = append_content_address + ',' + replace_content_address
+        if post.post_type == 'question':
+            mailto_link_subject = post.thread.title
+        else:
+            mailto_link_subject = _('An edit for my answer')
+        #todo: possibly add more mailto thread headers to organize messages
+
+        prompt = _('To add to your post EDIT ABOVE THIS LINE')
+        reply_separator_line = const.SIMPLE_REPLY_SEPARATOR_TEMPLATE % prompt
         data = {
             'site_name': askbot_settings.APP_SHORT_NAME,
-            'post': post
+            'post': post,
+            'replace_content_address': replace_content_address,
+            'reply_separator_line': reply_separator_line,
+            'mailto_link_subject': mailto_link_subject,
+            'reply_code': reply_code
         }
+
+        #load the template
         from askbot.skins.loaders import get_template
-        template = get_template('zhopa')
+        template = get_template('email/notify_author_about_approved_post.html')
+        #todo: possibly add headers to organize messages in threads
+        headers = {'Reply-To': append_content_address}
+
+        #send the message
         mail.send_mail(
             subject_line = _('Your post at %(site_name)s was approved') % data,
             body_text = template.render(Context(data)),
-            recipient_list = [post.author,],
+            recipient_list = [post.author.email,],
             related_object = post,
-            activity_type = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT
+            activity_type = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT,
+            headers = headers
         )
     
 
@@ -2845,6 +2881,8 @@ def record_post_update_activity(
         updated_by = None,
         timestamp = None,
         created = False,
+        was_approved = False,
+        by_email = False,
         diff = None,
         **kwargs
     ):
@@ -2875,6 +2913,11 @@ def record_post_update_activity(
         created = created,
         diff = diff,
     )
+    if post.should_notify_author_about_publishing(
+                                        was_approved = was_approved,
+                                        by_email = by_email
+                                    ):
+        tasks.notify_author_about_approved_post_celery_task.delay(post)
     #non-celery version
     #tasks.record_post_update(
     #    post = post,

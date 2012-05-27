@@ -107,7 +107,7 @@ class ThreadManager(models.Manager):
             question.last_edited_at = added_at
             question.wikified_at = added_at
 
-        question.parse_and_save(author = author)
+        question.parse_and_save(author = author, by_email = by_email)
 
         question.add_revision(
             author = author,
