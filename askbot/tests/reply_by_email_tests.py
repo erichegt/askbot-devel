@@ -1,6 +1,6 @@
 from django.utils.translation import ugettext as _
 from askbot.models import ReplyAddress
-from askbot.lamson_handlers import PROCESS, VALIDATE_EMAIL, get_parts
+from askbot.mail.lamson_handlers import PROCESS, VALIDATE_EMAIL, get_parts
 from askbot import const
 
 

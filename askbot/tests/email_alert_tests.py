@@ -954,26 +954,34 @@ class PostApprovalTests(utils.AskbotTestCase):
     """test notifications sent to authors when their posts
     are approved or published"""
     def setUp(self):
+        self.reply_by_email = askbot_settings.REPLY_BY_EMAIL
+        askbot_settings.update('REPLY_BY_EMAIL', True)
+        self.enable_content_moderation = \
+            askbot_settings.ENABLE_CONTENT_MODERATION
+        askbot_settings.update('ENABLE_CONTENT_MODERATION', True)
         assert(
             django_settings.EMAIL_BACKEND == 'django.core.mail.backends.locmem.EmailBackend'
         )
 
+    def tearDown(self):
+        askbot_settings.update(
+            'REPLY_BY_EMAIL', self.reply_by_email
+        )
+        askbot_settings.update(
+            'ENABLE_CONTENT_MODERATION',
+            self.enable_content_moderation
+        )
+
     def test_emailed_question_answerable_approval_notification(self):
-        setting_backup = askbot_settings.REPLY_BY_EMAIL
-        askbot_settings.update('REPLY_BY_EMAIL', True)
-        self.u1 = self.create_user('user1', status = 'a')
+        self.u1 = self.create_user('user1', status = 'a')#regular user
         question = self.post_question(user = self.u1, by_email = True)
         outbox = django.core.mail.outbox
+        #here we should get just the notification of the post
+        #being placed on the moderation queue
         self.assertEquals(len(outbox), 1)
         self.assertEquals(outbox[0].recipients(), [self.u1.email])
-        askbot_settings.update('REPLY_BY_EMAIL', setting_backup)
 
     def test_moderated_question_answerable_approval_notification(self):
-        setting_backup1 = askbot_settings.REPLY_BY_EMAIL
-        askbot_settings.update('REPLY_BY_EMAIL', True)
-        setting_backup2 = askbot_settings.ENABLE_CONTENT_MODERATION
-        askbot_settings.update('ENABLE_CONTENT_MODERATION', True)
-
         u1 = self.create_user('user1', status = 'a')
         question = self.post_question(user = u1, by_email = True)
 
@@ -989,7 +997,3 @@ class PostApprovalTests(utils.AskbotTestCase):
         #moderation notification
         self.assertEquals(outbox[0].recipients(), [u1.email,])
         self.assertEquals(outbox[1].recipients(), [u1.email,])#approval
-
-        askbot_settings.update('REPLY_BY_EMAIL', setting_backup1)
-        askbot_settings.update('ENABLE_CONTENT_MODERATION', setting_backup2)
-

@@ -2285,17 +2285,16 @@ def user_approve_post_revision(user, post_revision, timestamp = None):
 
     post = post_revision.post
     post.approved = True
-    #counterintuitive, but we need to call parse_and_save()
-    #because this function extracts newly mentioned users
-    #and sends the post_updated signal, which ultimately triggers
-    #sending of the email update
-    post.parse_and_save(author = post_revision.author, was_approved = True)
+    post.save()
 
     if post_revision.post.post_type == 'question':
         thread = post.thread
         thread.approved = True
         thread.save()
     post.thread.invalidate_cached_data()
+
+    #send the signal of published revision
+    signals.post_revision_published.send(None, revision = post_revision)
 
 @auto_now_timestamp
 def flag_post(user, post, timestamp=None, cancel=False, cancel_all = False, force = False):
@@ -2808,62 +2807,13 @@ def send_instant_notifications_about_activity_in_post(
             headers = headers
         )
 
-def notify_author_about_approved_post(post):
-    """notifies author about approved post,
+def notify_author_of_published_revision(revision, **kwargs):
+    """notifies author about approved post revision,
     assumes that we have the very first revision
     """
-    #for answerable email only for now, because
-    #we don't yet have the template for the read-only notification
-    if askbot_settings.REPLY_BY_EMAIL:
-        #generate two reply codes (one for edit and one for addition)
-        #to format an answerable email or not answerable email
-        reply_options = {
-            'user': post.author,
-            'post': post,
-            'reply_action': 'append_content'
-        }
-        append_content_address = ReplyAddress.objects.create_new(
-                                                        **reply_options
-                                                    ).as_email_address()
-        reply_options['reply_action'] = 'replace_content'
-        replace_content_address = ReplyAddress.objects.create_new(
-                                                        **reply_options
-                                                    ).as_email_address()
-
-        #populate template context variables
-        reply_code = append_content_address + ',' + replace_content_address
-        if post.post_type == 'question':
-            mailto_link_subject = post.thread.title
-        else:
-            mailto_link_subject = _('An edit for my answer')
-        #todo: possibly add more mailto thread headers to organize messages
-
-        prompt = _('To add to your post EDIT ABOVE THIS LINE')
-        reply_separator_line = const.SIMPLE_REPLY_SEPARATOR_TEMPLATE % prompt
-        data = {
-            'site_name': askbot_settings.APP_SHORT_NAME,
-            'post': post,
-            'replace_content_address': replace_content_address,
-            'reply_separator_line': reply_separator_line,
-            'mailto_link_subject': mailto_link_subject,
-            'reply_code': reply_code
-        }
-
-        #load the template
-        from askbot.skins.loaders import get_template
-        template = get_template('email/notify_author_about_approved_post.html')
-        #todo: possibly add headers to organize messages in threads
-        headers = {'Reply-To': append_content_address}
-
-        #send the message
-        mail.send_mail(
-            subject_line = _('Your post at %(site_name)s was approved') % data,
-            body_text = template.render(Context(data)),
-            recipient_list = [post.author.email,],
-            related_object = post,
-            activity_type = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT,
-            headers = headers
-        )
+    if revision.revision == 1:#only email about first revision
+        from askbot.tasks import notify_author_of_published_revision_celery_task
+        notify_author_of_published_revision_celery_task.delay(revision)
     
 
 #todo: move to utils
@@ -2881,8 +2831,6 @@ def record_post_update_activity(
         updated_by = None,
         timestamp = None,
         created = False,
-        was_approved = False,
-        by_email = False,
         diff = None,
         **kwargs
     ):
@@ -2913,19 +2861,6 @@ def record_post_update_activity(
         created = created,
         diff = diff,
     )
-    if post.should_notify_author_about_publishing(
-                                        was_approved = was_approved,
-                                        by_email = by_email
-                                    ):
-        tasks.notify_author_about_approved_post_celery_task.delay(post)
-    #non-celery version
-    #tasks.record_post_update(
-    #    post = post,
-    #    newly_mentioned_users = newly_mentioned_users,
-    #    updated_by = updated_by,
-    #    timestamp = timestamp,
-    #    created = created,
-    #)
 
 
 def record_award_event(instance, created, **kwargs):
@@ -3270,22 +3205,10 @@ def make_admin_if_first_user(instance, **kwargs):
         instance.set_admin_status()
     cache.cache.set('admin-created', True)
 
-def place_post_revision_on_moderation_queue(instance, **kwargs):
-    """`instance` is post revision, because we must
-    be able to moderate all the revisions, if necessary,
-    in order to avoid people getting the post past the moderation
-    then make some evil edit.
-    """
-    if instance.needs_moderation():
-        instance.place_on_moderation_queue()
 
 #signal for User model save changes
 django_signals.pre_save.connect(make_admin_if_first_user, sender=User)
 django_signals.pre_save.connect(calculate_gravatar_hash, sender=User)
-django_signals.post_save.connect(
-    place_post_revision_on_moderation_queue,
-    sender=PostRevision
-)
 django_signals.post_save.connect(add_missing_subscriptions, sender=User)
 django_signals.post_save.connect(record_award_event, sender=Award)
 django_signals.post_save.connect(notify_award_message, sender=Award)
@@ -3310,6 +3233,7 @@ signals.user_updated.connect(record_user_full_updated, sender=User)
 signals.user_logged_in.connect(complete_pending_tag_subscriptions)#todo: add this to fake onlogin middleware
 signals.user_logged_in.connect(post_anonymous_askbot_content)
 signals.post_updated.connect(record_post_update_activity)
+signals.post_revision_published.connect(notify_author_of_published_revision)
 signals.site_visited.connect(record_user_visit)
 
 #set up a possibility for the users to follow others

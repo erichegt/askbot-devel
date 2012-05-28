@@ -442,9 +442,7 @@ class Post(models.Model):
         return data
 
     #todo: when models are merged, it would be great to remove author parameter
-    def parse_and_save(
-        self, author = None, was_approved = False, by_email = False, **kwargs
-    ):
+    def parse_and_save(self, author = None, **kwargs):
         """generic method to use with posts to be used prior to saving
         post edit or addition
         """
@@ -487,8 +485,6 @@ class Post(models.Model):
             newly_mentioned_users = newly_mentioned_users,
             timestamp = timestamp,
             created = created,
-            by_email = by_email,
-            was_approved = was_approved,
             diff = diff,
             sender = self.__class__
         )
@@ -517,17 +513,6 @@ class Post(models.Model):
 
     def needs_moderation(self):
         return self.approved == False
-
-    def should_notify_author_about_publishing(
-        self, was_approved = False, by_email = False
-    ):
-        """True if post is a newly published question or answer
-        which was posted by email and or just approved by the
-        moderator"""
-        if self.post_type in ('question', 'answer'):
-            if self.revisions.count() == 0:#brand new post
-                return was_approved or by_email
-        return False
 
     def get_absolute_url(self, no_slug = False, question_post=None, thread=None):
         from askbot.utils.slug import slugify
@@ -1682,11 +1667,15 @@ class PostRevisionManager(models.Manager):
 
     def create_question_revision(self, *kargs, **kwargs):
         kwargs['revision_type'] = self.model.QUESTION_REVISION
-        return super(PostRevisionManager, self).create(*kargs, **kwargs)
+        revision = super(PostRevisionManager, self).create(*kargs, **kwargs)
+        revision.moderate_or_publish()
+        return revision
 
     def create_answer_revision(self, *kargs, **kwargs):
         kwargs['revision_type'] = self.model.ANSWER_REVISION
-        return super(PostRevisionManager, self).create(*kargs, **kwargs)
+        revision = super(PostRevisionManager, self).create(*kargs, **kwargs)
+        revision.moderate_or_publish()
+        return revision
 
     def question_revisions(self):
         return self.filter(revision_type=self.model.QUESTION_REVISION)
@@ -1828,6 +1817,17 @@ class PostRevision(models.Model):
         activity.save()
         #todo: make this group-sensitive
         activity.add_recipients(get_admins_and_moderators())
+
+
+    def moderate_or_publish(self):
+        """either place on moderation queue or announce
+        that this revision is published"""
+        if self.needs_moderation():#moderate
+            self.place_on_moderation_queue()
+        else:#auto-approve
+            from askbot.models import signals
+            signals.post_revision_published.send(None, revision = self)
+
 
     def revision_type_str(self):
         return self.REVISION_TYPE_CHOICES_DICT[self.revision_type]
