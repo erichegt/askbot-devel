@@ -188,7 +188,7 @@ def ASK(message, host = None, addr = None):
     parts = get_parts(message)
     from_address = message.From
     subject = message['Subject']#why lamson does not give it normally?
-    body_text, stored_files, unused = process_parts(parts)
+    body_text, stored_files, unused = mail.process_parts(parts)
     if addr == 'ask':
         mail.process_emailed_question(
             from_address, subject, body_text, stored_files
