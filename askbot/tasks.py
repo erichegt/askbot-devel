@@ -37,6 +37,7 @@ from askbot.models.badges import award_badges_signal
 
 @task(ignore_result = True)
 def notify_author_of_published_revision_celery_task(revision):
+    #todo: move this to ``askbot.mail`` module
     #for answerable email only for now, because
     #we don't yet have the template for the read-only notification
     if askbot_settings.REPLY_BY_EMAIL:
@@ -68,6 +69,7 @@ def notify_author_of_published_revision_celery_task(revision):
         data = {
             'site_name': askbot_settings.APP_SHORT_NAME,
             'post': revision.post,
+            'author_email_signature': revision.author.email_signature,
             'replace_content_address': replace_content_address,
             'reply_separator_line': reply_separator_line,
             'mailto_link_subject': mailto_link_subject,

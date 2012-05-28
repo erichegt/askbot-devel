@@ -268,13 +268,25 @@ def PROCESS(
     reply_code = reply_address_object.address
     body_text, stored_files, signature = mail.process_parts(parts, reply_code)
 
-    #update signature and validate email address
+    #if have signature update signature
     user = reply_address_object.user
-    if signature and signature != user.email_signature:
-        user.email_signature = signature
+    if signature:#if there, then it was stripped
+        if signature != user.email_signature:
+            user.email_signature = signature
+    else:#try to strip signature
+        stripped_body_text = user.strip_email_signature(body_text)
+        #todo: add test cases for emails without the signature
+        if stripped_body_text == body_text and user.email_signature:
+            #todo: send an email asking to update the signature
+            raise ValueError('email signature changed or unknown')
+        body_text = stripped_body_text
+
+    #validate email address
     user.email_isvalid = True
     user.save()#todo: actually, saving is not necessary, if nothing changed
 
+    #todo: elaborate - here in some cases we want to add an edit
+    #and in other cases - replace the text entirely
     if reply_address_object.was_used:
         action = reply_address_object.edit_post
     else:

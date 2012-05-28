@@ -8,10 +8,11 @@
 #}
 {{ reply_separator_line }}
 <p>{% trans 
-        post_text=post.text|safe_urlquote,
-        subject=mailto_link_subject|safe_urlquote
+        post_text = post.text|safe_urlquote,
+        subject = mailto_link_subject|safe_urlquote,
+        author_email_signature = author_email_signature|safe_urlquote
 %}If you would like to edit by email, please
-<a href="mailto://{{ replace_content_address }}?body={{ post_text }}&subject={{ subject }}">click here</a>{% endtrans %}</p>
+<a href="mailto://{{ replace_content_address }}?body={{ post_text }}{{ author_email_signature}}&subject={{ subject }}">click here</a>{% endtrans %}</p>
 <p>{% trans %}Below is a copy of your post:{% endtrans %}</p>
 {% if post.post_type == 'question' %}
     <p style="font-size:16px">{{ post.thread.title }}</p>

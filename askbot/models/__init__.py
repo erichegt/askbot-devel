@@ -2738,7 +2738,7 @@ def get_reply_to_addresses(user, post):
             if post.post_type in ('answer', 'comment'):
                 reply_args['reply_action'] = 'post_comment'
             elif post.post_type == 'question':
-                reply_args['reply_action'] = 'post_question'
+                reply_args['reply_action'] = 'post_answer'
 
             primary_addr = ReplyAddress.objects.create_new(
                                                     **reply_args
