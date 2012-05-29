@@ -877,8 +877,11 @@ def user(request, id, slug=None, tab_name=None):
     elif askbot_settings.KARMA_MODE == 'hidden':
         can_show_karma = False
     else:
-        if request.user.is_administrator_or_moderator() \
-            or request.user == profile_owner:
+        if request.user.is_anonymous():
+            can_show_karma = False
+        elif request.user.is_administrator_or_moderator():
+            can_show_karma = True
+        elif request.user == profile_owner:
             can_show_karma = True
         else:
             can_show_karma = False
