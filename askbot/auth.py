@@ -338,13 +338,15 @@ def onDownVoted(vote, post, user, timestamp=None):
 
     if not (post.wiki or post.is_anonymous):
         author = post.author
-        author.receive_reputation(askbot_settings.REP_LOSS_FOR_DOWNVOTING)
+        author.receive_reputation(
+            askbot_settings.REP_LOSS_FOR_RECEIVING_DOWNVOTE
+        )
         author.save()
 
         question = post.thread._question_post() # TODO: this is suboptimal if post is already a question
 
         reputation = Repute(user=author,
-                   negative=askbot_settings.REP_LOSS_FOR_DOWNVOTING,
+                   negative=askbot_settings.REP_LOSS_FOR_RECEIVING_DOWNVOTE,
                    question=question,
                    reputed_at=timestamp,
                    reputation_type=-3,
@@ -352,12 +354,12 @@ def onDownVoted(vote, post, user, timestamp=None):
         reputation.save()
 
         user.receive_reputation(
-            askbot_settings.REP_LOSS_FOR_RECEIVING_DOWNVOTE
+            askbot_settings.REP_LOSS_FOR_DOWNVOTING,
         )
         user.save()
 
         reputation = Repute(user=user,
-                   negative=askbot_settings.REP_LOSS_FOR_RECEIVING_DOWNVOTE,
+                   negative=askbot_settings.REP_LOSS_FOR_DOWNVOTING,
                    question=question,
                    reputed_at=timestamp,
                    reputation_type=-5,

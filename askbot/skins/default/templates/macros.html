@@ -578,7 +578,7 @@ answer {% if answer.accepted() %}accepted-answer{% endif %} {% if answer.author_
 {%- endmacro -%}
 
 {%- macro user_website_link(user, max_display_length=25) -%}
-    {% if user.website %}
+    {% if user.website and (not user.is_blocked()) %}
         <a 
             href="{{user.website}}"
             title="{% trans username=user.username|escape, url=user.website %}{{username}}'s website is {{url}}{% endtrans %}"

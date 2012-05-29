@@ -110,7 +110,7 @@ def manage_inbox(request):
                             mail.send_mail(
                                 subject_line = _('your post was not accepted'),
                                 body_text = unicode(body_text),
-                                recipient_list = [post.author,]
+                                recipient_list = [post.author.email,]
                             )
                             memo.delete()
 

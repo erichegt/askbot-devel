@@ -39,6 +39,7 @@ Programming and documentation
 * `monkut <https://github.com/monkut>`_
 * `Jim Tittsler <http://wikieducator.org/User:JimTittsler>`_
 * Silvio Heuberger
+* `Alexandros <https://github.com/alexandros-z>`_
 
 Translations
 ------------

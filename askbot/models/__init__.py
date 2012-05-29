@@ -1420,6 +1420,7 @@ def user_edit_comment(
                         edited_by = self,
                         by_email = by_email
                     )
+    comment_post.thread.invalidate_cached_data()
 
 def user_edit_post(self,
                 post = None,
@@ -1839,6 +1840,14 @@ def user_set_status(self, new_status):
         #that permission, it will mostly be false.
         if self.is_administrator():
             self.remove_admin_status()
+
+    #when toggling between blocked and non-blocked status
+    #we need to invalidate question page caches, b/c they contain
+    #user's url, which must be hidden in the blocked state
+    if 'b' in (new_status, self.status) and new_status != self.status:
+        threads = Thread.objects.get_for_user(self)
+        for thread in threads:
+            thread.invalidate_cached_post_data()
 
     self.status = new_status
     self.save()

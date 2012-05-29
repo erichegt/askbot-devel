@@ -15,7 +15,7 @@
         format(tag_name = tag_name)
     #}
     <div class="inputs">
-        <input id="interestingTagInput" autocomplete="off" type="text"/>&nbsp;
+        <input id="interestingTagInput" autocomplete="off" type="text"/>
         <input id="interestingTagAdd" type="submit" value="{% trans %}add{% endtrans %}"/>
     </div>
     <h2>{% trans %}Ignored tags{% endtrans %}</h2>
@@ -32,7 +32,7 @@
         format(tag_name = tag_name)
     #}
     <div class="inputs">
-        <input id="ignoredTagInput" autocomplete="off" type="text"/>&nbsp;
+        <input id="ignoredTagInput" autocomplete="off" type="text"/>
         <input id="ignoredTagAdd" type="submit" value="{% trans %}add{% endtrans%}"/>
     </div>
     {% if settings.SUBSCRIBED_TAG_SELECTOR_ENABLED %}
@@ -50,11 +50,11 @@
             format(tag_name = tag_name)
         #}
         <div class="inputs">
-            <input id="subscribedTagInput" autocomplete="off" type="text"/>&nbsp;
+            <input id="subscribedTagInput" autocomplete="off" type="text"/>
             <input id="subscribedTagAdd" type="submit" value="{% trans %}add{% endtrans%}"/>
         </div>
     {% endif %}
-    <h3>{% trans %}Display tag filter{% endtrans%}</h3>
+    <h3>{% trans %}Show only questions from{% endtrans%}</h3>
     <div id="displayTagFilterControl">
         {{
             macros.radio_select(
@@ -65,7 +65,7 @@
         }}
     </div>
     {% if settings.SUBSCRIBED_TAG_SELECTOR_ENABLED %}
-        <h3>{% trans %}Email tag filter{% endtrans%}</h3>
+        <h3>{% trans %}Send me email alerts for{% endtrans%}</h3>
         <div id="emailTagFilterControl">
             {{
                 macros.radio_select(
@@ -74,6 +74,16 @@
                     choices = email_tag_filter_strategy_choices
                 )
             }}
+            {% if request.user.is_authenticated() %}
+            <p>
+                <a 
+                    href="{% 
+                        url user_profile 
+                        request.user.id, request.user.username|slugify 
+                    %}?sort=email_subscriptions"
+                >{% trans %}Change frequency of emails{% endtrans %}</a>
+            </p>
+            {% endif %}
         </div>
     {% endif %}
 </div>

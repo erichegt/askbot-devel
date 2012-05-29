@@ -10,6 +10,7 @@ the main function is run_startup_tests
 import sys
 import os
 import re
+import urllib
 import askbot
 import south
 from django.db import transaction, connection
@@ -481,6 +482,36 @@ def test_avatar():
             short_message = True
         )
 
+def test_custom_user_profile_tab():
+    setting_name = 'ASKBOT_CUSTOM_USER_PROFILE_TAB'
+    tab_settings = getattr(django_settings, setting_name, None)
+    if tab_settings:
+        if not isinstance(tab_settings, dict):
+            print "Setting %s must be a dictionary!!!" % setting_name
+            
+        name = tab_settings.get('NAME', None)
+        slug = tab_settings.get('SLUG', None)
+        func_name = tab_settings.get('CONTENT_GENERATOR', None)
+
+        errors = list()
+        if (name is None) or (not(isinstance(name, basestring))):
+            errors.append("%s['NAME'] must be a string" % setting_name)
+        if (slug is None) or (not(isinstance(slug, str))):
+            errors.append("%s['SLUG'] must be an ASCII string" % setting_name)
+
+        if urllib.quote_plus(slug) != slug:
+            errors.append(
+                "%s['SLUG'] must be url safe, make it simple" % setting_name
+            )
+
+        try:
+            func = load_module(func_name)
+        except ImportError:
+            errors.append("%s['CONTENT_GENERATOR'] must be a dotted path to a function" % setting_name)
+        header = 'Custom user profile tab is configured incorrectly in your settings.py file'
+        footer = 'Please carefully read about adding a custom user profile tab.'
+        print_errors(errors, header = header, footer = footer)
+
 def run_startup_tests():
     """function that runs
     all startup tests, mainly checking settings config so far
@@ -532,6 +563,7 @@ def run_startup_tests():
     test_media_url()
     if 'manage.py test' in ' '.join(sys.argv):
         test_settings_for_test_runner()
+    test_custom_user_profile_tab()
 
 @transaction.commit_manually
 def run():

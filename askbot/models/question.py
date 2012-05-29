@@ -357,6 +357,20 @@ class ThreadManager(models.Manager):
         contributors = User.objects.filter(id__in=u_id).order_by('avatar_type', '?')[:avatar_limit]
         return contributors
 
+    def get_for_user(self, user):
+        """returns threads where a given user had participated"""
+        post_ids = PostRevision.objects.filter(
+                                        author = user
+                                    ).values_list(
+                                        'post_id', flat = True
+                                    ).distinct()
+        thread_ids = Post.objects.filter(
+                                        id__in = post_ids
+                                    ).values_list(
+                                        'thread_id', flat = True
+                                    ).distinct()
+        return self.filter(id__in = thread_ids)
+
 
 class Thread(models.Model):
     SUMMARY_CACHE_KEY_TPL = 'thread-question-summary-%d'

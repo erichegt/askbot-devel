@@ -1215,6 +1215,7 @@ EditCommentForm.prototype.attachTo = function(comment, mode){
         this._submit_btn.html(gettext('save comment'));
     }
     this.getElement().show();
+    this.enableButtons();
     this.focus();
     putCursorAtEnd(this._textarea);
 };
@@ -1342,13 +1343,13 @@ EditCommentForm.prototype.createDom = function(){
 };
 
 EditCommentForm.prototype.enableButtons = function(){
-    this._submit_btn.attr('disabled', '');
-    this._cancel_btn.attr('disabled', '');
+    this._submit_btn.attr('disabled', false);
+    this._cancel_btn.attr('disabled', false);
 };
 
 EditCommentForm.prototype.disableButtons = function(){
-    this._submit_btn.attr('disabled', 'disabled');
-    this._cancel_btn.attr('disabled', 'disabled');
+    this._submit_btn.attr('disabled', true);
+    this._cancel_btn.attr('disabled', true);
 };
 
 EditCommentForm.prototype.reset = function(){
@@ -1809,7 +1810,7 @@ var socialSharing = function(){
             params: "width=630,height=436,toolbar=1,status=1,resizable=1,scrollbars=1"
         },
         linkedin: {
-            url: "http://www.linkedin.com/shareArticle?mini=true&amp;url={URL}&amp;source={TEXT}",
+            url: "http://www.linkedin.com/shareArticle?mini=true&url={URL}&title={TEXT}",
             params: "width=630,height=436,toolbar=1,status=1,resizable=1,scrollbars=1"
         }
     };

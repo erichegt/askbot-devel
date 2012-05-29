@@ -15,15 +15,19 @@ class Migration(DataMigration):
         message = "Connecting votes to posts"
         num_votes = orm.Vote.objects.count()
         for v in ProgressBar(orm.Vote.objects.iterator(), num_votes, message):
-            if (v.content_type.app_label, v.content_type.model) == ('askbot', 'question'):
-                v.voted_post = orm.Post.objects.get(self_question__id=v.object_id)
-            elif (v.content_type.app_label, v.content_type.model) == ('askbot', 'answer'):
-                v.voted_post = orm.Post.objects.get(self_answer__id=v.object_id)
-            elif (v.content_type.app_label, v.content_type.model) == ('askbot', 'comment'):
-                v.voted_post = orm.Post.objects.get(self_comment__id=v.object_id)
-            else:
-                raise ValueError('Unknown vote subject!')
-            v.save()
+            try:
+                if (v.content_type.app_label, v.content_type.model) == ('askbot', 'question'):
+                    v.voted_post = orm.Post.objects.get(self_question__id=v.object_id)
+                elif (v.content_type.app_label, v.content_type.model) == ('askbot', 'answer'):
+                    v.voted_post = orm.Post.objects.get(self_answer__id=v.object_id)
+                elif (v.content_type.app_label, v.content_type.model) == ('askbot', 'comment'):
+                    v.voted_post = orm.Post.objects.get(self_comment__id=v.object_id)
+                else:
+                    raise ValueError('Unknown vote subject!')
+                v.save()
+            except orm.Post.DoesNotExist:
+                print TERM_RED_BOLD, 'Post of type=%s, id=%s does not exist!!!' % (v.content_type.model, v.object_id)
+                v.delete()
 
         ###
 

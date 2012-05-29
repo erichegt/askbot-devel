@@ -83,7 +83,7 @@
                 $('#id_user_status_info').html("{% trans %}Suspended users can only edit or delete their own posts.{% endtrans %}");
                 $('#id_user_status_info').show('slow');
             } else if (optionValue == "b"){
-                $('#id_user_status_info').html("{% trans %}Blocked users can only login and send feedback to the site administrators.{% endtrans %}");
+                $('#id_user_status_info').html("{% trans %}Blocked users can only login and send feedback to the site administrators, their url and profile will also be hidden.{% endtrans %}");
                 $('#id_user_status_info').show('slow');
             } else {
                 $('#id_user_status_info').hide('slow');
