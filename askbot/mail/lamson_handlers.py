@@ -259,16 +259,18 @@ def VALIDATE_EMAIL(
 def PROCESS(
     parts = None,
     reply_address_object = None,
+    subject_line = None,
     **kwargs
 ):
     """handler to process the emailed message
     and make a post to askbot based on the contents of
     the email, including the text body and the file attachments"""
-    #split email into bits
+    #1) get actual email content 
+    #   todo: factor this out into the process_reply decorator
     reply_code = reply_address_object.address
     body_text, stored_files, signature = mail.process_parts(parts, reply_code)
 
-    #if have signature update signature
+    #2) process body text and email signature
     user = reply_address_object.user
     if signature:#if there, then it was stripped
         if signature != user.email_signature:
@@ -281,14 +283,17 @@ def PROCESS(
             raise ValueError('email signature changed or unknown')
         body_text = stripped_body_text
 
-    #validate email address
+    #3) validate email address and save user
     user.email_isvalid = True
     user.save()#todo: actually, saving is not necessary, if nothing changed
 
-    #todo: elaborate - here in some cases we want to add an edit
-    #and in other cases - replace the text entirely
-    if reply_address_object.was_used:
-        action = reply_address_object.edit_post
-    else:
-        action = reply_address_object.create_reply
-    action(body_text, stored_files)
+    #4) actually make an edit in the forum
+    robj = reply_address_object
+    add_post_actions = ('post_comment', 'post_answer', 'auto_answer_or_comment')
+    if robj.reply_action in ('replace_content', 'append_content'):
+        robj.edit_post(body_text, title = subject_line)
+    elif robj.reply_action in add_post_actions:
+        if robj.was_used:
+            robj.edit_post(body_text, reply_action = 'append_content')
+        else:
+            robj.create_reply(body_text)

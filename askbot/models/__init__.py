@@ -1503,18 +1503,18 @@ def user_edit_post(self,
 
 @auto_now_timestamp
 def user_edit_question(
-                    self,
-                    question = None,
-                    title = None,
-                    body_text = None,
-                    revision_comment = None,
-                    tags = None,
-                    wiki = False,
-                    edit_anonymously = False,
-                    timestamp = None,
-                    force = False,#if True - bypass the assert
-                    by_email = False
-                ):
+                self,
+                question = None,
+                title = None,
+                body_text = None,
+                revision_comment = None,
+                tags = None,
+                wiki = False,
+                edit_anonymously = False,
+                timestamp = None,
+                force = False,#if True - bypass the assert
+                by_email = False
+            ):
     if force == False:
         self.assert_can_edit_question(question)
 

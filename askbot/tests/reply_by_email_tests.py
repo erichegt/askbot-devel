@@ -101,7 +101,7 @@ class ReplyAddressModelTests(AskbotTestCase):
                                         post = self.answer,
                                         user = self.u1
                                     )
-        post = result.create_reply(TEST_CONTENT, [])
+        post = result.create_reply(TEST_CONTENT)
         self.assertEquals(post.post_type, "comment")
         self.assertEquals(post.text, TEST_CONTENT)
         self.assertEquals(self.answer.comments.count(), 2)
@@ -111,7 +111,7 @@ class ReplyAddressModelTests(AskbotTestCase):
                                         post = self.comment,
                                         user = self.u1
                                     )
-        post = result.create_reply(TEST_CONTENT, [])
+        post = result.create_reply(TEST_CONTENT)
         self.assertEquals(post.post_type, "comment")
         self.assertEquals(post.text, TEST_CONTENT)
         self.assertEquals(self.answer.comments.count(), 2)
@@ -122,7 +122,7 @@ class ReplyAddressModelTests(AskbotTestCase):
                                         post = self.question,
                                         user = self.u3
                                     )
-        post = result.create_reply(TEST_CONTENT, [])
+        post = result.create_reply(TEST_CONTENT)
         self.assertEquals(post.post_type, "comment")
         self.assertEquals(post.text, TEST_CONTENT)
 
@@ -131,7 +131,7 @@ class ReplyAddressModelTests(AskbotTestCase):
                                         post = self.question,
                                         user = self.u3
                                     )
-        post = result.create_reply(TEST_LONG_CONTENT, [])
+        post = result.create_reply(TEST_LONG_CONTENT)
         self.assertEquals(post.post_type, "answer")
         self.assertEquals(post.text, TEST_LONG_CONTENT)
 

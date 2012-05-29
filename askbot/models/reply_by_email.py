@@ -36,6 +36,8 @@ class ReplyAddressManager(BaseQuerySetManager):
 REPLY_ACTION_CHOICES = (
     ('post_answer', _('Post an answer')),
     ('post_comment', _('Post a comment')),
+    ('replace_content', _('Edit post')),
+    ('append_content', _('Append to post')),
     ('auto_answer_or_comment', _('Answer or comment, depending on the size of post')),
     ('validate_email', _('Validate email and record signature')),
 )
@@ -83,22 +85,41 @@ class ReplyAddress(models.Model):
                         askbot_settings.REPLY_BY_EMAIL_HOSTNAME
                     )
 
-    def edit_post(self, body_text, stored_files):
+    def edit_post(
+        self, body_text, title = None, reply_action = None
+    ):
         """edits the created post upon repeated response
         to the same address"""
-        assert self.was_used == True
-        self.user.edit_post(
-            post = self.response_post,
-            body_text = stored_files,
-            revision_comment = _('edited by email'),
-            by_email = True
-        )
+        reply_action = reply_action or self.reply_action
+
+        if reply_action == 'append_content':
+            body_text = self.post.text + '\n\n' + body_text
+            revision_comment = _('added content by email')
+        else:
+            revision_comment = _('edited by email')
+
+        if self.post.post_type == 'question':
+            self.user.edit_question(
+                question = self.post,
+                body_text = body_text,
+                title = title,
+                revision_comment = revision_comment,
+                by_email = True
+            )
+        else:
+            self.user.edit_post(
+                post = self.response_post,
+                body_text = body_text,
+                revision_comment = revision_comment,
+                by_email = True
+            )
         self.response_post.thread.invalidate_cached_data()
 
-    def create_reply(self, body_text, stored_files):
+    def create_reply(self, body_text):
         """creates a reply to the post which was emailed
         to the user
         """
+        assert(self.was_used == False)
         result = None
         if self.post.post_type == 'answer':
             result = self.user.post_comment(
