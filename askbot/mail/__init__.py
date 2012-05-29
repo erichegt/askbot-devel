@@ -288,7 +288,7 @@ def process_parts(parts, reply_code = None):
             stored_files.append(stored_file)
             attachments_markdown += '\n\n' + markdown
         elif part_type == 'body':
-            body_markdown += '\n\n' + content
+            body_markdown += '\n\n' + content.strip('\n\t ')
         elif part_type == 'inline':
             markdown, stored_file = process_attachment(content)
             stored_files.append(stored_file)
