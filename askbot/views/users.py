@@ -655,7 +655,8 @@ def user_responses(request, user, context):
     #3) "package" data for the output
     response_list = list()
     for memo in memo_set:
-        #a monster query chain below
+        if memo.activity.content_object is None:
+            continue#a temp plug due to bug in the comment deletion
         response = {
             'id': memo.id,
             'timestamp': memo.activity.active_at,
