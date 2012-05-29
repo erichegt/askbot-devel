@@ -290,8 +290,10 @@ def PROCESS(
     #4) actually make an edit in the forum
     robj = reply_address_object
     add_post_actions = ('post_comment', 'post_answer', 'auto_answer_or_comment')
-    if robj.reply_action in ('replace_content', 'append_content'):
+    if robj.reply_action == 'replace_content':
         robj.edit_post(body_text, title = subject_line)
+    elif robj.reply_action == 'append_content':
+        robj.edit_post(body_text)#in this case we don't touch the title
     elif robj.reply_action in add_post_actions:
         if robj.was_used:
             robj.edit_post(body_text, reply_action = 'append_content')
