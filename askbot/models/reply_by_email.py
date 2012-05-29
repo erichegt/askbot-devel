@@ -100,7 +100,7 @@ class ReplyAddress(models.Model):
         else:
             post = self.post
 
-        if self.reply_action == 'append_content':
+        if reply_action == 'append_content':
             body_text = post.text + '\n\n' + body_text
             revision_comment = _('added content by email')
         else:
