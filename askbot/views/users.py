@@ -662,7 +662,7 @@ def user_responses(request, user, context):
     response_list = list()
     for memo in memo_set:
         #a monster query chain below
-        if memo.activity is None:
+        if memo.activity.content_object is None:
             #todo: this is a temporary plug, due to
             #poor handling of comment deletion - see User.delete_comment()
             continue
