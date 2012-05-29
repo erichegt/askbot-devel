@@ -1252,6 +1252,11 @@ def user_delete_comment(
                     timestamp = None
                 ):
     self.assert_can_delete_comment(comment = comment)
+    #todo: we want to do this
+    #comment.deleted = True
+    #comment.deleted_by = self
+    #comment.deleted_at = timestamp
+    #comment.save()
     comment.delete()
     comment.thread.invalidate_cached_data()
 

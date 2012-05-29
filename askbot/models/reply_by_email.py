@@ -113,7 +113,12 @@ class ReplyAddress(models.Model):
                 revision_comment = revision_comment,
                 by_email = True
             )
-        self.response_post.thread.invalidate_cached_data()
+        #todo: why do we have these branches?
+        if self.response_post:
+            thread = self.response_post.thread
+        else:
+            thread = self.post.thread
+        thread.invalidate_cached_data()
 
     def create_reply(self, body_text):
         """creates a reply to the post which was emailed
