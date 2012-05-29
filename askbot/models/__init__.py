@@ -2732,7 +2732,7 @@ def get_reply_to_addresses(user, post):
     #these variables will contain return values
     primary_addr = django_settings.DEFAULT_FROM_EMAIL
     secondary_addr = None
-    if askbot_settings.REPLY_BY_EMAIL:
+    if user.can_reply_by_email():
         if user.reputation >= askbot_settings.MIN_REP_TO_POST_BY_EMAIL:
 
             reply_args = {
