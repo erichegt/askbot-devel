@@ -86,42 +86,49 @@ class ReplyAddress(models.Model):
                     )
 
     def edit_post(
-        self, body_text, title = None, reply_action = None
+        self, body_text, title = None, edit_response = False
     ):
         """edits the created post upon repeated response
         to the same address"""
-        reply_action = reply_action or self.reply_action
+        if self.was_used or edit_response:
+            reply_action = 'append_content'
+        else:
+            reply_action = self.reply_action
 
-        if reply_action == 'append_content':
-            body_text = self.post.text + '\n\n' + body_text
+        if edit_response:
+            post = self.response_post
+        else:
+            post = self.post
+
+        if self.reply_action == 'append_content':
+            body_text = post.text + '\n\n' + body_text
             revision_comment = _('added content by email')
         else:
+            assert(reply_action == 'replace_content')
             revision_comment = _('edited by email')
 
-        if self.post.post_type == 'question':
+        if post.post_type == 'question':
+            assert(post is self.post)
             self.user.edit_question(
-                question = self.post,
+                question = post,
                 body_text = body_text,
                 title = title,
                 revision_comment = revision_comment,
                 by_email = True
             )
-            post = self.post
         else:
-            post = self.response_post or self.post
             self.user.edit_post(
                 post = post,
                 body_text = body_text,
                 revision_comment = revision_comment,
                 by_email = True
             )
-        post.thread.invalidate_cached_data()
+        self.post.thread.invalidate_cached_data()
 
     def create_reply(self, body_text):
         """creates a reply to the post which was emailed
         to the user
         """
-        assert(self.was_used == False)
         result = None
         if self.post.post_type == 'answer':
             result = self.user.post_comment(
