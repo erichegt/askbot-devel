@@ -585,12 +585,13 @@ def user_recent(request, user, context):
 
         elif activity.activity_type == const.TYPE_ACTIVITY_PRIZE:
             award = activity.content_object
-            activities.append(AwardEvent(
-                time=award.awarded_at,
-                type=activity.activity_type,
-                content_object=award.content_object,
-                badge=award.badge,
-            ))
+            if award is not None:#todo: work around halfa$$ comment deletion
+                activities.append(AwardEvent(
+                    time=award.awarded_at,
+                    type=activity.activity_type,
+                    content_object=award.content_object,
+                    badge=award.badge,
+                ))
 
     activities.sort(key=operator.attrgetter('time'), reverse=True)
 
