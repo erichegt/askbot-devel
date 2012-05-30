@@ -47,8 +47,11 @@ def add_tz_offset(datetime_object):
     return str(datetime_object) + ' ' + TIMEZONE_STR
 
 @register.filter
-def safe_urlquote(text):
-    return urllib.quote_plus(text.encode('utf8'))
+def safe_urlquote(text, quote_plus = False):
+    if quote_plus:
+        return urllib.quote_plus(text.encode('utf8'))
+    else:
+        return urllib.quote(text.encode('utf8'))
 
 @register.filter
 def strip_path(url):
