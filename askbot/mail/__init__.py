@@ -264,7 +264,7 @@ def extract_user_signature(text, reply_code):
 
         #strip off the leading quoted lines, there could be one or two
         #also strip empty lines
-        while tail[0].startswith('>') or tail[0].strip() == '':
+        while tail and (tail[0].startswith('>') or tail[0].strip() == ''):
             tail.pop(0)
 
         return '\n'.join(tail)
