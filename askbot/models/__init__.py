@@ -2685,7 +2685,12 @@ def format_instant_notification_email(
                     'instruction': _('To reply, PLEASE WRITE ABOVE THIS LINE.')
                 }
         if post.post_type == 'question' and alt_reply_address:
-            data = {'addr': alt_reply_address}
+            data = {
+                'addr': alt_reply_address,
+                'subject': urllib.quote(
+                        ('Re: ' + post.thread.title).encode('utf-8')
+                    )
+            }
             reply_separator += '<br>' + \
                 const.REPLY_WITH_COMMENT_TEMPLATE % data
     else:
