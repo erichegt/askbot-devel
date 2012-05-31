@@ -9,8 +9,18 @@
         {{ start_quote(quote_level) }}
             {% set author = post.author.username %}
             {% if post.post_type == 'question' %}
-                <p style="{{ heading_style() }}">
-                    {% trans %}Question:{% endtrans %}
+                <p>
+                    {% if format == 'parent_subthread' %}
+                        {% if is_leaf_post %}
+                            {% trans -%}
+                                In response to {{ author }}'s question:
+                            {%- endtrans %}
+                        {% else %}
+                            {% trans %}Question:{% endtrans %}
+                        {% endif %}
+                    {% else %}
+                        {% trans %}Question:{% endtrans %}
+                    {% endif %}
                     {{ post.thread.title }}
                 </p>
                 {% set tag_names = post.get_tag_names() %}
