@@ -41,6 +41,7 @@ from askbot.skins.loaders import render_into_skin
 from askbot.templatetags import extra_tags
 from askbot.search.state_manager import SearchState
 from askbot.utils import url_utils
+from askbot.utils.loading import load_module
 
 def owner_or_moderator_required(f):
     @functools.wraps(f)
@@ -57,6 +58,7 @@ def owner_or_moderator_required(f):
 
 def users(request, by_group = False, group_id = None, group_slug = None):
     """Users view, including listing of users by group"""
+    users = models.User.objects.exclude(status = 'b')
     group = None
     group_email_moderation_enabled = False
     user_can_join_group = False
@@ -591,12 +593,13 @@ def user_recent(request, user, context):
 
         elif activity.activity_type == const.TYPE_ACTIVITY_PRIZE:
             award = activity.content_object
-            activities.append(AwardEvent(
-                time=award.awarded_at,
-                type=activity.activity_type,
-                content_object=award.content_object,
-                badge=award.badge,
-            ))
+            if award is not None:#todo: work around halfa$$ comment deletion
+                activities.append(AwardEvent(
+                    time=award.awarded_at,
+                    type=activity.activity_type,
+                    content_object=award.content_object,
+                    badge=award.badge,
+                ))
 
     activities.sort(key=operator.attrgetter('time'), reverse=True)
 
@@ -661,11 +664,8 @@ def user_responses(request, user, context):
     #3) "package" data for the output
     response_list = list()
     for memo in memo_set:
-        #a monster query chain below
         if memo.activity.content_object is None:
-            #todo: this is a temporary plug, due to
-            #poor handling of comment deletion - see User.delete_comment()
-            continue
+            continue#a temp plug due to bug in the comment deletion
         response = {
             'id': memo.id,
             'timestamp': memo.activity.active_at,
@@ -851,6 +851,24 @@ def user_email_subscriptions(request, user, context):
         request
     )
 
+@csrf.csrf_protect
+def user_custom_tab(request, user, context):
+    """works only if `ASKBOT_CUSTOM_USER_PROFILE_TAB`
+    setting in the ``settings.py`` is properly configured"""
+    tab_settings = django_settings.ASKBOT_CUSTOM_USER_PROFILE_TAB
+    module_path = tab_settings['CONTENT_GENERATOR']
+    content_generator = load_module(module_path)
+
+    page_title = _('profile - %(section)s') % \
+        {'section': tab_settings['NAME']}
+
+    context.update({
+        'custom_tab_content': content_generator(request, user),
+        'tab_name': tab_settings['SLUG'],
+        'page_title': page_title
+    })
+    return render_into_skin('user_profile/custom_tab.html', context, request)
+
 USER_VIEW_CALL_TABLE = {
     'stats': user_stats,
     'recent': user_recent,
@@ -862,6 +880,12 @@ USER_VIEW_CALL_TABLE = {
     'email_subscriptions': user_email_subscriptions,
     'moderation': user_moderate,
 }
+
+CUSTOM_TAB = getattr(django_settings, 'ASKBOT_CUSTOM_USER_PROFILE_TAB', None)
+if CUSTOM_TAB:
+    CUSTOM_SLUG = CUSTOM_TAB['SLUG']
+    USER_VIEW_CALL_TABLE[CUSTOM_SLUG] = user_custom_tab
+
 #todo: rename this function - variable named user is everywhere
 def user(request, id, slug=None, tab_name=None):
     """Main user view function that works as a switchboard
@@ -911,6 +935,9 @@ def user(request, id, slug=None, tab_name=None):
         'search_state': search_state,
         'user_follow_feature_on': ('followit' in django_settings.INSTALLED_APPS),
     }
+    if CUSTOM_TAB:
+        context['custom_tab_name'] = CUSTOM_TAB['NAME']
+        context['custom_tab_slug'] = CUSTOM_TAB['SLUG']
     return user_view_func(request, profile_owner, context)
 
 @csrf.csrf_exempt
