@@ -2690,10 +2690,8 @@ def format_instant_notification_email(
     can_reply = to_user.can_reply_by_email()
 
     if can_reply:
-        reply_separator = const.REPLY_SEPARATOR_TEMPLATE % {
-                    'user_action': user_action,
-                    'instruction': _('To reply, PLEASE WRITE ABOVE THIS LINE.')
-                }
+        reply_separator = const.SIMPLE_REPLY_SEPARATOR_TEMPLATE % \
+                    _('To reply, PLEASE WRITE ABOVE THIS LINE.')
         if post.post_type == 'question' and alt_reply_address:
             data = {
                 'addr': alt_reply_address,
@@ -2701,8 +2699,9 @@ def format_instant_notification_email(
                         ('Re: ' + post.thread.title).encode('utf-8')
                     )
             }
-            reply_separator += '<br>' + \
+            reply_separator += '<p>' + \
                 const.REPLY_WITH_COMMENT_TEMPLATE % data
+            reply_separator += '</p>'
     else:
         reply_separator = user_action
                     
