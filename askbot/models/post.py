@@ -624,20 +624,19 @@ class Post(models.Model):
     def format_for_email(self, quote_level = 0):
         """format post for the output in email,
         if quote_level > 0, the post will be indented that number of times
+        todo: move to views?
         """
-        from askbot.templatetags.extra_filters_jinja import absolutize_urls_func
-        output = ''
-        if self.post_type == 'question':
-            output += '<b>%s</b><br/>' % self.thread.title
-            
-        output += absolutize_urls_func(self.html)
-        if self.post_type == 'question':#add tags to the question
-            output += self.format_tags_for_email()
-        quote_style = 'padding-left:5px; border-left: 2px solid #aaa;'
-        while quote_level > 0:
-            quote_level = quote_level - 1
-            output = '<div style="%s">%s</div>' % (quote_style, output)
-        return output
+        from askbot.templatetags.extra_filters_jinja \
+            import absolutize_urls_func
+        from askbot.skins.loaders import get_template
+        from django.template import Context
+        template = get_template('email/quoted_post.html')
+        data = {
+            'post': self,
+            'quote_level': quote_level,
+            'html': absolutize_urls_func(self.html)
+        }
+        return template.render(Context(data))
 
     def format_for_email_as_parent_thread_summary(self):
         """format for email as summary of parent posts

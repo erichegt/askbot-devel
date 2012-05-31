@@ -1,0 +1,31 @@
+{# Parameters:
+    * quote_level - integer
+    * post - the post object
+#}
+{% spaceless %}
+    {% for number in range(quote_level) %}
+    <div style="padding-left:5px; border-left: 2px solid #aaa;">
+    {% endfor %}
+        <p style="font-size: 14px; font-weight: bold; margin-bottom: 0px;">
+            {% set author = post.username %}
+            {% if post.post_type == 'question' %}
+                {% trans %}Question by {{author}}:{% endtrans %}
+                {{ post.thread.title }}
+                {% set tag_names = post.get_tag_names() %}
+                {% if tag_names %}
+                <p>
+                    {% trans %}Tags:{% endtrans %}
+                    {{ tag_names|join(', ') }}.
+                </p>
+                {% endif %}
+            {% elif post.post_type == 'answer' %}
+                {% trans %}Answer by {{ author }}:{% endtrans %}
+            {% else %}
+                {% trans author %}Comment by {{ author }}:{% endtrans %}
+            {% endif %}
+        </p>
+        {{ html }}
+    {% for number in range(quote_level) %}
+    </div>
+    {% endfor %}
+{% endspaceless %}

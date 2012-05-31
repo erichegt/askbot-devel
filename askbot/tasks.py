@@ -83,7 +83,7 @@ def notify_author_of_published_revision_celery_task(revision):
         headers = {'Reply-To': append_content_address}
         #send the message
         mail.send_mail(
-            subject_line = _('Your post at %(site_name)s was approved') % data,
+            subject_line = _('Your post at %(site_name)s is now published') % data,
             body_text = template.render(Context(data)),
             recipient_list = [revision.author.email,],
             related_object = revision,
