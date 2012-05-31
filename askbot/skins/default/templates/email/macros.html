@@ -1,7 +1,7 @@
 {% macro quoted_post(post = None, quote_level = 0) %}
     {% spaceless %}
         {{ start_quote(quote_level) }}
-            {% set author = post.username %}
+            {% set author = post.author.username %}
             {% if post.post_type == 'question' %}
                 <p style="{{ heading_style() }}">
                     {% trans %}Question:{% endtrans %}
@@ -10,7 +10,7 @@
                 {% set tag_names = post.get_tag_names() %}
                 {% if tag_names %}
                 <p>
-                    {% trans author=post.author.username -%}
+                    {% trans -%}
                         Asked by: {{ author }}
                     {%- endtrans %}
                 </p>
@@ -28,6 +28,7 @@
                     {% trans author %}Commented by {{ author }}:{% endtrans %}
                 </p>
             {% endif %}
+            {{ post.html }}
         {{ end_quote(quote_level) }}
     {% endspaceless %}
 {% endmacro %}
