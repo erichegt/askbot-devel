@@ -660,36 +660,14 @@ class Post(models.Model):
             current_post = parent_post
         return output
 
-    def format_for_email_as_metadata(self):
-        output = _(
-            'Posted by %(user)s on %(date)s'
-        ) % {
-            'user': self.author.username,
-            'date': self.added_at.strftime(const.DATETIME_FORMAT)
-        }
-        return '<p>%s</p>' % output
-
     def format_for_email_as_subthread(self):
         """outputs question or answer and all it's comments
         returns empty string for all other post types
         """
-        if self.post_type in ('question', 'answer'):
-            output = self.format_for_email_as_metadata()
-            output += self.format_for_email()
-            comments = self.get_cached_comments()
-            if comments:
-                comments_heading = ungettext(
-                                    '%(count)d comment:',
-                                    '%(count)d comments:',
-                                    len(comments)
-                                ) % {'count': len(comments)}
-                output += '<p>%s</p>' % comments_heading
-                for comment in comments:
-                    output += comment.format_for_email_as_metadata()
-                    output += comment.format_for_email(quote_level = 1)
-            return output
-        else:
-            return ''
+        from askbot.skins.loaders import get_template
+        from django.template import Context
+        template = get_template('email/post_as_subthread.html')
+        return template.render(Context({'post': self}))
 
     def set_cached_comments(self, comments):
         """caches comments in the lifetime of the object

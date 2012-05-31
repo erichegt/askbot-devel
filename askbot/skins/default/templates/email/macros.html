@@ -1,0 +1,49 @@
+{% macro quoted_post(post = None, quote_level = 0) %}
+    {% spaceless %}
+        {{ start_quote(quote_level) }}
+            {% set author = post.username %}
+            {% if post.post_type == 'question' %}
+                <p style="{{ heading_style() }}">
+                    {% trans %}Question:{% endtrans %}
+                    {{ post.thread.title }}
+                </p>
+                {% set tag_names = post.get_tag_names() %}
+                {% if tag_names %}
+                <p>
+                    {% trans author=post.author.username -%}
+                        Asked by: {{ author }}
+                    {%- endtrans %}
+                </p>
+                <p>
+                    {% trans %}Tags:{% endtrans %}
+                    {{ tag_names|join(', ') }}.
+                </p>
+                {% endif %}
+            {% elif post.post_type == 'answer' %}
+                <p>
+                    {% trans %}Answered by {{ author }}:{% endtrans %}
+                </p>
+            {% else %}
+                <p>
+                    {% trans author %}Commented by {{ author }}:{% endtrans %}
+                </p>
+            {% endif %}
+        {{ end_quote(quote_level) }}
+    {% endspaceless %}
+{% endmacro %}
+
+{% macro start_quote(level = 0) %}
+    {% for number in range(level) %}
+        <div style="padding-left:5px; border-left: 2px solid #aaa;">
+    {% endfor %}
+{% endmacro %}
+
+{% macro end_quote(level = 0) %}
+    {% for number in range(level) %}
+        </div>
+    {% endfor %}
+{% endmacro %}
+
+{% macro heading_style() %}
+font-size:14px;font-weight:bold;margin-bottom:0px;
+{% endmacro %}
