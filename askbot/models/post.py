@@ -604,23 +604,6 @@ class Post(models.Model):
         """
         return html_utils.strip_tags(self.html)[:max_length] + ' ...'
 
-    def format_tags_for_email(self):
-        """formats tags of the question post for email"""
-        tag_style = "white-space: nowrap; " \
-                    + "font-size: 11px; color: #333;" \
-                    + "background-color: #EEE;" \
-                    + "border-left: 3px solid #777;" \
-                    + "border-top: 1px solid #EEE;" \
-                    + "border-bottom: 1px solid #CCC;" \
-                    + "border-right: 1px solid #CCC;" \
-                    + "padding: 1px 8px 1px 8px;" \
-                    + "margin-right:3px;"
-        output = '<div>'
-        for tag_name in self.get_tag_names():
-            output += '<span style="%s">%s</span>' % (tag_style, tag_name)
-        output += '</div>'
-        return output
-
     def format_for_email(self, quote_level = 0):
         """format post for the output in email,
         if quote_level > 0, the post will be indented that number of times
@@ -649,13 +632,15 @@ class Post(models.Model):
             if parent_post is None:
                 break
             quote_level += 1
+            output += '<p>'
             output += _(
-                'In reply to %(user)s %(post)s of %(date)s<br/>'
+                'In reply to %(user)s %(post)s of %(date)s'
             ) % {
                 'user': parent_post.author.username,
                 'post': _(parent_post.post_type),
                 'date': parent_post.added_at.strftime(const.DATETIME_FORMAT)
             }
+            output += '</p>'
             output += parent_post.format_for_email(quote_level = quote_level)
             current_post = parent_post
         return output
