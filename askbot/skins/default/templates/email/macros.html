@@ -12,24 +12,24 @@
                 <p>
                     {% if format == 'parent_subthread' %}
                         {% if is_leaf_post %}
+                            {% trans %}Question by {{ author }}:{% endtrans %}
+                        {% else %}
                             {% trans -%}
                                 In response to {{ author }}'s question:
                             {%- endtrans %}
-                        {% else %}
-                            {% trans %}Question:{% endtrans %}
                         {% endif %}
                     {% else %}
-                        {% trans %}Question:{% endtrans %}
+                        {% trans %}Question :{% endtrans %}
                     {% endif %}
                     {{ post.thread.title }}
                 </p>
+                <p>
+                    {% if format != 'parent_subthread' %}
+                        {% trans %}Asked by {{ author }}:{% endtrans %}
+                    {% endif %}
+                </p>
                 {% set tag_names = post.get_tag_names() %}
                 {% if tag_names %}
-                <p>
-                    {% trans -%}
-                        Asked by: {{ author }}
-                    {%- endtrans %}
-                </p>
                 <p>
                     {% trans %}Tags:{% endtrans %}
                     {{ tag_names|join(', ') }}.
