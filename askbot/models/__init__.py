@@ -2299,7 +2299,9 @@ def user_approve_post_revision(user, post_revision, timestamp = None):
     post.thread.invalidate_cached_data()
 
     #send the signal of published revision
-    signals.post_revision_published.send(None, revision = post_revision)
+    signals.post_revision_published.send(
+        None, revision = post_revision, was_approved = True
+    )
 
 @auto_now_timestamp
 def flag_post(user, post, timestamp=None, cancel=False, cancel_all = False, force = False):
@@ -2817,11 +2819,14 @@ def send_instant_notifications_about_activity_in_post(
             headers = headers
         )
 
-def notify_author_of_published_revision(revision, **kwargs):
+def notify_author_of_published_revision(
+    revision = None, was_approved = None, **kwargs
+):
     """notifies author about approved post revision,
     assumes that we have the very first revision
     """
-    if revision.revision == 1:#only email about first revision
+    #only email about first revision
+    if revision.should_notify_author_about_publishing(was_approved):
         from askbot.tasks import notify_author_of_published_revision_celery_task
         notify_author_of_published_revision_celery_task.delay(revision)
     
@@ -3243,6 +3248,9 @@ signals.user_updated.connect(record_user_full_updated, sender=User)
 signals.user_logged_in.connect(complete_pending_tag_subscriptions)#todo: add this to fake onlogin middleware
 signals.user_logged_in.connect(post_anonymous_askbot_content)
 signals.post_updated.connect(record_post_update_activity)
+
+#probably we cannot use post-save here the point of this is
+#to tell when the revision becomes publicly visible, not when it is saved
 signals.post_revision_published.connect(notify_author_of_published_revision)
 signals.site_visited.connect(record_user_visit)
 

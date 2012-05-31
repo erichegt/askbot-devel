@@ -959,6 +959,10 @@ class PostApprovalTests(utils.AskbotTestCase):
         self.enable_content_moderation = \
             askbot_settings.ENABLE_CONTENT_MODERATION
         askbot_settings.update('ENABLE_CONTENT_MODERATION', True)
+        self.self_notify_when = \
+            askbot_settings.SELF_NOTIFY_EMAILED_POST_AUTHOR_WHEN
+        when = const.FOR_FIRST_REVISION
+        askbot_settings.update('SELF_NOTIFY_EMAILED_POST_AUTHOR_WHEN', when)
         assert(
             django_settings.EMAIL_BACKEND == 'django.core.mail.backends.locmem.EmailBackend'
         )
@@ -970,6 +974,10 @@ class PostApprovalTests(utils.AskbotTestCase):
         askbot_settings.update(
             'ENABLE_CONTENT_MODERATION',
             self.enable_content_moderation
+        )
+        askbot_settings.update(
+            'SELF_NOTIFY_EMAILED_POST_AUTHOR_WHEN', 
+            self.self_notify_when
         )
 
     def test_emailed_question_answerable_approval_notification(self):

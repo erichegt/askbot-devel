@@ -345,7 +345,7 @@ class Post(models.Model):
         db_table = 'askbot_post'
 
 
-    def parse_post_text(post):
+    def parse_post_text(self):
         """typically post has a field to store raw source text
         in comment it is called .comment, in Question and Answer it is
         called .text
@@ -361,18 +361,18 @@ class Post(models.Model):
         removed_mentions - list of mention <Activity> objects - for removed ones
         """
 
-        if post.post_type in ('question', 'answer', 'tag_wiki', 'reject_reason'):
+        if self.post_type in ('question', 'answer', 'tag_wiki', 'reject_reason'):
             _urlize = False
             _use_markdown = True
             _escape_html = False #markdow does the escaping
-        elif post.is_comment():
+        elif self.is_comment():
             _urlize = True
             _use_markdown = True
             _escape_html = True
         else:
             raise NotImplementedError
 
-        text = post.text
+        text = self.text
 
         if _escape_html:
             text = cgi.escape(text)
@@ -384,12 +384,12 @@ class Post(models.Model):
             text = sanitize_html(markup.get_parser().convert(text))
 
         #todo, add markdown parser call conditional on
-        #post.use_markdown flag
+        #self.use_markdown flag
         post_html = text
         mentioned_authors = list()
         removed_mentions = list()
         if '@' in text:
-            op = post.get_origin_post()
+            op = self.get_origin_post()
             anticipated_authors = op.get_author_list(
                 include_comments = True,
                 recursive = True
@@ -416,10 +416,10 @@ class Post(models.Model):
             #find mentions that were removed and identify any previously
             #entered mentions so that we can send alerts on only new ones
             from askbot.models.user import Activity
-            if post.pk is not None:
+            if self.pk is not None:
                 #only look for previous mentions if post was already saved before
                 prev_mention_qs = Activity.objects.get_mentions(
-                    mentioned_in = post
+                    mentioned_in = self
                 )
                 new_set = set(mentioned_authors)
                 for prev_mention in prev_mention_qs:
@@ -1778,6 +1778,7 @@ class PostRevision(models.Model):
                 self.post.thread.save()
             #above changes will hide post from the public display
             if self.by_email:
+                #todo: move this to the askbot.mail module
                 from askbot.mail import send_mail
                 email_context = {
                     'site': askbot_settings.APP_SHORT_NAME
@@ -1818,7 +1819,6 @@ class PostRevision(models.Model):
         #todo: make this group-sensitive
         activity.add_recipients(get_admins_and_moderators())
 
-
     def moderate_or_publish(self):
         """either place on moderation queue or announce
         that this revision is published"""
@@ -1828,6 +1828,23 @@ class PostRevision(models.Model):
             from askbot.models import signals
             signals.post_revision_published.send(None, revision = self)
 
+    def should_notify_author_about_publishing(self, was_approved = False):
+        """True if author should get email about making own post"""
+        if self.by_email:
+            schedule = askbot_settings.SELF_NOTIFY_EMAILED_POST_AUTHOR_WHEN
+            if schedule == const.NEVER:
+                return False
+            elif schedule == const.FOR_FIRST_REVISION:
+                return self.revision == 1
+            elif schedule == const.FOR_ANY_REVISION:
+                return True
+            else:
+                raise ValueError()
+        else:
+            #logic not implemented yet
+            #the ``was_approved`` argument will be used here
+            #schedule = askbot_settings.SELF_NOTIFY_WEB_POST_AUTHOR_WHEN
+            return False
 
     def revision_type_str(self):
         return self.REVISION_TYPE_CHOICES_DICT[self.revision_type]
