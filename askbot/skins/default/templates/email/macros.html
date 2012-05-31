@@ -1,4 +1,10 @@
-{% macro quoted_post(post = None, quote_level = 0) %}
+{% macro quoted_post(
+        post = None,
+        quote_level = 0,
+        format = None,
+        is_leaf_post = False
+    )
+%}
     {% spaceless %}
         {{ start_quote(quote_level) }}
             {% set author = post.author.username %}
@@ -21,11 +27,37 @@
                 {% endif %}
             {% elif post.post_type == 'answer' %}
                 <p>
-                    {% trans %}Answered by {{ author }}:{% endtrans %}
+                    {% if format == 'parent_subthread' %}
+                        {% if is_leaf_post %}
+                            {% trans -%}
+                                {{ author }}'s answer:
+                            {%- endtrans %}
+                        {% else %}
+                            {% trans -%}
+                                In reply to {{ author }}'s answer:
+                            {%- endtrans %}
+                        {% endif %}
+                    {% else %}
+                        {% trans %}Answered by {{ author }}:{% endtrans %}
+                    {% endif %}
                 </p>
             {% else %}
                 <p>
-                    {% trans author %}Commented by {{ author }}:{% endtrans %}
+                    {% if format == 'parent_subthread' %}
+                        {% if is_leaf_post %}
+                            {% trans -%}
+                                {{ author }}'s comment:
+                            {%- endtrans %}
+                        {% else %}
+                            {% trans -%}
+                                In reply to {{ author }}'s comment:
+                            {%- endtrans %}
+                        {% endif %}
+                    {% else %}
+                        {% trans author -%}
+                            Commented by {{ author }}:
+                        {%- endtrans %}
+                    {% endif %}
                 </p>
             {% endif %}
             {{ post.html }}

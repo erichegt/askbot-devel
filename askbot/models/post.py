@@ -604,7 +604,9 @@ class Post(models.Model):
         """
         return html_utils.strip_tags(self.html)[:max_length] + ' ...'
 
-    def format_for_email(self, quote_level = 0):
+    def format_for_email(
+        self, quote_level = 0, is_leaf_post = False, format = None
+    ):
         """format post for the output in email,
         if quote_level > 0, the post will be indented that number of times
         todo: move to views?
@@ -617,7 +619,9 @@ class Post(models.Model):
         data = {
             'post': self,
             'quote_level': quote_level,
-            'html': absolutize_urls_func(self.html)
+            #'html': absolutize_urls_func(self.html),
+            'is_leaf_post': is_leaf_post,
+            'format': format
         }
         return template.render(Context(data))
 
@@ -632,6 +636,7 @@ class Post(models.Model):
             if parent_post is None:
                 break
             quote_level += 1
+            """
             output += '<p>'
             output += _(
                 'In reply to %(user)s %(post)s of %(date)s'
@@ -641,7 +646,11 @@ class Post(models.Model):
                 'date': parent_post.added_at.strftime(const.DATETIME_FORMAT)
             }
             output += '</p>'
-            output += parent_post.format_for_email(quote_level = quote_level)
+            """
+            output += parent_post.format_for_email(
+                quote_level = quote_level,
+                format = 'parent_subthread'
+            )
             current_post = parent_post
         return output
 

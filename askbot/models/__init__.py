@@ -2653,7 +2653,7 @@ def format_instant_notification_email(
             )
         #todo: remove hardcoded style
     else:
-        content_preview = post.format_for_email()
+        content_preview = post.format_for_email(is_leaf_post = True)
 
     #add indented summaries for the parent posts
     content_preview += post.format_for_email_as_parent_thread_summary()
