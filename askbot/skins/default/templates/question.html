@@ -169,6 +169,9 @@
 {% endblock %}
 {% block endjs %}
     {% include "question/javascript.html" %}
+    {% if settings.TAG_SOURCE == 'category-tree' %}
+        {% include "meta/category_tree_js.html" %}
+    {% endif %}
     {#
     <script type="text/javascript">
         var messages = askbot['messages'];

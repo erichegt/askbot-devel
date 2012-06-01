@@ -32,6 +32,7 @@ from askbot import models
 from askbot import schedules
 from askbot.models.tag import Tag
 from askbot import const
+from askbot.utils import category_tree
 from askbot.utils import functions
 from askbot.utils.decorators import anonymous_forbidden, ajax_only, get_only
 from askbot.search.state_manager import SearchState, DummySearchState
@@ -539,6 +540,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
         'answer' : answer_form,
         'answers' : page_objects.object_list,
         'answer_count': len(answers),
+        'category_tree_data': category_tree.get_data(),
         'user_votes': user_votes,
         'user_post_id_list': user_post_id_list,
         'user_can_post_comment': user_can_post_comment,#in general

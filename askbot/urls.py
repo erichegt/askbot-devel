@@ -295,6 +295,11 @@ urlpatterns = patterns('',
         views.meta.badge,
         name='badge'
     ),
+    url(
+        r'get-html-template/',
+        views.commands.get_html_template,
+        name='get_html_template'
+    ),
     url(#ajax only
         r'^%s%s$' % (_('messages/'), _('markread/')),
         views.commands.read_message,

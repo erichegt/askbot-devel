@@ -976,7 +976,7 @@ var questionRetagger = function(){
     var doRetag = function(){
         $.ajax({
             type: "POST",
-            url: retagUrl,
+            url: retagUrl,//todo add this url to askbot['urls']
             dataType: "json",
             data: { tags: getUniqueWords(tagInput.val()).join(' ') },
             success: function(json) {
@@ -992,7 +992,7 @@ var questionRetagger = function(){
                 }
             },
             error: function(xhr, textStatus, errorThrown) {
-                showMessage(tagsDiv, 'sorry, somethin is not right here');
+                showMessage(tagsDiv, 'sorry, something is not right here');
                 cancelRetag();
             }
         });
@@ -2696,6 +2696,185 @@ CategorySelector.prototype.decorate = function(element) {
     this.populateCategoryLevel([0]);
 };
 
+/**
+ * @constructor
+ * loads html for the category selector from
+ * the server via ajax and activates the
+ * CategorySelector on the loaded HTML
+ */
+var CategorySelectorLoader = function() {
+    WrappedElement.call(this);
+    this._is_loaded = false;
+};
+inherits(CategorySelectorLoader, WrappedElement);
+
+CategorySelectorLoader.prototype.setLoaded = function(is_loaded) {
+    this._is_loaded = is_loaded;
+};
+
+CategorySelectorLoader.prototype.isLoaded = function() {
+    return this._is_loaded;
+};
+
+CategorySelectorLoader.prototype.setEditor = function(editor) {
+    this._editor = editor;
+};
+
+CategorySelectorLoader.prototype.closeEditor = function() {
+    this._editor.hide();
+    this._editor_buttons.hide();
+    this._display_tags_container.show();
+    this._question_body.show();
+    this._question_controls.show();
+};
+
+CategorySelectorLoader.prototype.openEditor = function() {
+    this._editor.show();
+    this._editor_buttons.show();
+    this._display_tags_container.hide();
+    this._question_body.hide();
+    this._question_controls.hide();
+};
+
+CategorySelectorLoader.prototype.addEditorButtons = function() {
+    this._editor.after(this._editor_buttons);
+};
+
+CategorySelectorLoader.prototype.getOnLoadHandler = function() {
+    var me = this;
+    return function(html){
+        me.setLoaded(true);
+
+        //append loaded html to dom
+        var editor = $('<div>' + html + '</div>');
+        me.setEditor(editor);
+        $('#question-tags').after(editor);
+
+        askbot['functions']['initCategoryTree']();
+
+        me.addEditorButtons();
+        me.openEditor();
+        //add the save button
+    };
+};
+
+CategorySelectorLoader.prototype.startLoadingHTML = function(on_load) {
+    var me = this;
+    $.ajax({
+        type: 'GET',
+        dataType: 'json',
+        data: { template_name: 'widgets/tag_category_selector.html' },
+        url: askbot['urls']['get_html_template'],
+        cache: true,
+        success: function(data) {
+            if (data['success']) {
+                on_load(data['html']);
+            } else {
+                showMessage(me.getElement(), data['message']);
+            }
+        }
+    });
+};
+
+CategorySelectorLoader.prototype.getRetagHandler = function() {
+    var me = this;
+    return function() {
+        if (me.isLoaded() === false) {
+            me.startLoadingHTML(me.getOnLoadHandler());
+        } else {
+            me.openEditor();
+        }
+        return false;
+    }
+};
+
+CategorySelectorLoader.prototype.drawNewTags = function(new_tags) {
+    if (new_tags === ''){
+        this._display_tags_container.html('');
+        return;
+    }
+    new_tags = new_tags.split(/\s+/);
+    var tags_html = ''
+    $.each(new_tags, function(index, name){
+        var tag = new Tag();
+        tag.setName(name);
+        tags_html += tag.getElement().outerHTML();
+    });
+    this._display_tags_container.html(tags_html);
+};
+
+CategorySelectorLoader.prototype.getSaveHandler = function() {
+    var me = this;
+    return function() {
+        var tagInput = $('input[name="tags"]');
+        $.ajax({
+            type: "POST",
+            url: retagUrl,//add to askbot['urls']
+            dataType: "json",
+            data: { tags: getUniqueWords(tagInput.val()).join(' ') },
+            success: function(json) {
+                if (json['success'] === true){
+                    var new_tags = getUniqueWords(json['new_tags']);
+                    oldTagsHtml = '';
+                    me.closeEditor();
+                    me.drawNewTags(new_tags.join(' '));
+                }
+                else {
+                    me.closeEditor();
+                    showMessage(me.getElement(), json['message']);
+                }
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                showMessage(tagsDiv, 'sorry, something is not right here');
+                cancelRetag();
+            }
+        });
+        return false;
+    };
+};
+
+CategorySelectorLoader.prototype.getCancelHandler = function() {
+    var me = this;
+    return function() {
+        me.closeEditor();
+    };
+};
+
+CategorySelectorLoader.prototype.decorate = function(element) {
+    this._element = element;
+    this._display_tags_container = $('#question-tags');
+    this._question_body = $('.question-body');
+    this._question_controls = $('#question-controls');
+
+    this._editor_buttons = this.makeElement('div');
+    this._done_button = this.makeElement('button');
+    this._done_button.html(gettext('save tags'));
+    this._editor_buttons.append(this._done_button);
+
+    this._cancel_button = this.makeElement('button');
+    this._cancel_button.html(gettext('cancel'));
+    this._editor_buttons.append(this._cancel_button);
+    this._editor_buttons.find('button').addClass('submit');
+    this._editor_buttons.addClass('retagger-buttons');
+
+    //done button
+    setupButtonEventHandlers(
+        this._done_button,
+        this.getSaveHandler()
+    );
+    //cancel button
+    setupButtonEventHandlers(
+        this._cancel_button,
+        this.getCancelHandler()
+    );
+
+    //retag button
+    setupButtonEventHandlers(
+        element,
+        this.getRetagHandler()
+    );
+};
+
 $(document).ready(function() {
     $('[id^="comments-for-"]').each(function(index, element){
         var comments = new PostCommentsWidget();
@@ -2712,7 +2891,12 @@ $(document).ready(function() {
         deleter.setPostId(post_id);
         deleter.decorate($(element).find('.question-delete'));
     });
-    questionRetagger.init();
+    if (askbot['settings']['tagSource'] == 'category-tree') {
+        var catSelectorLoader = new CategorySelectorLoader();
+        catSelectorLoader.decorate($('#retag'));
+    } else {
+        questionRetagger.init();
+    }
     socialSharing.init();
 });
 

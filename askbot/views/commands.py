@@ -470,6 +470,19 @@ def get_tags_by_wildcard(request):
     re_data = simplejson.dumps({'tag_count': count, 'tag_names': list(names)})
     return HttpResponse(re_data, mimetype = 'application/json')
 
+@decorators.ajax_only
+def get_html_template(request):
+    """returns rendered template"""
+    template_name = request.REQUEST.get('template_name', None)
+    allowed_templates = (
+        'widgets/tag_category_selector.html',
+    )
+    if template_name not in allowed_templates:
+        raise Http404
+    return {
+        'html': get_template(template_name).render()
+    }
+
 @decorators.get_only
 def get_tag_list(request):
     """returns tags to use in the autocomplete

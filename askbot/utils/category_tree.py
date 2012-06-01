@@ -2,7 +2,32 @@
 tree, stored in the settings.
 The tree is plain text, with levels of branching 
 reflected by indentation (2 spaces per level).
+example of desired structure, when input is parsed
+
+    cat_tree = [
+        ['dummy', 
+            [
+                ['tires', [
+                        ['michelin', [
+                                ['trucks', []],
+                                ['cars', []],
+                                ['motorcycles', []]
+                            ]
+                        ],
+                        ['good year', []],
+                        ['honda', []],
+                    ]
+                ],
+                ['abandonment', []],
+                ['chile', []],
+                ['vulcanization', []],
+            ]
+        ]
+    ]
 """
+from askbot.conf import settings as askbot_settings
+from django.utils import simplejson
+
 def get_subtree(tree, path):
         if len(path) == 1:
             assert(path[0] == 0)
@@ -51,3 +76,13 @@ def parse_tree(text):
         subtree.append([line.strip(), []])
 
     return tree
+
+def get_data():
+    """returns category tree data structure encoded as json
+    or None, if category_tree is disabled
+    """
+    if askbot_settings.TAG_SOURCE == 'category-tree':
+        cat_tree = parse_tree(askbot_settings.CATEGORY_TREE)
+        return simplejson.dumps(cat_tree)
+    else:
+        return None

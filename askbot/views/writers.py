@@ -260,36 +260,6 @@ def ask(request):#view used to ask a new question
         'wiki': request.REQUEST.get('wiki', False),
         'is_anonymous': request.REQUEST.get('is_anonymous', False),
     }
-    
-    if askbot_settings.TAG_SOURCE == 'category-tree':
-        cat_tree = category_tree.parse_tree(askbot_settings.CATEGORY_TREE)
-        category_tree_data = simplejson.dumps(cat_tree)
-    else:
-        category_tree_data = None
-
-    """
-    example of desired structure
-    cat_tree = [
-        ['dummy', 
-            [
-                ['tires', [
-                        ['michelin', [
-                                ['trucks', []],
-                                ['cars', []],
-                                ['motorcycles', []]
-                            ]
-                        ],
-                        ['good year', []],
-                        ['honda', []],
-                    ]
-                ],
-                ['abandonment', []],
-                ['chile', []],
-                ['vulcanization', []],
-            ]
-        ]
-    ]
-    """
         
     data = {
         'active_tab': 'ask',
@@ -297,8 +267,7 @@ def ask(request):#view used to ask a new question
         'form' : form,
         'mandatory_tags': models.tag.get_mandatory_tags(),
         'email_validation_faq_url':reverse('faq') + '#validate',
-        'use_category_selector': (askbot_settings.TAG_SOURCE == 'category-tree'),
-        'category_tree_data': category_tree_data,
+        'category_tree_data': category_tree.get_data(),
         'tag_names': list()#need to keep context in sync with edit_question for tag editor
     }
     return render_into_skin('ask.html', data, request)
@@ -429,12 +398,6 @@ def edit_question(request, id):
                                     user = request.user
                                 )
 
-        if askbot_settings.TAG_SOURCE == 'category-tree':
-            cat_tree = category_tree.parse_tree(askbot_settings.CATEGORY_TREE)
-            category_tree_data = simplejson.dumps(cat_tree)
-        else:
-            category_tree_data = None
-
         data = {
             'page_class': 'edit-question-page',
             'active_tab': 'questions',
@@ -443,8 +406,7 @@ def edit_question(request, id):
             'mandatory_tags': models.tag.get_mandatory_tags(),
             'form' : form,
             'tag_names': question.thread.get_tag_names(),
-            'use_category_selector': (askbot_settings.TAG_SOURCE == 'category-tree'),
-            'category_tree_data': category_tree_data
+            'category_tree_data': category_tree.get_data()
         }
         return render_into_skin('question_edit.html', data, request)
 

@@ -15,6 +15,7 @@
                                         id="select_revision" name="select_revision" 
                                         value="{% trans %}select revision{% endtrans %}">
     </div> 
+    {% set use_category_selector = (settings.TAG_SOURCE == 'category-tree') %}
     {{
         macros.edit_post(
                     form,
@@ -96,21 +97,8 @@
         
     });
     </script>
-    {% if use_category_selector %}
-    <script type='text/javascript'>
-        (function(){
-            var selector = new CategorySelector();
-            selector.setData(JSON.parse("{{category_tree_data|escapejs}}"));
-            if (askbot['data']['userIsAdminOrMod']) {
-                selector.setEditable(true);
-            }
-            selector.decorate($('.category-selector'));
-
-            var tag_editor = new TagEditor();
-            tag_editor.decorate($('.tag-editor'));
-            selector.setSelectHandler(tag_editor.getAddTagHandler());
-        })();
-    </script>
+    {% if settings.TAG_SOURCE == 'category-tree' %}
+        {% include "meta/category_tree_js.html" %}
     {% endif %}
 {% endblock %}
 <!-- end question_edit.html -->

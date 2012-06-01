@@ -1,0 +1,24 @@
+<script type='text/javascript'>
+    askbot['functions'] = askbot['functions'] || {};
+    askbot['functions']['initCategoryTree'] = function(){
+        var sel_elems = $('.category-selector');
+        if (sel_elems.length > 0) {
+            var selector = new CategorySelector();
+            selector.setData(JSON.parse("{{category_tree_data|escapejs}}"));
+            if (askbot['data']['userIsAdminOrMod']) {
+                selector.setEditable(true);
+            }
+            selector.decorate(sel_elems);
+
+            var tag_editor = new TagEditor();
+            tag_editor.decorate($('.tag-editor'));
+            {% if page_class == 'question-page' %}
+                {% for tag_name in question.get_tag_names() %}
+                    tag_editor.addTag('{{ tag_name }}');
+                {% endfor %}
+            {% endif %}
+            selector.setSelectHandler(tag_editor.getAddTagHandler());
+        }
+    };
+    askbot['functions']['initCategoryTree']();
+</script>

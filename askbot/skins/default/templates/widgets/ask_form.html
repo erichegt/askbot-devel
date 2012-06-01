@@ -27,7 +27,7 @@
             post_type = 'question',
             edit_title = False,
             mandatory_tags = mandatory_tags,
-            use_category_selector = use_category_selector
+            use_category_selector = (settings.TAG_SOURCE == 'category-tree')
         )
     }}
     <div class="question-options">
