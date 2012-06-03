@@ -170,6 +170,18 @@ class AskbotTestCase(TestCase):
                         timestamp = timestamp
                     )
 
+    def create_tag(self, tag_name, user = None):
+        """creates a user, b/c it is necessary"""
+        if user is None:
+            try:
+                user = models.User.objects.get(username = 'tag_creator')
+            except models.User.DoesNotExist:
+                user = self.create_user('tag_creator')
+
+        tag = models.Tag(created_by = user, name = tag_name)
+        tag.save()
+        return tag
+
     def post_comment(
                 self,
                 user = None,
