@@ -105,7 +105,9 @@ class GroupTagManager(TagManager):
         #replace spaces with dashes
         group_name = clean_group_name(group_name)
         try:
-            tag = self.get(name = group_name)
+            #iexact is important!!! b/c we don't want case variants
+            #of tags
+            tag = self.get(name__iexact = group_name)
         except self.model.DoesNotExist:
             tag = self.model(name = group_name, created_by = user)
             tag.save()
