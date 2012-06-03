@@ -6,11 +6,25 @@ from askbot.deps.livesettings import ConfigurationGroup
 from askbot.deps.livesettings import values
 from django.utils.translation import ugettext as _
 from askbot.conf.super_groups import CONTENT_AND_UI
-SIDEBAR_QUESTION = ConfigurationGroup(
+SIDEBAR_QUESTION = ConfigurationGroup(#shitty name - why sidebar?
                     'SIDEBAR_QUESTION',
-                    _('Question page sidebar'),
+                    _('Question page banners and sidebar'),
                     super_group = CONTENT_AND_UI
                 )
+
+settings.register(
+    values.LongStringValue(
+        SIDEBAR_QUESTION,
+        'QUESTION_PAGE_TOP_BANNER',
+        description = _('Top banner'),
+        default = '',
+        help_text = _(
+            'When using this option, please '
+            'use the HTML validation service to make sure that '
+            'your input is valid and works well in all browsers.'
+        )
+    )
+)
 
 settings.register(
     values.LongStringValue(
@@ -20,7 +34,7 @@ settings.register(
         default = '',
         help_text = _(
                     'Use this area to enter content at the TOP of the sidebar'
-                    'in HTML format.   When using this option '
+                    'in HTML format. When using this option '
                     '(as well as the sidebar footer), please '
                     'use the HTML validation service to make sure that '
                     'your input is valid and works well in all browsers.'
