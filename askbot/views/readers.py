@@ -40,6 +40,7 @@ from askbot.templatetags import extra_tags
 import askbot.conf
 from askbot.conf import settings as askbot_settings
 from askbot.skins.loaders import render_into_skin, get_template #jinja2 template loading enviroment
+from askbot.views import context
 
 # used in index page
 #todo: - take these out of const or settings
@@ -553,6 +554,8 @@ def question(request, id):#refactor - long subroutine. display question body, an
         'show_comment': show_comment,
         'show_comment_position': show_comment_position,
     }
+
+    data.update(context.get_for_tag_editor())
 
     return render_into_skin('question.html', data, request)
 

@@ -33,6 +33,10 @@ _('click to see the most answered questions')
 _('click to see least voted questions')
 _('by votes')
 _('click to see most voted questions')
+TAGS_ARE_REQUIRED_MESSAGE = _('tags are required')
+TAG_WRONG_CHARS_MESSAGE = _(
+    'please use letters, numbers and characters "-+.#"'
+)
 
 def get_i18n_message(key):
     messages = {

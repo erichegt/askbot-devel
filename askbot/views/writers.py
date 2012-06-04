@@ -33,6 +33,7 @@ from askbot.utils.functions import diff_date
 from askbot.utils import url_utils
 from askbot.utils.file_utils import store_file
 from askbot.utils import category_tree
+from askbot.views import context
 from askbot.templatetags import extra_filters_jinja as template_filters
 from askbot.importers.stackexchange import management as stackexchange#todo: may change
 
@@ -270,6 +271,7 @@ def ask(request):#view used to ask a new question
         'category_tree_data': category_tree.get_data(),
         'tag_names': list()#need to keep context in sync with edit_question for tag editor
     }
+    data.update(context.get_for_tag_editor())
     return render_into_skin('ask.html', data, request)
 
 @login_required
@@ -408,6 +410,7 @@ def edit_question(request, id):
             'tag_names': question.thread.get_tag_names(),
             'category_tree_data': category_tree.get_data()
         }
+        data.update(context.get_for_tag_editor())
         return render_into_skin('question_edit.html', data, request)
 
     except exceptions.PermissionDenied, e:

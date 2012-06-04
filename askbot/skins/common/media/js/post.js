@@ -2391,6 +2391,7 @@ GroupJoinButton.prototype.decorate = function(elem) {
 var TagEditor = function() {
     WrappedElement.call(this);
     this._has_hot_backspace = false;
+    this._settings = JSON.parse(askbot['settings']['tag_editor']);
 };
 inherits(TagEditor, WrappedElement);
 
@@ -2421,17 +2422,66 @@ TagEditor.prototype.getTagDeleteHandler = function(tag){
     var me = this;
     return function(){
         me.removeSelectedTag(tag.getName());
+        me.clearErrorMessage();
         tag.dispose();
         $('.acResults').hide();//a hack to hide the autocompleter
         me.fixHeight();
     };
 };
 
-TagEditor.prototype.addTag = function(tag_name) {
-    var tag_name = tag_name.replace(/\s+/, ' ').toLowerCase();
-    if ($.inArray(tag_name, this.getSelectedTags()) !== -1) {
-        return;
+TagEditor.prototype.cleanTag = function(tag_name) {
+    tag_name = $.trim(tag_name);
+    tag_name = tag_name.replace(/\s+/, ' ');
+
+    var force_lowercase = this._settings['force_lowercase_tags'];
+    if (force_lowercase) {
+        tag_name = tag_name.toLowerCase();
     }
+
+    if ($.inArray(tag_name, this.getSelectedTags()) !== -1) {
+        throw interpolate(
+            gettext('tag "%s" was already added, no need to repeat'),
+            [tag_name]
+        );
+    }
+
+    var tag_regex = new RegExp(this._settings['tag_regex']);
+    if (tag_regex.test(tag_name) === false) {
+        throw this._settings['messages']['wrong_chars']
+    }
+
+    var max_tags = this._settings['max_tags_per_post'];
+    if (this.getSelectedTags().length + 1 > max_tags) {//count current
+        throw interpolate(
+            ngettext(
+                'a maximum of %s tag is allowed',
+                'a maximum of %s tags are allowed',
+                max_tags
+            ),
+            [max_tags]
+        );
+    }
+
+    var max_length = this._settings['max_tag_length'];
+    if (tag_name.length > max_length) {
+        throw interpolate(
+            ngettext(
+                'must be shorter than %(max_chars)s character',
+                'must be shorter than %(max_chars)s characters',
+                max_length
+            ),
+            {'max_chars': max_length },
+            true
+        );
+    }
+    if (this._settings['force_lowercase_tags']) {
+        return tag_name.toLowerCase();
+    } else {
+        return tag_name;
+    }
+};
+
+TagEditor.prototype.addTag = function(tag_name) {
     var tag = new Tag();
     tag.setName(tag_name);
     tag.setDeletable(true);
@@ -2441,12 +2491,33 @@ TagEditor.prototype.addTag = function(tag_name) {
     this.addSelectedTag(tag_name);
 };
 
+TagEditor.prototype.clearErrorMessage = function() {
+    this._error_alert.html('');
+    //this._error_alert.fadeOut();
+    this._element.css('margin-top', '18px');//todo: the margin thing is a hack
+};
+
+TagEditor.prototype.setErrorMessage = function(text) {
+    var old_text = this._error_alert.html();
+    this._error_alert.html(text);
+    if (old_text == '') {
+        this._error_alert.hide();
+        this._error_alert.fadeIn(100);
+    }
+    this._element.css('margin-top', '0');//todo: remove this hack
+};
+
 TagEditor.prototype.getAddTagHandler = function() {
     var me = this;
     return function(tag_name) {
-        me.addTag(tag_name);
-        me.clearNewTagInput();
-        me.fixHeight();
+        try {
+            var clean_tag_name = me.cleanTag($.trim(tag_name));
+            me.addTag(clean_tag_name);
+            me.clearNewTagInput();
+            me.fixHeight();
+        } catch (error) {
+            me.setErrorMessage(error);
+        }
     };
 };
 
@@ -2481,9 +2552,12 @@ TagEditor.prototype.hasHotBackspace = function() {
 
 TagEditor.prototype.completeTagInput = function() {
     var tag_name = $.trim(this._visible_tags_input.val());
-    if (tag_name.length > 0) {
+    try {
+        tag_name = this.cleanTag(tag_name);
         this.addTag(tag_name);
         this.clearNewTagInput();
+    } catch (error) {
+        this.setErrorMessage(error);
     }
 };
 
@@ -2508,6 +2582,10 @@ TagEditor.prototype.fixHeight = function() {
     this.saveHeight();
 };
 
+TagEditor.prototype.closeAutoCompleter = function() {
+    this._autocompleter.finish();
+};
+
 TagEditor.prototype.getTagInputKeyHandler = function() {
     var new_tags = this._visible_tags_input;
     var me = this;
@@ -2518,18 +2596,46 @@ TagEditor.prototype.getTagInputKeyHandler = function() {
         me.saveHeight();
         var key = e.which || e.keyCode;
         var text = me.getRawNewTagValue();
-        //space 32, backspace 8, enter 13
+
+        //space 32, enter 13
         if (key == 32 || key == 13) {
             var tag_name = $.trim(text);
             if (tag_name.length > 0) {
                 me.completeTagInput();
             }
-        } else if (key == 8 && text.length == 0) {
+            me.fixHeight();
+            return false;
+        }
+
+        if (text == '') {
+            me.clearErrorMessage();
+            me.closeAutoCompleter();
+        } else {
+            try {
+                /* do-nothing validation here
+                 * just to report any errors while 
+                 * the user is typing */
+                me.cleanTag(text);
+                me.clearErrorMessage();
+            } catch (error) {
+                me.setErrorMessage(error);
+            }
+        }
+        
+        //8 is backspace
+        if (key == 8 && text.length == 0) {
             if (me.hasHotBackspace() === true) {
                 me.editLastTag();
+                me.setHotBackspace(false);
             } else {
                 me.setHotBackspace(true);
             }
+        }
+
+        //27 is escape
+        if (key == 27) {
+            me.clearNewTagInput();
+            me.clearErrorMessage();
         }
 
         if (key !== 8) {
@@ -2544,6 +2650,7 @@ TagEditor.prototype.decorate = function(element) {
     this._element = element;
     this._hidden_tags_input = element.find('input[name="tags"]');//this one is hidden
     this._tags_container = element.find('ul.tags');
+    this._error_alert = $('.tag-editor-error-alert');
 
     var me = this;
     this._tags_container.children().each(function(idx, elem){
@@ -2572,6 +2679,7 @@ TagEditor.prototype.decorate = function(element) {
         delay: 10
     });
     tagsAc.decorate(visible_tags_input);
+    this._autocompleter = tagsAc;
     visible_tags_input.keyup(this.getTagInputKeyHandler());
 
     element.click(function(e) {

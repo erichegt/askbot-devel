@@ -1,6 +1,7 @@
 import re
 from django import forms
 from askbot import const
+from askbot.const import message_keys
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext_lazy, string_concat
 from django.utils.text import get_text_list
@@ -256,7 +257,8 @@ class TagNamesField(forms.CharField):
     def need_mandatory_tags(self):
         """true, if list of mandatory tags is not empty"""
         from askbot import models
-        return askbot_settings.TAGS_ARE_REQUIRED and len(models.tag.get_mandatory_tags()) > 0
+        num_mandatory_tags = len(models.tag.get_mandatory_tags())
+        return askbot_settings.TAGS_ARE_REQUIRED and num_mandatory_tags > 0
 
     def tag_string_matches(self, tag_string, mandatory_tag):
         """true if tag string matches the mandatory tag"""
@@ -282,7 +284,9 @@ class TagNamesField(forms.CharField):
         data = value.strip()
         if len(data) < 1:
             if askbot_settings.TAGS_ARE_REQUIRED:
-                    raise forms.ValidationError(_('tags are required'))
+                    raise forms.ValidationError(
+                        _(message_keys.TAGS_ARE_REQUIRED_MESSAGE)
+                    )
             else:
                 return ''#don't test for required characters when tags is ''
         split_re = re.compile(const.TAG_SPLIT_REGEX)
@@ -309,17 +313,20 @@ class TagNamesField(forms.CharField):
             if tag_length > askbot_settings.MAX_TAG_LENGTH:
                 #singular form is odd in english, but required for pluralization
                 #in other languages
-                msg = ungettext_lazy('each tag must be shorter than %(max_chars)d character',#odd but added for completeness
-                                'each tag must be shorter than %(max_chars)d characters',
-                                tag_length) % {'max_chars':tag_length}
+                msg = ungettext_lazy(
+                    #odd but added for completeness
+                    'each tag must be shorter than %(max_chars)d character',
+                    'each tag must be shorter than %(max_chars)d characters',
+                    tag_length
+                ) % {'max_chars':tag_length}
                 raise forms.ValidationError(msg)
 
             #todo - this needs to come from settings
             tagname_re = re.compile(const.TAG_REGEX, re.UNICODE)
             if not tagname_re.search(tag):
-                raise forms.ValidationError(_(
-                    'In tags, please use letters, numbers and characters "-+.#"'
-                ))
+                raise forms.ValidationError(
+                    _(message_keys.TAG_WRONG_CHARS_MESSAGE)
+                )
             #only keep unique tags
             if tag not in entered_tags:
                 entered_tags.append(tag)

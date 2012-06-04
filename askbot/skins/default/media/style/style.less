@@ -9,7 +9,7 @@ body {
     line-height: 150%;
     margin: 0;
     padding: 0;
-    color: #000;
+    color: #666;
     font-family:@body-font;
 }
 
@@ -1351,7 +1351,7 @@ ul#related-tags li {
     margin-bottom: 5px;
 }
 
-.ask-page {
+.ask-page, .question-page {
     .title-desc, .tags-desc {
         color: @info-text;
         font-style: italic;
@@ -3526,8 +3526,14 @@ textarea.tipped-input {
     }
 }
 
-.question-page .category-selector ul.select-box {
-    width: 217px;
+.question-page {
+    .category-selector ul.select-box {
+        width: 217px;
+    }
+    .tag-editor {
+        width: 660px;
+        margin-left: 0;
+    }
 }
 
 /* tag editor */
@@ -3539,6 +3545,7 @@ textarea.tipped-input {
         margin: 0;
         li {
             margin-top: 8px;
+            height: 13px;
         }
     }
     input.new-tags-input {
