@@ -214,11 +214,11 @@ def bounce_email(email, subject, reason = None, body_text = None):
             '<p>Sorry, your question could not be posted '
             'due to insufficient privileges of your user account</p>'
         )
+    elif body_text:
+        error_message = body_text
     else:
         raise ValueError('unknown reason to bounce an email: "%s"' % reason)
 
-    if body_text:
-        error_message = string_concat(error_message, body_text)
 
     #print 'sending email'
     #print email
