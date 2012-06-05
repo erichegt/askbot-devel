@@ -348,7 +348,7 @@ def process_emailed_question(
                 ).as_email_address()
                 raise PermissionDenied(
                     messages.ask_for_signature(user, footer_code = reply_to),
-                    reply_to = reply_to.as_email_address()
+                    reply_to = reply_to
                 )
 
             tagnames = form.cleaned_data['tagnames']
