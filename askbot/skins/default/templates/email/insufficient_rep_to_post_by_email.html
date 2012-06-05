@@ -10,6 +10,6 @@
 </p>
 <p>
     {% trans %}To make posts by email, you need to receive about {{min_upvotes}} upvotes.{% endtrans %}
-    {% trans %}Please post your question at {{ site_link|safe }}{% endtrans %}
+    {% trans link=site_link|safe %}Please post your question at {{link}}{% endtrans %}
 </p>
 {% include "email/footer.html" %}
