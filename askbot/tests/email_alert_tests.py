@@ -1005,3 +1005,11 @@ class PostApprovalTests(utils.AskbotTestCase):
         #moderation notification
         self.assertEquals(outbox[0].recipients(), [u1.email,])
         self.assertEquals(outbox[1].recipients(), [u1.email,])#approval
+
+
+class MailMessagesTests(utils.AskbotTestCase):
+    def test_ask_for_signature(self):
+        from askbot.mail import messages
+        user = self.create_user('user')
+        message = messages.ask_for_signature(user, footer_code = 'nothing')
+        self.assertTrue(user.username in message)

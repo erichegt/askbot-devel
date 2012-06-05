@@ -1,5 +1,5 @@
 {% import "email/macros.html" as macros %}
-<p style="{{ macros.headline() }}">
+<p style="{{ macros.heading_style() }}">
     {% trans %}{{ username }}, please reply to this message.{% endtrans %}
 </p>
 <p>
@@ -8,4 +8,4 @@
     {% trans %}We will attempt to detect the signature in your response.{% endtrans %}
 </p>
 {% include "email/footer.html" %}
-<p style="{{ macros.fine_print() }}">{{ footer_code }}</p>
+<p style="{{ macros.fine_print_style() }}">{{ footer_code }}</p>

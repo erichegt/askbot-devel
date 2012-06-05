@@ -7,16 +7,20 @@ from askbot.conf import settings as askbot_settings
 from askbot.skins.loaders import get_template
 from askbot.utils import html as html_utils
 
-def message(func, template = None):
+def message(template = None):
     """a decorator that creates a function
     which returns formatted message using the
     template and data"""
-    @functools.wraps(func)
-    def wrapped(data):
-        template = get_template(template)
-        return template.render(Context(data))
+    def decorate(func):
+        @functools.wraps(func)
+        def wrapped(*args, **kwargs):
+            template_object = get_template(template)
+            data = func(*args, **kwargs)
+            return template_object.render(Context(data))
+        return wrapped
+    return decorate
 
-@message('email/ask_for_signature.html')
+@message(template = 'email/ask_for_signature.html')
 def ask_for_signature(user, footer_code = None):
     """tells that we don't have user's signature
     and because of that he/she cannot make posts
@@ -28,7 +32,7 @@ def ask_for_signature(user, footer_code = None):
         'footer_code': footer_code
     }
 
-@message('email/insufficient_rep_to_post_by_email.html')
+@message(template = 'email/insufficient_rep_to_post_by_email.html')
 def insufficient_reputation(user):
     """tells user that he does not have
     enough rep and suggests to ask on the web
