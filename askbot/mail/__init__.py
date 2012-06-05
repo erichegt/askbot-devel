@@ -14,7 +14,6 @@ from django.template import Context
 from askbot import exceptions
 from askbot import const
 from askbot.conf import settings as askbot_settings
-from askbot import models
 from askbot.utils import url_utils
 from askbot.utils.file_utils import store_file
 #todo: maybe send_mail functions belong to models
@@ -321,7 +320,7 @@ def process_emailed_question(
     """posts question received by email or bounces the message"""
     #a bunch of imports here, to avoid potential circular import issues
     from askbot.forms import AskByEmailForm
-    from askbot.models import User
+    from askbot.models import ReplyAddress, User
     from askbot.mail import messages
 
     reply_to = None
@@ -339,8 +338,11 @@ def process_emailed_question(
                         email__iexact = email_address
                     )
 
+            if user.can_post_by_email() == False:
+                raise PermissionDenied(messages.insufficient_reputation(user))
+
             if user.email_isvalid == False:
-                reply_to = models.ReplyAddress.objects.create_new(
+                reply_to = ReplyAddress.objects.create_new(
                     user = user,
                     reply_action = 'validate_email'
                 ).as_email_address()
@@ -348,9 +350,6 @@ def process_emailed_question(
                     messages.ask_for_signature(user, footer_code = reply_to),
                     reply_to = reply_to.as_email_address()
                 )
-
-            if user.can_post_by_email() == False:
-                raise PermissionDenied(messages.insufficient_reputation(user))
 
             tagnames = form.cleaned_data['tagnames']
             title = form.cleaned_data['title']
