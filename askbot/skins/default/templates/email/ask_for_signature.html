@@ -1,0 +1,11 @@
+{% import "email/macros.html" as macros %}
+<p style="{{ macros.headline() }}">
+    {% trans %}{{ username }}, please reply to this message.{% endtrans %}
+</p>
+<p>
+    {% trans %}Your post could not be published, because we could not detect signature in your email.{% endtrans %}<br/>
+    {% trans %}Please make a simple response, without editing this message.{% endtrans %}<br/>
+    {% trans %}We will attempt to detect the signature in your response.{% endtrans %}
+</p>
+{% include "email/footer.html" %}
+<p style="{{ macros.fine_print() }}">{{ footer_code }}</p>

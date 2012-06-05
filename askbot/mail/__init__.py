@@ -14,10 +14,9 @@ from django.template import Context
 from askbot import exceptions
 from askbot import const
 from askbot.conf import settings as askbot_settings
+from askbot import models
 from askbot.utils import url_utils
-from askbot.utils import html as html_utils
 from askbot.utils.file_utils import store_file
-from askbot.skins.loaders import get_template
 #todo: maybe send_mail functions belong to models
 #or the future API
 def prefix_the_subject_line(subject):
@@ -167,7 +166,9 @@ TAGS_INSTRUCTION_FOOTNOTE = _(
 the tags, use a semicolon or a comma, for example, [One tag; Other tag]</p>"""
 )
 
-def bounce_email(email, subject, reason = None, body_text = None):
+def bounce_email(
+    email, subject, reason = None, body_text = None, reply_to = None
+):
     """sends a bounce email at address ``email``, with the subject
     line ``subject``, accepts several reasons for the bounce:
     * ``'problem_posting'``, ``unknown_user`` and ``permission_denied``
@@ -224,10 +225,15 @@ def bounce_email(email, subject, reason = None, body_text = None):
     #print email
     #print subject
     #print error_message
+    headers = {}
+    if reply_to:
+        headers['Reply-To'] = reply_to
+        
     send_mail(
         recipient_list = (email,),
         subject_line = 'Re: ' + subject,
-        body_text = error_message
+        body_text = error_message,
+        headers = headers
     )
 
 def extract_reply(text):
@@ -316,7 +322,9 @@ def process_emailed_question(
     #a bunch of imports here, to avoid potential circular import issues
     from askbot.forms import AskByEmailForm
     from askbot.models import User
+    from askbot.mail import messages
 
+    reply_to = None
     try:
         #todo: delete uploaded files when posting by email fails!!!
         data = {
@@ -332,26 +340,17 @@ def process_emailed_question(
                     )
 
             if user.email_isvalid == False:
-                raise PermissionDenied('Lacking email signature')
+                reply_to = models.ReplyAddress.objects.create_new(
+                    user = user,
+                    reply_action = 'validate_email'
+                ).as_email_address()
+                raise PermissionDenied(
+                    messages.ask_for_signature(user, footer_code = reply_to),
+                    reply_to = reply_to.as_email_address()
+                )
 
             if user.can_post_by_email() == False:
-                #todo: factor this code out
-                template = get_template('email/insufficient_rep_to_post_by_email.html')
-                min_rep = askbot_settings.MIN_REP_TO_POST_BY_EMAIL
-                min_upvotes = 1 + \
-                    (min_rep/askbot_settings.REP_GAIN_FOR_RECEIVING_UPVOTE)
-                site_link = html_utils.site_link(
-                    'ask',
-                    askbot_settings.APP_SHORT_NAME
-                )
-                data = {
-                    'username': user.username,
-                    'site_name': askbot_settings.APP_SHORT_NAME,
-                    'site_link': site_link,
-                    'min_upvotes': min_upvotes
-                }
-                message = template.render(Context(data))
-                raise PermissionDenied(message)
+                raise PermissionDenied(messages.insufficient_reputation(user))
 
             tagnames = form.cleaned_data['tagnames']
             title = form.cleaned_data['title']
@@ -385,7 +384,8 @@ def process_emailed_question(
             email_address,
             subject,
             reason = 'permission_denied',
-            body_text = unicode(error)
+            body_text = unicode(error),
+            reply_to = reply_to
         )
     except ValidationError:
         if from_address:
