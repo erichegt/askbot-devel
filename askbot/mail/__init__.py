@@ -208,7 +208,7 @@ def bounce_email(email, subject, reason = None, body_text = None):
             'site': askbot_settings.APP_SHORT_NAME,
             'url': url_utils.get_login_url()
         }
-    elif reason == 'permission_denied':
+    elif reason == 'permission_denied' and body_text:
         error_message = _(
             '<p>Sorry, your question could not be posted '
             'due to insufficient privileges of your user account</p>'
@@ -216,7 +216,7 @@ def bounce_email(email, subject, reason = None, body_text = None):
     else:
         raise ValueError('unknown reason to bounce an email: "%s"' % reason)
 
-    if body_text != None:
+    if body_text:
         error_message = string_concat(error_message, body_text)
 
     #print 'sending email'
@@ -337,7 +337,8 @@ def process_emailed_question(
                 #todo: factor this code out
                 template = get_template('email/insufficient_rep_to_post_by_email.html')
                 min_rep = askbot_settings.MIN_REP_TO_POST_BY_EMAIL
-                min_upvotes = min_rep / askbot_settings.REP_GAIN_FOR_RECEIVING_UPVOTE
+                min_upvotes = 1 + \
+                    (min_rep/askbot_settings.REP_GAIN_FOR_RECEIVING_UPVOTE)
                 data = {
                     'username': user.username,
                     'site_name': askbot_settings.APP_SHORT_NAME,
