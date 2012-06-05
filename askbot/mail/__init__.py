@@ -15,6 +15,7 @@ from askbot import exceptions
 from askbot import const
 from askbot.conf import settings as askbot_settings
 from askbot.utils import url_utils
+from askbot.utils import html as html_utils
 from askbot.utils.file_utils import store_file
 from askbot.skins.loaders import get_template
 #todo: maybe send_mail functions belong to models
@@ -208,7 +209,7 @@ def bounce_email(email, subject, reason = None, body_text = None):
             'site': askbot_settings.APP_SHORT_NAME,
             'url': url_utils.get_login_url()
         }
-    elif reason == 'permission_denied' and body_text:
+    elif reason == 'permission_denied' and body_text is None:
         error_message = _(
             '<p>Sorry, your question could not be posted '
             'due to insufficient privileges of your user account</p>'
@@ -339,9 +340,11 @@ def process_emailed_question(
                 min_rep = askbot_settings.MIN_REP_TO_POST_BY_EMAIL
                 min_upvotes = 1 + \
                     (min_rep/askbot_settings.REP_GAIN_FOR_RECEIVING_UPVOTE)
+                site_link = html_utils.site_link('ask', askbot_settings.SITE_NAME)
                 data = {
                     'username': user.username,
                     'site_name': askbot_settings.APP_SHORT_NAME,
+                    'site_link': site_link,
                     'min_upvotes': min_upvotes
                 }
                 message = template.render(Context(data))
