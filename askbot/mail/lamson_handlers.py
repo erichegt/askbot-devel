@@ -261,6 +261,7 @@ def PROCESS(
     parts = None,
     reply_address_object = None,
     subject_line = None,
+    from_address = None,
     **kwargs
 ):
     """handler to process the emailed message
@@ -300,3 +301,17 @@ def PROCESS(
             robj.edit_post(body_text, edit_response = True)
         else:
             robj.create_reply(body_text)
+    elif robj.reply_action == 'validate_email':
+        #todo: this is copy-paste - factor it out to askbot.mail.messages
+        data = {
+            'site_name': askbot_settings.APP_SHORT_NAME,
+            'site_url': askbot_settings.APP_URL,
+            'ask_address': 'ask@' + askbot_settings.REPLY_BY_EMAIL_HOSTNAME
+        }
+        template = get_template('email/re_welcome_lamson_on.html')
+
+        mail.send_mail(
+            subject_line = _('Re: %s') % subject_line,
+            body_text = template.render(Context(data)),
+            recipient_list = [from_address,]
+        )
