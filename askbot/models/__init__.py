@@ -297,7 +297,7 @@ def user_can_have_strong_url(self):
     followed by the search engine crawlers"""
     return (self.reputation >= askbot_settings.MIN_REP_TO_HAVE_STRONG_URL)
 
-def user_can_reply_by_email(self):
+def user_can_post_by_email(self):
     """True, if reply by email is enabled 
     and user has sufficient reputatiton"""
     return askbot_settings.REPLY_BY_EMAIL and \
@@ -2519,7 +2519,7 @@ User.add_to_class('is_following_question', user_is_following_question)
 User.add_to_class('mark_tags', user_mark_tags)
 User.add_to_class('update_response_counts', user_update_response_counts)
 User.add_to_class('can_have_strong_url', user_can_have_strong_url)
-User.add_to_class('can_reply_by_email', user_can_reply_by_email)
+User.add_to_class('can_post_by_email', user_can_post_by_email)
 User.add_to_class('can_post_comment', user_can_post_comment)
 User.add_to_class('is_administrator', user_is_administrator)
 User.add_to_class('is_administrator_or_moderator', user_is_administrator_or_moderator)
@@ -2687,7 +2687,7 @@ def format_instant_notification_email(
         'post_link': '<a href="%s">%s</a>' % (post_url, _(post.post_type))
     }
 
-    can_reply = to_user.can_reply_by_email()
+    can_reply = to_user.can_post_by_email()
 
     if can_reply:
         reply_separator = const.SIMPLE_REPLY_SEPARATOR_TEMPLATE % \
@@ -2746,7 +2746,7 @@ def get_reply_to_addresses(user, post):
     #these variables will contain return values
     primary_addr = django_settings.DEFAULT_FROM_EMAIL
     secondary_addr = None
-    if user.can_reply_by_email():
+    if user.can_post_by_email():
         if user.reputation >= askbot_settings.MIN_REP_TO_POST_BY_EMAIL:
 
             reply_args = {

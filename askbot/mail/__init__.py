@@ -10,11 +10,13 @@ from django.core.exceptions import PermissionDenied
 from django.forms import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import string_concat
+from django.template import Context
 from askbot import exceptions
 from askbot import const
 from askbot.conf import settings as askbot_settings
 from askbot.utils import url_utils
 from askbot.utils.file_utils import store_file
+from askbot.skins.loaders import get_template
 #todo: maybe send_mail functions belong to models
 #or the future API
 def prefix_the_subject_line(subject):
@@ -330,6 +332,19 @@ def process_emailed_question(
 
             if user.email_isvalid == False:
                 raise PermissionDenied('Lacking email signature')
+
+            if user.can_post_by_email() == False:
+                #todo: factor this code out
+                template = get_template('email/insufficient_rep_to_post_by_email.html')
+                min_rep = askbot_settings.MIN_REP_TO_POST_BY_EMAIL
+                min_upvotes = min_rep / askbot_settings.REP_GAIN_FOR_RECEIVING_UPVOTE
+                data = {
+                    'username': user.username,
+                    'site_name': askbot_settings.APP_SHORT_NAME,
+                    'min_upvotes': min_upvotes
+                }
+                message = template.render(Context(data))
+                raise PermissionDenied(message)
 
             tagnames = form.cleaned_data['tagnames']
             title = form.cleaned_data['title']
