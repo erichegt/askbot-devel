@@ -340,7 +340,10 @@ def process_emailed_question(
                 min_rep = askbot_settings.MIN_REP_TO_POST_BY_EMAIL
                 min_upvotes = 1 + \
                     (min_rep/askbot_settings.REP_GAIN_FOR_RECEIVING_UPVOTE)
-                site_link = html_utils.site_link('ask', askbot_settings.SITE_NAME)
+                site_link = html_utils.site_link(
+                    'ask',
+                    askbot_settings.APP_SHORT_NAME
+                )
                 data = {
                     'username': user.username,
                     'site_name': askbot_settings.APP_SHORT_NAME,
