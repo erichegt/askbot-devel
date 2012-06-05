@@ -5,7 +5,7 @@
 <p>
     {% trans %}Your post could not be published, because we could not detect signature in your email.{% endtrans %}<br/>
     {% trans %}Please make a simple response, without editing this message.{% endtrans %}<br/>
-    {% trans %}We will attempt to detect the signature in your response.{% endtrans %}
+    {% trans %}We will then attempt to detect the signature in your response and you should be able to post.{% endtrans %}
 </p>
 {% include "email/footer.html" %}
 <p style="{{ macros.fine_print_style() }}">{{ footer_code }}</p>

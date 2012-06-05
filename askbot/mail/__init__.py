@@ -346,10 +346,8 @@ def process_emailed_question(
                     user = user,
                     reply_action = 'validate_email'
                 ).as_email_address()
-                raise PermissionDenied(
-                    messages.ask_for_signature(user, footer_code = reply_to),
-                    reply_to = reply_to
-                )
+                message = messages.ask_for_signature(user, footer_code = reply_to)
+                raise PermissionDenied(message)
 
             tagnames = form.cleaned_data['tagnames']
             title = form.cleaned_data['title']
