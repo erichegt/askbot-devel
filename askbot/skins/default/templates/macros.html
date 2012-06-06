@@ -263,6 +263,7 @@ poor design of the data or methods on data objects #}
             title="{% trans %}see questions tagged '{{ tag }}'{% endtrans %}"
             {% endif %}
             rel="tag"
+            data-tag-name="{{ tag|replace('*', '&#10045;')|escape }}"
         >{{ tag|replace('*', '&#10045;')|truncate(20,True)}}</{% if not is_link or tag[-1] == '*' %}span{% else %}a{% endif %}>
         {% if deletable %}
             <div class="delete-icon"

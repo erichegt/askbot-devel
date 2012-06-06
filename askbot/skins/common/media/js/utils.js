@@ -989,7 +989,9 @@ Tag.prototype.decorate = function(element){
         this._delete_icon.decorate(del);
     }
     this._inner_element = this._element.find('.tag');
-    this._name = this.decodeTagName($.trim(this._inner_element.html()));
+    this._name = this.decodeTagName(
+        $.trim(this._inner_element.attr('data-tag-name'))
+    );
     if (this._title !== null){
         this._inner_element.attr('title', this._title);
     }
