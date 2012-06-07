@@ -32,6 +32,12 @@ post_updated = django.dispatch.Signal(
                                             'newly_mentioned_users'
                                         ]
                             )
+post_revision_published = django.dispatch.Signal(
+                                providing_args = [
+                                    'revision',
+                                    'was_approved'
+                                ]
+                            )
 site_visited = django.dispatch.Signal(providing_args=['user', 'timestamp'])
 
 def pop_signal_receivers(signal):

@@ -888,8 +888,11 @@ SelectBoxItem.prototype.createDom = function() {
     elem.data('itemOriginalTitle', this._description);
 }
 
-SelectBoxItem.prototype.decorate = function() {
-    throw "not implemented";
+SelectBoxItem.prototype.decorate = function(element) {
+    this._element = element;
+    this._id = element.data('itemId');
+    this._name = element.html();
+    this._description = element.data('originalTitle');
 };
 
 /**
@@ -1015,10 +1018,12 @@ SelectBox.prototype.getSelectHandler = function(item) {
 SelectBox.prototype.decorate = function(element){
     this._element = element;
     var me = this;
-    var items = this._element.find('.select-box-item');
-    items.each(function(idx, item_element){
-        var item = this.createItem();
+    var box_items = this._items;
+    var item_elements = this._element.find('.select-box-item');
+    item_elements.each(function(idx, item_element){
+        var item = me.createItem();
         item.decorate($(item_element));
+        box_items.push(item);
         setupButtonEventHandlers(
             item.getElement(),
             me.getSelectHandler(item)
@@ -1112,7 +1117,9 @@ Tag.prototype.decorate = function(element){
         this._delete_icon.decorate(del);
     }
     this._inner_element = this._element.find('.tag');
-    this._name = this.decodeTagName($.trim(this._inner_element.html()));
+    this._name = this.decodeTagName(
+        $.trim(this._inner_element.attr('data-tag-name'))
+    );
     if (this._title !== null){
         this._inner_element.attr('title', this._title);
     }

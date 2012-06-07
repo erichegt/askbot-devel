@@ -66,7 +66,7 @@
                     <td><strong title="{{ view_user.last_seen }}">{{ macros.timeago(view_user.last_seen) }}</strong></td>
                 </tr>
                 {% endif %}
-                {% if view_user.website %}
+                {% if view_user.website and (not view_user.is_blocked()) %}
                 <tr>
                     <td>{% trans %}website{% endtrans %}</td>
                     <td>{{ macros.user_website_link(view_user, max_display_length = 30) }}</td>
@@ -95,7 +95,7 @@
         </td>
         <td width="380">
             <div class="user-about">
-            {% if view_user.about %}
+            {% if view_user.about and (not view_user.is_blocked()) %}
                 {{view_user.about|linebreaks}}
             {% endif %}
             </div>

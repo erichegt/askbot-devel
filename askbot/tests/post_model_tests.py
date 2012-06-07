@@ -344,7 +344,7 @@ class ThreadRenderLowLevelCachingTests(AskbotTestCase):
         # Make sure that title and body text are escaped properly.
         # This should be obvious at this point, if the above test passes, but why not be explicit
         # UPDATE: And voila, these tests catched double-escaping bug in template, where `&lt;` was `&amp;lt;`
-        #         And indeed, post.summary is escaped before saving, in parse_and_save_post()
+        #         And indeed, post.summary is escaped before saving, in parse_and_save()
         # UPDATE 2:Weird things happen with question summary (it's double escaped etc., really weird) so
         # let's just make sure that there are no tag placeholders left
         self.assertTrue('&lt;&lt;&lt;tag1&gt;&gt;&gt; fake title' in proper_html)

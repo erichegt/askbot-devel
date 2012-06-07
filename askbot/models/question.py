@@ -74,6 +74,7 @@ class ThreadManager(models.Manager):
                 by_email = False,
                 email_address = None
             ):
+        """creates new thread"""
         # TODO: Some of this code will go to Post.objects.create_new
 
         thread = super(
@@ -348,6 +349,20 @@ class ThreadManager(models.Manager):
         avatar_limit = askbot_settings.SIDEBAR_MAIN_AVATAR_LIMIT
         contributors = User.objects.filter(id__in=u_id).order_by('avatar_type', '?')[:avatar_limit]
         return contributors
+
+    def get_for_user(self, user):
+        """returns threads where a given user had participated"""
+        post_ids = PostRevision.objects.filter(
+                                        author = user
+                                    ).values_list(
+                                        'post_id', flat = True
+                                    ).distinct()
+        thread_ids = Post.objects.filter(
+                                        id__in = post_ids
+                                    ).values_list(
+                                        'thread_id', flat = True
+                                    ).distinct()
+        return self.filter(id__in = thread_ids)
 
 
 class Thread(models.Model):
@@ -772,6 +787,7 @@ class Thread(models.Model):
         return False
 
     def retag(self, retagged_by=None, retagged_at=None, tagnames=None, silent=False):
+        """changes thread tags"""
         if None in (retagged_by, retagged_at, tagnames):
             raise Exception('arguments retagged_at, retagged_by and tagnames are required')
 

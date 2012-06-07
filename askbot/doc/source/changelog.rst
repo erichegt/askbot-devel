@@ -5,6 +5,11 @@ Development version
 -------------------
 * Welcome email for the case when replying by email is enabled (Evgeny)
 * Detection of email signature based on the response to the welome email (Evgeny)
+* Hide "website" and "about" section of the blocked user profiles
+  to help prevent user profile spam (Evgeny)
+* Added a function to create a custom user profile tab,
+  the feature requires access to the server (Evgeny)
+* Added optional top banner to the question page (Evgeny)
 
 0.7.43 (May 14, 2012)
 ---------------------

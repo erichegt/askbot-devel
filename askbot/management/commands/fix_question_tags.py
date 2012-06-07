@@ -39,33 +39,33 @@ class Command(NoArgsCommand):
         transaction.commit()
 
         #go through questions and fix tag records on each
-        questions = models.Question.objects.all()
+        threads = models.Thread.objects.all()
         checked_count = 0
         found_count = 0
-        total_count = questions.count()
+        total_count = threads.count()
         print "Searching for questions with inconsistent tag records:",
-        for question in questions:
-            tags = question.thread.tags.all()
-            denorm_tag_set = set(question.get_tag_names())
-            norm_tag_set = set(question.thread.tags.values_list('name', flat=True))
+        for thread in threads:
+            tags = thread.tags.all()
+            denorm_tag_set = set(thread.get_tag_names())
+            norm_tag_set = set(thread.tags.values_list('name', flat=True))
             if norm_tag_set != denorm_tag_set:
 
-                if question.last_edited_by:
-                    user = question.last_edited_by
-                    timestamp = question.last_edited_at
+                if thread.last_edited_by:
+                    user = thread.last_edited_by
+                    timestamp = thread.last_edited_at
                 else:
-                    user = question.author
-                    timestamp = question.added_at
+                    user = thread.author
+                    timestamp = thread.added_at
 
-                tagnames = forms.TagNamesField().clean(question.tagnames)
+                tagnames = forms.TagNamesField().clean(thread.tagnames)
 
-                question.thread.update_tags(
+                thread.update_tags(
                     tagnames = tagnames,
                     user = user,
                     timestamp = timestamp
                 )
-                question.thread.tagnames = tagnames
-                question.thread.save()
+                thread.tagnames = tagnames
+                thread.save()
                 found_count += 1
 
             transaction.commit()

@@ -12,7 +12,7 @@ from askbot.conf import settings as askbot_settings
 from django.utils.datastructures import SortedDict
 from django.contrib.contenttypes.models import ContentType
 from askbot import const
-from askbot.utils import mail
+from askbot import mail
 from askbot.utils.slug import slugify
 
 DEBUG_THIS_COMMAND = False

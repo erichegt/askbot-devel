@@ -40,7 +40,7 @@ from askbot.utils.decorators import auto_now_timestamp
 from askbot.utils.slug import slugify
 from askbot.utils.diff import textDiff as htmldiff
 from askbot.utils.url_utils import strip_path
-from askbot.utils import mail
+from askbot import mail
 
 def get_model(model_name):
     """a shortcut for getting model for an askbot app"""
@@ -207,9 +207,12 @@ def user_update_avatar_type(self):
 
 def user_strip_email_signature(self, text):
     """strips email signature from the end of the text"""
+    if self.email_signature.strip() == '':
+        return text
+
     text = '\n'.join(text.splitlines())#normalize the line endings
-    if text.endswith(self.email_signature):
-        return text[0:-len(self.email_signature)]
+    while text.endswith(self.email_signature):
+        text = text[0:-len(self.email_signature)]
     return text
 
 def _check_gravatar(gravatar):
@@ -294,7 +297,7 @@ def user_can_have_strong_url(self):
     followed by the search engine crawlers"""
     return (self.reputation >= askbot_settings.MIN_REP_TO_HAVE_STRONG_URL)
 
-def user_can_reply_by_email(self):
+def user_can_post_by_email(self):
     """True, if reply by email is enabled 
     and user has sufficient reputatiton"""
     return askbot_settings.REPLY_BY_EMAIL and \
@@ -1249,6 +1252,11 @@ def user_delete_comment(
                     timestamp = None
                 ):
     self.assert_can_delete_comment(comment = comment)
+    #todo: we want to do this
+    #comment.deleted = True
+    #comment.deleted_by = self
+    #comment.deleted_at = timestamp
+    #comment.save()
     comment.delete()
     comment.thread.invalidate_cached_data()
 
@@ -1500,18 +1508,18 @@ def user_edit_post(self,
 
 @auto_now_timestamp
 def user_edit_question(
-                    self,
-                    question = None,
-                    title = None,
-                    body_text = None,
-                    revision_comment = None,
-                    tags = None,
-                    wiki = False,
-                    edit_anonymously = False,
-                    timestamp = None,
-                    force = False,#if True - bypass the assert
-                    by_email = False
-                ):
+                self,
+                question = None,
+                title = None,
+                body_text = None,
+                revision_comment = None,
+                tags = None,
+                wiki = False,
+                edit_anonymously = False,
+                timestamp = None,
+                force = False,#if True - bypass the assert
+                by_email = False
+            ):
     if force == False:
         self.assert_can_edit_question(question)
 
@@ -1869,6 +1877,14 @@ def user_set_status(self, new_status):
         #that permission, it will mostly be false.
         if self.is_administrator():
             self.remove_admin_status()
+
+    #when toggling between blocked and non-blocked status
+    #we need to invalidate question page caches, b/c they contain
+    #user's url, which must be hidden in the blocked state
+    if 'b' in (new_status, self.status) and new_status != self.status:
+        threads = Thread.objects.get_for_user(self)
+        for thread in threads:
+            thread.invalidate_cached_post_data()
 
     self.status = new_status
     self.save()
@@ -2283,11 +2299,17 @@ def user_approve_post_revision(user, post_revision, timestamp = None):
     post = post_revision.post
     post.approved = True
     post.save()
+
     if post_revision.post.post_type == 'question':
         thread = post.thread
         thread.approved = True
         thread.save()
     post.thread.invalidate_cached_data()
+
+    #send the signal of published revision
+    signals.post_revision_published.send(
+        None, revision = post_revision, was_approved = True
+    )
 
 @auto_now_timestamp
 def flag_post(user, post, timestamp=None, cancel=False, cancel_all = False, force = False):
@@ -2497,7 +2519,7 @@ User.add_to_class('is_following_question', user_is_following_question)
 User.add_to_class('mark_tags', user_mark_tags)
 User.add_to_class('update_response_counts', user_update_response_counts)
 User.add_to_class('can_have_strong_url', user_can_have_strong_url)
-User.add_to_class('can_reply_by_email', user_can_reply_by_email)
+User.add_to_class('can_post_by_email', user_can_post_by_email)
 User.add_to_class('can_post_comment', user_can_post_comment)
 User.add_to_class('is_administrator', user_is_administrator)
 User.add_to_class('is_administrator_or_moderator', user_is_administrator_or_moderator)
@@ -2569,12 +2591,13 @@ User.add_to_class(
     user_assert_can_approve_post_revision
 )
 
-#todo: move this to askbot/utils ??
+#todo: move this to askbot/mail ?
 def format_instant_notification_email(
                                         to_user = None,
                                         from_user = None,
                                         post = None,
-                                        reply_with_comment_address = None,
+                                        reply_address = None,
+                                        alt_reply_address = None,
                                         update_type = None,
                                         template = None,
                                     ):
@@ -2621,16 +2644,16 @@ def format_instant_notification_email(
         revisions = post.revisions.all()[:2]
         assert(len(revisions) == 2)
         content_preview = htmldiff(
-                            revisions[1].html,
-                            revisions[0].html,
-                            ins_start = '<b><u style="background-color:#cfc">',
-                            ins_end = '</u></b>',
-                            del_start = '<del style="color:#600;background-color:#fcc">',
-                            del_end = '</del>'
-                        )
+                revisions[1].html,
+                revisions[0].html,
+                ins_start = '<b><u style="background-color:#cfc">',
+                ins_end = '</u></b>',
+                del_start = '<del style="color:#600;background-color:#fcc">',
+                del_end = '</del>'
+            )
         #todo: remove hardcoded style
     else:
-        content_preview = post.format_for_email()
+        content_preview = post.format_for_email(is_leaf_post = True)
 
     #add indented summaries for the parent posts
     content_preview += post.format_for_email_as_parent_thread_summary()
@@ -2664,16 +2687,21 @@ def format_instant_notification_email(
         'post_link': '<a href="%s">%s</a>' % (post_url, _(post.post_type))
     }
 
-    can_reply = to_user.can_reply_by_email()
+    can_reply = to_user.can_post_by_email()
 
     if can_reply:
-        reply_separator = const.REPLY_SEPARATOR_TEMPLATE % {
-                        'user_action': user_action,
-                        'instruction': _('To reply, PLEASE WRITE ABOVE THIS LINE.')
-                    }
-        if post.post_type == 'question' and reply_with_comment_address:
-            data = {'addr': reply_with_comment_address}
-            reply_separator += '<br>' + const.REPLY_WITH_COMMENT_TEMPLATE % data
+        reply_separator = const.SIMPLE_REPLY_SEPARATOR_TEMPLATE % \
+                    _('To reply, PLEASE WRITE ABOVE THIS LINE.')
+        if post.post_type == 'question' and alt_reply_address:
+            data = {
+                'addr': alt_reply_address,
+                'subject': urllib.quote(
+                        ('Re: ' + post.thread.title).encode('utf-8')
+                    )
+            }
+            reply_separator += '<p>' + \
+                const.REPLY_WITH_COMMENT_TEMPLATE % data
+            reply_separator += '</p>'
     else:
         reply_separator = user_action
                     
@@ -2691,7 +2719,56 @@ def format_instant_notification_email(
         'reply_separator': reply_separator
     }
     subject_line = _('"%(title)s"') % {'title': origin_post.thread.title}
-    return subject_line, template.render(Context(update_data))
+
+    content = template.render(Context(update_data))
+    if can_reply:
+        content += '<p style="font-size:8px;color:#aaa">' + \
+                    reply_address + '</p>'
+
+    return subject_line, content
+
+def get_reply_to_addresses(user, post):
+    """Returns one or two email addresses that can be
+    used by a given `user` to reply to the `post`
+    the first address - always a real email address,
+    the second address is not ``None`` only for "question" posts.
+
+    When the user is notified of a new question - 
+    i.e. `post` is a "quesiton", he/she
+    will need to choose - whether to give a question or a comment,
+    thus we return the second address - for the comment reply.
+
+    When the post is a "question", the first email address
+    is for posting an "answer", and when post is either
+    "comment" or "answer", the address will be for posting
+    a "comment".
+    """
+    #these variables will contain return values
+    primary_addr = django_settings.DEFAULT_FROM_EMAIL
+    secondary_addr = None
+    if user.can_post_by_email():
+        if user.reputation >= askbot_settings.MIN_REP_TO_POST_BY_EMAIL:
+
+            reply_args = {
+                'post': post,
+                'user': user,
+                'reply_action': 'post_comment'
+            }
+            if post.post_type in ('answer', 'comment'):
+                reply_args['reply_action'] = 'post_comment'
+            elif post.post_type == 'question':
+                reply_args['reply_action'] = 'post_answer'
+
+            primary_addr = ReplyAddress.objects.create_new(
+                                                    **reply_args
+                                                ).as_email_address()
+
+            if post.post_type == 'question':
+                reply_args['reply_action'] = 'post_comment'
+                secondary_addr = ReplyAddress.objects.create_new(
+                                                    **reply_args
+                                                ).as_email_address()
+    return primary_addr, secondary_addr
 
 #todo: action
 def send_instant_notifications_about_activity_in_post(
@@ -2715,52 +2792,31 @@ def send_instant_notifications_about_activity_in_post(
     if update_activity.activity_type not in acceptable_types:
         return
 
+    #calculate some variables used in the loop below
     from askbot.skins.loaders import get_template
     update_type_map = const.RESPONSE_ACTIVITY_TYPE_MAP_FOR_TEMPLATES
     update_type = update_type_map[update_activity.activity_type]
-
     origin_post = post.get_origin_post()
-    for user in recipients:
-      
-        #todo: this could be packaged as an "action" - a bundle
-        #of executive function with the activity log recording
-        #TODO check user reputation
-        headers = mail.thread_headers(post, origin_post, update_activity.activity_type)
-        reply_with_comment_address = None#only used for questions in some cases
-        if askbot_settings.REPLY_BY_EMAIL:
-            reply_addr = "noreply"
-            if user.reputation >= askbot_settings.MIN_REP_TO_POST_BY_EMAIL:
-
-                reply_args = {
-                    'post': post,
-                    'user': user,
-                    'reply_action': 'post_comment'
-                }
-                if post.post_type in ('answer', 'comment'):
-                    reply_addr = ReplyAddress.objects.create_new(**reply_args)
-                elif post.post_type == 'question':
-                    reply_with_comment_address = ReplyAddress.objects.create_new(**reply_args)
-                    #default action is to post answer
-                    reply_args['reply_action'] = 'post_answer'
-                    reply_addr = ReplyAddress.objects.create_new(**reply_args)
-
-            reply_to = 'reply-%s@%s' % (
-                            reply_addr,
-                            askbot_settings.REPLY_BY_EMAIL_HOSTNAME
+    headers = mail.thread_headers(
+                            post,
+                            origin_post,
+                            update_activity.activity_type
                         )
-            headers.update({'Reply-To': reply_to})
-        else:
-            reply_to = django_settings.DEFAULT_FROM_EMAIL
+    #send email for all recipients
+    for user in recipients:
+        reply_address, alt_reply_address = get_reply_to_addresses(user, post)
 
         subject_line, body_text = format_instant_notification_email(
                             to_user = user,
                             from_user = update_activity.user,
                             post = post,
-                            reply_with_comment_address = reply_with_comment_address,
+                            reply_address = reply_address,
+                            alt_reply_address = alt_reply_address,
                             update_type = update_type,
                             template = get_template('instant_notification.html')
                         )
       
+        headers['Reply-To'] = reply_address
         mail.send_mail(
             subject_line = subject_line,
             body_text = body_text,
@@ -2769,6 +2825,18 @@ def send_instant_notifications_about_activity_in_post(
             activity_type = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT,
             headers = headers
         )
+
+def notify_author_of_published_revision(
+    revision = None, was_approved = None, **kwargs
+):
+    """notifies author about approved post revision,
+    assumes that we have the very first revision
+    """
+    #only email about first revision
+    if revision.should_notify_author_about_publishing(was_approved):
+        from askbot.tasks import notify_author_of_published_revision_celery_task
+        notify_author_of_published_revision_celery_task.delay(revision)
+    
 
 #todo: move to utils
 def calculate_gravatar_hash(instance, **kwargs):
@@ -2815,14 +2883,6 @@ def record_post_update_activity(
         created = created,
         diff = diff,
     )
-    #non-celery version
-    #tasks.record_post_update(
-    #    post = post,
-    #    newly_mentioned_users = newly_mentioned_users,
-    #    updated_by = updated_by,
-    #    timestamp = timestamp,
-    #    created = created,
-    #)
 
 
 def record_award_event(instance, created, **kwargs):
@@ -3167,22 +3227,10 @@ def make_admin_if_first_user(instance, **kwargs):
         instance.set_admin_status()
     cache.cache.set('admin-created', True)
 
-def place_post_revision_on_moderation_queue(instance, **kwargs):
-    """`instance` is post revision, because we must
-    be able to moderate all the revisions, if necessary,
-    in order to avoid people getting the post past the moderation
-    then make some evil edit.
-    """
-    if instance.needs_moderation():
-        instance.place_on_moderation_queue()
 
 #signal for User model save changes
 django_signals.pre_save.connect(make_admin_if_first_user, sender=User)
 django_signals.pre_save.connect(calculate_gravatar_hash, sender=User)
-django_signals.post_save.connect(
-    place_post_revision_on_moderation_queue,
-    sender=PostRevision
-)
 django_signals.post_save.connect(add_missing_subscriptions, sender=User)
 django_signals.post_save.connect(record_award_event, sender=Award)
 django_signals.post_save.connect(notify_award_message, sender=Award)
@@ -3207,6 +3255,10 @@ signals.user_updated.connect(record_user_full_updated, sender=User)
 signals.user_logged_in.connect(complete_pending_tag_subscriptions)#todo: add this to fake onlogin middleware
 signals.user_logged_in.connect(post_anonymous_askbot_content)
 signals.post_updated.connect(record_post_update_activity)
+
+#probably we cannot use post-save here the point of this is
+#to tell when the revision becomes publicly visible, not when it is saved
+signals.post_revision_published.connect(notify_author_of_published_revision)
 signals.site_visited.connect(record_user_visit)
 
 #set up a possibility for the users to follow others

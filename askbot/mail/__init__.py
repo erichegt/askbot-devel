@@ -10,6 +10,7 @@ from django.core.exceptions import PermissionDenied
 from django.forms import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import string_concat
+from django.template import Context
 from askbot import exceptions
 from askbot import const
 from askbot.conf import settings as askbot_settings
@@ -164,7 +165,9 @@ TAGS_INSTRUCTION_FOOTNOTE = _(
 the tags, use a semicolon or a comma, for example, [One tag; Other tag]</p>"""
 )
 
-def bounce_email(email, subject, reason = None, body_text = None):
+def bounce_email(
+    email, subject, reason = None, body_text = None, reply_to = None
+):
     """sends a bounce email at address ``email``, with the subject
     line ``subject``, accepts several reasons for the bounce:
     * ``'problem_posting'``, ``unknown_user`` and ``permission_denied``
@@ -206,25 +209,30 @@ def bounce_email(email, subject, reason = None, body_text = None):
             'site': askbot_settings.APP_SHORT_NAME,
             'url': url_utils.get_login_url()
         }
-    elif reason == 'permission_denied':
+    elif reason == 'permission_denied' and body_text is None:
         error_message = _(
             '<p>Sorry, your question could not be posted '
             'due to insufficient privileges of your user account</p>'
         )
+    elif body_text:
+        error_message = body_text
     else:
         raise ValueError('unknown reason to bounce an email: "%s"' % reason)
 
-    if body_text != None:
-        error_message = string_concat(error_message, body_text)
 
     #print 'sending email'
     #print email
     #print subject
     #print error_message
+    headers = {}
+    if reply_to:
+        headers['Reply-To'] = reply_to
+        
     send_mail(
         recipient_list = (email,),
         subject_line = 'Re: ' + subject,
-        body_text = error_message
+        body_text = error_message,
+        headers = headers
     )
 
 def extract_reply(text):
@@ -250,7 +258,29 @@ def process_attachment(attachment):
         markdown_link = '!' + markdown_link
     return markdown_link, file_storage
 
-def process_parts(parts):
+def extract_user_signature(text, reply_code):
+    """extracts email signature as text trailing
+    the reply code"""
+    if reply_code in text:
+        #extract the signature
+        tail = list()
+        for line in reversed(text.splitlines()):
+            #scan backwards from the end until the magic line
+            if reply_code in line:
+                break
+            tail.insert(0, line)
+
+        #strip off the leading quoted lines, there could be one or two
+        #also strip empty lines
+        while tail and (tail[0].startswith('>') or tail[0].strip() == ''):
+            tail.pop(0)
+
+        return '\n'.join(tail)
+    else:
+        return ''
+
+
+def process_parts(parts, reply_code = None):
     """Process parts will upload the attachments and parse out the
     body, if body is multipart. Secondly - links to attachments
     will be added to the body of the question.
@@ -266,7 +296,7 @@ def process_parts(parts):
             stored_files.append(stored_file)
             attachments_markdown += '\n\n' + markdown
         elif part_type == 'body':
-            body_markdown += '\n\n' + content
+            body_markdown += '\n\n' + content.strip('\n\t ')
         elif part_type == 'inline':
             markdown, stored_file = process_attachment(content)
             stored_files.append(stored_file)
@@ -274,25 +304,32 @@ def process_parts(parts):
 
     #if the response separator is present - 
     #split the body with it, and discard the "so and so wrote:" part
+    if reply_code:
+        signature = extract_user_signature(body_markdown, reply_code)
+    else:
+        signature = None
     body_markdown = extract_reply(body_markdown)
 
     body_markdown += attachments_markdown
-    return body_markdown.strip(), stored_files
+    return body_markdown.strip(), stored_files, signature
 
 
-def process_emailed_question(from_address, subject, parts, tags = None):
+def process_emailed_question(
+    from_address, subject, body_text, stored_files, tags = None
+):
     """posts question received by email or bounces the message"""
     #a bunch of imports here, to avoid potential circular import issues
     from askbot.forms import AskByEmailForm
-    from askbot.models import User
+    from askbot.models import ReplyAddress, User
+    from askbot.mail import messages
 
+    reply_to = None
     try:
         #todo: delete uploaded files when posting by email fails!!!
-        body, stored_files = process_parts(parts)
         data = {
             'sender': from_address,
             'subject': subject,
-            'body_text': body
+            'body_text': body_text
         }
         form = AskByEmailForm(data)
         if form.is_valid():
@@ -301,8 +338,16 @@ def process_emailed_question(from_address, subject, parts, tags = None):
                         email__iexact = email_address
                     )
 
+            if user.can_post_by_email() == False:
+                raise PermissionDenied(messages.insufficient_reputation(user))
+
             if user.email_isvalid == False:
-                raise PermissionDenied('Lacking email signature')
+                reply_to = ReplyAddress.objects.create_new(
+                    user = user,
+                    reply_action = 'validate_email'
+                ).as_email_address()
+                message = messages.ask_for_signature(user, footer_code = reply_to)
+                raise PermissionDenied(message)
 
             tagnames = form.cleaned_data['tagnames']
             title = form.cleaned_data['title']
@@ -336,7 +381,8 @@ def process_emailed_question(from_address, subject, parts, tags = None):
             email_address,
             subject,
             reason = 'permission_denied',
-            body_text = unicode(error)
+            body_text = unicode(error),
+            reply_to = reply_to
         )
     except ValidationError:
         if from_address:

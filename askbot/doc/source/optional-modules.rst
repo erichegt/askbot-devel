@@ -124,6 +124,49 @@ Also, settings ``MEDIA_ROOT`` and ``MEDIA_URL`` will need to be added to your ``
     be up to date, so please take the development version from the 
     github repository
 
+Custom section in the user profile
+==================================
+Sometimes you might want to add a completely custom section
+to the user profile, available via an additional tab.
+
+This is possible by editing the ``settings.py`` file,
+which means that to use this feature you must have sufficient 
+access to the webserver file system.
+
+Add a following setting to your ``settings.py``::
+
+    ASKBOT_CUSTOM_USER_PROFILE_TAB = {
+        'NAME': 'some name',
+        'SLUG': 'some-name',
+        'CONTENT_GENERATOR': 'myapp.views.somefunc'
+    }
+
+The value of ``ASKBOT_CUSTOM_USER_PROFILE_TAB['CONTENT_GENERATOR']``
+should be a path to the function that returns the widget content
+as string.
+
+Here is a simple example of the content generator 
+implemented as part of the fictional application called ``myapp``::
+
+    from myapp.models import Thing#definition not shown here
+    from django.template.loader import get_template
+    from django.template import Context
+
+    def somefunc(request, profile_owner):
+        """loads things for the ``profile_owner``
+        and returns output rendered as html string
+        """
+        template = get_template('mytemplate.html')
+        things = Thing.objects.filter(user = profile_owner)
+        return template.render(Context({'things': things}))
+
+The function is very similar to the regular
+Django view, but returns a string instead of the ``HttpResponse``
+instance.
+
+Also, the method must accept one additional argument -
+an instance of the ``django.contrib.auth.models.User`` object.
+
 Wordpress Integration 
 =====================
 
@@ -183,7 +226,7 @@ The minimum settings required to enable this feature are defining the port and b
 
     LAMSON_RECEIVER_CONFIG = {'host': 'your.ip.address', 'port': 25}
     
-    LAMSON_HANDLERS = ['askbot.lamson_handlers']
+    LAMSON_HANDLERS = ['askbot.mail.lamson_handlers']
     
     LAMSON_ROUTER_DEFAULTS = {'host': '.+'}
 

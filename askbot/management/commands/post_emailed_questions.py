@@ -22,7 +22,7 @@ import base64
 from django.conf import settings as django_settings
 from django.core.management.base import NoArgsCommand, CommandError
 from askbot.conf import settings as askbot_settings
-from askbot.utils import mail
+from askbot import mail
 
 class CannotParseEmail(Exception):
     """This exception will bounce the email"""

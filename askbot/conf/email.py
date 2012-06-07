@@ -274,8 +274,6 @@ settings.register(
     )
 )
 
-
-
 settings.register(
      livesettings.BooleanValue(
          EMAIL,
@@ -291,6 +289,31 @@ settings.register(
 )
 
 settings.register(
+    livesettings.StringValue(
+        EMAIL,
+        'SELF_NOTIFY_EMAILED_POST_AUTHOR_WHEN',
+        description = _(
+            'Emailed post: when to notify author about publishing'
+        ),
+        choices = const.SELF_NOTIFY_EMAILED_POST_AUTHOR_WHEN_CHOICES,
+        default = const.NEVER
+    )
+)
+
+#not implemented at this point
+#settings.register(
+#    livesettings.IntegerValue(
+#        EMAIL,
+#        'SELF_NOTIFY_WEB_POST_AUTHOR_WHEN',
+#        description = _(
+#            'Web post: when to notify author about publishing'
+#        ),
+#        choices = const.SELF_NOTIFY_WEB_POST_AUTHOR_WHEN_CHOICES,
+#        default =  const.NEVER
+#    )
+#)
+
+settings.register(
      livesettings.StringValue(
          EMAIL,
         'REPLY_BY_EMAIL_HOSTNAME',
@@ -301,8 +324,6 @@ settings.register(
     )
 )
 
-
-
 settings.register(
     livesettings.IntegerValue(
         EMAIL,
@@ -311,4 +332,3 @@ settings.register(
         description=_('Email replies having fewer words than this number will be posted as comments instead of answers')
     )
 )
-

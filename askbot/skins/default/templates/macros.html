@@ -200,7 +200,8 @@ poor design of the data or methods on data objects #}
         search_state = None,
         css_class = None,
         tag_css_class = None,
-        tag_html_tag = 'li'
+        tag_html_tag = 'li',
+        truncate_long_tags = False
     )
 -%}
 <ul {% if id %}id="{{ id }}"{% endif %}
@@ -214,7 +215,8 @@ poor design of the data or methods on data objects #}
                 deletable = deletable,
                 is_link = make_links,
                 search_state = search_state,
-                html_tag = tag_html_tag 
+                html_tag = tag_html_tag,
+                truncate_long_tag = False
             )}}
         {% endfor %}
     {% endif %}
@@ -276,7 +278,8 @@ poor design of the data or methods on data objects #}
             css_class = None,
             search_state = None,
             html_tag = 'div',
-            extra_content = ''
+            extra_content = '',
+            truncate_long_tag = False
         )
 -%}
   {% if not search_state %}  {#  get empty SearchState() if there's none; CAUTION: for some reason this doesn't work inside `spaceless` tag below! #}
@@ -291,7 +294,12 @@ poor design of the data or methods on data objects #}
             title="{% trans %}see questions tagged '{{ tag }}'{% endtrans %}"
             {% endif %}
             rel="tag"
-        >{{ tag|replace('*', '&#10045;')|truncate(20,True)}}</{% if not is_link or tag[-1] == '*' %}span{% else %}a{% endif %}>
+            data-tag-name="{{ tag|replace('*', '&#10045;')|escape }}"
+        >{% if truncate_long_tag -%}
+            {{ tag|replace('*', '&#10045;')|truncate(17, True) }}
+        {%- else -%}
+            {{ tag|replace('*', '&#10045;') }}
+        {%- endif %}</{% if not is_link or tag[-1] == '*' %}span{% else %}a{% endif %}>
         {% if deletable %}
             <div class="delete-icon"
                 {% if delete_link_title %}
@@ -608,7 +616,7 @@ answer {% if answer.accepted() %}accepted-answer{% endif %} {% if answer.author_
 {%- endmacro -%}
 
 {%- macro user_website_link(user, max_display_length=25) -%}
-    {% if user.website %}
+    {% if user.website and (not user.is_blocked()) %}
         <a 
             href="{{user.website}}"
             title="{% trans username=user.username|escape, url=user.website %}{{username}}'s website is {{url}}{% endtrans %}"
