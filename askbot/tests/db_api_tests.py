@@ -15,6 +15,9 @@ from askbot.conf import settings as askbot_settings
 import datetime
 
 class DBApiTests(AskbotTestCase):
+    """tests methods on User object,
+    that were added for askbot
+    """
 
     def setUp(self):
         self.create_user()
@@ -161,7 +164,8 @@ class DBApiTests(AskbotTestCase):
         matches = models.Post.objects.get_questions().get_by_text_query("database'")
         self.assertTrue(len(matches) == 1)
 
-class UserLikeTests(AskbotTestCase):
+class UserLikeTagTests(AskbotTestCase):
+    """tests for user liking and disliking tags"""
     def setUp(self):
         self.create_user()
         self.question = self.post_question(tags = 'one two three')
@@ -387,3 +391,14 @@ class CommentTests(AskbotTestCase):
         self.other_user.upvote(comment, cancel = True)
         comment = models.Post.objects.get_comments().get(id = self.comment.id)
         self.assertEquals(comment.score, 0)
+
+class TagAndGroupTests(AskbotTestCase):
+    def setUp(self):
+        self.u1 = self.create_user('u1')
+        
+    def test_group_cannot_create_case_variant_tag(self):
+        self.post_question(user = self.u1, tags = 'one two three')
+        models.Tag.group_tags.get_or_create(user = self.u1, group_name = 'One')
+        tag_one = models.Tag.objects.filter(name__iexact = 'one')
+        self.assertEqual(tag_one.count(), 1)
+        self.assertEqual(tag_one[0].name, 'one')

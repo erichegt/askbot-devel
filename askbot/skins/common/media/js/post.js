@@ -1062,10 +1062,11 @@ var questionRetagger = function(){
         var tags_str = '';
         links.each(function(index, element){
             if (index === 0){
-                tags_str = $(element).html();
+                //this is pretty bad - we should use Tag.getName()
+                tags_str = $(element).attr('data-tag-name');
             }
             else {
-                tags_str += ' ' + $(element).html();
+                tags_str += ' ' + $(element).attr('data-tag-name');
             }
         });
         return tags_str;

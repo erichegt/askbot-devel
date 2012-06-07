@@ -7,11 +7,11 @@ from django.db.models import signals, Count
 from askbot import models
 from askbot import const
 
-def fix_revisionless_posts(post_class, post_name):
+def fix_revisionless_posts(post_class):
         posts = post_class.objects.annotate(
                                         rev_count = Count('revisions')
                                     ).filter(rev_count = 0)
-        print 'have %d corrupted %ss' % (len(posts), post_name)
+        print 'have %d corrupted posts' % len(posts)
         for post in posts:
             post.add_revision(
                         author = post.author,
@@ -39,5 +39,4 @@ class Command(NoArgsCommand):
         """function that handles the command job
         """
         self.remove_save_signals()
-        fix_revisionless_posts(models.Question, 'question')
-        fix_revisionless_posts(models.Answer, 'answer')
+        fix_revisionless_posts(models.Post)

@@ -485,6 +485,9 @@ def get_tag_list(request):
 @decorators.get_only
 def load_tag_wiki_text(request):
     """returns text of the tag wiki in markdown format"""
+    if 'tag_id' not in request.GET:
+        return HttpResponse('', status = 400)#bad request
+
     tag = get_object_or_404(models.Tag, id = request.GET['tag_id'])
     tag_wiki_text = getattr(tag.tag_wiki, 'text', '').strip()
     return HttpResponse(tag_wiki_text, mimetype = 'text/plain')
