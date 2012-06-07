@@ -2409,6 +2409,11 @@ TagEditor.prototype.addSelectedTag = function(tag_name) {
     $('.acResults').hide();//a hack to hide the autocompleter
 };
 
+TagEditor.prototype.isSelectedTagName = function(tag_name) {
+    var tag_names = this.getSelectedTags();
+    return $.inArray(tag_name, tag_names) != -1;
+};
+
 TagEditor.prototype.removeSelectedTag = function(tag_name) {
     var tag_names = this.getSelectedTags();
     var idx = $.inArray(tag_name, tag_names);
@@ -2429,7 +2434,7 @@ TagEditor.prototype.getTagDeleteHandler = function(tag){
     };
 };
 
-TagEditor.prototype.cleanTag = function(tag_name) {
+TagEditor.prototype.cleanTag = function(tag_name, reject_dupe) {
     tag_name = $.trim(tag_name);
     tag_name = tag_name.replace(/\s+/, ' ');
 
@@ -2438,9 +2443,9 @@ TagEditor.prototype.cleanTag = function(tag_name) {
         tag_name = tag_name.toLowerCase();
     }
 
-    if ($.inArray(tag_name, this.getSelectedTags()) !== -1) {
+    if (reject_dupe && this.isSelectedTagName(tag_name)) {
         throw interpolate(
-            gettext('tag "%s" was already added, no need to repeat'),
+            gettext('tag "%s" was already added, no need to repeat (press "escape" to delete)'),
             [tag_name]
         );
     }
@@ -2491,10 +2496,21 @@ TagEditor.prototype.addTag = function(tag_name) {
     this.addSelectedTag(tag_name);
 };
 
-TagEditor.prototype.clearErrorMessage = function() {
+TagEditor.prototype.immediateClearErrorMessage = function() {
     this._error_alert.html('');
-    //this._error_alert.fadeOut();
+    this._error_alert.show();
     this._element.css('margin-top', '18px');//todo: the margin thing is a hack
+}
+
+TagEditor.prototype.clearErrorMessage = function(fade) {
+    if (fade) {
+        var me = this;
+        this._error_alert.fadeOut(function(){
+            me.immediateClearErrorMessage();
+        });
+    } else {
+        this.immediateClearErrorMessage();
+    }
 };
 
 TagEditor.prototype.setErrorMessage = function(text) {
@@ -2510,6 +2526,9 @@ TagEditor.prototype.setErrorMessage = function(text) {
 TagEditor.prototype.getAddTagHandler = function() {
     var me = this;
     return function(tag_name) {
+        if (me.isSelectedTagName(tag_name)) {
+            return;
+        }
         try {
             var clean_tag_name = me.cleanTag($.trim(tag_name));
             me.addTag(clean_tag_name);
@@ -2517,6 +2536,9 @@ TagEditor.prototype.getAddTagHandler = function() {
             me.fixHeight();
         } catch (error) {
             me.setErrorMessage(error);
+            setTimeout(function(){
+                me.clearErrorMessage(true);
+            }, 1000);
         }
     };
 };
@@ -2550,10 +2572,10 @@ TagEditor.prototype.hasHotBackspace = function() {
     return this._has_hot_backspace;
 };
 
-TagEditor.prototype.completeTagInput = function() {
+TagEditor.prototype.completeTagInput = function(reject_dupe) {
     var tag_name = $.trim(this._visible_tags_input.val());
     try {
-        tag_name = this.cleanTag(tag_name);
+        tag_name = this.cleanTag(tag_name, reject_dupe);
         this.addTag(tag_name);
         this.clearNewTagInput();
     } catch (error) {
@@ -2601,7 +2623,7 @@ TagEditor.prototype.getTagInputKeyHandler = function() {
         if (key == 32 || key == 13) {
             var tag_name = $.trim(text);
             if (tag_name.length > 0) {
-                me.completeTagInput();
+                me.completeTagInput(true);//true for reject dupes
             }
             me.fixHeight();
             return false;
@@ -2669,7 +2691,11 @@ TagEditor.prototype.decorate = function(element) {
     var tagsAc = new AutoCompleter({
         url: askbot['urls']['get_tag_list'],
         onItemSelect: function(){
-            me.completeTagInput();
+            if (me.isSelectedTagName(item['value']) === false) {
+                me.completeTagInput();
+            } else {
+                me.clearNewTagInput();
+            }
         },
         preloadData: true,
         minChars: 1,

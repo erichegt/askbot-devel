@@ -826,14 +826,91 @@ TwoStateToggle.prototype.decorate = function(element){
 };
 
 /**
+ * @constructor
+ * an item used for the select box described below
+ */
+var SelectBoxItem = function() {
+    WrappedElement.call(this);
+    this._id = null;
+    this._name = null;
+    this._description = null;
+};
+inherits(SelectBoxItem, WrappedElement);
+
+SelectBoxItem.prototype.setId = function(id) {
+    this._id = id;
+    if (this._element) {
+        this._element.data('itemId', id);
+    }
+};
+
+SelectBoxItem.prototype.setName = function(name) {
+    this._name = name;
+    if (this._element) {
+        this._element.html(name);
+    }
+};
+
+SelectBoxItem.prototype.setDescription = function(description) {
+    this._description = description;
+    if (this._element) {
+        this._element.data('originalTitle');
+    }
+};
+
+SelectBoxItem.prototype.getData = function () {
+    //todo: stuck using old key names, change after merge
+    //with the user-groups branch
+    return {
+        id: this._id,
+        title: this._name,
+        details: this._description
+    };
+};
+
+SelectBoxItem.prototype.isSelected = function() {
+    return this._element.hasClass('selected');
+};
+
+SelectBoxItem.prototype.setSelected = function(is_selected) {
+    if (is_selected) {
+        this._element.addClass('selected');
+    } else {
+        this._element.removeClass('selected');
+    }
+}
+
+SelectBoxItem.prototype.createDom = function() {
+    var elem = this.makeElement('li');
+    this._element = elem;
+    elem.html(this._name);
+    elem.data('itemId', this._id);
+    elem.data('itemOriginalTitle', this._description);
+}
+
+SelectBoxItem.prototype.decorate = function() {
+    throw "not implemented";
+};
+
+/**
  * A list of items from where one can be selected
  */
 var SelectBox = function(){
     WrappedElement.call(this);
     this._items = [];
     this._select_handler = function(){};//empty default
+    this._is_editable = false;
+    this._item_class = SelectBoxItem;
 };
 inherits(SelectBox, WrappedElement);
+
+SelectBox.prototype.setEditable = function(is_editable) {
+    this._is_editable = is_editable;
+};
+
+SelectBox.prototype.isEditable = function() {
+    return this._is_editable;
+};
 
 SelectBox.prototype.removeItem = function(id){
     var item = this.getItem(id);
@@ -842,64 +919,84 @@ SelectBox.prototype.removeItem = function(id){
 };
 
 SelectBox.prototype.removeAllItems = function() {
-    $(this._element.find('li')).remove();
+    $.each(this._items, function(idx, item) {
+        item.dispose();
+    });
 };
 
 SelectBox.prototype.getItem = function(id){
-    return $(this._element.find('li[data-item-id="' + id + '"]'));
+    return this._items[id];
 };
 
 SelectBox.prototype.setItemClass = function(id, css_class) {
-    this.getItem(id).addClass(css_class);
+    this.getItem(id).getElement().addClass(css_class);
 };
 
-/** @todo: rename to setItem?? have a problem when id's are all say 0 */
-SelectBox.prototype.addItem = function(id, title, details){
-    /*this._items.push({
-        id: id,
-        title: title,
-        details: details
-    });*/
-    if (this._element){
-        var li = this.getItem(id);
-        var new_li = false;
-        if (li.length !== 1){
-            li = this.makeElement('li');
-            new_li = true;
-            this._element.append(li);
-        }
-        li.attr('data-item-id', id)
-            .attr('data-original-title', details)
-            .html(title);
-        this.selectItem($(li));
-        var me = this;
-        setupButtonEventHandlers(
-            $(li),
-            me.getSelectHandler($(li))
-        );
+SelectBox.prototype.deleteItem = function(id) {
+    var item = this.getItem(id);
+    if (item !== undefined) {
+        item.dispose();
+        this._items[id] = null;
     }
 };
 
-SelectBox.prototype.getSelectedItemData = function(){
-    var item = $(this._element.find('li.selected')[0]);
-    if (item.length === 0) {
-        return null;
+SelectBox.prototype.createItem = function() {
+    return new this._item_class();
+};
+
+/** @todo: rename to setItem?? have a problem when id's are all say 0 */
+SelectBox.prototype.addItem = function(id, name, description){
+
+    if (this.hasElement() === false) {
+        return;
+    }
+    //delete old item
+    this.deleteItem(id);
+    //create new item
+    var item = this.createItem();
+    item.setId(id);
+    item.setName(name);
+    item.setDescription(description);
+    //add item to the SelectBox
+    this._items[id] = item;
+    this._element.append(item.getElement());
+    this.selectItem(item);
+    //set event handler
+    var me = this;
+    setupButtonEventHandlers(
+        item.getElement(),
+        me.getSelectHandler(item)
+    );
+};
+
+SelectBox.prototype.getSelectedItem = function() {
+    for (var i = 0; i < this._items.length; i++) {
+        var item = this._items[i];
+        if (item.isSelected()) {
+            return item;
+        }
+    }
+    return undefined;
+};
+
+SelectBox.prototype.getSelectedItemData = function() {
+    var item = this.getSelectedItem();
+    if (item) {
+        return item.getData() || undefined;
     } else {
-        return {
-            id: item.attr('data-item-id'),
-            title: item.html(),
-            details: item.attr('data-original-title')
-        };
+        return undefined;
     }
 };
 
 SelectBox.prototype.selectItem = function(item){
     this.clearSelection();
-    item.addClass('selected');
+    item.setSelected(true);
 };
 
 SelectBox.prototype.clearSelection = function(){
-    this._element.find('li').removeClass('selected');
+    $.each(this._items, function(idx, item) {
+        item.setSelected(false);
+    });
 };
 
 SelectBox.prototype.setSelectHandler = function(handler) {
@@ -911,18 +1008,20 @@ SelectBox.prototype.getSelectHandler = function(item) {
     var handler = this._select_handler;
     return function(){
         me.selectItem(item);
-        var data = me.getSelectedItemData();
-        handler(data);
+        handler(item.getData());
     };
 };
 
 SelectBox.prototype.decorate = function(element){
     this._element = element;
     var me = this;
-    this._element.find('li').each(function(itx, item){
+    var items = this._element.find('.select-box-item');
+    items.each(function(idx, item_element){
+        var item = this.createItem();
+        item.decorate($(item_element));
         setupButtonEventHandlers(
-            $(item),
-            me.getSelectHandler($(item))
+            item.getElement(),
+            me.getSelectHandler(item)
         );
     });
 };
