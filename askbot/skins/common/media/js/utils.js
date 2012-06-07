@@ -858,6 +858,10 @@ SelectBoxItem.prototype.setDescription = function(description) {
     }
 };
 
+SelectBoxItem.prototype.getId = function() {
+    return this._id;
+};
+
 SelectBoxItem.prototype.getData = function () {
     //todo: stuck using old key names, change after merge
     //with the user-groups branch
@@ -915,31 +919,47 @@ SelectBox.prototype.isEditable = function() {
     return this._is_editable;
 };
 
-SelectBox.prototype.removeItem = function(id){
-    var item = this.getItem(id);
-    item.fadeOut();
-    item.remove();
-};
-
 SelectBox.prototype.removeAllItems = function() {
-    $.each(this._items, function(idx, item) {
+    var items = this._items;
+    $.each(items, function(idx, item){
         item.dispose();
     });
+    this._items = [];
 };
 
 SelectBox.prototype.getItem = function(id){
-    return this._items[id];
+    var items = this._items;
+    for (var i = 0; i < items.length; i++) {
+        if (items[i].getId() === id) {
+            return items[i];
+        }
+    }
+    return undefined;
 };
 
 SelectBox.prototype.setItemClass = function(id, css_class) {
     this.getItem(id).getElement().addClass(css_class);
 };
 
+//why do we have these two almost identical methods?
+SelectBox.prototype.removeItem = function(id){
+    var item = this.getItem(id);
+    item.getElement().fadeOut();
+    item.dispose();
+    var idx = $.inArray(item, this._items);
+    if (idx !== -1) {
+        this._items.splice(idx, 1);
+    }
+};
 SelectBox.prototype.deleteItem = function(id) {
     var item = this.getItem(id);
-    if (item !== undefined) {
-        item.dispose();
-        this._items[id] = null;
+    if (item === undefined) {
+        return;
+    }
+    item.dispose();
+    var idx = $.inArray(item, this._items);
+    if (idx !== -1) {
+        this._items.splice(idx, 1);
     }
 };
 
@@ -961,7 +981,7 @@ SelectBox.prototype.addItem = function(id, name, description){
     item.setName(name);
     item.setDescription(description);
     //add item to the SelectBox
-    this._items[id] = item;
+    this._items.push(item);
     this._element.append(item.getElement());
     this.selectItem(item);
     //set event handler
