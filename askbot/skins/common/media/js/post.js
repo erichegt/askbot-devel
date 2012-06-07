@@ -2715,6 +2715,27 @@ TagEditor.prototype.decorate = function(element) {
     });
 };
 
+var Category = function() {
+    SelectBoxItem.call(this);
+    tihs._is_editable = false;
+};
+inherits(Category, SelectBoxItem);
+
+Category.prototype.decorate = function(element) {
+    this.superClass_.decorate.call(this, element);
+};
+
+/**
+ * @constructor
+ * SelectBox subclass to create/edit/delete
+ * categories
+ */
+var CategorySelectBox = function() {
+    SelectBox.call(this);
+    this._item_class = Category;
+};
+inherits(CategorySelectBox, SelectBox);
+
 var CategorySelector = function() {
     WrappedElement.call(this);
     this._data = null;
@@ -2810,19 +2831,19 @@ CategorySelector.prototype.decorate = function(element) {
     this._element = element;
     this._selectors = [];
 
-    var selector0 = new SelectBox();
+    var selector0 = new CategorySelectBox();
     selector0.decorate(element.find('.cat-col-0'));
     selector0.setSelectHandler(this.getSelectHandler(0));
     this.maybeAddEditButton(selector0);
     this._selectors.push(selector0);
 
-    var selector1 = new SelectBox();
+    var selector1 = new CategorySelectBox();
     selector1.decorate(element.find('.cat-col-1'));
     selector1.setSelectHandler(this.getSelectHandler(1));
     this.maybeAddEditButton(selector1);
     this._selectors.push(selector1)
 
-    var selector2 = new SelectBox();
+    var selector2 = new CategorySelectBox();
     selector2.decorate(element.find('.cat-col-2'));
     selector2.setSelectHandler(this.getSelectHandler(2));
     this.maybeAddEditButton(selector2);

@@ -936,7 +936,9 @@ SelectBox.prototype.getItem = function(id){
     }
     return undefined;
 };
-
+/**
+ * this method sets css class to the item's DOM element
+ */
 SelectBox.prototype.setItemClass = function(id, css_class) {
     this.getItem(id).getElement().addClass(css_class);
 };
