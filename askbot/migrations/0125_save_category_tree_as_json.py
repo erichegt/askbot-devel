@@ -1,21 +1,84 @@
 # -*- coding: utf-8 -*-
 import datetime
 from south.db import db
-from south.v2 import SchemaMigration
+from south.v2 import DataMigration
+from django.utils import simplejson
 from django.db import models
+from askbot.conf import settings as askbot_settings
+
+def get_subtree(tree, path):
+    """#this might be simpler, but not tested
+    clevel = tree
+    for step in path:
+        try:
+            level = clevel[step]
+        except IndexError:
+            return False
+    return clevel
+    """
+    if len(path) == 1:
+        assert(path[0] == 0)
+        return tree
+    else:
+        import copy
+        parent_path = copy.copy(path)
+        leaf_index = parent_path.pop()
+        branch_index = parent_path[-1]
+        parent_tree = get_subtree(tree, parent_path)
+        return parent_tree[branch_index][1]
+
+def parse_tree(text):
+    """parse tree represented as indented text
+    one item per line, with two spaces per level of indentation
+    """
+    lines = text.split('\n')
+    import re
+    in_re = re.compile(r'^([ ]*)')
+
+    tree = [['dummy', []]]
+    subtree_path = [0]
+    clevel = 0
+
+    for line in lines:
+        if line.strip() == '':
+            continue
+        match = in_re.match(line)
+        level = len(match.group(1))/2 + 1
+
+        if level > clevel:
+            subtree_path.append(0)#
+        elif level < clevel:
+            subtree_path = subtree_path[:level+1]
+            leaf_index = subtree_path.pop()
+            subtree_path.append(leaf_index + 1)
+        else:
+            leaf_index = subtree_path.pop()
+            subtree_path.append(leaf_index + 1)
+
+        clevel = level
+        try:
+            subtree = get_subtree(tree, subtree_path)
+        except:
+            return tree
+        subtree.append([line.strip(), []])
+
+    return tree
 
 
-class Migration(SchemaMigration):
+class Migration(DataMigration):
 
     def forwards(self, orm):
-        try:
-            # Adding field 'User.interesting_tags'
-            db.add_column(u'auth_user', 'email_signature', self.gf('django.db.models.fields.TextField')(blank=True, default = ''), keep_default=False)
-        except:
-            pass
+        """reads category tree saved as string,
+        translates it to json and saves back"""
+        old_data = askbot_settings.CATEGORY_TREE
+        json_data = parse_tree(old_data)
+        json_string = simplejson.dumps(json_data)
+        askbot_settings.update('CATEGORY_TREE',  json_string)
 
     def backwards(self, orm):
-        db.delete_column('auth_user', 'email_signature')
+        "Write your backwards methods here."
+        pass
+
 
     models = {
         'askbot.activity': {
@@ -193,7 +256,7 @@ class Migration(SchemaMigration):
             'address': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '25'}),
             'allowed_from_email': ('django.db.models.fields.EmailField', [], {'max_length': '150'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'post': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'reply_addresses'", 'to': "orm['askbot.Post']"}),
+            'post': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'reply_addresses'", 'null': 'True', 'to': "orm['askbot.Post']"}),
             'reply_action': ('django.db.models.fields.CharField', [], {'default': "'auto_answer_or_comment'", 'max_length': '32'}),
             'response_post': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'edit_addresses'", 'null': 'True', 'to': "orm['askbot.Post']"}),
             'used_at': ('django.db.models.fields.DateTimeField', [], {'default': 'None', 'null': 'True'}),
@@ -279,6 +342,7 @@ class Migration(SchemaMigration):
             'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
             'email_isvalid': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'email_key': ('django.db.models.fields.CharField', [], {'max_length': '32', 'null': 'True'}),
+            'email_signature': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'email_tag_filter_strategy': ('django.db.models.fields.SmallIntegerField', [], {'default': '1'}),
             'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
             'gold': ('django.db.models.fields.SmallIntegerField', [], {'default': '0'}),
@@ -318,3 +382,4 @@ class Migration(SchemaMigration):
     }
 
     complete_apps = ['askbot']
+    symmetrical = True

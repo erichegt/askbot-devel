@@ -210,6 +210,11 @@ urlpatterns = patterns('',
         name = 'save_tag_wiki_text'
     ),
     url(#ajax only
+        r'^add-tag-category/',
+        views.commands.add_tag_category,
+        name = 'add_tag_category'
+    ),
+    url(#ajax only
         r'^save-group-logo-url/',
         views.commands.save_group_logo_url,
         name = 'save_group_logo_url'

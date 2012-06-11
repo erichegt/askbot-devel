@@ -237,14 +237,48 @@ class AnswerEditorField(EditorField):
         self.length_error_template_plural = 'answer must be > %d characters'
         self.min_length = askbot_settings.MIN_ANSWER_BODY_LENGTH
 
+def clean_tag(tag_name):
+    """a function that cleans a single tag name"""
+    tag_length = len(tag_name)
+    if tag_length > askbot_settings.MAX_TAG_LENGTH:
+        #singular form is odd in english, but required for pluralization
+        #in other languages
+        msg = ungettext_lazy(
+            #odd but added for completeness
+            'each tag must be shorter than %(max_chars)d character',
+            'each tag must be shorter than %(max_chars)d characters',
+            tag_length
+        ) % {'max_chars':tag_length}
+        raise forms.ValidationError(msg)
+
+    #todo - this needs to come from settings
+    tagname_re = re.compile(const.TAG_REGEX, re.UNICODE)
+    if not tagname_re.search(tag_name):
+        raise forms.ValidationError(
+            _(message_keys.TAG_WRONG_CHARS_MESSAGE)
+        )
+
+    if askbot_settings.FORCE_LOWERCASE_TAGS:
+        #a simpler way to handle tags - just lowercase thew all
+        return tag_name.lower()
+    else:
+        try:
+            from askbot import models
+            stored_tag = models.Tag.objects.get(name__iexact = tag_name)
+            return stored_tag.name
+        except models.Tag.DoesNotExist:
+            return tag_name
+
+
 class TagNamesField(forms.CharField):
     def __init__(self, *args, **kwargs):
         super(TagNamesField, self).__init__(*args, **kwargs)
         self.required = askbot_settings.TAGS_ARE_REQUIRED
-        self.widget = forms.TextInput(attrs={'size' : 50, 'autocomplete' : 'off'})
+        self.widget = forms.TextInput(
+                        attrs={'size' : 50, 'autocomplete' : 'off'}
+                    )
         self.max_length = 255
         self.label = _('tags')
-        #self.help_text = _('please use space to separate tags (this enables autocomplete feature)')
         self.help_text = ungettext_lazy(
             'Tags are short keywords, with no spaces within. '
             'Up to %(max_tags)d tag can be used.',
@@ -308,51 +342,11 @@ class TagNamesField(forms.CharField):
                 ) % {'tags': get_text_list(models.tag.get_mandatory_tags())}
                 raise forms.ValidationError(msg)
 
-        for tag in tag_strings:
-            tag_length = len(tag)
-            if tag_length > askbot_settings.MAX_TAG_LENGTH:
-                #singular form is odd in english, but required for pluralization
-                #in other languages
-                msg = ungettext_lazy(
-                    #odd but added for completeness
-                    'each tag must be shorter than %(max_chars)d character',
-                    'each tag must be shorter than %(max_chars)d characters',
-                    tag_length
-                ) % {'max_chars':tag_length}
-                raise forms.ValidationError(msg)
-
-            #todo - this needs to come from settings
-            tagname_re = re.compile(const.TAG_REGEX, re.UNICODE)
-            if not tagname_re.search(tag):
-                raise forms.ValidationError(
-                    _(message_keys.TAG_WRONG_CHARS_MESSAGE)
-                )
-            #only keep unique tags
-            if tag not in entered_tags:
-                entered_tags.append(tag)
-
-        #normalize character case of tags
         cleaned_entered_tags = list()
-        if askbot_settings.FORCE_LOWERCASE_TAGS:
-            #a simpler way to handle tags - just lowercase thew all
-            for name in entered_tags:
-                lowercased_name = name.lower()
-                if lowercased_name not in cleaned_entered_tags:
-                    cleaned_entered_tags.append(lowercased_name)
-        else:
-            #make names of tags in the input to agree with the database
-            for entered_tag in entered_tags:
-                try:
-                    #looks like we have to load tags one-by one
-                    #because we need tag name cases to be the same
-                    #as those stored in the database
-                    stored_tag = models.Tag.objects.get(
-                                            name__iexact = entered_tag
-                                        )
-                    if stored_tag.name not in cleaned_entered_tags:
-                        cleaned_entered_tags.append(stored_tag.name)
-                except models.Tag.DoesNotExist:
-                    cleaned_entered_tags.append(entered_tag)
+        for tag in tag_strings:
+            cleaned_tag = clean_tag(tag)
+            if cleaned_tag not in cleaned_entered_tags:
+                cleaned_entered_tags.append(clean_tag(tag))
 
         return u' '.join(cleaned_entered_tags)
 

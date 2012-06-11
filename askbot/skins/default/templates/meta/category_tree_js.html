@@ -5,9 +5,6 @@
         if (sel_elems.length > 0) {
             var selector = new CategorySelector();
             selector.setData(JSON.parse("{{category_tree_data|escapejs}}"));
-            if (askbot['data']['userIsAdminOrMod']) {
-                selector.setEditable(true);
-            }
             selector.decorate(sel_elems);
 
             var tag_editor = new TagEditor();
@@ -18,7 +15,9 @@
                 {% endfor %}
             {% endif %}
             selector.setSelectHandler(tag_editor.getAddTagHandler());
+            return selector;
         }
     };
     askbot['functions']['initCategoryTree']();
+    askbot['urls']['add_tag_category'] = '{% url add_tag_category %}';
 </script>

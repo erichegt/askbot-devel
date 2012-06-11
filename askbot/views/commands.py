@@ -20,6 +20,7 @@ from askbot import models
 from askbot import forms
 from askbot.conf import should_show_sort_by_relevance
 from askbot.conf import settings as askbot_settings
+from askbot.utils import category_tree
 from askbot.utils import decorators
 from askbot.utils import url_utils
 from askbot import mail
@@ -477,6 +478,7 @@ def get_html_template(request):
     allowed_templates = (
         'widgets/tag_category_selector.html',
     )
+    #have allow simple context for the templates
     if template_name not in allowed_templates:
         raise Http404
     return {
@@ -526,7 +528,42 @@ def save_tag_wiki_text(request):
         return {'html': tag_wiki.html}
     else:
         raise ValueError('invalid post data')
-            
+
+@csrf.csrf_exempt
+@decorators.ajax_only
+@decorators.post_only
+def add_tag_category(request):
+    """adds a category at the tip of a given path expects
+    the following keys in the ``request.POST``
+    * path - array starting with zero giving path to
+      the category page where to add the category
+    * new_category_name - string that must satisfy the
+      same requiremets as a tag
+
+    return json with the category tree data
+    todo: switch to json stored in the live settings
+    now we have indented input
+    """
+    if request.user.is_anonymous() \
+        or not request.user.is_administrator_or_moderator():
+        raise exceptions.PermissionDenied()
+
+    post_data = simplejson.loads(request.raw_post_data)
+    category_name = forms.clean_tag(post_data['new_category_name'])
+    path = post_data['path']
+
+    tree = category_tree.get_data()
+
+    if category_tree.has_category(tree, category_name):
+        raise ValueError('category already exists')
+
+    if category_tree.path_is_valid(tree, path) == False:
+        raise ValueError('category insertion path is invalid')
+
+    category_tree.add_category(tree, category_name, path)
+    category_tree.save_data(tree)
+    return {'tree_data': tree}
+
 
 @decorators.get_only
 def get_groups_list(request):

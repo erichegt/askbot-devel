@@ -3486,13 +3486,19 @@ textarea.tipped-input {
         padding-left: 7px;
         font-size: 14px;
         line-height: 25px;
+        input {
+            margin: 0 0 2px -5px;
+            font-size: 14px;
+            line-height: 14px;
+            vertical-align: middle;
+            color: @info-text;
+        }
     }
     li.selected,
     li.selected:hover {
         background-color: #fcf8e3;
         color: #c09853;
     }
-
     li:hover {
         background-color: #cecece;
         color: white;
@@ -3537,6 +3543,9 @@ textarea.tipped-input {
 .question-page {
     .category-selector ul.select-box {
         width: 217px;
+        input {
+            width: 95px;
+        }
     }
     .tag-editor {
         width: 660px;

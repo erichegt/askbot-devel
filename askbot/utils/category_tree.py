@@ -28,53 +28,26 @@ example of desired structure, when input is parsed
 from askbot.conf import settings as askbot_settings
 from django.utils import simplejson
 
+def _get_subtree(tree, path):
+    clevel = tree
+    for pace in path:
+        clevel = clevel[1][pace]
+    return clevel
+
 def get_subtree(tree, path):
-        if len(path) == 1:
-            assert(path[0] == 0)
-            return tree
-        else:
-            import copy
-            parent_path = copy.copy(path)
-            leaf_index = parent_path.pop()
-            branch_index = parent_path[-1]
-            parent_tree = get_subtree(tree, parent_path)
-            return parent_tree[branch_index][1]
+    """path always starts with 0,
+    and is a list of integers"""
+    assert(path[0] == 0)
+    if len(path) == 1:#special case
+        return tree[0]
+    else:
+        return _get_subtree(tree[0], path[1:])
 
-def parse_tree(text):
-    """parse tree represented as indented text
-    one item per line, with two spaces per level of indentation
-    """
-    lines = text.split('\n')
-    import re
-    in_re = re.compile(r'^([ ]*)')
-
-    tree = [['dummy', []]]
-    subtree_path = [0]
-    clevel = 0
-
-    for line in lines:
-        if line.strip() == '':
-            continue
-        match = in_re.match(line)
-        level = len(match.group(1))/2 + 1
-
-        if level > clevel:
-            subtree_path.append(0)#
-        elif level < clevel:
-            subtree_path = subtree_path[:level+1]
-            leaf_index = subtree_path.pop()
-            subtree_path.append(leaf_index + 1)
-        else:
-            leaf_index = subtree_path.pop()
-            subtree_path.append(leaf_index + 1)
-
-        clevel = level
-        try:
-            subtree = get_subtree(tree, subtree_path)
-        except:
-            return tree
-        subtree.append([line.strip(), []])
-
+def sort_tree(tree):
+    """sorts contents of the nodes alphabetically"""
+    tree = sorted(tree, lambda x,y: cmp(x[0], y[0]))
+    for item in tree:
+        item[1] = sort_tree(item[1])
     return tree
 
 def get_data():
@@ -82,7 +55,38 @@ def get_data():
     or None, if category_tree is disabled
     """
     if askbot_settings.TAG_SOURCE == 'category-tree':
-        cat_tree = parse_tree(askbot_settings.CATEGORY_TREE)
-        return simplejson.dumps(cat_tree)
+        return simplejson.loads(askbot_settings.CATEGORY_TREE)
     else:
         return None
+
+def path_is_valid(tree, path):
+    try:
+        get_subtree(tree, path)
+        return True
+    except IndexError:
+        return False
+    except AssertionError:
+        return False
+
+def add_category(tree, category_name, path):
+    subtree = get_subtree(tree, path)
+    subtree[1].append([category_name, []])
+
+def _has_category(tree, category_name):
+    for item in tree:
+        if item[0] == category_name:
+            return True
+        if _has_category(item[1], category_name):
+            return True
+    return False
+
+def has_category(tree, category_name):
+    """true if category is in tree"""
+    #skip the dummy
+    return _has_category(tree[0][1], category_name)
+
+def save_data(tree):
+    assert(askbot_settings.TAG_SOURCE == 'category-tree')
+    tree = sort_tree(tree)
+    tree_json = simplejson.dumps(tree)
+    askbot_settings.update('CATEGORY_TREE', tree_json)
