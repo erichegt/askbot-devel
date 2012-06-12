@@ -2920,7 +2920,7 @@ Category.prototype.addControls = function() {
             //tree.setState('editable');
             //tree.selectPath(tree.getPathToCategory(me.getName()));
             me.setState('editing');
-            //return true;
+            return false;
         }
     );
     this._edit_button = edit_button;
