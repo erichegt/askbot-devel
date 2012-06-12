@@ -215,6 +215,16 @@ urlpatterns = patterns('',
         name = 'add_tag_category'
     ),
     url(#ajax only
+        r'^rename-tag/',
+        views.commands.rename_tag,
+        name = 'rename_tag'
+    ),
+    url(#
+        r'^delete-tag/',
+        views.commands.delete_tag,
+        name = 'delete_tag'
+    ),
+    url(#ajax only
         r'^save-group-logo-url/',
         views.commands.save_group_logo_url,
         name = 'save_group_logo_url'

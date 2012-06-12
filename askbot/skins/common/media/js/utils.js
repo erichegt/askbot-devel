@@ -449,10 +449,9 @@ var SimpleContent = function(){
 inherits(SimpleContent, WrappedElement);
 
 SimpleContent.prototype.setContent = function(text) {
-    //todo: for text we should use .html() for text nodes .append()
     this._content = text;
     if (this._element) {
-        this._element.append(text);
+        this._element.html(text);
     }
 };
 
@@ -1024,6 +1023,10 @@ SelectBox.prototype.getItem = function(id){
     }
     return undefined;
 };
+
+SelectBox.prototype.getItemByIndex = function(idx) {
+    return this._items[idx];
+};
 /**
  * this method sets css class to the item's DOM element
  */
@@ -1080,6 +1083,7 @@ SelectBox.prototype.addItem = function(id, name, description){
         item.getElement(),
         me.getSelectHandler(item)
     );
+    return item;
 };
 
 SelectBox.prototype.getSelectedItem = function() {

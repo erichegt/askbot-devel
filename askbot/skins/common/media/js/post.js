@@ -2732,11 +2732,20 @@ TagEditor.prototype.decorate = function(element) {
 var Category = function() {
     SelectBoxItem.call(this);
     this._state = 'display';
+    this._settings = JSON.parse(askbot['settings']['tag_editor']);
 };
 inherits(Category, SelectBoxItem);
 
 Category.prototype.getName = function() {
     return this.getContent().getContent();
+};
+
+Category.prototype.setCategoryTreeObject = function(tree) {
+    this._tree = tree;
+};
+
+Category.prototype.getCategoryTreeObject = function() {
+    return this._tree;
 };
 
 Category.prototype.setState = function(state) {
@@ -2750,10 +2759,13 @@ Category.prototype.setState = function(state) {
         this.hideEditor();
         this.hideEditControls();
     } else if (state === 'editable') {
+        this._tree._state = 'editable';//a hack
         this.showContent();
         this.hideEditor();
         this.showEditControls();
     } else if (state === 'edit') {
+        this._prev_tree_state = this._tree.getState();
+        this._tree._state = 'editing';//a hack
         this._input_box.val(this.getName());
         this.hideContent();
         this.showEditor();
@@ -2802,14 +2814,68 @@ Category.prototype.hideEditor = function() {
     this._cancel_button.hide();
 };
 
+Category.prototype.getInput = function() {
+    return this._input_box.val();
+};
+
 Category.prototype.getDeleteHandler = function() {
-    return function(){ return false; }
+    var me = this;
+    return function() {
+        if (confirm(gettext('Delete category?'))) {
+            var tree = me.getCategoryTreeObject();
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                data: {tag_name: me.getName()},
+                cache: false,
+                url: askbot['urls']['delete_tag'],
+                success: function(data) {
+                    if (data['success']) {
+                        //rebuild category tree based on data
+                        tree.setData(data['tree_data']);
+                        //re-open current branch
+                        tree.selectPath(tree.getCurrentPath());
+                        tree.setState('edit');
+                    } else {
+                        alert(data['message']);
+                    }
+                }
+            });
+        }
+        return false;
+    };
 };
 
 Category.prototype.getSaveHandler = function() {
     var me = this;
+    var settings = this._settings;
     //here we need old value and new value
     return function(){
+        var new_name = me.getInput();
+        try {
+            new_name = cleanTag(new_name, settings);
+            var data = {
+                old_name: me.getOriginalName(),
+                new_name: new_name
+            };
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                data: data,
+                cache: false,
+                url: askbot['urls']['rename_tag'],
+                success: function(data) {
+                    if (data['success']) {
+                        me.setName(new_name);
+                        me.setState('editable');
+                    } else {
+                        alert(data['message']);
+                    }
+                }
+            });
+        } catch (error) {
+            alert(error);
+        }
         return false;
     };
 };
@@ -2854,16 +2920,22 @@ Category.prototype.addControls = function() {
     this._element.append(delete_button);
 };
 
+Category.prototype.getOriginalName = function() {
+    return this._original_name;
+};
+
 Category.prototype.createDom = function() {
     Category.superClass_.createDom.call(this);
     this.addControls();
     this.setState('display');
+    this._original_name = this.getName();
 };
 
 Category.prototype.decorate = function(element) {
     Category.superClass_.decorate.call(this, element);
     this.addControls();
     this.setState('display');
+    this._original_name = this.getName();
 };
 
 var CategoryAdder = function() {
@@ -2959,7 +3031,8 @@ CategoryAdder.prototype.startAdding = function() {
                 //rebuild category tree based on data
                 tree.setData(data['tree_data']);
                 //re-open current branch
-                tree.openPath(current_path);
+                tree.selectCategory(name);
+                tree.setState('edit');
                 me.setState('wait');
             } else {
                 alert(data['message']);
@@ -3028,6 +3101,14 @@ var CategorySelectBox = function() {
     this._level = undefined;
 };
 inherits(CategorySelectBox, SelectBox);
+
+CategorySelectBox.prototype.addItem = function(id, name, description) {
+    var item = CategorySelectBox.superClass_.addItem.call(
+        this, id, name, description
+    );
+    item.setCategoryTreeObject(this._tree);
+    return item;
+};
 
 CategorySelectBox.prototype.setState = function(state) {
     this._state = state;
@@ -3123,6 +3204,9 @@ inherits(CategorySelector, Widget);
  */
 CategorySelector.prototype.setState = function(state) {
     this._state = state;
+    if (state === 'editing') {
+        return;//do not propagate this state
+    }
     $.each(this._selectors, function(idx, selector){
         selector.setState(state);
     });
@@ -3142,21 +3226,34 @@ CategorySelector.prototype.clearCategoryLevels = function(level) {
     }
 };
 
-CategorySelector.prototype.hasCategory = function(category) {
-    function inData(category, data) {
+CategorySelector.prototype.getPathToCategory = function(name) {
+    function getPath(name, data, path) {
         for (var i = 0; i < data.length; i++) {
+            //calc path for new item
+            var item_path = path.slice();
+            item_path.push(i);
             //check name of the current node
-            if (data[i][0] === category) {
-                return true;
+            if (data[i][0] === name) {
+                return item_path
             }
             //check in the subtree
-            if (inData(category, data[i][1])) {
-                return true;
+            var deep_path = getPath(name, data[i][1], item_path);
+            if (deep_path.length > item_path.length) {
+                return deep_path;
             }
         }
-        return false;
+        return path;
     }
-    return inData(category, this._data[0][1]);
+    var path = getPath(name, this._data[0][1], [0]);
+    if (path.length === 1) {
+        return undefined;
+    } else {
+        return path;
+    }
+};
+
+CategorySelector.prototype.hasCategory = function(category) {
+    return this.getPathToCategory(category) !== undefined;
 };
 
 CategorySelector.prototype.getLeafItems = function(selection_path) {
@@ -3173,7 +3270,7 @@ CategorySelector.prototype.getLeafItems = function(selection_path) {
  */
 CategorySelector.prototype.populateCategoryLevel = function(source_path) {
     var level = source_path.length - 1;
-    if (level > 3) {
+    if (level >= 3) {
         return;
     }
     //clear all items downstream
@@ -3196,10 +3293,20 @@ CategorySelector.prototype.populateCategoryLevel = function(source_path) {
     selector.clearSelection();
 };
 
-CategorySelector.prototype.openPath = function(path) {
+CategorySelector.prototype.selectPath = function(path) {
     for (var i = 1; i <= path.length; i++) {
         this.populateCategoryLevel(path.slice(0, i));
     }
+    for (var i = 1; i < path.length; i++) {
+        var sel_box = this._selectors[i-1];
+        var category = sel_box.getItemByIndex(path[i]);
+        sel_box.selectItem(category);
+    }
+};
+
+CategorySelector.prototype.selectCategory = function(name) {
+    var path = this.getPathToCategory(name);
+    this.selectPath(path);
 };
 
 CategorySelector.prototype.getSelectedPath = function(selected_level) {
@@ -3243,6 +3350,9 @@ CategorySelector.prototype.getEditorToggle = function() {
 CategorySelector.prototype.getSelectHandler = function(level) {
     var me = this;
     return function(item_data) {
+        if (me.getState() === 'editing') {
+            return;//don't navigate when editing
+        }
         //1) run the assigned select handler
         var tag_name = item_data['title']
         if (me.getState() === 'select') {

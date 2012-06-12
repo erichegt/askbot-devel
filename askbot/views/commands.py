@@ -7,6 +7,7 @@ is not always very clean.
 """
 from django.conf import settings as django_settings
 from django.core import exceptions
+#from django.core.management import call_command
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect, Http404, HttpResponseBadRequest
@@ -528,6 +529,38 @@ def save_tag_wiki_text(request):
         return {'html': tag_wiki.html}
     else:
         raise ValueError('invalid post data')
+
+@csrf.csrf_exempt
+@decorators.ajax_only
+@decorators.post_only
+def rename_tag(request):
+    if request.user.is_anonymous() \
+        or not request.user.is_administrator_or_moderator():
+        raise exceptions.PermissionDenied()
+    new_name = forms.clean_tag(request.POST['new_name'])
+    old_name = forms.clean_tag(request.POST['old_name'])
+
+    #kwargs = {'from': old_name, 'to': new_name}
+    #call_command('rename_tags', **kwargs)
+
+    tree = category_tree.get_data()
+    category_tree.rename_category(tree, old_name, new_name)
+    category_tree.save_data(tree)
+
+@csrf.csrf_exempt
+@decorators.ajax_only
+@decorators.post_only
+def delete_tag(request):
+    """todo: actually delete tags
+    now it is only deletion of category from the tree"""
+    if request.user.is_anonymous() \
+        or not request.user.is_administrator_or_moderator():
+        raise exceptions.PermissionDenied()
+    tag_name = forms.clean_tag(request.POST['tag_name'])
+    tree = category_tree.get_data()
+    category_tree.delete_category(tree, tag_name)
+    category_tree.save_data(tree)
+    return {'tree_data': tree}
 
 @csrf.csrf_exempt
 @decorators.ajax_only

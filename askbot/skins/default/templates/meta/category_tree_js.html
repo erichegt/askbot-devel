@@ -6,6 +6,7 @@
             var selector = new CategorySelector();
             selector.setData(JSON.parse("{{category_tree_data|escapejs}}"));
             selector.decorate(sel_elems);
+            selector.setState('select');
 
             var tag_editor = new TagEditor();
             tag_editor.decorate($('.tag-editor'));
@@ -20,4 +21,6 @@
     };
     askbot['functions']['initCategoryTree']();
     askbot['urls']['add_tag_category'] = '{% url add_tag_category %}';
+    askbot['urls']['rename_tag'] = '{% url rename_tag %}';
+    askbot['urls']['delete_tag'] = '{% url delete_tag %}';
 </script>

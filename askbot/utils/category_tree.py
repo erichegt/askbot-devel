@@ -85,6 +85,32 @@ def has_category(tree, category_name):
     #skip the dummy
     return _has_category(tree[0][1], category_name)
 
+def _rename_category(tree, from_name, to_name):
+    for item in tree:
+        if item[0] == from_name:
+            item[0] = to_name
+            return True
+        if _rename_category(item[1], from_name, to_name):
+            return True
+    return False
+
+def rename_category(tree, from_name, to_name):
+    _rename_category(tree[0][1], from_name, to_name)
+    return sort_tree(tree)
+
+def _delete_category(tree, name):
+    for item in tree:
+        if item[0] == name:
+            tree.remove(item)
+            return True
+        if _delete_category(item[1], name):
+            return True
+    return False
+
+def delete_category(tree, name):
+    _delete_category(tree[0][1], name)
+    return sort_tree(tree)
+
 def save_data(tree):
     assert(askbot_settings.TAG_SOURCE == 'category-tree')
     tree = sort_tree(tree)
