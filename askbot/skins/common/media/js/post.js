@@ -2763,7 +2763,7 @@ Category.prototype.setState = function(state) {
         this.showContent();
         this.hideEditor();
         this.showEditControls();
-    } else if (state === 'edit') {
+    } else if (state === 'editing') {
         this._prev_tree_state = this._tree.getState();
         this._tree._state = 'editing';//a hack
         this._input_box.val(this.getName());
@@ -2794,6 +2794,11 @@ Category.prototype.showEditControls = function() {
     );
 };
 
+Category.prototype.showEditControlsNow = function() {
+    this._delete_button.show();
+    this._edit_button.show();
+};
+
 Category.prototype.hideContent = function() {
     this.getContent().getElement().hide();
 };
@@ -2804,6 +2809,7 @@ Category.prototype.showContent = function() {
 
 Category.prototype.showEditor = function() {
     this._input_box.show();
+    this._input_box.focus();
     this._save_button.show();
     this._cancel_button.show();
 };
@@ -2835,7 +2841,7 @@ Category.prototype.getDeleteHandler = function() {
                         tree.setData(data['tree_data']);
                         //re-open current branch
                         tree.selectPath(tree.getCurrentPath());
-                        tree.setState('edit');
+                        tree.setState('editable');
                     } else {
                         alert(data['message']);
                     }
@@ -2868,6 +2874,7 @@ Category.prototype.getSaveHandler = function() {
                     if (data['success']) {
                         me.setName(new_name);
                         me.setState('editable');
+                        me.showEditControlsNow();
                     } else {
                         alert(data['message']);
                     }
@@ -2897,6 +2904,7 @@ Category.prototype.addControls = function() {
         'x',
         function(){
             me.setState('editable');
+            me.showEditControlsNow();
             return false;
         }
     );
@@ -2906,8 +2914,13 @@ Category.prototype.addControls = function() {
     var edit_button = this.makeButton(
         gettext('edit'),
         function(){ 
-            me.setState('edit');
-            return false;
+            //todo: I would like to make only one at a time editable
+            //var tree = me.getCategoryTreeObject();
+            //tree.closeAllEditors();
+            //tree.setState('editable');
+            //tree.selectPath(tree.getPathToCategory(me.getName()));
+            me.setState('editing');
+            //return true;
         }
     );
     this._edit_button = edit_button;
@@ -2959,14 +2972,14 @@ CategoryAdder.prototype.setState = function(state) {
     if (!this._element) {
         return;
     }
-    if (state === 'wait') {
+    if (state === 'waiting') {
         this._element.show();
         this._input.val('');
         this._input.hide();
         this._save_button.hide();
         this._cancel_button.hide();
         this._trigger.show();
-    } else if (state === 'edit') {
+    } else if (state === 'editable') {
         this._element.show();
         this._input.show();
         this._input.val('');
@@ -2975,7 +2988,7 @@ CategoryAdder.prototype.setState = function(state) {
         this._cancel_button.show();
         this._trigger.hide();
     } else if (state === 'disabled') {
-        this.setState('wait');//a little hack
+        this.setState('waiting');//a little hack
         this._state = 'disabled';
         this._element.hide();
     }
@@ -3032,8 +3045,8 @@ CategoryAdder.prototype.startAdding = function() {
                 tree.setData(data['tree_data']);
                 //re-open current branch
                 tree.selectCategory(name);
-                tree.setState('edit');
-                me.setState('wait');
+                tree.setState('editable');
+                me.setState('waiting');
             } else {
                 alert(data['message']);
             }
@@ -3069,7 +3082,7 @@ CategoryAdder.prototype.createDom = function() {
     var me = this;
     setupButtonEventHandlers(
         trigger,
-        function(){ me.setState('edit'); }
+        function(){ me.setState('editable'); }
     )
     setupButtonEventHandlers(
         save_button,
@@ -3081,7 +3094,7 @@ CategoryAdder.prototype.createDom = function() {
     setupButtonEventHandlers(
         cancel_button,
         function() {
-            me.setState('wait');
+            me.setState('waiting');
             return false;//prevent submit
         }
     );
@@ -3119,8 +3132,8 @@ CategorySelectBox.prototype.setState = function(state) {
         $.each(this._items, function(idx, item){
             item.setState('display');
         });
-    } else if (state === 'edit') {
-        this._category_adder.setState('wait');
+    } else if (state === 'editable') {
+        this._category_adder.setState('waiting');
         $.each(this._items, function(idx, item){
             item.setState('editable');
         });
@@ -3188,7 +3201,7 @@ CategoryEditorToggle.prototype.getDefaultHandler = function() {
             editor.setState('select');
         } else {
             me.setState('on-state');
-            editor.setState('edit');
+            editor.setState('editable');
         }
     };
 };
@@ -3348,6 +3361,15 @@ CategorySelector.prototype.getCurrentPath = function() {
 CategorySelector.prototype.getEditorToggle = function() {
     return this._editor_toggle;
 };
+
+/*CategorySelector.prototype.closeAllEditors = function() {
+    $.each(this._selectors, function(idx, sel) {
+        sel._category_adder.setState('wait');
+        $.each(sel._items, function(idx2, item) {
+            item.setState('editable');
+        });
+    });
+};*/
 
 CategorySelector.prototype.getSelectHandler = function(level) {
     var me = this;
