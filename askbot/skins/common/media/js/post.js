@@ -3113,7 +3113,9 @@ CategorySelectBox.prototype.addItem = function(id, name, description) {
 CategorySelectBox.prototype.setState = function(state) {
     this._state = state;
     if (state === 'select') {
-        this._category_adder.setState('disabled');
+        if (this._category_adder) {
+            this._category_adder.setState('disabled');
+        }
         $.each(this._items, function(idx, item){
             item.setState('display');
         });
