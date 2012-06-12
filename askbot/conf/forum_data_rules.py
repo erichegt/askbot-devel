@@ -128,6 +128,20 @@ settings.register(
     )
 )
 
+settings.register(
+    livesettings.BooleanValue(
+        FORUM_DATA_RULES,
+        'ENABLE_TAG_MODERATION',
+        default = False,
+        description = _('Enable tag moderation'),
+        help_text = _(
+            'If enabled, any new tags will not be applied '
+            'to the questions, but emailed to the moderators. '
+            'To use this feature, tags must be optional.'
+        )
+    )
+)
+
 TAG_SOURCE_CHOICES = (
     ('category-tree', _('category tree')),
     ('user-input', _('user input')),

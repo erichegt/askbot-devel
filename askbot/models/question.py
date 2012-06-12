@@ -12,7 +12,9 @@ from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 
 import askbot
-import askbot.conf
+from askbot.conf import settings as askbot_settings
+from askbot import mail
+from askbot.mail import messages
 from askbot.models.tag import Tag
 from askbot.models.base import AnonymousContent
 from askbot.models.post import Post, PostRevision
@@ -725,7 +727,11 @@ class Thread(models.Model):
         modified_tags = list()
         #remove tags from the question's tags many2many relation
         if removed_tagnames:
-            removed_tags = [tag for tag in previous_tags if tag.name in removed_tagnames]
+            removed_tags = list()
+            for tag in previous_tags:
+                if tag.name in removed_tagnames:
+                    removed_tags.append(tag)
+
             self.tags.remove(*removed_tags)
 
             #if any of the removed tags reached use count == 1 that means they must be deleted
@@ -743,18 +749,23 @@ class Thread(models.Model):
         if added_tagnames:
             #find reused tags
             reused_tags = Tag.objects.filter(name__in = added_tagnames)
-            #undelete them, because we are using them
-            reused_count = reused_tags.update(
+            reused_count = reused_tags.update(#undelete them
                                     deleted = False,
                                     deleted_by = None,
                                     deleted_at = None
                                 )
-            #if there are brand new tags, create them and finalize the added tag list
+            #if there are brand new tags, create them
+            #and finalize the added tag list
             if reused_count < len(added_tagnames):
                 added_tags = list(reused_tags)
 
                 reused_tagnames = set([tag.name for tag in reused_tags])
                 new_tagnames = added_tagnames - reused_tagnames
+            else:
+                added_tags = reused_tags
+                new_tagnames = set()
+
+            if user.can_create_tags():
                 for name in new_tagnames:
                     new_tag = Tag.objects.create(
                                             name = name,
@@ -762,12 +773,28 @@ class Thread(models.Model):
                                             used_count = 1
                                         )
                     added_tags.append(new_tag)
-            else:
-                added_tags = reused_tags
+                #finally add tags to the relation and extend the modified list
+                self.tags.add(*added_tags)
+                modified_tags.extend(added_tags)
 
-            #finally add tags to the relation and extend the modified list
-            self.tags.add(*added_tags)
-            modified_tags.extend(added_tags)
+            elif new_tagnames:#notify admins by email about new tags
+                body_text = messages.notify_admins_about_new_tags(
+                                        tags = new_tagnames,
+                                        user = user,
+                                        thread = self
+                                    )
+                site_name = askbot_settings.APP_SHORT_NAME
+                subject_line = _('New tags added to %s') % site_name
+                mail.mail_moderators(
+                    subject_line,
+                    body_text,
+                    headers = {'Reply-To': user.email}
+                )
+                msg = _(
+                    'Tags %s are new and will be submitted for the '
+                    'moderators approval'
+                ) % ', '.join(new_tagnames)
+                user.message_set.create(message = msg)
 
         ####################################################################
         self.update_summary_html() # regenerate question/thread summary html

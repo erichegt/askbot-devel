@@ -122,7 +122,9 @@ def send_mail(
 def mail_moderators(
             subject_line = '',
             body_text = '',
-            raise_on_failure = False):
+            raise_on_failure = False,
+            headers = None
+        ):
     """sends email to forum moderators and admins
     """
     from django.db.models import Q
@@ -139,7 +141,15 @@ def mail_moderators(
         from_email = django_settings.DEFAULT_FROM_EMAIL
 
     try:
-        mail.send_mail(subject_line, body_text, from_email, recipient_list)
+        msg = mail.EmailMessage(
+                        subject_line, 
+                        body_text, 
+                        from_email,
+                        recipient_list,
+                        headers = headers or {}
+                    )
+        msg.content_subtype = 'html'
+        msg.send()
     except smtplib.SMTPException, error:
         logging.critical(unicode(error))
         if raise_on_failure == True:

@@ -3,6 +3,9 @@ Changes in Askbot
 
 Development version
 -------------------
+* Simple tag moderation via email (Evgeny)
+* Editable optional three level category selector for the tags (Evgeny)
+* Tag editor adding tags as they are typed (Evgeny)
 * Welcome email for the case when replying by email is enabled (Evgeny)
 * Detection of email signature based on the response to the welome email (Evgeny)
 * Hide "website" and "about" section of the blocked user profiles
