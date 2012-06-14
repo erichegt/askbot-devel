@@ -28,6 +28,13 @@ example of desired structure, when input is parsed
 from askbot.conf import settings as askbot_settings
 from django.utils import simplejson
 
+def get_leaf_index(tree, leaf_name):
+    children = tree[1]
+    for index, child in enumerate(children):
+        if child[0] == leaf_name:
+            return index
+    return None
+
 def _get_subtree(tree, path):
     clevel = tree
     for pace in path:
@@ -70,7 +77,16 @@ def path_is_valid(tree, path):
 
 def add_category(tree, category_name, path):
     subtree = get_subtree(tree, path)
-    subtree[1].append([category_name, []])
+    children = subtree[1]
+    children.append([category_name, []])
+    children = sorted(children, lambda x,y: cmp(x[0], y[0]))
+    subtree[1] = children
+    new_path = path[:]
+    #todo: reformulate all paths in terms of names?
+    new_item_index = get_leaf_index(subtree, category_name)
+    assert new_item_index != None
+    new_path.append(new_item_index)
+    return new_path
 
 def _has_category(tree, category_name):
     for item in tree:
@@ -85,17 +101,17 @@ def has_category(tree, category_name):
     #skip the dummy
     return _has_category(tree[0][1], category_name)
 
-def _rename_category(tree, from_name, to_name):
-    for item in tree:
-        if item[0] == from_name:
-            item[0] = to_name
-            return True
-        if _rename_category(item[1], from_name, to_name):
-            return True
-    return False
-
-def rename_category(tree, from_name, to_name):
-    _rename_category(tree[0][1], from_name, to_name)
+def rename_category(
+    tree, from_name = None, to_name = None, path = None
+):
+    if to_name == from_name:
+        return
+    subtree = get_subtree(tree, path[:-1])
+    from_index = get_leaf_index(subtree, from_name)
+    #todo possibly merge if to_name exists on the same level
+    #to_index = get_leaf_index(subtree, to_name)
+    child = subtree[1][from_index]
+    child[0] = to_name
     return sort_tree(tree)
 
 def _delete_category(tree, name):
@@ -107,12 +123,13 @@ def _delete_category(tree, name):
             return True
     return False
 
-def delete_category(tree, name):
-    _delete_category(tree[0][1], name)
+def delete_category(tree, name, path):
+    subtree = get_subtree(tree, path[:-1])
+    del_index = get_leaf_index(subtree, name)
+    subtree[1].pop(del_index)
     return sort_tree(tree)
 
 def save_data(tree):
     assert(askbot_settings.TAG_SOURCE == 'category-tree')
-    tree = sort_tree(tree)
     tree_json = simplejson.dumps(tree)
     askbot_settings.update('CATEGORY_TREE', tree_json)

@@ -82,7 +82,7 @@ class CategoryTreeTests(unittest.TestCase):
 
     def test_add_category(self):
         ct.add_category(self.tree, 'appreciate', [0, 2])
-        appreciate = ct.get_subtree(self.tree, [0, 2, 4])
+        appreciate = ct.get_subtree(self.tree, [0, 2, 0])
         self.assertEqual(appreciate[0] , 'appreciate')
 
     def test_sort_data(self):

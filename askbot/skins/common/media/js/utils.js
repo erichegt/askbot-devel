@@ -904,6 +904,7 @@ var SelectBoxItem = function() {
     this._content_class = BoxItemContent;//default expects a single text node
     //content element - instance of this._content_class
     this._content = undefined;
+    this._selector = undefined;//the selector object
 };
 inherits(SelectBoxItem, Widget);
 
@@ -912,6 +913,10 @@ SelectBoxItem.prototype.setId = function(id) {
     if (this._element) {
         this._element.data('itemId', id);
     }
+};
+
+SelectBoxItem.prototype.getId = function() {
+    return this._id;
 };
 
 SelectBoxItem.prototype.setName = function(name) {
@@ -928,10 +933,6 @@ SelectBoxItem.prototype.setDescription = function(description) {
     }
 };
 
-SelectBoxItem.prototype.getId = function() {
-    return this._id;
-};
-
 SelectBoxItem.prototype.getData = function () {
     //todo: stuck using old key names, change after merge
     //with the user-groups branch
@@ -940,6 +941,14 @@ SelectBoxItem.prototype.getData = function () {
         title: this._name,
         details: this._description
     };
+};
+
+SelectBoxItem.prototype.setSelector = function(sel) {
+    this._selector = sel;
+};
+
+SelectBoxItem.prototype.getSelector = function(sel) {
+    return this._selector;
 };
 
 SelectBoxItem.prototype.getContent = function() {
@@ -958,6 +967,10 @@ SelectBoxItem.prototype.setSelected = function(is_selected) {
     }
 }
 
+SelectBoxItem.prototype.detach = function() {
+    this._element.detach();
+};
+
 SelectBoxItem.prototype.createDom = function() {
     var elem = this.makeElement('li');
     this._element = elem;
@@ -968,6 +981,12 @@ SelectBoxItem.prototype.createDom = function() {
     elem.append(content.getElement());
     this._content = content;
 }
+/**
+ * this method sets css class to the item's DOM element
+ */
+SelectBoxItem.prototype.addCssClass = function(css_class) {
+    this._element.addClass(css_class);
+};
 
 SelectBoxItem.prototype.decorate = function(element) {
     this._element = element;
@@ -1006,10 +1025,10 @@ SelectBox.prototype.isEditable = function() {
     return this._is_editable;
 };
 
-SelectBox.prototype.removeAllItems = function() {
+SelectBox.prototype.detachAllItems = function() {
     var items = this._items;
     $.each(items, function(idx, item){
-        item.dispose();
+        item.detach();
     });
     this._items = [];
 };
@@ -1026,12 +1045,6 @@ SelectBox.prototype.getItem = function(id){
 
 SelectBox.prototype.getItemByIndex = function(idx) {
     return this._items[idx];
-};
-/**
- * this method sets css class to the item's DOM element
- */
-SelectBox.prototype.setItemClass = function(id, css_class) {
-    this.getItem(id).getElement().addClass(css_class);
 };
 
 //why do we have these two almost identical methods?
@@ -1060,6 +1073,27 @@ SelectBox.prototype.createItem = function() {
     return new this._item_class();
 };
 
+SelectBox.prototype.getItemIndex = function(item) {
+    var idx = $.inArray(item, this._items);
+    if (idx === -1) {
+        throw "index error";
+    }
+    return idx;
+};
+
+SelectBox.prototype.addItemObject = function(item) {
+    this._items.push(item);
+    this._element.append(item.getElement());
+    this.selectItem(item);
+    item.setSelector(this);
+    //set event handler
+    var me = this;
+    setupButtonEventHandlers(
+        item.getElement(),
+        me.getSelectHandler(item)
+    );
+};
+
 /** @todo: rename to setItem?? have a problem when id's are all say 0 */
 SelectBox.prototype.addItem = function(id, name, description){
 
@@ -1074,15 +1108,8 @@ SelectBox.prototype.addItem = function(id, name, description){
     item.setName(name);
     item.setDescription(description);
     //add item to the SelectBox
-    this._items.push(item);
-    this._element.append(item.getElement());
-    this.selectItem(item);
-    //set event handler
-    var me = this;
-    setupButtonEventHandlers(
-        item.getElement(),
-        me.getSelectHandler(item)
-    );
+    this.addItemObject(item);
+
     return item;
 };
 

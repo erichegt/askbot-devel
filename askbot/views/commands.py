@@ -537,14 +537,21 @@ def rename_tag(request):
     if request.user.is_anonymous() \
         or not request.user.is_administrator_or_moderator():
         raise exceptions.PermissionDenied()
-    new_name = forms.clean_tag(request.POST['new_name'])
-    old_name = forms.clean_tag(request.POST['old_name'])
+    post_data = simplejson.loads(request.raw_post_data)
+    to_name = forms.clean_tag(post_data['to_name'])
+    from_name = forms.clean_tag(post_data['from_name'])
+    path = post_data['path']
 
     #kwargs = {'from': old_name, 'to': new_name}
     #call_command('rename_tags', **kwargs)
 
     tree = category_tree.get_data()
-    category_tree.rename_category(tree, old_name, new_name)
+    category_tree.rename_category(
+        tree,
+        from_name = from_name,
+        to_name = to_name,
+        path = path
+    )
     category_tree.save_data(tree)
 
 @csrf.csrf_exempt
@@ -556,9 +563,11 @@ def delete_tag(request):
     if request.user.is_anonymous() \
         or not request.user.is_administrator_or_moderator():
         raise exceptions.PermissionDenied()
-    tag_name = forms.clean_tag(request.POST['tag_name'])
+    post_data = simplejson.loads(request.raw_post_data)
+    tag_name = forms.clean_tag(post_data['tag_name'])
+    path = post_data['path']
     tree = category_tree.get_data()
-    category_tree.delete_category(tree, tag_name)
+    category_tree.delete_category(tree, tag_name, path)
     category_tree.save_data(tree)
     return {'tree_data': tree}
 
@@ -587,15 +596,15 @@ def add_tag_category(request):
 
     tree = category_tree.get_data()
 
-    if category_tree.has_category(tree, category_name):
-        raise ValueError('category already exists')
-
     if category_tree.path_is_valid(tree, path) == False:
         raise ValueError('category insertion path is invalid')
 
-    category_tree.add_category(tree, category_name, path)
+    new_path = category_tree.add_category(tree, category_name, path)
     category_tree.save_data(tree)
-    return {'tree_data': tree}
+    return {
+        'tree_data': tree,
+        'new_path': new_path
+    }
 
 
 @decorators.get_only

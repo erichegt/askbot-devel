@@ -3,8 +3,7 @@ Scripts for cnprog.com
 Project Name: Lanai
 All Rights Resevred 2008. CNPROG.COM
 */
-var lanai =
-{
+var lanai = {
     /**
      * Finds any <pre><code></code></pre> tags which aren't registered for
      * pretty printing, adds the appropriate class name and invokes prettify.
@@ -2700,7 +2699,7 @@ TagEditor.prototype.decorate = function(element) {
     var me = this;
     var tagsAc = new AutoCompleter({
         url: askbot['urls']['get_tag_list'],
-        onItemSelect: function(){
+        onItemSelect: function(item){
             if (me.isSelectedTagName(item['value']) === false) {
                 me.completeTagInput();
             } else {
@@ -2736,16 +2735,20 @@ var Category = function() {
 };
 inherits(Category, SelectBoxItem);
 
+Category.prototype.setCategoryTree = function(tree) {
+    this._tree = tree;
+};
+
+Category.prototype.getCategoryTree = function() {
+    return this._tree;
+};
+
 Category.prototype.getName = function() {
     return this.getContent().getContent();
 };
 
-Category.prototype.setCategoryTreeObject = function(tree) {
-    this._tree = tree;
-};
-
-Category.prototype.getCategoryTreeObject = function() {
-    return this._tree;
+Category.prototype.getPath = function() {
+    return this._tree.getPathToItem(this);
 };
 
 Category.prototype.setState = function(state) {
@@ -2828,11 +2831,14 @@ Category.prototype.getDeleteHandler = function() {
     var me = this;
     return function() {
         if (confirm(gettext('Delete category?'))) {
-            var tree = me.getCategoryTreeObject();
+            var tree = me.getCategoryTree();
             $.ajax({
                 type: 'POST',
                 dataType: 'json',
-                data: {tag_name: me.getName()},
+                data: JSON.stringify({
+                    tag_name: me.getName(),
+                    path: me.getPath()
+                }),
                 cache: false,
                 url: askbot['urls']['delete_tag'],
                 success: function(data) {
@@ -2857,22 +2863,23 @@ Category.prototype.getSaveHandler = function() {
     var settings = this._settings;
     //here we need old value and new value
     return function(){
-        var new_name = me.getInput();
+        var to_name = me.getInput();
         try {
-            new_name = cleanTag(new_name, settings);
+            to_name = cleanTag(to_name, settings);
             var data = {
-                old_name: me.getOriginalName(),
-                new_name: new_name
+                from_name: me.getOriginalName(),
+                to_name: to_name,
+                path: me.getPath()
             };
             $.ajax({
                 type: 'POST',
                 dataType: 'json',
-                data: data,
+                data: JSON.stringify(data),
                 cache: false,
                 url: askbot['urls']['rename_tag'],
                 success: function(data) {
                     if (data['success']) {
-                        me.setName(new_name);
+                        me.setName(to_name);
                         me.setState('editable');
                         me.showEditControlsNow();
                     } else {
@@ -2915,10 +2922,12 @@ Category.prototype.addControls = function() {
         gettext('edit'),
         function(){ 
             //todo: I would like to make only one at a time editable
-            //var tree = me.getCategoryTreeObject();
+            //var tree = me.getCategoryTree();
             //tree.closeAllEditors();
             //tree.setState('editable');
-            //tree.selectPath(tree.getPathToCategory(me.getName()));
+            //calc path, then select it
+            var tree = me.getCategoryTree();
+            tree.selectPath(me.getPath());
             me.setState('editing');
             return false;
         }
@@ -2959,7 +2968,7 @@ var CategoryAdder = function() {
 };
 inherits(CategoryAdder, WrappedElement);
 
-CategoryAdder.prototype.setCategoryTreeObject = function(tree) {
+CategoryAdder.prototype.setCategoryTree = function(tree) {
     this._tree = tree;
 };
 
@@ -2999,12 +3008,12 @@ CategoryAdder.prototype.cleanCategoryName = function(name) {
     if (name === '') {
         throw gettext('category name cannot be empty');
     }
-    if ( this._tree.hasCategory(name) ) {
+    //if ( this._tree.hasCategory(name) ) {
         //throw interpolate(
-        throw gettext('this category already exists');
+        //throw gettext('this category already exists');
         //    [this._tree.getDisplayPathByName(name)]
         //)
-    }
+    //}
     return cleanTag(name, this._settings);
 };
 
@@ -3017,6 +3026,10 @@ CategoryAdder.prototype.getPath = function() {
     }
 };
 
+CategoryAdder.prototype.getSelectBox = function() {
+    return this._tree.getSelectBox(this._level);
+};
+
 CategoryAdder.prototype.startAdding = function() {
     try {
         var name = this._input.val();
@@ -3025,9 +3038,16 @@ CategoryAdder.prototype.startAdding = function() {
         alert(error);
         return;
     }
+
+    //don't add dupes to the same level
+    var existing_names = this.getSelectBox().getNames();
+    if ($.inArray(name, existing_names) != -1) {
+        alert(gettext('already exists at the current level!'));
+        return;
+    }
+
     var me = this;
     var tree = this._tree;
-    var current_path = tree.getCurrentPath();
     var adder_path = this.getPath();
 
     $.ajax({
@@ -3043,8 +3063,7 @@ CategoryAdder.prototype.startAdding = function() {
             if (data['success']) {
                 //rebuild category tree based on data
                 tree.setData(data['tree_data']);
-                //re-open current branch
-                tree.selectCategory(name);
+                tree.selectPath(data['new_path']);
                 tree.setState('editable');
                 me.setState('waiting');
             } else {
@@ -3115,14 +3134,6 @@ var CategorySelectBox = function() {
 };
 inherits(CategorySelectBox, SelectBox);
 
-CategorySelectBox.prototype.addItem = function(id, name, description) {
-    var item = CategorySelectBox.superClass_.addItem.call(
-        this, id, name, description
-    );
-    item.setCategoryTreeObject(this._tree);
-    return item;
-};
-
 CategorySelectBox.prototype.setState = function(state) {
     this._state = state;
     if (state === 'select') {
@@ -3140,18 +3151,29 @@ CategorySelectBox.prototype.setState = function(state) {
     }
 };
 
-CategorySelectBox.prototype.setCategoryTreeObject = function(tree) {
+CategorySelectBox.prototype.setCategoryTree = function(tree) {
     this._tree = tree;
+};
+
+CategorySelectBox.prototype.getCategoryTree = function() {
 };
 
 CategorySelectBox.prototype.setLevel = function(level) {
     this._level = level;
 };
 
+CategorySelectBox.prototype.getNames = function() {
+    var names = [];
+    $.each(this._items, function(idx, item) {
+        names.push(item.getName());
+    });
+    return names;
+};
+
 CategorySelectBox.prototype.appendCategoryAdder = function() {
     var adder = new CategoryAdder();
     adder.setLevel(this._level);
-    adder.setCategoryTreeObject(this._tree);
+    adder.setCategoryTree(this._tree);
     this._category_adder = adder;
     this._element.append(adder.getElement());
 };
@@ -3227,8 +3249,47 @@ CategorySelector.prototype.setState = function(state) {
     });
 };
 
+CategorySelector.prototype.getPathToItem = function(item) {
+    function findPathToItemInTree(tree, item) {
+        for (var i = 0; i < tree.length; i++) {
+            var node = tree[i];
+            if (node[2] === item) {
+                return [i];
+            }
+            var path = findPathToItemInTree(node[1], item);
+            if (path.length > 0) {
+                path.unshift(i);
+                return path;
+            }
+        }
+        return [];
+    };
+    return findPathToItemInTree(this._data, item);
+};
+
+CategorySelector.prototype.applyToDataItems = function(func) {
+    function applyToDataItems(tree) {
+        $.each(tree, function(idx, item) {
+            func(item);
+            applyToDataItems(item[1]);
+        });
+    };
+    if (this._data) {
+        applyToDataItems(this._data);
+    }
+};
+
 CategorySelector.prototype.setData = function(data) {
+    this._clearData
     this._data = data;
+    var tree = this;
+    function attachCategory(item) {
+        var cat = new Category();
+        cat.setName(item[0]);
+        cat.setCategoryTree(tree);
+        item[2] = cat;
+    };
+    this.applyToDataItems(attachCategory);
 };
 
 /**
@@ -3237,38 +3298,8 @@ CategorySelector.prototype.setData = function(data) {
  */
 CategorySelector.prototype.clearCategoryLevels = function(level) {
     for (var i = level; i < 3; i++) {
-        this._selectors[i].removeAllItems();
+        this._selectors[i].detachAllItems();
     }
-};
-
-CategorySelector.prototype.getPathToCategory = function(name) {
-    function getPath(name, data, path) {
-        for (var i = 0; i < data.length; i++) {
-            //calc path for new item
-            var item_path = path.slice();
-            item_path.push(i);
-            //check name of the current node
-            if (data[i][0] === name) {
-                return item_path
-            }
-            //check in the subtree
-            var deep_path = getPath(name, data[i][1], item_path);
-            if (deep_path.length > item_path.length) {
-                return deep_path;
-            }
-        }
-        return path;
-    }
-    var path = getPath(name, this._data[0][1], [0]);
-    if (path.length === 1) {
-        return undefined;
-    } else {
-        return path;
-    }
-};
-
-CategorySelector.prototype.hasCategory = function(category) {
-    return this.getPathToCategory(category) !== undefined;
 };
 
 CategorySelector.prototype.getLeafItems = function(selection_path) {
@@ -3296,10 +3327,12 @@ CategorySelector.prototype.populateCategoryLevel = function(source_path) {
     var items  = this.getLeafItems(source_path);
 
     $.each(items, function(idx, item) {
-        var tag_name = item[0];
-        selector.addItem(idx, tag_name, '');//first and last are dummy values
-        if (item[1].length > 0) {
-            selector.setItemClass(idx, 'tree');
+        var category_name = item[0];
+        var category_subtree = item[1];
+        var category_object = item[2];
+        selector.addItemObject(category_object);
+        if (category_subtree.length > 0) {
+            category_object.addCssClass('tree');
         }
     });
 
@@ -3319,21 +3352,21 @@ CategorySelector.prototype.selectPath = function(path) {
     }
 };
 
-CategorySelector.prototype.selectCategory = function(name) {
-    var path = this.getPathToCategory(name);
-    this.selectPath(path);
+CategorySelector.prototype.getSelectBox = function(level) {
+    return this._selectors[level];
 };
 
 CategorySelector.prototype.getSelectedPath = function(selected_level) {
-    var path = [0];//root
+    var path = [0];//root, todo: better use names for path???
     /* 
      * upper limit capped by current clicked level
      * we ignore all selection above the current level
      */
     for (var i = 0; i < selected_level + 1; i++) {
-        var data = this._selectors[i].getSelectedItemData();
-        if (data){
-            path.push(parseInt(data['id']));
+        var selector = this._selectors[i];
+        var item = selector.getSelectedItem();
+        if (item) {
+            path.push(selector.getItemIndex(item));
         } else {
             return path;
         }
@@ -3400,21 +3433,21 @@ CategorySelector.prototype.decorate = function(element) {
 
     var selector0 = new CategorySelectBox();
     selector0.setLevel(0);
-    selector0.setCategoryTreeObject(this);
+    selector0.setCategoryTree(this);
     selector0.decorate(element.find('.cat-col-0'));
     selector0.setSelectHandler(this.getSelectHandler(0));
     this._selectors.push(selector0);
 
     var selector1 = new CategorySelectBox();
     selector1.setLevel(1);
-    selector1.setCategoryTreeObject(this);
+    selector1.setCategoryTree(this);
     selector1.decorate(element.find('.cat-col-1'));
     selector1.setSelectHandler(this.getSelectHandler(1));
     this._selectors.push(selector1)
 
     var selector2 = new CategorySelectBox();
     selector2.setLevel(2);
-    selector2.setCategoryTreeObject(this);
+    selector2.setCategoryTree(this);
     selector2.decorate(element.find('.cat-col-2'));
     selector2.setSelectHandler(this.getSelectHandler(2));
     this._selectors.push(selector2);
