@@ -1159,6 +1159,10 @@ ul.tags.marked-tags li,
 ul#ab-user-tags li {
     width: 160px;
     margin:5px;
+    margin-left: 0;
+}
+.tags-page ul.tags {
+    margin-left: 5px;
 }
 
 ul#related-tags li {
@@ -3293,19 +3297,26 @@ p.signup_p {
 .avatar-page li {
     display: inline;
 }
-.user-profile-page .avatar p {
-    margin-bottom: 0px;
+
+.user-profile-page {
+    .avatar p {
+        margin-bottom: 0px;
+    }
+    .tabBar a#stats {
+        margin-left: 0;
+    }
+    img.gravatar {
+        margin: 2px 0 3px 0;
+    }
+    h3 {
+        padding: 0;
+        margin-top: -3px;
+    }
+    ul.tags {
+        margin-left: 5px;
+    }
 }
-.user-profile-page .tabBar a#stats {
-    margin-left: 0;
-}
-.user-profile-page img.gravatar {
-    margin: 2px 0 3px 0;
-}
-.user-profile-page h3 {
-    padding: 0;
-    margin-top: -3px;
-}
+
 .userList {
     font-size: 13px;
 }

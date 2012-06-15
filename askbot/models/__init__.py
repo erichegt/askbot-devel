@@ -82,7 +82,7 @@ User.add_to_class(
                     )
         )
 
-User.add_to_class('email_isvalid', models.BooleanField(default=False))
+User.add_to_class('email_isvalid', models.BooleanField(default=False)) #@UndefinedVariable
 User.add_to_class('email_key', models.CharField(max_length=32, null=True))
 #hardcoded initial reputaion of 1, no setting for this one
 User.add_to_class('reputation',
@@ -122,6 +122,8 @@ User.add_to_class('interesting_tags', models.TextField(blank = True))
 User.add_to_class('ignored_tags', models.TextField(blank = True))
 User.add_to_class('subscribed_tags', models.TextField(blank = True))
 User.add_to_class('email_signature', models.TextField(blank = True))
+User.add_to_class('show_marked_tags', models.BooleanField(default = True))
+
 User.add_to_class(
     'email_tag_filter_strategy',
     models.SmallIntegerField(
@@ -236,6 +238,42 @@ def user_get_old_vote_for_post(self, post):
         return None
     except Vote.MultipleObjectsReturned:
         raise AssertionError
+
+def user_get_marked_tags(self, reason):
+    """reason is a type of mark: good, bad or subscribed"""
+    assert(reason in ('good', 'bad', 'subscribed'))
+    if reason == 'subscribed':
+        if askbot_settings.SUBSCRIBED_TAG_SELECTOR_ENABLED == False:
+            return Tag.objects.none()
+
+    return Tag.objects.filter(
+        user_selections__user = self,
+        user_selections__reason = reason
+    )
+
+MARKED_TAG_PROPERTY_MAP = {
+    'good': 'interesting_tags',
+    'bad': 'ignored_tags',
+    'subscribed': 'subscribed_tags'
+}
+def user_get_marked_tag_names(self, reason):
+    """returns list of marked tag names for a give
+    reason: good, bad, or subscribed
+    will add wildcard tags as well, if used
+    """
+    if reason == 'subscribed':
+        if askbot_settings.SUBSCRIBED_TAG_SELECTOR_ENABLED == False:
+            return list()
+
+    tags = self.get_marked_tags(reason)
+    tag_names = list(tags.values_list('name', flat = True))
+
+    if askbot_settings.USE_WILDCARD_TAGS:
+        attr_name = MARKED_TAG_PROPERTY_MAP[reason]
+        wildcard_tags = getattr(self, attr_name).split()
+        tag_names.extend(wildcard_tags)
+        
+    return tag_names
 
 def user_has_affinity_to_question(self, question = None, affinity_type = None):
     """returns True if number of tag overlap of the user tag
@@ -2476,6 +2514,8 @@ User.add_to_class('get_absolute_url', user_get_absolute_url)
 User.add_to_class('get_avatar_url', user_get_avatar_url)
 User.add_to_class('get_default_avatar_url', user_get_default_avatar_url)
 User.add_to_class('get_gravatar_url', user_get_gravatar_url)
+User.add_to_class('get_marked_tags', user_get_marked_tags)
+User.add_to_class('get_marked_tag_names', user_get_marked_tag_names)
 User.add_to_class('strip_email_signature', user_strip_email_signature)
 User.add_to_class('get_groups_membership_info', user_get_groups_membership_info)
 User.add_to_class('get_anonymous_name', user_get_anonymous_name)

@@ -372,6 +372,7 @@ class GroupProfile(models.Model):
                         )
 
     class Meta:
+        #added to make account merges work properly
         app_label = 'askbot'
 
     def can_accept_user(self, user):
