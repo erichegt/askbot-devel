@@ -4,7 +4,7 @@ Changes in Askbot
 Development version
 -------------------
 * Welcome email for the case when replying by email is enabled (Evgeny)
-* Detection of email signature based on the response to the welome email (Evgeny)
+* Detection of email signature based on the response to the welcome email (Evgeny)
 * Hide "website" and "about" section of the blocked user profiles
   to help prevent user profile spam (Evgeny)
 * Added a function to create a custom user profile tab,
