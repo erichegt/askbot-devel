@@ -1,7 +1,9 @@
 {% from "macros.html" import timeago %}
+{% if settings.SIDEBAR_QUESTION_HEADER %}
 <div class="box">
     {{ settings.SIDEBAR_QUESTION_HEADER }}
 </div>
+{% endif %}
 <div class="box vote-buttons">
     <h2 >{% trans %}Question tools{% endtrans %}</h2>
     {% if favorited %}

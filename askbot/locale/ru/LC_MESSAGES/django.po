@@ -4844,7 +4844,7 @@ msgstr "редактировать"
 #: skins/default/templates/macros.html:525
 #: skins/default/templates/question.html:511
 msgid "add comment"
-msgstr "добавить комментарий"
+msgstr "добавить"
 
 #: skins/default/templates/macros.html:518
 #, python-format
