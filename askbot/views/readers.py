@@ -164,7 +164,7 @@ def questions(request, **kwargs):
             },
             'paginator': paginator_html,
             'question_counter': question_counter,
-            'faces': [extra_tags.gravatar(contributor, 48) for contributor in contributors],
+            'faces': [],#[extra_tags.gravatar(contributor, 48) for contributor in contributors],
             'feed_url': context_feed_url,
             'query_string': search_state.query_string(),
             'page_size' : page_size,
@@ -172,7 +172,7 @@ def questions(request, **kwargs):
             'non_existing_tags': meta_data['non_existing_tags']
         }
         ajax_data['related_tags'] = [{
-            'name': tag.name,
+            'name': escape(tag.name),
             'used_count': humanize.intcomma(tag.local_used_count)
         } for tag in related_tags]
 

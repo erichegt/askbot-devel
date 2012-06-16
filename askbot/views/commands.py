@@ -14,6 +14,7 @@ from django.forms import ValidationError, IntegerField, CharField
 from django.shortcuts import get_object_or_404
 from django.views.decorators import csrf
 from django.utils import simplejson
+from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from django.utils.translation import string_concat
 from askbot import models
@@ -576,7 +577,7 @@ def api_get_questions(request):
     threads = threads.distinct()[:30]
     thread_list = [{
         'url': thread.get_absolute_url(),
-        'title': thread.title,
+        'title': escape(thread.title),
         'answer_count': thread.answer_count
     } for thread in threads]
     json_data = simplejson.dumps(thread_list)
