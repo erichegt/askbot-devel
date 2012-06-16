@@ -15,6 +15,7 @@ from django.http import HttpResponseRedirect, HttpResponse, Http404, HttpRespons
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.template import Context
 from django.utils import simplejson
+from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from django.utils import translation
