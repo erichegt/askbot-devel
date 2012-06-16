@@ -13,6 +13,7 @@ from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from django.contrib.auth.models import User
 from django.utils.safestring import mark_safe
+from django.utils.html import escape
 from django.db import models
 from django.conf import settings as django_settings
 from django.contrib.contenttypes.models import ContentType
@@ -38,6 +39,7 @@ from askbot.models.repute import Award, Repute, Vote
 from askbot import auth
 from askbot.utils.decorators import auto_now_timestamp
 from askbot.utils.slug import slugify
+from askbot.utils.html import sanitize_html
 from askbot.utils.diff import textDiff as htmldiff
 from askbot.utils.url_utils import strip_path
 from askbot import mail
@@ -2094,7 +2096,7 @@ def user_get_absolute_url(self):
 
 def get_profile_link(self):
     profile_link = u'<a href="%s">%s</a>' \
-        % (self.get_profile_url(),self.username)
+        % (self.get_profile_url(), escape(self.username))
 
     return mark_safe(profile_link)
 
@@ -2684,8 +2686,8 @@ def format_instant_notification_email(
         revisions = post.revisions.all()[:2]
         assert(len(revisions) == 2)
         content_preview = htmldiff(
-                revisions[1].html,
-                revisions[0].html,
+                sanitize_html(revisions[1].html),
+                sanitize_html(revisions[0].html),
                 ins_start = '<b><u style="background-color:#cfc">',
                 ins_end = '</u></b>',
                 del_start = '<del style="color:#600;background-color:#fcc">',

@@ -34,6 +34,7 @@ from askbot import schedules
 from askbot.models.tag import Tag
 from askbot import const
 from askbot.utils import functions
+from askbot.utils.html import sanitize_html
 from askbot.utils.decorators import anonymous_forbidden, ajax_only, get_only
 from askbot.search.state_manager import SearchState, DummySearchState
 from askbot.templatetags import extra_tags
@@ -562,10 +563,13 @@ def revisions(request, id, post_type = None):
     revisions.reverse()
     for i, revision in enumerate(revisions):
         if i == 0:
-            revision.diff = revisions[i].html
+            revision.diff = sanitize_html(revisions[i].html)
             revision.summary = _('initial version')
         else:
-            revision.diff = htmldiff(revisions[i-1].html, revision.html)
+            revision.diff = htmldiff(
+                sanitize_html(revisions[i-1].html),
+                sanitize_html(revision.html)
+            )
 
     data = {
         'page_class':'revisions-page',

@@ -399,9 +399,8 @@ class Post(models.Model):
 
             extra_authors = set()
             for name_seed in extra_name_seeds:
-                extra_authors.update(User.objects.filter(
-                    username__istartswith = name_seed
-                )
+                extra_authors.update(
+                    User.objects.filter(username__istartswith = name_seed)
                 )
 
             #it is important to preserve order here so that authors of post
@@ -470,9 +469,12 @@ class Post(models.Model):
         #because generic relation needs primary key of the related object
         super(self.__class__, self).save(**kwargs)
         if last_revision:
-            diff = htmldiff(last_revision, self.html)
+            diff = htmldiff(
+                        sanitize_html(last_revision),
+                        sanitize_html(self.html)
+                    )
         else:
-            diff = self.get_snippet()
+            diff = sanitize_html(self.get_snippet())
 
         timestamp = self.get_time_of_last_edit()
 

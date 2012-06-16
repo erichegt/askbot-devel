@@ -5,6 +5,7 @@ import re
 import htmlentitydefs
 from urlparse import urlparse
 from django.core.urlresolvers import reverse
+from django.utils.html import escape
 
 class HTMLSanitizerMixin(sanitizer.HTMLSanitizerMixin):
     acceptable_elements = ('a', 'abbr', 'acronym', 'address', 'b', 'big',
@@ -62,7 +63,7 @@ def site_link(url_name, title):
     from askbot.conf import settings
     base_url = urlparse(settings.APP_URL)
     url = base_url.scheme + '://' + base_url.netloc + reverse(url_name)
-    return '<a href="%s">%s</a>' % (url, title)
+    return '<a href="%s">%s</a>' % (url, escape(title))
 
 def unescape(text):
     """source: http://effbot.org/zone/re-sub.htm#unescape-html

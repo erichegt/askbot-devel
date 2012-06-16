@@ -4,7 +4,7 @@
 {% block title %}{% spaceless %}{% trans %}Edit user profile{% endtrans %}{% endspaceless %}{% endblock %}
 {% block content %}
 <h1 class="section-title">
-    {{ request.user.username }} - {% trans %}edit profile{% endtrans %}
+    {{ request.user.username|escape }} - {% trans %}edit profile{% endtrans %}
 </h1>
 <div id="main-body" style="width:100%;padding-top:10px">
     <form name="" action="{% url edit_user request.user.id %}" method="post">{% csrf_token %}
@@ -42,7 +42,7 @@
                     {{ form.username }}
                     <span class="form-error"> {{ form.username.errors }} </span></td>
                 {% else %}
-                    {{ view_user.username }}
+                    {{ view_user.username|escape }}
                 {% endif %}
                 </td>
                 </tr>

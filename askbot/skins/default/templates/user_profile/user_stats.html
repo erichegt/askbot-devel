@@ -10,7 +10,7 @@
     {% if settings.GROUPS_ENABLED %}
     <div id="user-groups">
         <h2>{% trans 
-                username = view_user.username
+                username = view_user.username|escape
             %}{{username}}'s groups{% endtrans %}
         </h2>
         <table id="groups-list">
@@ -146,7 +146,7 @@
                                     <a
                                         title="{{ award.content_object.get_snippet()|collapse }}"
                                         href="{{ award.content_object.get_absolute_url() }}"
-                                    >{% if award.content_type.post_type == 'answer' %}{% trans %}Answer to:{% endtrans %}{% endif %} {{ award.content_object.thread.title }}</a>
+                                    >{% if award.content_type.post_type == 'answer' %}{% trans %}Answer to:{% endtrans %}{% endif %} {{ award.content_object.thread.title|escape }}</a>
                                 </li>
                                 {% endif %}
                             {% endfor %}

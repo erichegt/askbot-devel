@@ -11,7 +11,7 @@
                 {% if view_user.id == user.id %}
                 <h2>{% trans %}Your karma change log.{% endtrans %}</h2>
                 {% else %}
-                <h2>{% trans user_name=view_user.username %}{{user_name}}'s karma change log{% endtrans %}</h2>
+                <h2>{% trans user_name=view_user.username|escape %}{{user_name}}'s karma change log{% endtrans %}</h2>
                 {% endif %}
                 {% for rep in reputation %}
                 <p>
