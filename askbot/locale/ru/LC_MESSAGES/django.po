@@ -8403,7 +8403,7 @@ msgstr "Сорт. по &raquo;"
 
 #: skins/default/templates/main_page/headline.html:12
 msgid "Tagged"
-msgstr "Отмечено"
+msgstr "В тегах"
 
 #: skins/default/templates/main_page/nothing_found.html:8
 msgid "Please follow some questions or follow some users."
