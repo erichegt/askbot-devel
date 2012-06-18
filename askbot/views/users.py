@@ -99,7 +99,7 @@ def users(request, by_group = False, group_id = None, group_slug = None):
                                         }
                                     )
                     return HttpResponseRedirect(group_page_url)
-            
+
 
     is_paginated = True
 
@@ -331,7 +331,7 @@ def user_stats(request, user, context):
     # Questions
     #
     questions = user.posts.get_questions().filter(**question_filter).\
-                    order_by('-score', '-thread__last_activity_at').\
+                    order_by('-points', '-thread__last_activity_at').\
                     select_related('thread', 'thread__last_activity_by')[:100]
 
     #added this if to avoid another query if questions is less than 100
@@ -347,7 +347,7 @@ def user_stats(request, user, context):
         deleted=False,
         thread__posts__deleted=False,
         thread__posts__post_type='question',
-    ).select_related('thread').order_by('-score', '-added_at')[:100]
+    ).select_related('thread').order_by('-points', '-added_at')[:100]
 
     top_answer_count = len(top_answers)
 
@@ -381,7 +381,7 @@ def user_stats(request, user, context):
         interesting_tag_names = None
         ignored_tag_names = None
         subscribed_tag_names = None
-        
+
 #    tags = models.Post.objects.filter(author=user).values('id', 'thread', 'thread__tags')
 #    post_ids = set()
 #    thread_ids = set()
@@ -800,7 +800,7 @@ def user_favorites(request, user, context):
     favorite_threads = user.user_favorite_questions.values_list('thread', flat=True)
     questions = models.Post.objects.filter(post_type='question', thread__in=favorite_threads)\
                     .select_related('thread', 'thread__last_activity_by')\
-                    .order_by('-score', '-thread__last_activity_at')[:const.USER_VIEW_DATA_SIZE]
+                    .order_by('-points', '-thread__last_activity_at')[:const.USER_VIEW_DATA_SIZE]
 
     data = {
         'active_tab':'users',

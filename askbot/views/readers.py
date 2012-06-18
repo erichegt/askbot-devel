@@ -413,7 +413,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
             return HttpResponseRedirect(reverse('index'))
 
     elif show_answer:
-        #if the url calls to view a particular answer to 
+        #if the url calls to view a particular answer to
         #question - we must check whether the question exists
         #whether answer is actually corresponding to the current question
         #and that the visitor is allowed to see it
@@ -455,7 +455,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
         user_post_id_list = [
             id for id in post_to_author if post_to_author[id] == request.user.id
         ]
-        
+
     #resolve page number and comment number for permalinks
     show_comment_position = None
     if show_comment:
@@ -520,7 +520,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
         is_cacheable = False
     elif show_comment_position > askbot_settings.MAX_COMMENTS_TO_SHOW:
         is_cacheable = False
-        
+
     answer_form = AnswerForm(
         initial = {
             'wiki': question_post.wiki and askbot_settings.WIKI_ON,
@@ -608,5 +608,5 @@ def widget_questions(request):
     data = {
         'threads': threads[:askbot_settings.QUESTIONS_WIDGET_MAX_QUESTIONS]
     }
-    return render_into_skin('question_widget.html', data, request) 
-    
+    return render_into_skin('question_widget.html', data, request)
+

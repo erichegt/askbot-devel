@@ -160,7 +160,7 @@ def process_vote(user = None, vote_direction = None, post = None):
     if vote != None:
         user.assert_can_revoke_old_vote(vote)
         score_delta = vote.cancel()
-        response_data['count'] = post.score + score_delta
+        response_data['count'] = post.points+ score_delta
         response_data['status'] = 1 #this means "cancel"
 
     else:
@@ -183,7 +183,7 @@ def process_vote(user = None, vote_direction = None, post = None):
         else:
             vote = user.downvote(post = post)
 
-        response_data['count'] = post.score
+        response_data['count'] = post.points
         response_data['status'] = 0 #this means "not cancel", normal operation
 
     response_data['success'] = 1
@@ -326,7 +326,7 @@ def vote(request, id):
 
             response_data['count'] = post.offensive_flag_count
             response_data['success'] = 1
-        
+
         elif vote_type in ['7.6', '8.6']:
             #flag question or answer
             if vote_type == '7.6':
@@ -463,7 +463,7 @@ def get_tags_by_wildcard(request):
     wildcard = request.GET.get('wildcard', None)
     if wildcard is None:
         raise Http404
-        
+
     matching_tags = models.Tag.objects.get_by_wildcards( [wildcard,] )
     count = matching_tags.count()
     names = matching_tags.values_list('name', flat = True)[:20]
@@ -513,7 +513,7 @@ def save_tag_wiki_text(request):
         return {'html': tag_wiki.html}
     else:
         raise ValueError('invalid post data')
-            
+
 
 @decorators.get_only
 def get_groups_list(request):
@@ -701,7 +701,8 @@ def upvote_comment(request):
         )
     else:
         raise ValueError
-    return {'score': comment.score}
+    #FIXME: rename js
+    return {'score': comment.points}
 
 @csrf.csrf_exempt
 @decorators.ajax_only
@@ -782,7 +783,7 @@ def edit_group_membership(request):
 @decorators.admins_only
 def save_group_logo_url(request):
     """saves urls for the group logo"""
-    form = forms.GroupLogoURLForm(request.POST)    
+    form = forms.GroupLogoURLForm(request.POST)
     if form.is_valid():
         group_id = form.cleaned_data['group_id']
         image_url = form.cleaned_data['image_url']

@@ -164,7 +164,7 @@ class ThreadManager(models.Manager):
 
         # TODO: add a possibility to see deleted questions
         qs = self.filter(
-                posts__post_type='question', 
+                posts__post_type='question',
                 posts__deleted=False,
             ) # (***) brings `askbot_post` into the SQL query, see the ordering section below
 
@@ -288,8 +288,8 @@ class ThreadManager(models.Manager):
             'activity-asc': 'last_activity_at',
             'answers-desc': '-answer_count',
             'answers-asc': 'answer_count',
-            'votes-desc': '-score',
-            'votes-asc': 'score',
+            'votes-desc': '-points',
+            'votes-asc': 'points',
 
             'relevance-desc': '-relevance', # special Postgresql-specific ordering, 'relevance' quaso-column is added by get_for_query()
         }
@@ -318,7 +318,7 @@ class ThreadManager(models.Manager):
         #threads = [thread for thread in threads if not thread.summary_html_cached()]
 
         page_questions = Post.objects.filter(post_type='question', thread__in=[obj.id for obj in threads])\
-                            .only('id', 'thread', 'score', 'is_anonymous', 'summary', 'post_type', 'deleted') # pick only the used fields
+                            .only('id', 'thread', 'points', 'is_anonymous', 'summary', 'post_type', 'deleted') # pick only the used fields
         page_question_map = {}
         for pq in page_questions:
             page_question_map[pq.thread_id] = pq
@@ -402,12 +402,22 @@ class Thread(models.Model):
     answer_accepted_at = models.DateTimeField(null=True, blank=True)
     added_at = models.DateTimeField(default = datetime.datetime.now)
 
-    score = models.IntegerField(default = 0)
+    #db_column will be removed later
+    points = models.IntegerField(default = 0, db_column='score')
 
     objects = ThreadManager()
-    
+
     class Meta:
         app_label = 'askbot'
+
+    #property to support legacy themes in case there are.
+    @property
+    def score(self):
+        return int(self.points)
+    @score.setter
+    def score(self, number):
+        if number:
+            self.points = int(number)
 
     def _question_post(self, refresh=False):
         if refresh and hasattr(self, '_question_cache'):
@@ -526,7 +536,7 @@ class Thread(models.Model):
         return 'thread-data-%s-%s' % (self.id, sort_method)
 
     def invalidate_cached_post_data(self):
-        """needs to be called when anything notable 
+        """needs to be called when anything notable
         changes in the post data - on votes, adding,
         deleting, editing content"""
         #we can call delete_many() here if using Django > 1.2
@@ -559,7 +569,7 @@ class Thread(models.Model):
                     {
                         'latest':'-added_at',
                         'oldest':'added_at',
-                        'votes':'-score'
+                        'votes':'-points'
                     }[sort_method]
                 )
         #1) collect question, answer and comment posts and list of post id's

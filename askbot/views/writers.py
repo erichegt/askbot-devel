@@ -46,7 +46,7 @@ QUESTIONS_PAGE_SIZE = 10
 ANSWERS_PAGE_SIZE = 10
 
 @csrf.csrf_exempt
-def upload(request):#ajax upload file to a question or answer 
+def upload(request):#ajax upload file to a question or answer
     """view that handles file upload via Ajax
     """
 
@@ -66,7 +66,7 @@ def upload(request):#ajax upload file to a question or answer
         file_name_prefix = request.POST.get('file_name_prefix', '')
         if file_name_prefix not in ('', 'group_logo_'):
             raise exceptions.PermissionDenied('invalid upload file name prefix')
-        
+
         # check file type
         f = request.FILES['file-upload']
         #todo: extension checking should be replaced with mimetype checking
@@ -118,14 +118,14 @@ def __import_se_data(dump_file):
     """non-view function that imports the SE data
     in the future may import other formats as well
 
-    In this function stdout is temporarily 
+    In this function stdout is temporarily
     redirected, so that the underlying importer management
     command could stream the output to the browser
 
     todo: maybe need to add try/except clauses to restore
     the redirects in the exceptional situations
     """
-    
+
     fake_stdout = tempfile.NamedTemporaryFile()
     real_stdout = sys.stdout
     sys.stdout = fake_stdout
@@ -381,7 +381,7 @@ def edit_question(request, id):
                             body_text = form.cleaned_data['text'],
                             revision_comment = form.cleaned_data['summary'],
                             tags = form.cleaned_data['tags'],
-                            wiki = is_wiki, 
+                            wiki = is_wiki,
                             edit_anonymously = is_anon_edit,
                         )
                     return HttpResponseRedirect(question.get_absolute_url())
@@ -421,7 +421,7 @@ def edit_answer(request, id):
             if 'select_revision' in request.POST:
                 # user has changed revistion number
                 revision_form = forms.RevisionForm(
-                                                answer, 
+                                                answer,
                                                 latest_revision,
                                                 request.POST
                                             )
@@ -550,7 +550,8 @@ def __generate_comments_json(obj, user):#non-view generates json data for the po
             'user_id': comment_owner.id,
             'is_deletable': is_deletable,
             'is_editable': is_editable,
-            'score': comment.score,
+            'points': comment.points,
+            'score': comment.points, #to support js
             'upvoted_by_user': getattr(comment, 'upvoted_by_user', False)
         }
         json_comments.append(comment_data)
@@ -615,7 +616,8 @@ def edit_comment(request):
         'user_id': comment_post.author.id,
         'is_deletable': is_deletable,
         'is_editable': is_editable,
-        'score': comment_post.score,
+        'score': comment_post.points, #to support unchanged js
+        'points': comment_post.points,
         'voted': comment_post.is_upvoted_by(request.user),
     }
 

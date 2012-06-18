@@ -274,7 +274,7 @@ def user_get_marked_tag_names(self, reason):
         attr_name = MARKED_TAG_PROPERTY_MAP[reason]
         wildcard_tags = getattr(self, attr_name).split()
         tag_names.extend(wildcard_tags)
-        
+
     return tag_names
 
 def user_has_affinity_to_question(self, question = None, affinity_type = None):
@@ -338,7 +338,7 @@ def user_can_have_strong_url(self):
     return (self.reputation >= askbot_settings.MIN_REP_TO_HAVE_STRONG_URL)
 
 def user_can_post_by_email(self):
-    """True, if reply by email is enabled 
+    """True, if reply by email is enabled
     and user has sufficient reputatiton"""
     return askbot_settings.REPLY_BY_EMAIL and \
         self.reputation > askbot_settings.MIN_REP_TO_POST_BY_EMAIL
@@ -749,7 +749,7 @@ def user_assert_can_delete_question(self, question = None):
         #if there are answers by other people,
         #then deny, unless user in admin or moderator
         answer_count = question.thread.all_answers()\
-                        .exclude(author=self).exclude(score__lte=0).count()
+                        .exclude(author=self).exclude(points__lte=0).count()
 
         if answer_count > 0:
             if self.is_administrator() or self.is_moderator():
@@ -2126,7 +2126,7 @@ def user_get_groups_membership_info(self, groups):
         info[group.id]['can_join'] = group.group_profile.can_accept_user(self)
 
     return info
-        
+
 
 
 def user_get_karma_summary(self):
@@ -2271,12 +2271,12 @@ def _process_vote(user, post, timestamp=None, cancel=False, vote_type=None):
             auth.onDownVotedCanceled(vote, post, user, timestamp)
         else:
             auth.onDownVoted(vote, post, user, timestamp)
-            
+
     post.thread.invalidate_cached_data()
 
     if post.post_type == 'question':
         #denormalize the question post score on the thread
-        post.thread.score = post.score
+        post.thread.points = post.points
         post.thread.save()
         post.thread.update_summary_html()
 
@@ -2363,12 +2363,12 @@ def flag_post(user, post, timestamp=None, cancel=False, cancel_all = False, forc
                         content_type = post_content_type, object_id=post.id
                     )
         for flag in all_flags:
-            auth.onUnFlaggedItem(post, flag.user, timestamp=timestamp)            
+            auth.onUnFlaggedItem(post, flag.user, timestamp=timestamp)
 
     elif cancel:#todo: can't unflag?
         if force == False:
             user.assert_can_remove_flag_offensive(post = post)
-        auth.onUnFlaggedItem(post, user, timestamp=timestamp)        
+        auth.onUnFlaggedItem(post, user, timestamp=timestamp)
 
     else:
         if force == False:
@@ -2708,17 +2708,17 @@ def format_instant_notification_email(
         if update_type.endswith('update'):
             user_action = _('%(user)s edited a %(post_link)s.')
         else:
-            user_action = _('%(user)s posted a %(post_link)s') 
+            user_action = _('%(user)s posted a %(post_link)s')
     elif post.is_answer():
         if update_type.endswith('update'):
             user_action = _('%(user)s edited an %(post_link)s.')
         else:
-            user_action = _('%(user)s posted an %(post_link)s.') 
+            user_action = _('%(user)s posted an %(post_link)s.')
     elif post.is_question():
         if update_type.endswith('update'):
             user_action = _('%(user)s edited a %(post_link)s.')
         else:
-            user_action = _('%(user)s posted a %(post_link)s.') 
+            user_action = _('%(user)s posted a %(post_link)s.')
     else:
         raise ValueError('unrecognized post type')
 
@@ -2746,7 +2746,7 @@ def format_instant_notification_email(
             reply_separator += '</p>'
     else:
         reply_separator = user_action
-                    
+
     update_data = {
         'update_author_name': from_user.username,
         'receiving_user_name': to_user.username,
@@ -2775,7 +2775,7 @@ def get_reply_to_addresses(user, post):
     the first address - always a real email address,
     the second address is not ``None`` only for "question" posts.
 
-    When the user is notified of a new question - 
+    When the user is notified of a new question -
     i.e. `post` is a "quesiton", he/she
     will need to choose - whether to give a question or a comment,
     thus we return the second address - for the comment reply.
@@ -2857,7 +2857,7 @@ def send_instant_notifications_about_activity_in_post(
                             update_type = update_type,
                             template = get_template('instant_notification.html')
                         )
-      
+
         headers['Reply-To'] = reply_address
         mail.send_mail(
             subject_line = subject_line,
@@ -2878,7 +2878,7 @@ def notify_author_of_published_revision(
     if revision.should_notify_author_about_publishing(was_approved):
         from askbot.tasks import notify_author_of_published_revision_celery_task
         notify_author_of_published_revision_celery_task.delay(revision)
-    
+
 
 #todo: move to utils
 def calculate_gravatar_hash(instance, **kwargs):
@@ -3255,7 +3255,7 @@ def update_user_avatar_type_flag(instance, **kwargs):
 def make_admin_if_first_user(instance, **kwargs):
     """first user automatically becomes an administrator
     the function is run only once in the interpreter session
-    """    
+    """
     import sys
     #have to check sys.argv to satisfy the test runner
     #which fails with the cache-based skipping

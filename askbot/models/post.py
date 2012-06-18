@@ -199,7 +199,7 @@ class PostManager(BaseQuerySetManager):
             comment = const.POST_STATUS['default_version'],
             by_email = by_email
         )
-        
+
         return post
 
     #todo: instead of this, have Thread.add_answer()
@@ -308,7 +308,7 @@ class Post(models.Model):
     locked_by = models.ForeignKey(User, null=True, blank=True, related_name='locked_posts')
     locked_at = models.DateTimeField(null=True, blank=True)
 
-    score = models.IntegerField(default=0)
+    points = models.IntegerField(default=0, db_column='score')
     vote_up_count = models.IntegerField(default=0)
     vote_down_count = models.IntegerField(default=0)
 
@@ -344,6 +344,14 @@ class Post(models.Model):
         app_label = 'askbot'
         db_table = 'askbot_post'
 
+    #property to support legacy themes in case there are.
+    @property
+    def score(self):
+        return int(self.points)
+    @score.setter
+    def score(self, number):
+        if number:
+            self.points = int(number)
 
     def parse_post_text(self):
         """typically post has a field to store raw source text
@@ -670,7 +678,7 @@ class Post(models.Model):
         does not talk to the actual cache system
         """
         self._cached_comments = comments
-    
+
     def get_cached_comments(self):
         try:
             return self._cached_comments
@@ -1684,7 +1692,7 @@ class PostRevision(models.Model):
     text       = models.TextField()
 
     approved = models.BooleanField(default=False, db_index=True)
-    approved_by = models.ForeignKey(User, null = True, blank = True) 
+    approved_by = models.ForeignKey(User, null = True, blank = True)
     approved_at = models.DateTimeField(null = True, blank = True)
 
     by_email = models.BooleanField(default = False)#true, if edited by email
@@ -1765,7 +1773,7 @@ class PostRevision(models.Model):
                     body_text = body_text,
                     recipient_list = [self.author.email,],
                 )
-                
+
             else:
                 message = _(
                     'Your post was placed on the moderation queue '
