@@ -53,16 +53,18 @@ def get_admins_and_moderators():
         models.Q(is_superuser=True) | models.Q(status='m')
     )
 
-def get_users_by_text_query(search_query):
+def get_users_by_text_query(search_query, users_query_set = None):
     """Runs text search in user names and profile.
     For postgres, search also runs against user group names.
     """
     import askbot
+    if users_query_set is None:
+        users_query_set = User.objects.all()
     if 'postgresql_psycopg2' in askbot.get_database_engine_name():
         from askbot.search import postgresql
-        return postgresql.run_full_text_search(User.objects.all(), search_query)
+        return postgresql.run_full_text_search(users_query_set, search_query)
     else:
-        return User.objects.filter(
+        return users_query_set.filter(
             models.Q(username__icontains=search_query) |
             models.Q(about__icontains=search_query)
         )

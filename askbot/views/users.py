@@ -70,6 +70,8 @@ def users(request, by_group = False, group_id = None, group_slug = None):
             if all((group_id, group_slug)) == False:
                 return HttpResponseRedirect('groups')
             else:
+                import pdb
+                pdb.set_trace()
                 try:
                     group = models.Tag.group_tags.get(id = group_id)
                     group_email_moderation_enabled = \
@@ -81,12 +83,12 @@ def users(request, by_group = False, group_id = None, group_slug = None):
                 except models.Tag.DoesNotExist:
                     raise Http404
                 if group_slug == slugify(group.name):
-                    group_users = models.User.objects.filter(
+                    users = models.User.objects.filter(
                         group_memberships__group__id = group_id
                     )
                     if request.user.is_authenticated():
                         user_is_group_member = bool(
-                                                    group_users.filter(
+                                                    users.filter(
                                                         id = request.user.id
                                                     ).count()
                                                 )
@@ -125,13 +127,13 @@ def users(request, by_group = False, group_id = None, group_slug = None):
             order_by_parameter = '-reputation'
 
         objects_list = Paginator(
-                            models.User.objects.order_by(order_by_parameter),
+                            users.order_by(order_by_parameter),
                             const.USERS_PAGE_SIZE
                         )
         base_url = request.path + '?sort=%s&' % sortby
     else:
         sortby = "reputation"
-        matching_users = models.get_users_by_text_query(search_query)
+        matching_users = models.get_users_by_text_query(search_query, users)
         objects_list = Paginator(
                             matching_users.order_by('-reputation'),
                             const.USERS_PAGE_SIZE
