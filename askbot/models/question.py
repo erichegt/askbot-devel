@@ -191,7 +191,12 @@ class ThreadManager(BaseQuerySetManager):
         if askbot_settings.ENABLE_CONTENT_MODERATION:
             qs = qs.filter(approved = True)
 
-        meta_data = {}
+        #if groups feature is enabled, filter out threads
+        #that are private in groups to which current user does not belong
+        if askbot_settings.GROUPS_ENABLED:
+            #get group names
+            qs = self.exclude_group_private(user = request_user)
+
 
         #run text search while excluding any modifier in the search string
         #like #tag [title: something] @user
@@ -201,12 +206,6 @@ class ThreadManager(BaseQuerySetManager):
         #we run other things after full text search, because
         #FTS may break the chain of the query set calls,
         #since it might go into an external asset, like Solr
-
-        #if groups feature is enabled, filter out threads
-        #that are private in groups to which current user does not belong
-        if askbot_settings.GROUPS_ENABLED:
-            #get group names
-            qs = self.exclude_group_private(user = request_user)
 
         #search in titles, if necessary
         if search_state.query_title:
@@ -226,6 +225,7 @@ class ThreadManager(BaseQuerySetManager):
         #plus any tags added to the query string with #tag or [tag:something] 
         #syntax.
         #run tag search in addition to these unified tags
+        meta_data = {}
         tags = search_state.unified_tags()
         if len(tags) > 0:
 

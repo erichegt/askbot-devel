@@ -164,6 +164,7 @@ def questions(request, **kwargs):
             'threads': page,
             'search_state': search_state,
             'reset_method_count': reset_method_count,
+            'request': request
         }))
 
         ajax_data = {
