@@ -1,5 +1,6 @@
 try:
     from haystack import indexes, site
+    from haystack.query import SearchQuerySet
 except ImportError:
     pass
 
@@ -27,3 +28,9 @@ class PostIndex(indexes.SearchIndex):
 
 site.register(Post, PostIndex)
 site.register(Thread, ThreadIndex)
+
+class AskbotSearchQuerySet(SearchQuerySet):
+
+    def get_django_queryset(self, model_klass):
+        id_list = [r.pk for r in self.models(model_klass)]
+        return model_klass.objects.filter(id__in=id_list)

@@ -2,11 +2,12 @@ import re
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
+from django.conf import settings
 from askbot.models.base import BaseQuerySetManager
 from askbot import const
 
 def tags_match_some_wildcard(tag_names, wildcard_tags):
-    """Same as 
+    """Same as
     :meth:`~askbot.models.tag.TagQuerySet.tags_match_some_wildcard`
     except it works on tag name strings
     """
