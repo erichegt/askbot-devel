@@ -84,7 +84,7 @@ class Command(NoArgsCommand):
             finally:
                 connection.close()
 
-    def get_updated_questions_for_user(self,user):
+    def get_updated_questions_for_user(self, user):
         """
         retreive relevant question updates for the user
         according to their subscriptions and recorded question
@@ -353,7 +353,7 @@ class Command(NoArgsCommand):
             else:
                 meta_data['new_q'] = False
                 
-            new_ans = Post.objects.get_answers().filter(
+            new_ans = Post.objects.get_answers(user).filter(
                                             thread=q.thread,
                                             added_at__gt=emailed_at,
                                             deleted=False,

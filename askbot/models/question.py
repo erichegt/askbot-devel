@@ -15,8 +15,9 @@ import askbot
 from askbot.conf import settings as askbot_settings
 from askbot import mail
 from askbot.mail import messages
-from askbot.models.tag import Tag
-from askbot.models.base import AnonymousContent
+from askbot.models.tag import Tag, get_groups
+from askbot.models.base import AnonymousContent, BaseQuerySetManager
+from askbot.models.tag import Tag, get_groups
 from askbot.models.post import Post, PostRevision
 from askbot.models import signals
 from askbot import const
@@ -26,8 +27,21 @@ from askbot.utils.slug import slugify
 from askbot.skins.loaders import get_template #jinja2 template loading enviroment
 from askbot.search.state_manager import DummySearchState
 
+class ThreadQuerySet(models.query.QuerySet):
+    def exclude_group_private(self, user):
+        """filters out threads not belonging to the user groups"""
+        if user.is_authenticated():
+            groups = user.get_foreign_groups()
+        else:
+            groups = get_groups()
+        #todo: maybe use is_private field
+        return self.exclude(groups__in = groups)
 
-class ThreadManager(models.Manager):
+class ThreadManager(BaseQuerySetManager):
+
+    def get_query_set(self):
+        return ThreadQuerySet(self.model)
+
     def get_tag_summary_from_threads(self, threads):
         """returns a humanized string containing up to
         five most frequently used
@@ -73,6 +87,7 @@ class ThreadManager(models.Manager):
                 text,
                 tagnames = None,
                 is_anonymous = False,
+                is_private = False,
                 by_email = False,
                 email_address = None
             ):
@@ -121,6 +136,9 @@ class ThreadManager(models.Manager):
             by_email = by_email,
             email_address = email_address
         )
+
+        if is_private:#add groups to thread and question
+            thread.make_private(author)
 
         # INFO: Question has to be saved before update_tags() is called
         thread.update_tags(tagnames = tagnames, user = author, timestamp = added_at)
@@ -175,15 +193,39 @@ class ThreadManager(models.Manager):
 
         meta_data = {}
 
+        #run text search while excluding any modifier in the search string
+        #like #tag [title: something] @user
         if search_state.stripped_query:
             qs = self.get_for_query(search_query=search_state.stripped_query, qs=qs)
+
+        #we run other things after full text search, because
+        #FTS may break the chain of the query set calls,
+        #since it might go into an external asset, like Solr
+
+        #if groups feature is enabled, filter out threads
+        #that are private in groups to which current user does not belong
+        if askbot_settings.GROUPS_ENABLED:
+            #get group names
+            qs = self.exclude_group_private(user = request_user)
+
+        #search in titles, if necessary
         if search_state.query_title:
             qs = qs.filter(title__icontains = search_state.query_title)
+
+        #search user names if @user is added to search string
+        #or if user name exists in the search state
         if search_state.query_users:
             query_users = User.objects.filter(username__in=search_state.query_users)
             if query_users:
-                qs = qs.filter(posts__post_type='question', posts__author__in=query_users) # TODO: unify with search_state.author ?
+                qs = qs.filter(
+                    posts__post_type='question',
+                    posts__author__in=query_users
+                ) # TODO: unify with search_state.author ?
 
+        #unified tags - is list of tags taken from the tag selection
+        #plus any tags added to the query string with #tag or [tag:something] 
+        #syntax.
+        #run tag search in addition to these unified tags
         tags = search_state.unified_tags()
         if len(tags) > 0:
 
@@ -214,6 +256,8 @@ class ThreadManager(models.Manager):
         if search_state.scope == 'unanswered':
             qs = qs.filter(closed = False) # Do not show closed questions in unanswered section
             if askbot_settings.UNANSWERED_QUESTION_MEANING == 'NO_ANSWERS':
+                # todo: this will introduce a problem if there are private answers
+                # which are counted here
                 qs = qs.filter(answer_count=0) # TODO: expand for different meanings of this
             elif askbot_settings.UNANSWERED_QUESTION_MEANING == 'NO_ACCEPTED_ANSWERS':
                 qs = qs.filter(accepted_answer__isnull=True)
@@ -319,8 +363,13 @@ class ThreadManager(models.Manager):
         # Precache data only for non-cached threads - only those will be rendered
         #threads = [thread for thread in threads if not thread.summary_html_cached()]
 
-        page_questions = Post.objects.filter(post_type='question', thread__in=[obj.id for obj in threads])\
-                            .only('id', 'thread', 'score', 'is_anonymous', 'summary', 'post_type', 'deleted') # pick only the used fields
+        thread_ids = [obj.id for obj in threads]
+        page_questions = Post.objects.filter(
+            post_type='question', thread__id__in = thread_ids
+        ).only(# pick only the used fields
+            'id', 'thread', 'score', 'is_anonymous',
+            'summary', 'post_type', 'deleted'
+        )
         page_question_map = {}
         for pq in page_questions:
             page_question_map[pq.thread_id] = pq
@@ -374,6 +423,7 @@ class Thread(models.Model):
     title = models.CharField(max_length=300)
 
     tags = models.ManyToManyField('Tag', related_name='threads')
+    groups = models.ManyToManyField('Tag', related_name='group_threads')
 
     # Denormalised data, transplanted from Question
     tagnames = models.CharField(max_length=125)
@@ -425,6 +475,15 @@ class Thread(models.Model):
         #question_id = self._question_post().id
         #return reverse('question', args = [question_id]) + slugify(self.title)
 
+    def get_answer_count(self, user = None):
+        """returns answer count depending on who the user is.
+        When user groups are enabled and some answers are hidden,
+        the answer count to show must be reflected accordingly"""
+        if askbot_settings.GROUPS_ENABLED == False or user is None:
+            return self.answer_count
+        else:
+            return self.get_answers(user).count()
+
     def update_favorite_count(self):
         self.favourite_count = FavoriteQuestion.objects.filter(thread=self).count()
         self.save()
@@ -474,10 +533,13 @@ class Thread(models.Model):
     def get_title(self, question=None):
         if not question:
             question = self._question_post() # allow for optimization if the caller has already fetched the question post for this thread
-        if self.closed:
+        if self.is_private():
+            attr = const.POST_STATUS['private']
+        elif self.closed:
             attr = const.POST_STATUS['closed']
         elif question.deleted:
             attr = const.POST_STATUS['deleted']
+
         else:
             attr = None
         if attr is not None:
@@ -514,12 +576,12 @@ class Thread(models.Model):
             return self.posts.get_answers().filter(deleted=False)
         else:
             if user.is_administrator() or user.is_moderator():
-                return self.posts.get_answers()
+                return self.posts.get_answers(user = user)
             else:
-                return self.posts.get_answers().filter(
-                                models.Q(deleted = False) | models.Q(author = user) \
-                                | models.Q(deleted_by = user)
-                            )
+                return self.posts.get_answers(user = user).filter(
+                            models.Q(deleted = False) | models.Q(author = user) \
+                            | models.Q(deleted_by = user)
+                        )
 
     def invalidate_cached_thread_content_fragment(self):
         cache.cache.delete(self.SUMMARY_CACHE_KEY_TPL % self.id)
@@ -540,9 +602,12 @@ class Thread(models.Model):
         #self.invalidate_cached_thread_content_fragment()
         self.update_summary_html()
 
-    def get_cached_post_data(self, sort_method = 'votes'):
+    def get_cached_post_data(self, user = None, sort_method = 'votes'):
         """returns cached post data, as calculated by
         the method get_post_data()"""
+        if askbot_settings.GROUPS_ENABLED:
+            #temporary plug: bypass cache where groups are enabled
+            return self.get_post_data(sort_method = sort_method, user = user)
         key = self.get_post_data_cache_key(sort_method)
         post_data = cache.cache.get(key)
         if not post_data:
@@ -550,14 +615,22 @@ class Thread(models.Model):
             cache.cache.set(key, post_data, const.LONG_TIME)
         return post_data
 
-    def get_post_data(self, sort_method = 'votes'):
+    def get_post_data(self, sort_method = 'votes', user = None):
         """returns question, answers as list and a list of post ids
         for the given thread
         the returned posts are pre-stuffed with the comments
         all (both posts and the comments sorted in the correct
         order)
         """
-        thread_posts = self.posts.all().order_by(
+        thread_posts = self.posts.all()
+        if askbot_settings.GROUPS_ENABLED:
+            if user.is_anonymous():
+                exclude_groups = get_groups()
+            else:
+                exclude_groups = user.get_foreign_groups()
+            thread_posts = thread_posts.exclude(groups__in = exclude_groups)
+
+        thread_posts = thread_posts.order_by(
                     {
                         'latest':'-added_at',
                         'oldest':'added_at',
@@ -699,6 +772,14 @@ class Thread(models.Model):
         if user and user.is_authenticated():
             return self.followed_by.filter(id = user.id).count() > 0
         return False
+
+    def make_private(self, user):
+        groups = list(user.get_groups())
+        self.groups.add(*groups)
+        self._question_post().groups.add(*groups)
+
+    def is_private(self):
+        return askbot_settings.GROUPS_ENABLED and self.groups.count() > 0
 
     def update_tags(self, tagnames = None, user = None, timestamp = None):
         """
@@ -865,11 +946,13 @@ class Thread(models.Model):
 
         return last_updated_at, last_updated_by
 
-    def get_summary_html(self, search_state):
-        html = self.get_cached_summary_html()
+    def get_summary_html(self, search_state, visitor = None):
+        html = self.get_cached_summary_html(visitor)
         if not html:
-            html = self.update_summary_html()
+            html = self.update_summary_html(visitor)
 
+        # todo: this work may be pushed onto javascript we post-process tag names
+        # in the snippet so that tag urls match the search state
         # use `<<<` and `>>>` because they cannot be confused with user input
         # - if user accidentialy types <<<tag-name>>> into question title or body,
         # then in html it'll become escaped like this: &lt;&lt;&lt;tag-name&gt;&gt;&gt;
@@ -889,14 +972,21 @@ class Thread(models.Model):
 
         return html
 
-    def get_cached_summary_html(self):
+    def get_cached_summary_html(self, visitor = None):
+        #todo: remove this plug by adding cached foreign user group
+        #parameter to the key. Now with groups on caching is turned off
+        #parameter visitor is there to get summary out by the user groups
+        if askbot_settings.GROUPS_ENABLED:
+            return None
         return cache.cache.get(self.SUMMARY_CACHE_KEY_TPL % self.id)
 
-    def update_summary_html(self):
+    def update_summary_html(self, visitor = None):
         context = {
             'thread': self,
-            'question': self._question_post(refresh=True),  # fetch new question post to make sure we're up-to-date
+            #fetch new question post to make sure we're up-to-date
+            'question': self._question_post(refresh=True),
             'search_state': DummySearchState(),
+            'visitor': visitor
         }
         html = get_template('widgets/question_summary.html').render(context)
         # INFO: Timeout is set to 30 days:

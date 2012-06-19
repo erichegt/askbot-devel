@@ -217,6 +217,7 @@ def ask(request):#view used to ask a new question
             tagnames = form.cleaned_data['tags']
             text = form.cleaned_data['text']
             ask_anonymously = form.cleaned_data['ask_anonymously']
+            post_privately = form.cleaned_data['post_privately']
 
             if request.user.is_authenticated():
                 try:
@@ -226,6 +227,7 @@ def ask(request):#view used to ask a new question
                         tags = tagnames,
                         wiki = wiki,
                         is_anonymous = ask_anonymously,
+                        is_private = post_privately,
                         timestamp = timestamp
                     )
                     return HttpResponseRedirect(question.get_absolute_url())
@@ -258,7 +260,8 @@ def ask(request):#view used to ask a new question
         'text': request.REQUEST.get('text', ''),
         'tags': request.REQUEST.get('tags', ''),
         'wiki': request.REQUEST.get('wiki', False),
-        'is_anonymous': request.REQUEST.get('is_anonymous', False),
+        'ask_anonymously': request.REQUEST.get('ask_anonymousy', False),
+        'post_privately': request.REQUEST.get('post_privately', False)
     }
         
     data = {
@@ -379,6 +382,7 @@ def edit_question(request, id):
 
                         is_anon_edit = form.cleaned_data['stay_anonymous']
                         is_wiki = form.cleaned_data.get('wiki', question.wiki)
+                        post_privately = form.cleaned_data['post_privately']
 
                         request.user.edit_question(
                             question = question,
@@ -388,15 +392,21 @@ def edit_question(request, id):
                             tags = form.cleaned_data['tags'],
                             wiki = is_wiki, 
                             edit_anonymously = is_anon_edit,
+                            is_private = post_privately
                         )
                     return HttpResponseRedirect(question.get_absolute_url())
         else:
             #request type was "GET"
             revision_form = forms.RevisionForm(question, latest_revision)
+            initial = {
+                'post_privately': question.is_private(),
+                'wiki': question.wiki
+            }
             form = forms.EditQuestionForm(
                                     question = question,
                                     revision = latest_revision,
-                                    user = request.user
+                                    user = request.user,
+                                    initial = initial
                                 )
 
         data = {
@@ -458,12 +468,15 @@ def edit_answer(request, id):
                                 body_text = form.cleaned_data['text'],
                                 revision_comment = form.cleaned_data['summary'],
                                 wiki = form.cleaned_data.get('wiki', answer.wiki),
+                                is_private = form.cleaned_data.get('is_private', False)
                                 #todo: add wiki field to form
                             )
                     return HttpResponseRedirect(answer.get_absolute_url())
         else:
             revision_form = forms.RevisionForm(answer, latest_revision)
             form = forms.EditAnswerForm(answer, latest_revision)
+            if request.user.can_make_group_private_posts():
+                form.initial['post_privately'] = answer.is_private()
         data = {
             'page_class': 'edit-answer-page',
             'active_tab': 'questions',
@@ -499,11 +512,13 @@ def answer(request, id):#process a new answer
             if request.user.is_authenticated():
                 try:
                     follow = form.cleaned_data['email_notify']
+                    is_private = form.cleaned_data['post_privately']
                     answer = request.user.post_answer(
                                         question = question,
                                         body_text = text,
                                         follow = follow,
                                         wiki = wiki,
+                                        is_private = is_private,
                                         timestamp = update_time,
                                     )
                     return HttpResponseRedirect(answer.get_absolute_url())

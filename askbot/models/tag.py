@@ -185,3 +185,10 @@ class MarkedTag(models.Model):
 
     class Meta:
         app_label = 'askbot'
+
+def get_groups():
+    return Tag.group_tags.get_all()
+
+def get_group_names():
+    #todo: cache me
+    return get_groups().values_list('name', flat = True)

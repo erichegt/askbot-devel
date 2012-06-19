@@ -27,7 +27,7 @@ from askbot.models.question import Thread
 from askbot.skins import utils as skin_utils
 from askbot.models.question import QuestionView, AnonymousQuestion
 from askbot.models.question import FavoriteQuestion
-from askbot.models.tag import Tag, MarkedTag
+from askbot.models.tag import Tag, MarkedTag, get_group_names, get_groups
 from askbot.models.user import EmailFeedSetting, ActivityAuditStatus, Activity
 from askbot.models.user import GroupMembership, GroupProfile
 from askbot.models.post import Post, PostRevision, PostFlagReason, AnonymousAnswer
@@ -187,6 +187,9 @@ def user_get_avatar_url(self, size):
             return self.get_gravatar_url(size)
         else:
             return self.get_default_avatar_url(size)
+
+def user_get_user_groups(self):
+    """returns query set of groups to which user belongs"""
 
 def user_update_avatar_type(self):
     """counts number of custom avatars
@@ -1405,6 +1408,7 @@ def user_post_question(
                     tags = None,
                     wiki = False,
                     is_anonymous = False,
+                    is_private = False,
                     timestamp = None,
                     by_email = False,
                     email_address = None
@@ -1434,6 +1438,7 @@ def user_post_question(
                                     added_at = timestamp,
                                     wiki = wiki,
                                     is_anonymous = is_anonymous,
+                                    is_private = is_private,
                                     by_email = by_email,
                                     email_address = email_address
                                 )
@@ -1471,7 +1476,8 @@ def user_edit_post(self,
                 body_text = None,
                 revision_comment = None,
                 timestamp = None,
-                by_email = False
+                by_email = False,
+                is_private = False
             ):
     """a simple method that edits post body
     todo: unify it in the style of just a generic post
@@ -1498,7 +1504,8 @@ def user_edit_post(self,
             body_text = body_text,
             timestamp = timestamp,
             revision_comment = revision_comment,
-            by_email = by_email
+            by_email = by_email,
+            is_private = is_private
         )
     elif post.post_type == 'tag_wiki':
         post.apply_edit(
@@ -1523,6 +1530,7 @@ def user_edit_question(
                 tags = None,
                 wiki = False,
                 edit_anonymously = False,
+                is_private = False,
                 timestamp = None,
                 force = False,#if True - bypass the assert
                 by_email = False
@@ -1540,6 +1548,7 @@ def user_edit_question(
         tags = tags,
         wiki = wiki,
         edit_anonymously = edit_anonymously,
+        is_private = is_private,
         by_email = by_email
     )
 
@@ -1559,6 +1568,7 @@ def user_edit_answer(
                     body_text = None,
                     revision_comment = None,
                     wiki = False,
+                    is_private = False,
                     timestamp = None,
                     force = False,#if True - bypass the assert
                     by_email = False
@@ -1629,6 +1639,7 @@ def user_post_answer(
                     body_text = None,
                     follow = False,
                     wiki = False,
+                    is_private = False,
                     timestamp = None,
                     by_email = False
                 ):
@@ -1696,6 +1707,13 @@ def user_post_answer(
         wiki = wiki,
         by_email = by_email
     )
+
+    if self.can_make_group_private_posts():
+        if is_private:
+            answer_post.make_private(self)
+        else:
+            answer_post.make_public(self)
+
     answer_post.thread.invalidate_cached_data()
     award_badges_signal.send(None,
         event = 'post_answer',
@@ -2066,6 +2084,21 @@ def get_profile_link(self):
         % (self.get_profile_url(),self.username)
 
     return mark_safe(profile_link)
+
+def user_get_groups(self):
+    """returns a query set of groups to which user belongs"""
+    #todo: maybe cache this query
+    return Tag.group_tags.get_for_user(self)
+
+def user_get_foreign_groups(self):
+    """returns a query set of groups to which user does not belong"""
+    #todo: maybe cache this query
+    user_group_ids = self.get_groups().values_list('id', flat = True)
+    return get_groups().exclude(id__in = user_group_ids)
+
+def user_can_make_group_private_posts(self):
+    """simplest implementation: user belongs to at least one group"""
+    return self.get_groups().count() > 0
 
 def user_get_groups_membership_info(self, groups):
     """returts a defaultdict with values that are
@@ -2483,6 +2516,8 @@ User.add_to_class('get_absolute_url', user_get_absolute_url)
 User.add_to_class('get_avatar_url', user_get_avatar_url)
 User.add_to_class('get_default_avatar_url', user_get_default_avatar_url)
 User.add_to_class('get_gravatar_url', user_get_gravatar_url)
+User.add_to_class('get_groups', user_get_groups)
+User.add_to_class('get_foreign_groups', user_get_foreign_groups)
 User.add_to_class('strip_email_signature', user_strip_email_signature)
 User.add_to_class('get_groups_membership_info', user_get_groups_membership_info)
 User.add_to_class('get_anonymous_name', user_get_anonymous_name)
@@ -2529,6 +2564,7 @@ User.add_to_class('can_create_tags', user_can_create_tags)
 User.add_to_class('can_have_strong_url', user_can_have_strong_url)
 User.add_to_class('can_post_by_email', user_can_post_by_email)
 User.add_to_class('can_post_comment', user_can_post_comment)
+User.add_to_class('can_make_group_private_posts', user_can_make_group_private_posts)
 User.add_to_class('is_administrator', user_is_administrator)
 User.add_to_class('is_administrator_or_moderator', user_is_administrator_or_moderator)
 User.add_to_class('set_admin_status', user_set_admin_status)
@@ -3310,5 +3346,7 @@ __all__ = [
         'ReplyAddress',
 
         'get_model',
-        'get_admins_and_moderators'
+        'get_admins_and_moderators',
+        'get_group_names',
+        'get_grous'
 ]

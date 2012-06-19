@@ -418,7 +418,7 @@ class ThreadRenderLowLevelCachingTests(AskbotTestCase):
 
         ###
         cache.cache.delete(key)
-        thread.update_summary_html = lambda: "Monkey-patched <<<tag2>>>"
+        thread.update_summary_html = lambda dummy: "Monkey-patched <<<tag2>>>"
 
         self.assertFalse(thread.summary_html_cached())
         self.assertIsNone(thread.get_cached_summary_html())

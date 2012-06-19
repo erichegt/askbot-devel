@@ -24,7 +24,8 @@ import askbot
 from askbot.utils.slug import slugify
 from askbot import const
 from askbot.models.user import EmailFeedSetting
-from askbot.models.tag import Tag, MarkedTag, tags_match_some_wildcard
+from askbot.models.tag import Tag, MarkedTag
+from askbot.models.tag import get_groups, tags_match_some_wildcard
 from askbot.conf import settings as askbot_settings
 from askbot import exceptions
 from askbot.utils import markup
@@ -142,8 +143,21 @@ class PostManager(BaseQuerySetManager):
     def get_questions(self):
         return self.filter(post_type='question')
 
-    def get_answers(self):
-        return self.filter(post_type='answer')
+    def get_answers(self, user = None):
+        """returns query set of answer posts,
+        optionally filtered to exclude posts of groups
+        to which user does not belong"""
+        answers = self.filter(post_type='answer')
+
+        if askbot_settings.GROUPS_ENABLED:
+            if user is None or user.is_anonymous():
+                exclude_groups = get_groups()
+            else:
+                exclude_groups = user.get_foreign_groups()
+            answers = answers.exclude(groups__in = exclude_groups)
+
+        return answers
+
 
     def get_comments(self):
         return self.filter(post_type='comment')
@@ -288,6 +302,7 @@ class Post(models.Model):
 
     parent = models.ForeignKey('Post', blank=True, null=True, related_name='comments') # Answer or Question for Comment
     thread = models.ForeignKey('Thread', blank=True, null=True, default = None, related_name='posts')
+    groups = models.ManyToManyField('Tag', related_name = 'group_posts')#used for group-private posts
 
     author = models.ForeignKey(User, related_name='posts')
     added_at = models.DateTimeField(default=datetime.datetime.now)
@@ -510,6 +525,24 @@ class Post(models.Model):
 
     def is_reject_reason(self):
         return self.post_type == 'reject_reason'
+
+    def make_private(self, user):
+        """makes post private within user's groups"""
+        groups = user.get_groups()
+        self.groups.add(*groups)
+        if self.is_question():
+            self.thread.groups.add(*groups)
+
+    def make_public(self, user):
+        """removes the privacy mark from users groups"""
+        groups = user.get_groups()
+        self.groups.remove(*groups)
+        if self.is_question():
+            self.thread.groups.remove(*groups)
+
+    def is_private(self):
+        """true, if post is private within any groups"""
+        return askbot_settings.GROUPS_ENABLED and self.groups.count() > 0
 
     def needs_moderation(self):
         return self.approved == False
@@ -900,7 +933,11 @@ class Post(models.Model):
 
         #4) question asked by me (todo: not "edited_by_me" ???)
         question_author = origin_post.author
-        if EmailFeedSetting.objects.filter(subscriber = question_author, frequency = 'i', feed_type = 'q_ask').exists():
+        if EmailFeedSetting.objects.filter(
+            subscriber = question_author,
+            frequency = 'i',
+            feed_type = 'q_ask'
+        ).exists():
             subscriber_set.add(question_author)
 
         #4) questions answered by me -make sure is that people
@@ -1262,8 +1299,32 @@ class Post(models.Model):
                        )
             raise exceptions.AnswerHidden(message)
 
+    def assert_is_visible_to_user_groups(self, user):
+        """raises permission denied of the post
+        is hidden due to group memberships"""
+        assert(self.is_comment() == False)
+        post_groups = self.groups.all()
+        if post_groups.count() == 0:
+            return
+
+        if self.is_question():#todo maybe merge the "hidden" exceptions
+            exception = exceptions.QuestionHidden
+        elif self.is_answer():
+            exception = exceptions.AnswerHidden
+        else:
+            raise NotImplementedError
+
+        message = _('This post is temporarily not available')
+        if user.is_anonymous():
+            raise exception(message)
+        else:
+            user_groups_ids = user.get_groups().values_list('id', flat = True)
+            if post_groups.filter(id__in = user_groups_ids).count() == 0:
+                raise exception(message)
 
     def assert_is_visible_to(self, user):
+        if self.is_comment() == False and askbot_settings.GROUPS_ENABLED:
+            self.assert_is_visible_to_user_groups(user)
         if self.is_question():
             return self._question__assert_is_visible_to(user)
         elif self.is_answer():
@@ -1371,7 +1432,7 @@ class Post(models.Model):
 
     def _question__apply_edit(self, edited_at=None, edited_by=None, title=None,\
                               text=None, comment=None, tags=None, wiki=False,\
-                              edit_anonymously = False,
+                              edit_anonymously = False, is_private = False,
                               by_email = False
                             ):
 
@@ -1394,6 +1455,12 @@ class Post(models.Model):
         self.thread.title = title
         self.thread.tagnames = tags
         self.thread.save()
+
+        if self.is_private() != is_private:
+            if is_private:
+                self.make_private(self.author)
+            else:
+                self.make_public(self.author)
 
         self.__apply_edit(
             edited_at = edited_at,

@@ -15,6 +15,7 @@ from django.forms import ValidationError, IntegerField, CharField
 from django.shortcuts import get_object_or_404
 from django.views.decorators import csrf
 from django.utils import simplejson
+from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from django.utils.translation import string_concat
 from askbot import models
@@ -496,7 +497,7 @@ def get_tag_list(request):
                     ).values_list(
                         'name', flat = True
                     )
-    output = '\n'.join(tag_names)
+    output = '\n'.join(map(escape, tag_names))
     return HttpResponse(output, mimetype = 'text/plain')
 
 @decorators.get_only
@@ -670,7 +671,7 @@ def api_get_questions(request):
     thread_list = [{
         'url': thread.get_absolute_url(),
         'title': thread.title,
-        'answer_count': thread.answer_count
+        'answer_count': thread.get_answer_count(request.user)
     } for thread in threads]
     json_data = simplejson.dumps(thread_list)
     return HttpResponse(json_data, mimetype = "application/json")
@@ -767,7 +768,7 @@ def swap_question_with_answer(request):
     """
     if request.user.is_authenticated():
         if request.user.is_administrator() or request.user.is_moderator():
-            answer = models.Post.objects.get_answers().get(id = request.POST['answer_id'])
+            answer = models.Post.objects.get_answers(request.user).get(id = request.POST['answer_id'])
             new_question = answer.swap_with_question(new_title = request.POST['new_title'])
             return {
                 'id': new_question.id,

@@ -290,10 +290,11 @@ TYPE_RESPONSE = {
 }
 
 POST_STATUS = {
-    'closed'            : _('[closed]'),
-    'deleted'           : _('[deleted]'),
-    'default_version'   : _('initial version'),
-    'retagged'          : _('retagged'),
+    'closed': _('[closed]'),
+    'deleted': _('[deleted]'),
+    'default_version': _('initial version'),
+    'retagged': _('retagged'),
+    'private': _('[private]')   
 }
 
 #choices used in email and display filters

@@ -341,14 +341,19 @@ def user_stats(request, user, context):
     #
     # Top answers
     #
-    top_answers = user.posts.get_answers().filter(
+    top_answers = user.posts.get_answers(
+        request.user
+    ).filter(
         deleted=False,
         thread__posts__deleted=False,
         thread__posts__post_type='question',
-    ).select_related('thread').order_by('-score', '-added_at')[:100]
+    ).select_related(
+        'thread'
+    ).order_by(
+        '-score', '-added_at'
+    )[:100]
 
     top_answer_count = len(top_answers)
-
     #
     # Votes
     #
