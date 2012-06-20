@@ -482,13 +482,23 @@ def test_avatar():
             short_message = True
         )
 
+def test_haystack():
+    if 'haystack' in django_settings.INSTALLED_APPS:
+        try_import('haystack', 'django-haystack', short_message = True)
+        if not hasattr(django_settings, 'HAYSTACK_SEARCH_ENGINE'):
+            message = 'Please add HAYSTACK_SEARCH_ENGINE = simple, for more info please checkout: http://django-haystack.readthedocs.org/en/v1.2.7/settings.html#haystack-search-engine'
+            raise AskbotConfigError(message)
+        if not hasattr(django_settings, 'HAYSTACK_SITECONF'):
+            message = 'Please add HAYSTACK_SITECONF = "askbot.search.haystack"'
+            raise AskbotConfigError(message)
+
 def test_custom_user_profile_tab():
     setting_name = 'ASKBOT_CUSTOM_USER_PROFILE_TAB'
     tab_settings = getattr(django_settings, setting_name, None)
     if tab_settings:
         if not isinstance(tab_settings, dict):
             print "Setting %s must be a dictionary!!!" % setting_name
-            
+
         name = tab_settings.get('NAME', None)
         slug = tab_settings.get('SLUG', None)
         func_name = tab_settings.get('CONTENT_GENERATOR', None)
@@ -528,6 +538,7 @@ def run_startup_tests():
     #test_csrf_cookie_domain()
     test_staticfiles()
     test_avatar()
+    test_haystack()
     settings_tester = SettingsTester({
         'CACHE_MIDDLEWARE_ANONYMOUS_ONLY': {
             'value': True,
@@ -557,6 +568,13 @@ def run_startup_tests():
         'RECAPTCHA_USE_SSL': {
             'value': True,
             'message': 'Please add: RECAPTCHA_USE_SSL = True'
+        },
+        'ENABLE_HAYSTACK_SEARCH': {
+            'message': 'Please add: ENABLE_HAYSTACK_SEARCH = False or True according to your setup'
+        },
+        'HAYSTACK_SITECONF': {
+            'value': 'askbot.search.haystack',
+            'message': 'Please add: HAYSTACK_SITECONF = "askbot.search.haystack"'
         }
     })
     settings_tester.run()

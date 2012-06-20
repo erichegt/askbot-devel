@@ -161,6 +161,7 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
     'django.contrib.sitemaps',
     #'debug_toolbar',
+    #'haystack',
     'askbot',
     'askbot.deps.django_authopenid',
     #'askbot.importers.stackexchange', #se loader
@@ -229,3 +230,10 @@ CSRF_COOKIE_NAME = 'askbot_csrf'
 STATICFILES_DIRS = ( os.path.join(ASKBOT_ROOT, 'skins'),)
 
 RECAPTCHA_USE_SSL = True
+
+#HAYSTACK_SETTINGS
+ENABLE_HAYSTACK_SEARCH = False
+HAYSTACK_SITECONF = 'askbot.search.haystack'
+#more information
+#http://django-haystack.readthedocs.org/en/v1.2.7/settings.html
+HAYSTACK_SEARCH_ENGINE = 'simple'
