@@ -125,7 +125,8 @@ class ThreadManager(BaseQuerySetManager):
             question.last_edited_at = added_at
             question.wikified_at = added_at
 
-        question.parse_and_save(author = author)
+        #this is kind of bad, but we save assign privacy groups to posts and thread
+        question.parse_and_save(author = author, is_private = is_private)
 
         question.add_revision(
             author = author,
@@ -624,7 +625,7 @@ class Thread(models.Model):
         """
         thread_posts = self.posts.all()
         if askbot_settings.GROUPS_ENABLED:
-            if user.is_anonymous():
+            if user is None or user.is_anonymous():
                 exclude_groups = get_groups()
             else:
                 exclude_groups = user.get_foreign_groups()

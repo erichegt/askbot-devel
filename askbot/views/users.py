@@ -70,8 +70,6 @@ def users(request, by_group = False, group_id = None, group_slug = None):
             if all((group_id, group_slug)) == False:
                 return HttpResponseRedirect('groups')
             else:
-                import pdb
-                pdb.set_trace()
                 try:
                     group = models.Tag.group_tags.get(id = group_id)
                     group_email_moderation_enabled = \

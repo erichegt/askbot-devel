@@ -190,9 +190,6 @@ def user_get_avatar_url(self, size):
         else:
             return self.get_default_avatar_url(size)
 
-def user_get_user_groups(self):
-    """returns query set of groups to which user belongs"""
-
 def user_update_avatar_type(self):
     """counts number of custom avatars
     and if zero, sets avatar_type to False,
@@ -1583,8 +1580,10 @@ def user_edit_answer(
         text = body_text,
         comment = revision_comment,
         wiki = wiki,
+        is_private = is_private,
         by_email = by_email
     )
+
     answer.thread.invalidate_cached_data()
     award_badges_signal.send(None,
         event = 'edit_answer',
@@ -1707,14 +1706,9 @@ def user_post_answer(
         added_at = timestamp,
         email_notify = follow,
         wiki = wiki,
+        is_private = is_private,
         by_email = by_email
     )
-
-    if self.can_make_group_private_posts():
-        if is_private:
-            answer_post.make_private(self)
-        else:
-            answer_post.make_public(self)
 
     answer_post.thread.invalidate_cached_data()
     award_badges_signal.send(None,

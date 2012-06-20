@@ -180,6 +180,7 @@ class PostManager(BaseQuerySetManager):
                 text,
                 parent = None,
                 wiki = False,
+                is_private = False,
                 email_notify = False,
                 post_type = None,
                 by_email = False
@@ -204,7 +205,7 @@ class PostManager(BaseQuerySetManager):
             post.last_edited_at = added_at
             post.wikified_at = added_at
 
-        post.parse_and_save(author=author)
+        post.parse_and_save(author=author, is_private = is_private)
 
         post.add_revision(
             author = author,
@@ -224,6 +225,7 @@ class PostManager(BaseQuerySetManager):
                         added_at,
                         text,
                         wiki = False,
+                        is_private = False,
                         email_notify = False,
                         by_email = False
                     ):
@@ -233,6 +235,7 @@ class PostManager(BaseQuerySetManager):
                             added_at,
                             text,
                             wiki = wiki,
+                            is_private = is_private,
                             post_type = 'answer',
                             by_email = by_email
                         )
@@ -481,9 +484,19 @@ class Post(models.Model):
 
         created = self.pk is None
 
+        is_private = kwargs.pop('is_private', False)
+
         #this save must precede saving the mention activity
+        #as well as assigning groups to the post
         #because generic relation needs primary key of the related object
         super(self.__class__, self).save(**kwargs)
+
+        if author.can_make_group_private_posts():
+            if is_private:
+                self.make_private(author)
+            else:
+                self.make_public(author)
+
         if last_revision:
             diff = htmldiff(last_revision, self.html)
         else:
@@ -575,6 +588,15 @@ class Post(models.Model):
 
         raise NotImplementedError
 
+    def get_authorized_group_ids(self):
+        """returns values list query set for the group id's of the post"""
+        if self.is_comment():
+            return self.parent.get_authorized_group_ids()
+        elif self.is_answer() or self.is_question():
+            return self.groups.values_list('id', flat = True)
+        else:
+            raise NotImplementedError()
+
     def delete(self, **kwargs):
         """deletes comment and concomitant response activity
         records, as well as mention records, while preserving
@@ -636,6 +658,27 @@ class Post(models.Model):
         """returns an abbreviated snippet of the content
         """
         return html_utils.strip_tags(self.html)[:max_length] + ' ...'
+
+    def filter_authorized_users(self, candidates):
+        """returns list of users who are allowed to see this post"""
+        if askbot_settings.GROUPS_ENABLED == False:
+            return candidates
+        else:
+            #here we filter candidates against the post authorized groups
+            authorized_group_ids = list(self.get_authorized_group_ids())
+
+            if len(authorized_group_ids) == 0:#if there are no groups - all ok
+                return candidates
+
+            #and filter the users by those groups
+            filtered_candidates = list()
+            for candidate in candidates:
+                c_groups = candidate.get_groups()
+                if c_groups.filter(id__in = authorized_group_ids).count():
+                    filtered_candidates.append(candidate)
+
+            return filtered_candidates
+            
 
     def format_for_email(
         self, quote_level = 0, is_leaf_post = False, format = None
@@ -870,6 +913,7 @@ class Post(models.Model):
             ):
         """get list of users who have subscribed to
         receive instant notifications for a given post
+
         this method works for questions and answers
 
         Arguments:
@@ -1035,22 +1079,30 @@ class Post(models.Model):
 
         return list(subscriber_set)
 
-    def get_instant_notification_subscribers(self, potential_subscribers = None, mentioned_users = None, exclude_list = None):
+    def get_instant_notification_subscribers(
+        self, potential_subscribers = None,
+        mentioned_users = None, exclude_list = None
+    ):
         if self.is_question() or self.is_answer():
-            return self._qa__get_instant_notification_subscribers(
+            subscribers = self._qa__get_instant_notification_subscribers(
                 potential_subscribers=potential_subscribers,
                 mentioned_users=mentioned_users,
                 exclude_list=exclude_list
             )
         elif self.is_comment():
-            return self._comment__get_instant_notification_subscribers(
+            subscribers = self._comment__get_instant_notification_subscribers(
                 potential_subscribers=potential_subscribers,
                 mentioned_users=mentioned_users,
                 exclude_list=exclude_list
             )
         elif self.is_tag_wiki() or self.is_reject_reason():
             return list()
-        raise NotImplementedError
+        else:
+            raise NotImplementedError
+
+        #if askbot_settings.GROUPS_ENABLED and self.is_effectively_private():
+        #    for subscriber in subscribers:
+        return self.filter_authorized_users(subscribers)
 
     def get_latest_revision(self):
         return self.revisions.order_by('-revised_at')[0]
@@ -1415,8 +1467,16 @@ class Post(models.Model):
                         text = None,
                         comment = None,
                         wiki = False,
+                        is_private = False,
                         by_email = False
                     ):
+
+        #it is important to do this before __apply_edit b/c of signals!!!
+        if self.is_private() != is_private:
+            if is_private:
+                self.make_private(self.author)
+            else:
+                self.make_public(self.author)
 
         self.__apply_edit(
             edited_at = edited_at,
@@ -1426,6 +1486,7 @@ class Post(models.Model):
             wiki = wiki,
             by_email = by_email
         )
+
         if edited_at is None:
             edited_at = datetime.datetime.now()
         self.thread.set_last_activity(last_activity_at=edited_at, last_activity_by=edited_by)
@@ -1625,16 +1686,21 @@ class Post(models.Model):
 
 
     def get_response_receivers(self, exclude_list = None):
-        """returns a list of response receiving users"""
+        """returns a list of response receiving users
+        who see the on-screen notifications
+        """
         if self.is_answer():
-            return self._answer__get_response_receivers(exclude_list)
+            receivers = self._answer__get_response_receivers(exclude_list)
         elif self.is_question():
-            return self._question__get_response_receivers(exclude_list)
+            receivers = self._question__get_response_receivers(exclude_list)
         elif self.is_comment():
-            return self._comment__get_response_receivers(exclude_list)
+            receivers = self._comment__get_response_receivers(exclude_list)
         elif self.is_tag_wiki() or self.is_reject_reason():
             return list()#todo: who should get these?
-        raise NotImplementedError
+        else:
+            raise NotImplementedError
+
+        return self.filter_authorized_users(receivers)
 
     def get_question_title(self):
         if self.is_question():
