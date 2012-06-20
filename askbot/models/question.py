@@ -186,7 +186,7 @@ class ThreadManager(BaseQuerySetManager):
         # TODO: add a possibility to see deleted questions
         qs = self.filter(
                 posts__post_type='question', 
-                posts__deleted=False,
+                posts__deleted=False
             ) # (***) brings `askbot_post` into the SQL query, see the ordering section below
 
         if askbot_settings.ENABLE_CONTENT_MODERATION:
@@ -196,7 +196,7 @@ class ThreadManager(BaseQuerySetManager):
         #that are private in groups to which current user does not belong
         if askbot_settings.GROUPS_ENABLED:
             #get group names
-            qs = self.exclude_group_private(user = request_user)
+            qs = qs.exclude_group_private(user = request_user)
 
 
         #run text search while excluding any modifier in the search string
