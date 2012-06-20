@@ -52,6 +52,7 @@ class AskbotSearchQuerySet(SearchQuerySet):
                 else:
                     id_list.append(r.pk)
             elif r.model_name == model_klass._meta.object_name.lower():
+                #FIXME: add a highlight here?
                 id_list.append(r.pk)
 
         return model_klass.objects.filter(id__in=set(id_list))

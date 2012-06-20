@@ -300,7 +300,11 @@ class ThreadManager(models.Manager):
         }
 
         orderby = QUESTION_ORDER_BY_MAP[search_state.sort]
-        qs = qs.extra(order_by=[orderby])
+
+        if not (settings.ENABLE_HAYSTACK_SEARCH and orderby=='-relevance'):
+            #FIXME: this does not produces the very same results as postgres.
+            qs = qs.extra(order_by=[orderby])
+
 
         # HACK: We add 'ordering_key' column as an alias and order by it, because when distict() is used,
         #       qs.extra(order_by=[orderby,]) is lost if only `orderby` column is from askbot_post!
