@@ -129,38 +129,36 @@ class ThreadManager(models.Manager):
         """returns a query set of questions,
         matching the full text query
         """
-        if not qs:
-            qs = self.all()
-#        if getattr(settings, 'USE_SPHINX_SEARCH', False):
-#            matching_questions = Question.sphinx_search.query(search_query)
-#            question_ids = [q.id for q in matching_questions]
-#            return qs.filter(posts__post_type='question', posts__deleted=False, posts__self_question_id__in=question_ids)
-        if askbot.get_database_engine_name().endswith('mysql') \
-            and mysql.supports_full_text_search():
-            return qs.filter(
-                models.Q(title__search = search_query) |
-                models.Q(tagnames__search = search_query) |
-                models.Q(posts__deleted=False, posts__text__search = search_query)
-            )
-        elif 'postgresql_psycopg2' in askbot.get_database_engine_name():
-            from askbot.search import postgresql
-            return postgresql.run_full_text_search(qs, search_query)
+        if settings.ENABLE_HAYSTACK_SEARCH:
+            from askbot.search.haystack import AskbotSearchQuerySet
+            hs_qs = AskbotSearchQuerySet().filter(content=search_query)
+            return hs_qs.get_django_queryset()
         else:
-            return qs.filter(
-                models.Q(title__icontains=search_query) |
-                models.Q(tagnames__icontains=search_query) |
-                models.Q(posts__deleted=False, posts__text__icontains = search_query)
-            )
+            if not qs:
+                qs = self.all()
+    #        if getattr(settings, 'USE_SPHINX_SEARCH', False):
+    #            matching_questions = Question.sphinx_search.query(search_query)
+    #            question_ids = [q.id for q in matching_questions]
+    #            return qs.filter(posts__post_type='question', posts__deleted=False, posts__self_question_id__in=question_ids)
+            if askbot.get_database_engine_name().endswith('mysql') \
+                and mysql.supports_full_text_search():
+                return qs.filter(
+                    models.Q(title__search = search_query) |
+                    models.Q(tagnames__search = search_query) |
+                    models.Q(posts__deleted=False, posts__text__search = search_query)
+                )
+            elif 'postgresql_psycopg2' in askbot.get_database_engine_name():
+                from askbot.search import postgresql
+                return postgresql.run_full_text_search(qs, search_query)
+            else:
+                return qs.filter(
+                    models.Q(title__icontains=search_query) |
+                    models.Q(tagnames__icontains=search_query) |
+                    models.Q(posts__deleted=False, posts__text__icontains = search_query)
+                )
 
 
     def run_advanced_search(self, request_user, search_state):  # TODO: !! review, fix, and write tests for this
-        if settings.ENABLE_HAYSTACK_SEARCH:
-            return self._run_advanced_haystack_search(request_user, search_state)
-        else:
-            return self._run_advanced_full_text_search(request_user, search_state)
-
-
-    def _run_advanced_full_text_search(self, request_user, search_state):
         """
         all parameters are guaranteed to be clean
         however may not relate to database - in that case
@@ -300,6 +298,7 @@ class ThreadManager(models.Manager):
 
             'relevance-desc': '-relevance', # special Postgresql-specific ordering, 'relevance' quaso-column is added by get_for_query()
         }
+
         orderby = QUESTION_ORDER_BY_MAP[search_state.sort]
         qs = qs.extra(order_by=[orderby])
 
@@ -315,166 +314,6 @@ class ThreadManager(models.Manager):
         #print qs.query
 
         return qs.distinct(), meta_data
-
-    def _run_advanced_haystack_search(self, request_user, search_state):
-        from askbot.conf import settings as askbot_settings # Avoid circular import
-        try:
-            from askbot.search.haystack import AskbotSearchQuerySet
-            qs = AskbotSearchQuerySet()
-        except ImportError, e:
-            print e.message
-            qs = self
-
-        # TODO: add a possibility to see deleted questions
-        qs = qs.filter(
-                posts__post_type='question'
-               # posts__deleted=False,
-            ) # (***) brings `askbot_post` into the SQL query, see the ordering section below
-
-        #if askbot_settings.ENABLE_CONTENT_MODERATION:
-        #    qs = qs.filter(approved = True)
-
-        meta_data = {}
-
-        if search_state.stripped_query:
-            qs = self.get_for_query(search_query=search_state.stripped_query, qs=qs)
-        if search_state.query_title:
-            qs = qs.filter(title__icontains = search_state.query_title)
-        if search_state.query_users:
-            query_users = User.objects.filter(username__in=search_state.query_users)
-            if query_users:
-                qs = qs.filter(posts__post_type='question', posts__author__in=query_users) # TODO: unify with search_state.author ?
-
-        tags = search_state.unified_tags()
-        if len(tags) > 0:
-
-            if askbot_settings.TAG_SEARCH_INPUT_ENABLED:
-                #todo: this may be gone or disabled per option
-                #"tag_search_box_enabled"
-                existing_tags = set(
-                    Tag.objects.filter(
-                        name__in = tags
-                    ).values_list(
-                        'name',
-                        flat = True
-                    )
-                )
-
-                non_existing_tags = set(tags) - existing_tags
-                meta_data['non_existing_tags'] = list(non_existing_tags)
-                tags = existing_tags
-            else:
-                meta_data['non_existing_tags'] = list()
-
-            #construct filter for the tag search
-            for tag in tags:
-                qs = qs.filter(tags__name=tag) # Tags or AND-ed here, not OR-ed (i.e. we fetch only threads with all tags)
-        else:
-            meta_data['non_existing_tags'] = list()
-
-        if search_state.scope == 'unanswered':
-            print 'search state unanswered'
-            qs = qs.filter(closed = False) # Do not show closed questions in unanswered section
-            if askbot_settings.UNANSWERED_QUESTION_MEANING == 'NO_ANSWERS':
-                qs = qs.filter(answer_count=0) # TODO: expand for different meanings of this
-            elif askbot_settings.UNANSWERED_QUESTION_MEANING == 'NO_ACCEPTED_ANSWERS':
-                qs = qs.filter(accepted_answer__isnull=True)
-            elif askbot_settings.UNANSWERED_QUESTION_MEANING == 'NO_UPVOTED_ANSWERS':
-                raise NotImplementedError()
-            else:
-                raise Exception('UNANSWERED_QUESTION_MEANING setting is wrong')
-
-        elif search_state.scope == 'favorite':
-            print 'favorite_filter'
-            favorite_filter = models.Q(favorited_by=request_user)
-            if 'followit' in settings.INSTALLED_APPS:
-                followed_users = request_user.get_followed_users()
-                favorite_filter |= models.Q(posts__post_type__in=('question', 'answer'), posts__author__in=followed_users)
-            qs = qs.filter(favorite_filter)
-
-        #user contributed questions & answers
-        if search_state.author:
-            try:
-                # TODO: maybe support selection by multiple authors
-                u = User.objects.get(id=int(search_state.author))
-            except User.DoesNotExist:
-                meta_data['author_name'] = None
-            else:
-                qs = qs.filter(posts__post_type__in=('question', 'answer'), posts__author=u, posts__deleted=False)
-                meta_data['author_name'] = u.username
-
-        #get users tag filters
-        if request_user and request_user.is_authenticated():
-            #mark questions tagged with interesting tags
-            #a kind of fancy annotation, would be nice to avoid it
-            interesting_tags = Tag.objects.filter(
-                user_selections__user = request_user,
-                user_selections__reason = 'good'
-            )
-            ignored_tags = Tag.objects.filter(
-                user_selections__user = request_user,
-                user_selections__reason = 'bad'
-            )
-            if askbot_settings.SUBSCRIBED_TAG_SELECTOR_ENABLED:
-                meta_data['subscribed_tag_names'] = Tag.objects.filter(
-                    user_selections__user = request_user,
-                    user_selections__reason = 'subscribed'
-                ).values_list('name', flat = True)
-
-            meta_data['interesting_tag_names'] = [tag.name for tag in interesting_tags]
-            meta_data['ignored_tag_names'] = [tag.name for tag in ignored_tags]
-
-            if request_user.display_tag_filter_strategy == const.INCLUDE_INTERESTING and (interesting_tags or request_user.has_interesting_wildcard_tags()):
-                #filter by interesting tags only
-                interesting_tag_filter = models.Q(tags__in=interesting_tags)
-                if request_user.has_interesting_wildcard_tags():
-                    interesting_wildcards = request_user.interesting_tags.split()
-                    extra_interesting_tags = Tag.objects.get_by_wildcards(interesting_wildcards)
-                    interesting_tag_filter |= models.Q(tags__in=extra_interesting_tags)
-                qs = qs.filter(interesting_tag_filter)
-
-            # get the list of interesting and ignored tags (interesting_tag_names, ignored_tag_names) = (None, None)
-            if request_user.display_tag_filter_strategy == const.EXCLUDE_IGNORED and (ignored_tags or request_user.has_ignored_wildcard_tags()):
-                #exclude ignored tags if the user wants to
-                qs = qs.exclude(tags__in=ignored_tags)
-                if request_user.has_ignored_wildcard_tags():
-                    ignored_wildcards = request_user.ignored_tags.split()
-                    extra_ignored_tags = Tag.objects.get_by_wildcards(ignored_wildcards)
-                    qs = qs.exclude(tags__in = extra_ignored_tags)
-
-            if askbot_settings.USE_WILDCARD_TAGS:
-                meta_data['interesting_tag_names'].extend(request_user.interesting_tags.split())
-                meta_data['ignored_tag_names'].extend(request_user.ignored_tags.split())
-
-        QUESTION_ORDER_BY_MAP = {
-            'age-desc': '-added_at',
-            'age-asc': 'added_at',
-            'activity-desc': '-last_activity_at',
-            'activity-asc': 'last_activity_at',
-            'answers-desc': '-answer_count',
-            'answers-asc': 'answer_count',
-            'votes-desc': '-points',
-            'votes-asc': 'points',
-
-            'relevance-desc': '-relevance', # special Postgresql-specific ordering, 'relevance' quaso-column is added by get_for_query()
-        }
-        orderby = QUESTION_ORDER_BY_MAP[search_state.sort]
-        #FIXTHIS
-        #qs = qs.extra(order_by=[orderby])
-
-        # HACK: We add 'ordering_key' column as an alias and order by it, because when distict() is used,
-        #       qs.extra(order_by=[orderby,]) is lost if only `orderby` column is from askbot_post!
-        #       Removing distinct() from the queryset fixes the problem, but we have to use it here.
-        # UPDATE: Apparently we don't need distinct, the query don't duplicate Thread rows!
-        # qs = qs.extra(select={'ordering_key': orderby.lstrip('-')}, order_by=['-ordering_key' if orderby.startswith('-') else 'ordering_key'])
-        # qs = qs.distinct()
-
-        #FIXTHIS
-        #qs = qs.only('id', 'title', 'view_count', 'answer_count', 'last_activity_at', 'last_activity_by', 'closed', 'tagnames', 'accepted_answer')
-
-        #print qs.query
-
-        return qs.get_django_queryset(Thread), meta_data
 
     def precache_view_data_hack(self, threads):
         # TODO: Re-enable this when we have a good test cases to verify that it works properly.
