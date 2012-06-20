@@ -4,7 +4,7 @@ try:
 except ImportError:
     pass
 
-from askbot.models import Post, Thread, Tag, User
+from askbot.models import Post, Thread, User
 
 class ThreadIndex(indexes.SearchIndex):
     text = indexes.CharField(document=True, use_template=True)
@@ -28,18 +28,30 @@ class PostIndex(indexes.SearchIndex):
     def index_queryset(self):
         return Post.objects.filter(deleted=False)
 
+class UserIndex(indexes.SearchIndex):
+    text = indexes.CharField(document=True, use_template=True)
+
+    def index_queryset(self):
+        return User.objects.all()
+
 site.register(Post, PostIndex)
 site.register(Thread, ThreadIndex)
+site.register(User, UserIndex)
 
 class AskbotSearchQuerySet(SearchQuerySet):
 
-    #def get_django_queryset(self, model_klass=Thread):
-    def get_django_queryset(self):
+    def get_django_queryset(self, model_klass=Thread):
+        '''dirty hack because models() method from the
+        SearchQuerySet does not work </3'''
         id_list = []
         for r in self:
-            if getattr(r, 'thread_id'):
-                id_list.append(r.thread_id)
-            else:
+            if r.model_name in ['thread','post'] \
+                    and model_klass._meta.object_name.lower() == 'thread':
+                if getattr(r, 'thread_id'):
+                    id_list.append(r.thread_id)
+                else:
+                    id_list.append(r.pk)
+            elif r.model_name == model_klass._meta.object_name.lower():
                 id_list.append(r.pk)
 
-        return Thread.objects.filter(id__in=set(id_list))
+        return model_klass.objects.filter(id__in=set(id_list))
