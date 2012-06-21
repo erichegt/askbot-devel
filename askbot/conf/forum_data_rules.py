@@ -13,6 +13,21 @@ FORUM_DATA_RULES = livesettings.ConfigurationGroup(
                         super_group = DATA_AND_FORMATTING
                     )
 
+EDITOR_CHOICES = (
+    ('markdown', 'markdown'),
+    ('tinymce', 'WISYWIG (tinymce)')
+)
+
+settings.register(
+    livesettings.StringValue(
+        FORUM_DATA_RULES,
+        'EDITOR_TYPE',
+        default = 'markdown',
+        choices = EDITOR_CHOICES,
+        description = _('Editor for the posts')
+    )
+)
+
 settings.register(
     livesettings.BooleanValue(
         FORUM_DATA_RULES,

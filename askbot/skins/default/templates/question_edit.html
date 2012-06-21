@@ -20,10 +20,12 @@
         macros.edit_post(
                     form,
                     post_type='question',
+                    post_html=question.html,
                     edit_title=True,
                     mandatory_tags = mandatory_tags,
                     use_category_selector = use_category_selector,
-                    tag_names = tag_names
+                    tag_names = tag_names,
+                    editor_type = settings.EDITOR_TYPE
                 )
     }}
     <div class="after-editor">
@@ -57,8 +59,12 @@
     {% endif %}
     <script type='text/javascript' src='{{"/js/jquery.validate.min.js"|media}}'></script>
     <script type='text/javascript' src='{{"/js/post.js"|media}}'></script>
-    <script type='text/javascript' src='{{"/js/wmd/showdown.js"|media}}'></script>
-    <script type='text/javascript' src='{{"/js/wmd/wmd.js"|media}}'></script>
+    {% if settings.EDITOR_TYPE == 'markdown' %}
+        <script type='text/javascript' src='{{"/js/wmd/showdown.js"|media}}'></script>
+        <script type='text/javascript' src='{{"/js/wmd/wmd.js"|media}}'></script>
+    {% else %}
+        {% include "meta/tinymce.html" %}
+    {% endif %}
     <script type="text/javascript">
     {% if settings.ENABLE_MATHJAX or settings.MARKUP_CODE_FRIENDLY %}
         var codeFriendlyMarkdown = true;
@@ -68,8 +74,8 @@
     //todo move javascript out
     $().ready(function(){
         $("#nav_questions").attr('className',"on");
+
         $('#editor').TextAreaResizer();
-        
         //highlight code synctax when editor has new text
         $("#editor").typeWatch({highlight: false, wait: 3000,
                          captureLength: 5, callback: lanai.highlightSyntax});

@@ -7,10 +7,19 @@
         </div>
     </div>
 {% endif %}
-<div class='wmd-container'>
-    <div id="wmd-button-bar" class="wmd-panel"></div>
-    {{ post_form.text }}{# this element is resizable and will be wrapped by js #}
-</div>
+{% if editor_type == 'markdown' %}
+    <div class="wmd-container">
+        <div id="wmd-button-bar" class="wmd-panel"></div>
+        {{ post_form.text }}{# this element is resizable and will be wrapped by js #}
+    </div>
+{% else %}
+    <div class="wmd-container"><textarea name="text"></textarea></div>
+    <script type="text/javascript">
+        {% if post_html %}
+            askbot['data']['editorContent'] = '{{ post_html|escapejs }}';
+        {% endif %}
+    </script>
+{% endif %}
 <div class="form-item">
     <label for="editor" class="form-error">{{ post_form.text.errors }}</label>
 </div>
@@ -60,12 +69,14 @@
         <div class="form-error" >{{ post_form.summary.errors }}</div>
     </div>
 {% endif %}
-<div class="preview-toggle">
-    <span 
-        id="pre-collapse" 
-        title="{% trans %}Toggle the real time Markdown editor preview{% endtrans %}"
-    >
-        [{% trans %}hide preview{% endtrans %}]
-    </span>
-</div>
-<div id="previewer" class="wmd-preview"></div>
+{% if editor_type == 'markdown' %}
+    <div class="preview-toggle">
+        <span 
+            id="pre-collapse" 
+            title="{% trans %}Toggle the real time Markdown editor preview{% endtrans %}"
+        >
+            [{% trans %}hide preview{% endtrans %}]
+        </span>
+    </div>
+    <div id="previewer" class="wmd-preview"></div>
+{% endif %}
