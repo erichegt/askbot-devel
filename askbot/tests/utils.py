@@ -5,8 +5,8 @@ from functools import wraps
 from askbot import models
 
 def create_user(
-            username = None, 
-            email = None, 
+            username = None,
+            email = None,
             notification_schedule = None,
             date_joined = None,
             status = 'a',
@@ -25,13 +25,13 @@ def create_user(
     * 'q_sel' - questions that user decides to follow
     * 'm_and_c' - comments and mentions of user anywhere
 
-    and values as keys in 
+    and values as keys in
     :attr:`~askbot.models.EmailFeedSetting.FEED_TYPES`:
 
     * 'i' - instantly
     * 'd' - daily
     * 'w' - weekly
-    * 'n' - never 
+    * 'n' - never
     """
     user = models.User.objects.create_user(username, email)
 
@@ -42,7 +42,7 @@ def create_user(
     user.set_status(status)
     if notification_schedule == None:
         notification_schedule = models.EmailFeedSetting.NO_EMAIL_SCHEDULE
-        
+
     #a hack, we need to delete these, that will be created automatically
     #because just below we will be replacing them with the new values
     user.notification_subscriptions.all().delete()
@@ -110,7 +110,7 @@ class AskbotTestCase(TestCase):
 
 
     def post_question(
-                    self, 
+                    self,
                     user = None,
                     title = 'test question title',
                     body_text = 'test question body text',
@@ -151,7 +151,7 @@ class AskbotTestCase(TestCase):
         """reloads model object from the database
         """
         return obj.__class__.objects.get(id = obj.id)
-        
+
     def post_answer(
                     self,
                     user = None,
@@ -194,8 +194,8 @@ class AskbotTestCase(TestCase):
                 by_email = False,
                 timestamp = None
             ):
-        """posts and returns a comment to parent post, uses 
-        now timestamp if not given, dummy body_text 
+        """posts and returns a comment to parent post, uses
+        now timestamp if not given, dummy body_text
         author is required
         """
         if user is None:

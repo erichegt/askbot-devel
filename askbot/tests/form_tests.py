@@ -72,8 +72,8 @@ class AskByEmailFormTests(AskbotTestCase):
         askbot_settings.update('TAGS_ARE_REQUIRED', setting_backup)
 
     def test_email(self):
-        """loops through variants of the from field 
-        in the emails and tests the email address 
+        """loops through variants of the from field
+        in the emails and tests the email address
         extractor"""
         for test_case in EMAIL_CASES:
             self.data['sender'] = test_case[0]
@@ -178,7 +178,7 @@ class EditQuestionAnonymouslyFormTests(AskbotTestCase):
     def setup_data(self, is_anon, can_be_anon, is_owner, box_checked):
         """sets up data in the same order as shown in the
         truth table above
-        
+
         the four positional arguments are in the same order
         """
         askbot_settings.update('ALLOW_ASK_ANONYMOUSLY', can_be_anon)
@@ -264,7 +264,7 @@ class UserStatusFormTest(AskbotTestCase):
         self.moderator.set_status('m')
         self.subject = self.create_user('normal_user')
         self.subject.set_status('a')
-        self.form = forms.ChangeUserStatusForm(data, moderator = self.moderator, 
+        self.form = forms.ChangeUserStatusForm(data, moderator = self.moderator,
                                                subject = self.subject)
     def test_moderator_can_suspend_user(self):
         self.setup_data('s')
@@ -292,7 +292,7 @@ class UserNameFieldTest(AskbotTestCase):
         self.username_field.skip_clean = True
         self.assertEquals(self.username_field.clean('bar'), 'bar')#will pass anything
 
-        self.username_field.skip_clean = False 
+        self.username_field.skip_clean = False
 
         #will not pass b/c instance is not User model
         self.username_field.user_instance = dict(foo=1)
@@ -328,7 +328,7 @@ class AnswerEditorFieldTests(AskbotTestCase):
             self.field.clean,
             'a'
         )
-    
+
     def test_pass_long_body(self):
         self.assertEquals(
             self.field.clean(10*'a'),
