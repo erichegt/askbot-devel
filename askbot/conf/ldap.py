@@ -19,6 +19,25 @@ settings.register(
     )
 )
 
+LDAP_PROTOCOL_VERSION_CHOICES = (
+    ('3', _('Version 3')),
+    ('2', _('Version 2 (insecure and deprecated)!!!'))
+)
+
+settings.register(
+    livesettings.StringValue(
+        LDAP_SETTINGS,
+        'LDAP_PROTOCOL_VERSION',
+        default = '3',
+        choices = LDAP_PROTOCOL_VERSION_CHOICES,
+        description = _('LDAP protocol version'),
+        help_text = _(
+            'Note that Version 2 protocol is not secure!!! '
+            'Do not use it on unprotected network.'
+        )
+    )
+)
+
 settings.register(
     livesettings.StringValue(
         LDAP_SETTINGS,
@@ -33,6 +52,18 @@ settings.register(
         LDAP_SETTINGS,
         'LDAP_BASEDN',
         description=_('LDAP BASE DN')
+    )
+)
+
+settings.register(
+    livesettings.StringValue(
+        LDAP_SETTINGS,
+        'LDAP_USER_FILTER_TEMPLATE',
+        description = _('User search filter template'),
+        default = '(%s=%s)',
+        help_text = _(
+            'Python string format template, must have two string placeholders'
+        )
     )
 )
 

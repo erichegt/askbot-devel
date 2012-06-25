@@ -6,6 +6,7 @@ import datetime
 import logging
 from django.contrib.auth.models import User
 from django.core.exceptions import ImproperlyConfigured
+from django.conf import settings as django_settings
 from django.utils.translation import ugettext as _
 from askbot.deps.django_authopenid.models import UserAssociation
 from askbot.deps.django_authopenid import util
@@ -26,29 +27,66 @@ def ldap_authenticate(username, password):
     user_information = None
     try:
         ldap_session = ldap.initialize(askbot_settings.LDAP_URL)
-        ldap_session.protocol_version = ldap.VERSION3
-        user_filter = "({0}={1})".format(askbot_settings.LDAP_USERID_FIELD, 
-                                         username)
+
+        #set protocol version
+        if askbot_settings.LDAP_PROTOCOL_VERSION == '2':
+            ldap_session.protocol_version = ldap.VERSION2
+        elif askbot_settings.LDAP_PROTOCOL_VERSION == '3':
+            ldap_session.protocol_version = ldap.VERSION3
+        else:
+            raise NotImplementedError('unsupported version of ldap protocol')
+
+        #set extra ldap options, if given
+        if hasattr(django_settings, 'LDAP_EXTRA_OPTIONS'):
+            options = django_settings.LDAP_EXTRA_OPTIONS
+            for key, value in options:
+                if key.startswith('OPT_'):
+                    ldap_key = getattr(ldap, key)
+                    ldap.set_option(ldap_key, value)
+                else:
+                    raise ValueError('Invalid LDAP option %s' % key)
+
+        #add optional "master" LDAP authentication, if required
+        master_username = getattr(django_settings, 'LDAP_USER', None)
+        master_password = getattr(django_settings, 'LDAP_PASSWORD', None)
+        if master_username and master_password:
+            ldap_session.simple_bind_s(master_username, master_password)
+
+        user_filter = askbot_settings.LDAP_USERNAME_FILTER_TEMPLATE % (
+                                            askbot_settings.LDAP_USERID_FIELD, 
+                                            username
+                                        )
+
+        get_attrs = (
+            askbot_settings.LDAP_EMAIL_FIELD,
+            #askbot_settings.LDAP_SCREEN_NAME_FIELD
+            #todo: here we have a chance to get more data from LDAP
+            #maybe a point for some plugin
+        )
+
         # search ldap directory for user
-        res = ldap_session.search_s(askbot_settings.LDAP_BASEDN, ldap.SCOPE_SUBTREE, user_filter, None)
-        if res: # User found in LDAP Directory
-            user_dn = res[0][0]
-            user_information = res[0][1]
-            ldap_session.simple_bind_s(user_dn, password) # <-- will throw  ldap.INVALID_CREDENTIALS if fails
+        user_search_result = ldap_session.search_s(
+            askbot_settings.LDAP_BASEDN, ldap.SCOPE_SUBTREE, user_filter, get_attrs 
+        )
+        if user_search_result: # User found in LDAP Directory
+            user_dn = user_search_result[0][0]
+            user_information = user_search_result[0][1]
+            ldap_session.simple_bind_s(user_dn, password) #raises INVALID_CREDENTIALS
             ldap_session.unbind_s()
             
             exact_username = user_information[askbot_settings.LDAP_USERID_FIELD][0]
             
             # Assuming last, first order
             # --> may be different
-            last_name, first_name = user_information[askbot_settings.LDAP_COMMONNAME_FIELD][0].rsplit(" ", 1)
+            #last_name, first_name = user_information[askbot_settings.LDAP_COMMONNAME_FIELD][0].rsplit(" ", 1)
+
             email = user_information[askbot_settings.LDAP_EMAIL_FIELD][0]
             try:
                 user = User.objects.get(username__exact=exact_username)
                 # always update user profile to synchronize with ldap server
                 user.set_password(password)
-                user.first_name = first_name
-                user.last_name = last_name
+                #user.first_name = first_name
+                #user.last_name = last_name
                 user.email = email
                 user.save()
             except User.DoesNotExist:
@@ -56,8 +94,8 @@ def ldap_authenticate(username, password):
                 user = User()
                 user.username = exact_username
                 user.set_password(password)
-                user.first_name = first_name
-                user.last_name = last_name
+                #user.first_name = first_name
+                #user.last_name = last_name
                 user.email = email
                 user.is_staff = False
                 user.is_superuser = False

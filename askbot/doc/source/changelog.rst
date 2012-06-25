@@ -3,6 +3,8 @@ Changes in Askbot
 
 Development version
 -------------------
+* Updated LDAP configuration: allow protocol change, master login and
+  adding "extra options" to the ldap session (Evgeny)
 * Simple tag moderation via email (Evgeny)
 * Editable optional three level category selector for the tags (Evgeny)
 * Tag editor adding tags as they are typed (Evgeny)
