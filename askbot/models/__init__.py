@@ -25,6 +25,7 @@ from askbot.const.message_keys import get_i18n_message
 from askbot.conf import settings as askbot_settings
 from askbot.models.question import Thread
 from askbot.skins import utils as skin_utils
+from askbot.mail import messages
 from askbot.models.question import QuestionView, AnonymousQuestion
 from askbot.models.question import FavoriteQuestion
 from askbot.models.tag import Tag, MarkedTag, get_group_names, get_groups
@@ -36,6 +37,7 @@ from askbot.models import signals
 from askbot.models.badges import award_badges_signal, get_badge, BadgeData
 from askbot.models.repute import Award, Repute, Vote
 from askbot import auth
+from askbot.utils import category_tree
 from askbot.utils.decorators import auto_now_timestamp
 from askbot.utils.slug import slugify
 from askbot.utils.diff import textDiff as htmldiff
@@ -300,6 +302,47 @@ def user_can_create_tags(self):
         return self.is_administrator_or_moderator()
     else:
         return True
+
+def user_try_creating_tags(self,tag_names):
+    created_tags = list()
+    if self.can_create_tags():
+        for name in tag_names:
+            new_tag = Tag.objects.create(
+                                name = name,
+                                created_by = self,
+                                used_count = 1
+                            )
+            created_tags.append(new_tag)
+        #finally add tags to the relation and extend the modified list
+    elif tag_names:#notify admins by email about new tags
+        #maybe remove tags to report based on categories
+        #todo: maybe move this to tags_updated signal handler
+        if askbot_settings.TAG_SOURCE == 'category-tree':
+            category_names = category_tree.get_leaf_names()
+            tag_names = tag_names - category_names
+
+        if len(tag_names) > 0:
+            #todo: move all message sending codes to a separate module
+            body_text = messages.notify_admins_about_new_tags(
+                                    tags = tag_names,
+                                    user = self,
+                                    thread = self
+                                )
+            site_name = askbot_settings.APP_SHORT_NAME
+            subject_line = _('New tags added to %s') % site_name
+            mail.mail_moderators(
+                subject_line,
+                body_text,
+                headers = {'Reply-To': self.email}
+            )
+            msg = _(
+                'Tags %s are new and will be submitted for the '
+                'moderators approval'
+            ) % ', '.join(tag_names)
+            self.message_set.create(message = msg)
+
+    return created_tags
+
 
 def user_can_have_strong_url(self):
     """True if user's homepage url can be
@@ -2567,6 +2610,7 @@ User.add_to_class('set_admin_status', user_set_admin_status)
 User.add_to_class('edit_group_membership', user_edit_group_membership)
 User.add_to_class('is_group_member', user_is_group_member)
 User.add_to_class('remove_admin_status', user_remove_admin_status)
+User.add_to_class('try_creating_tags', user_try_creating_tags)
 User.add_to_class('is_moderator', user_is_moderator)
 User.add_to_class('is_approved', user_is_approved)
 User.add_to_class('is_watched', user_is_watched)

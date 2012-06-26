@@ -91,6 +91,14 @@ class TagQuerySet(models.query.QuerySet):
             tag.used_count = tag.threads.count()
             tag.save()
 
+    def mark_undeleted(self):
+        """removes deleted(+at/by) marks"""
+        self.update(#undelete them
+            deleted = False,
+            deleted_by = None,
+            deleted_at = None
+        )
+
     def tags_match_some_wildcard(self, wildcard_tags = None):
         """True if any one of the tags in the query set
         matches a wildcard

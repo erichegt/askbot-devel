@@ -798,24 +798,23 @@ class Thread(models.Model):
         """
         Updates Tag associations for a thread to match the given
         tagname string.
-
         When tags are removed and their use count hits 0 - the tag is
         automatically deleted.
-
         When an added tag does not exist - it is created
+        If tag moderation is on - new tags are placed on the queue
 
         Tag use counts are recalculated
-
         A signal tags updated is sent
 
-        *IMPORTANT*: self._question_post() has to exist when update_tags() is called!
+        *IMPORTANT*: self._question_post() has to
+        exist when update_tags() is called!
         """
         previous_tags = list(self.tags.all())
 
         previous_tagnames = set([tag.name for tag in previous_tags])
         updated_tagnames = set(t for t in tagnames.strip().split(' '))
-
         removed_tagnames = previous_tagnames - updated_tagnames
+
         #remove tags from the question's tags many2many relation
         #used_count values are decremented on all tags
         removed_tags = self.remove_tags_by_names(removed_tagnames)
@@ -832,49 +831,11 @@ class Thread(models.Model):
         if added_tagnames:
             #find reused tags
             reused_tags, new_tagnames = get_tags_by_names(added_tagnames)
-            reused_tags.update(#undelete them
-                deleted = False,
-                deleted_by = None,
-                deleted_at = None
-            )
+            reused_tags.mark_undeleted()
 
             added_tags = list(reused_tags)
-            if user.can_create_tags():
-                for name in new_tagnames:
-                    new_tag = Tag.objects.create(
-                                            name = name,
-                                            created_by = user,
-                                            used_count = 1
-                                        )
-                    added_tags.append(new_tag)
-                #finally add tags to the relation and extend the modified list
-            elif new_tagnames:#notify admins by email about new tags
-                #maybe remove tags to report based on categories
-                #todo: maybe move this to tags_updated signal handler
-                if askbot_settings.TAG_SOURCE == 'category-tree':
-                    category_names = category_tree.get_leaf_names()
-                    new_tag_names = new_tag_names - category_names
-
-                if len(new_tag_names) > 0:
-                    #todo: move all message sending codes to a separate module
-                    body_text = messages.notify_admins_about_new_tags(
-                                            tags = new_tagnames,
-                                            user = user,
-                                            thread = self
-                                        )
-                    site_name = askbot_settings.APP_SHORT_NAME
-                    subject_line = _('New tags added to %s') % site_name
-                    mail.mail_moderators(
-                        subject_line,
-                        body_text,
-                        headers = {'Reply-To': user.email}
-                    )
-                    msg = _(
-                        'Tags %s are new and will be submitted for the '
-                        'moderators approval'
-                    ) % ', '.join(new_tagnames)
-                    user.message_set.create(message = msg)
-
+            created_tags = user.try_creating_tags(new_tagnames)
+            added_tags.extend(created_tags)
             #todo: not nice that assignment of added_tags is way above
             self.tags.add(*added_tags)
             modified_tags.extend(added_tags)
