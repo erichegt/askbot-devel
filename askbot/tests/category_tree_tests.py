@@ -114,3 +114,15 @@ class CategoryTreeTests(unittest.TestCase):
             sorted_dump, 
             '[["dummy", [["audio", [["amadeus", []], ["mp3", []]]], ["cars", []]]]]'
         )
+
+    def test_get_leaf_names(self):
+        leaf_names = ct.get_leaf_names(self.tree)
+        self.assertEqual(
+            leaf_names, 
+            set([
+                'cars', 'volkswagen', 'zhiguli',
+                'cats', 'meow', 'tigers', 'rrrr',
+                'music', 'play', 'listen', 'loud',
+                'buy', 'download'
+            ])
+        )

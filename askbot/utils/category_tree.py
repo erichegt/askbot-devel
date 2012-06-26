@@ -66,6 +66,18 @@ def get_data():
     else:
         return None
 
+def _get_leaf_names(subtree):
+    leaf_names = set()
+    for leaf in subtree:
+        leaf_names.add(leaf[0])
+        leaf_names |= _get_leaf_names(leaf[1])
+    return leaf_names
+
+def get_leaf_names(tree = None):
+    """returns set of leaf names"""
+    data = tree or get_data()
+    return _get_leaf_names(data[0][1])
+
 def path_is_valid(tree, path):
     try:
         get_subtree(tree, path)

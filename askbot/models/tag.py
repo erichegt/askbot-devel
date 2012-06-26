@@ -5,6 +5,42 @@ from django.utils.translation import ugettext as _
 from askbot.models.base import BaseQuerySetManager
 from askbot import const
 
+def delete_tags(tags):
+    """deletes tags in the list"""
+    tag_ids = [tag.id for tag in tags]
+    Tag.objects.filter(id__in = tag_ids).delete()
+
+def get_tags_by_names(tag_names):
+    """returns query set of tags
+    and a set of tag names that were not found
+    """
+    tags = Tag.objects.filter(name__in = tag_names)
+    #if there are brand new tags, create them
+    #and finalize the added tag list
+    if tags.count() < len(tag_names):
+        found_tag_names = set([tag.name for tag in tags])
+        new_tag_names = set(tag_names) - found_tag_names
+    else:
+        new_tag_names = set()
+
+    return tags, new_tag_names
+
+
+def separate_unused_tags(tags):
+    """returns two lists::
+    * first where tags whose use counts are >0
+    * second - with use counts == 0
+    """
+    used = list()
+    unused = list()
+    for tag in tags:
+        if tag.used_count == 0:
+            unused.append(tag)
+        else:
+            assert(tag.used_count > 0)
+            used.append(tag)
+    return used, unused
+
 def tags_match_some_wildcard(tag_names, wildcard_tags):
     """Same as 
     :meth:`~askbot.models.tag.TagQuerySet.tags_match_some_wildcard`

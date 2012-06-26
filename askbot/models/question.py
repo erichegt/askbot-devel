@@ -15,7 +15,8 @@ import askbot
 from askbot.conf import settings as askbot_settings
 from askbot import mail
 from askbot.mail import messages
-from askbot.models.tag import Tag, get_groups
+from askbot.models.tag import Tag, get_groups, get_tags_by_names
+from askbot.models.tag import delete_tags, separate_unused_tags
 from askbot.models.base import AnonymousContent, BaseQuerySetManager
 from askbot.models.tag import Tag, get_groups
 from askbot.models.post import Post, PostRevision
@@ -782,6 +783,17 @@ class Thread(models.Model):
     def is_private(self):
         return askbot_settings.GROUPS_ENABLED and self.groups.count() > 0
 
+    def remove_tags_by_names(self, tagnames):
+        """removes tags from thread by names"""
+        removed_tags = list()
+        for tag in self.tags.all():
+            if tag.name in tagnames:
+                tag.used_count -= 1
+                removed_tags.append(tag)
+        self.tags.remove(*removed_tags)
+        return removed_tags
+
+
     def update_tags(self, tagnames = None, user = None, timestamp = None):
         """
         Updates Tag associations for a thread to match the given
@@ -804,49 +816,29 @@ class Thread(models.Model):
         updated_tagnames = set(t for t in tagnames.strip().split(' '))
 
         removed_tagnames = previous_tagnames - updated_tagnames
-        added_tagnames = updated_tagnames - previous_tagnames
-
-        modified_tags = list()
         #remove tags from the question's tags many2many relation
-        if removed_tagnames:
-            removed_tags = list()
-            for tag in previous_tags:
-                if tag.name in removed_tagnames:
-                    removed_tags.append(tag)
+        #used_count values are decremented on all tags
+        removed_tags = self.remove_tags_by_names(removed_tagnames)
+        #modified tags go on to recounting their use
+        modified_tags, unused_tags = separate_unused_tags(removed_tags)
+        delete_tags(unused_tags)#tags with used_count == 0 are deleted
 
-            self.tags.remove(*removed_tags)
-
-            #if any of the removed tags reached use count == 1 that means they must be deleted
-            for tag in removed_tags:
-                if tag.used_count == 1:
-                    #we won't modify used count b/c it's done below anyway
-                    removed_tags.remove(tag)
-                    #todo - do we need to use fields deleted_by and deleted_at?
-                    tag.delete()#auto-delete tags whose use count dwindled
-
-            #remember modified tags, we'll need to update use counts on them
-            modified_tags = removed_tags
+        modified_tags = removed_tags
 
         #add new tags to the relation
+        added_tagnames = updated_tagnames - previous_tagnames
+
+        #todo: the part below is too long and needs to be refactored
         if added_tagnames:
             #find reused tags
-            reused_tags = Tag.objects.filter(name__in = added_tagnames)
-            reused_count = reused_tags.update(#undelete them
-                                    deleted = False,
-                                    deleted_by = None,
-                                    deleted_at = None
-                                )
-            #if there are brand new tags, create them
-            #and finalize the added tag list
-            if reused_count < len(added_tagnames):
-                added_tags = list(reused_tags)
+            reused_tags, new_tagnames = get_tags_by_names(added_tagnames)
+            reused_tags.update(#undelete them
+                deleted = False,
+                deleted_by = None,
+                deleted_at = None
+            )
 
-                reused_tagnames = set([tag.name for tag in reused_tags])
-                new_tagnames = added_tagnames - reused_tagnames
-            else:
-                added_tags = reused_tags
-                new_tagnames = set()
-
+            added_tags = list(reused_tags)
             if user.can_create_tags():
                 for name in new_tagnames:
                     new_tag = Tag.objects.create(
@@ -856,27 +848,37 @@ class Thread(models.Model):
                                         )
                     added_tags.append(new_tag)
                 #finally add tags to the relation and extend the modified list
-                self.tags.add(*added_tags)
-                modified_tags.extend(added_tags)
-
             elif new_tagnames:#notify admins by email about new tags
-                body_text = messages.notify_admins_about_new_tags(
-                                        tags = new_tagnames,
-                                        user = user,
-                                        thread = self
-                                    )
-                site_name = askbot_settings.APP_SHORT_NAME
-                subject_line = _('New tags added to %s') % site_name
-                mail.mail_moderators(
-                    subject_line,
-                    body_text,
-                    headers = {'Reply-To': user.email}
-                )
-                msg = _(
-                    'Tags %s are new and will be submitted for the '
-                    'moderators approval'
-                ) % ', '.join(new_tagnames)
-                user.message_set.create(message = msg)
+                #maybe remove tags to report based on categories
+                #todo: maybe move this to tags_updated signal handler
+                if askbot_settings.TAG_SOURCE == 'category-tree':
+                    category_names = category_tree.get_leaf_names()
+                    new_tag_names = new_tag_names - category_names
+
+                if len(new_tag_names) > 0:
+                    #todo: move all message sending codes to a separate module
+                    body_text = messages.notify_admins_about_new_tags(
+                                            tags = new_tagnames,
+                                            user = user,
+                                            thread = self
+                                        )
+                    site_name = askbot_settings.APP_SHORT_NAME
+                    subject_line = _('New tags added to %s') % site_name
+                    mail.mail_moderators(
+                        subject_line,
+                        body_text,
+                        headers = {'Reply-To': user.email}
+                    )
+                    msg = _(
+                        'Tags %s are new and will be submitted for the '
+                        'moderators approval'
+                    ) % ', '.join(new_tagnames)
+                    user.message_set.create(message = msg)
+
+            #todo: not nice that assignment of added_tags is way above
+            self.tags.add(*added_tags)
+            modified_tags.extend(added_tags)
+
 
         ####################################################################
         self.update_summary_html() # regenerate question/thread summary html
