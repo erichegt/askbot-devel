@@ -126,3 +126,9 @@ class CategoryTreeTests(unittest.TestCase):
                 'buy', 'download'
             ])
         )
+
+    def test_get_leaf_names_empty(self):
+        self.assertEqual(
+            set([]),
+            ct.get_leaf_names(None)
+        )
