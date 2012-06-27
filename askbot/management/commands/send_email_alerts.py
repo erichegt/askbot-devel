@@ -338,11 +338,7 @@ class Command(NoArgsCommand):
 
             #collect info on all sorts of news that happened after
             #the most recent emailing to the user about this question
-            q_rev = PostRevision.objects.question_revisions().filter(
-                                                post=q,
-                                                revised_at__gt=emailed_at
-                                            )
-
+            q_rev = q.revisions.filter(revised_at__gt=emailed_at)
             q_rev = q_rev.exclude(author=user)
 
             #now update all sorts of metadata per question
@@ -358,17 +354,18 @@ class Command(NoArgsCommand):
                                             added_at__gt=emailed_at,
                                             deleted=False,
                                         )
-
             new_ans = new_ans.exclude(author=user)
             meta_data['new_ans'] = len(new_ans)
-            ans_rev = PostRevision.objects.answer_revisions().filter(
-                                            # answer__question = q
-                                            post__thread=q.thread,
 
-                                            post__deleted = False,
-                                            revised_at__gt = emailed_at
-                                        ).distinct()
-            ans_rev = ans_rev.exclude(author=user)
+            ans_ids = Post.objects.get_answers(user).filter(
+                                            thread=q.thread,
+                                            added_at__gt=emailed_at,
+                                            deleted=False,
+                                        ).values_list(
+                                            'id', flat = True
+                                        )
+            ans_rev = PostRevision.objects.filter(post__id__in = ans_ids)
+            ans_rev = ans_rev.exclude(author=user).distinct()
             meta_data['ans_rev'] = len(ans_rev)
 
             comments = meta_data.get('comments', 0)

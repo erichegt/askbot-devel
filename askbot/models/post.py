@@ -1560,7 +1560,7 @@ class Post(models.Model):
                 comment = const.POST_STATUS['default_version']
             else:
                 comment = 'No.%s Revision' % rev_no
-        return PostRevision.objects.create_answer_revision(
+        return PostRevision.objects.create(
             post = self,
             author = author,
             revised_at = revised_at,
@@ -1589,7 +1589,7 @@ class Post(models.Model):
             else:
                 comment = 'No.%s Revision' % rev_no
 
-        return PostRevision.objects.create_question_revision(
+        return PostRevision.objects.create(
             post = self,
             revision   = rev_no,
             title      = self.thread.title,
@@ -1760,26 +1760,9 @@ class Post(models.Model):
 
 class PostRevisionManager(models.Manager):
     def create(self, *kargs, **kwargs):
-        raise NotImplementedError  # Prevent accidental creation of PostRevision instance without `revision_type` set
-
-    def create_question_revision(self, *kargs, **kwargs):
-        kwargs['revision_type'] = self.model.QUESTION_REVISION
         revision = super(PostRevisionManager, self).create(*kargs, **kwargs)
         revision.moderate_or_publish()
         return revision
-
-    def create_answer_revision(self, *kargs, **kwargs):
-        kwargs['revision_type'] = self.model.ANSWER_REVISION
-        revision = super(PostRevisionManager, self).create(*kargs, **kwargs)
-        revision.moderate_or_publish()
-        return revision
-
-    def question_revisions(self):
-        return self.filter(revision_type=self.model.QUESTION_REVISION)
-
-    def answer_revisions(self):
-        return self.filter(revision_type=self.model.ANSWER_REVISION)
-
 
 class PostRevision(models.Model):
     QUESTION_REVISION_TEMPLATE_NO_TAGS = (
@@ -1787,20 +1770,7 @@ class PostRevision(models.Model):
         '<div class="text">%(html)s</div>\n'
     )
 
-    QUESTION_REVISION = 1
-    ANSWER_REVISION = 2
-    REVISION_TYPE_CHOICES = (
-        (QUESTION_REVISION, 'question'),
-        (ANSWER_REVISION, 'answer'),
-    )
-    REVISION_TYPE_CHOICES_DICT = dict(REVISION_TYPE_CHOICES)
-
     post = models.ForeignKey('askbot.Post', related_name='revisions', null=True, blank=True)
-
-    #todo: remove this field, as revision type is determined by the
-    #Post.post_type revision_type is a useless field
-    revision_type = models.SmallIntegerField(choices=REVISION_TYPE_CHOICES) # TODO: remove as we have Post now
-
     revision   = models.PositiveIntegerField()
     author     = models.ForeignKey('auth.User', related_name='%(class)ss')
     revised_at = models.DateTimeField()
@@ -1943,24 +1913,16 @@ class PostRevision(models.Model):
             #schedule = askbot_settings.SELF_NOTIFY_WEB_POST_AUTHOR_WHEN
             return False
 
-    def revision_type_str(self):
-        return self.REVISION_TYPE_CHOICES_DICT[self.revision_type]
-
     def __unicode__(self):
-        return u'%s - revision %s of %s' % (self.revision_type_str(), self.revision, self.title)
+        return u'%s - revision %s of %s' % (self.post.post_type, self.revision, self.title)
 
     def parent(self):
         return self.post
 
     def clean(self):
         "Internal cleaning method, called from self.save() by self.full_clean()"
-        # TODO: Remove this when we remove `revision_type`
         if not self.post:
             raise ValidationError('Post field has to be set.')
-
-        if (self.post.post_type == 'question' and not self.is_question_revision()) or \
-           (self.post.post_type == 'answer' and not self.is_answer_revision()):
-            raise ValidationError('Revision_type doesn`t match values in question/answer fields.')
 
     def save(self, **kwargs):
         # Determine the revision number, if not set
@@ -1968,22 +1930,15 @@ class PostRevision(models.Model):
             # TODO: Maybe use Max() aggregation? Or `revisions.count() + 1`
             self.revision = self.parent().revisions.values_list('revision', flat=True)[0] + 1
 
-        # Make sure that everything is ok, in particular that `revision_type` and `revision` are set to valid values
         self.full_clean()
 
         super(PostRevision, self).save(**kwargs)
 
-    def is_question_revision(self):
-        return self.revision_type == self.QUESTION_REVISION
-
-    def is_answer_revision(self):
-        return self.revision_type == self.ANSWER_REVISION
-
     @models.permalink
     def get_absolute_url(self):
-        if self.is_question_revision():
+        if self.post.is_question():
             return 'question_revisions', (self.post.id,), {}
-        elif self.is_answer_revision():
+        elif self.post.is_answer():
             return 'answer_revisions', (), {'id':self.post.id}
 
     def get_question_title(self):
@@ -1999,12 +1954,12 @@ class PostRevision(models.Model):
         markdowner = markup.get_parser()
         sanitized_html = sanitize_html(markdowner.convert(self.text))
 
-        if self.is_question_revision():
+        if self.post.is_question():
             return self.QUESTION_REVISION_TEMPLATE_NO_TAGS % {
                 'title': self.title,
                 'html': sanitized_html
             }
-        elif self.is_answer_revision():
+        elif self.post.is_answer():
             return sanitized_html
 
     def get_snippet(self, max_length = 120):

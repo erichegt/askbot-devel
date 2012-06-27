@@ -881,7 +881,7 @@ class Thread(models.Model):
 
         # Create a new revision
         latest_revision = thread_question.get_latest_revision()
-        PostRevision.objects.create_question_revision(
+        PostRevision.objects.create(
             post = thread_question,
             title      = latest_revision.title,
             author     = retagged_by,
