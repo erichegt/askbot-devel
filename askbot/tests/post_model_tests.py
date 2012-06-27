@@ -487,15 +487,22 @@ class ThreadRenderCacheUpdateTests(AskbotTestCase):
 
         time.sleep(1.5) # compensate for 1-sec time resolution in some databases
 
-        response = self.client.post(urlresolvers.reverse('edit_question', kwargs={'id': question.id}), data={
-            'title': 'edited title',
-            'text': 'edited body text',
-            'tags': 'tag1 tag2',
-            'summary': 'just some edit',
-        })
+        response = self.client.post(
+            urlresolvers.reverse('edit_question', kwargs={'id': question.id}),
+            data={
+                'title': 'edited title',
+                'text': 'edited body text',
+                'tags': 'tag1 tag2',
+                'summary': 'just some edit',
+                'select_revision': 'false'
+            }
+        )
         self.assertEqual(1, Post.objects.count())
         question = Post.objects.all()[0]
-        self.assertRedirects(response=response, expected_url=question.get_absolute_url())
+        self.assertRedirects(
+            response=response,
+            expected_url=question.get_absolute_url()
+        )
 
         thread = question.thread
         self.assertEqual(0, thread.answer_count)
@@ -574,10 +581,17 @@ class ThreadRenderCacheUpdateTests(AskbotTestCase):
         time.sleep(1.5)  # compensate for 1-sec time resolution in some databases
         self.client.logout()
         self.client.login(username='user2', password='pswd')
-        response = self.client.post(urlresolvers.reverse('edit_answer', kwargs={'id': answer.id}), data={
-            'text': 'edited body text',
-            'summary': 'just some edit',
-        })
+        response = self.client.post(
+            urlresolvers.reverse(
+                'edit_answer',
+                kwargs={'id': answer.id}
+            ),
+            data={
+                'text': 'edited body text',
+                'summary': 'just some edit',
+                'select_revision': 'false'
+            }
+        )
         self.assertRedirects(response=response, expected_url=answer.get_absolute_url())
 
         answer = Post.objects.get(id=answer.id)

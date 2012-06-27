@@ -1560,7 +1560,6 @@ class Post(models.Model):
                 comment = const.POST_STATUS['default_version']
             else:
                 comment = 'No.%s Revision' % rev_no
-        from askbot.models.post import PostRevision
         return PostRevision.objects.create_answer_revision(
             post = self,
             author = author,
@@ -1590,7 +1589,6 @@ class Post(models.Model):
             else:
                 comment = 'No.%s Revision' % rev_no
 
-        from askbot.models.post import PostRevision
         return PostRevision.objects.create_question_revision(
             post = self,
             revision   = rev_no,

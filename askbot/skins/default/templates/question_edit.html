@@ -11,17 +11,18 @@
 
     {% if revision_form.revision.errors %}{{ revision_form.revision.errors.as_ul() }}{% endif %}
     <div style="vertical-align:middle">
-    {{ revision_form.revision }} <input type="submit" style="display:none"
-                                        id="select_revision" name="select_revision" 
-                                        value="{% trans %}select revision{% endtrans %}">
+    {{ revision_form.revision }} <input type="hidden"
+                                        id="select_revision"
+                                        name="select_revision" 
+                                        value="false">
     </div> 
     {% set use_category_selector = (settings.TAG_SOURCE == 'category-tree') %}
     {{
         macros.edit_post(
                     form,
-                    post_type='question',
-                    post_html=question.html,
-                    edit_title=True,
+                    post_type = 'question',
+                    post_html = revision.text,
+                    edit_title = True,
                     mandatory_tags = mandatory_tags,
                     use_category_selector = use_category_selector,
                     tag_names = tag_names,
@@ -40,7 +41,7 @@
                 {{ macros.checkbox_in_div(form.post_privately) }}
             {% endif %}
         </div>
-        <input type="submit" value="{% trans %}Save edit{% endtrans %}" class="submit" />&nbsp;
+        <input id="edit_post_form_submit_button" type="submit" value="{% trans %}Save edit{% endtrans %}" class="submit" />&nbsp;
         <input type="button" value="{% trans %}Cancel{% endtrans %}" class="submit" onclick="history.back(-1);" />
 
     </div>
@@ -100,7 +101,8 @@
         );
 
         $('#id_revision').unbind().change(function(){
-            $("#select_revision").click();
+            $("#select_revision").val('true');
+            $('#edit_post_form_submit_button').click();
         });
         lanai.highlightSyntax();
         
