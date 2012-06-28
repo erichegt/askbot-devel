@@ -52,7 +52,7 @@ def ldap_authenticate(username, password):
         if master_username and master_password:
             ldap_session.simple_bind_s(master_username, master_password)
 
-        user_filter = askbot_settings.LDAP_USERNAME_FILTER_TEMPLATE % (
+        user_filter = askbot_settings.LDAP_USER_FILTER_TEMPLATE % (
                                             askbot_settings.LDAP_USERID_FIELD, 
                                             username
                                         )
