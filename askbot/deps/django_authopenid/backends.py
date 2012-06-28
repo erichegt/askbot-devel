@@ -26,6 +26,8 @@ def ldap_authenticate(username, password):
     import ldap
     user_information = None
     try:
+        import pdb
+        pdb.set_trace()
         ldap_session = ldap.initialize(askbot_settings.LDAP_URL)
 
         #set protocol version
@@ -58,8 +60,8 @@ def ldap_authenticate(username, password):
                                         )
 
         get_attrs = (
-            askbot_settings.LDAP_EMAIL_FIELD,
-            #askbot_settings.LDAP_SCREEN_NAME_FIELD
+            str(askbot_settings.LDAP_EMAIL_FIELD),
+            #str(askbot_settings.LDAP_USERID_FIELD)
             #todo: here we have a chance to get more data from LDAP
             #maybe a point for some plugin
         )

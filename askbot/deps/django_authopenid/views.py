@@ -322,14 +322,8 @@ def signin(request):
                         login(request, user)
                         return HttpResponseRedirect(next_url)
                     else:
-                        return finalize_generic_signin(
-                                request = request,
-                                user = user,
-                                user_identifier = username,
-                                login_provider_name = provider_name,
-                                redirect_url = next_url
-                            )
-
+                        user.message_set.create(_('incorrect user name or password'))
+                        return HttpResponseRedirect(request.path)
                 else:
                     if password_action == 'login':
                         user = authenticate(
