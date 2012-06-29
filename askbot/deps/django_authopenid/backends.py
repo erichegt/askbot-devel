@@ -15,6 +15,20 @@ from askbot.models.signals import user_registered
 
 log = logging.getLogger('configuration')
 
+def split_name(full_name, name_format):
+    bits = full_name.strip().split()
+    if len(bits) == 1:
+        bits.push('')
+    elif len(bits) == 0:
+        bits = ['', '']
+
+    if name_format == 'first,last':
+        return bits[0], bits[1]
+    elif name_format == 'last,first':
+        return bits[1], bits[0]
+    else:
+        raise ValueError('Unexpected value of name_format')
+
 
 def ldap_authenticate(username, password):
     """
@@ -26,8 +40,6 @@ def ldap_authenticate(username, password):
     import ldap
     user_information = None
     try:
-        import pdb
-        pdb.set_trace()
         ldap_session = ldap.initialize(askbot_settings.LDAP_URL)
 
         #set protocol version
@@ -37,6 +49,8 @@ def ldap_authenticate(username, password):
             ldap_session.protocol_version = ldap.VERSION3
         else:
             raise NotImplementedError('unsupported version of ldap protocol')
+
+        ldap.set_option(ldap.OPT_REFERRALS, 0)
 
         #set extra ldap options, if given
         if hasattr(django_settings, 'LDAP_EXTRA_OPTIONS'):
@@ -51,38 +65,68 @@ def ldap_authenticate(username, password):
         #add optional "master" LDAP authentication, if required
         master_username = getattr(django_settings, 'LDAP_USER', None)
         master_password = getattr(django_settings, 'LDAP_PASSWORD', None)
+
+        login_name_field = askbot_settings.LDAP_LOGIN_NAME_FIELD
+        base_dn = askbot_settings.LDAP_BASE_DN
+        login_template = login_name_field + '=%s,' + base_dn
+        encoding = askbot_settings.LDAP_ENCODING
+
         if master_username and master_password:
-            ldap_session.simple_bind_s(master_username, master_password)
+            login_dn = login_template % master_username
+            ldap_session.simple_bind_s(
+                login_dn.encode(encoding),
+                master_password.encode(encoding)
+            )
 
         user_filter = askbot_settings.LDAP_USER_FILTER_TEMPLATE % (
-                                            askbot_settings.LDAP_USERID_FIELD, 
-                                            username
-                                        )
+                        askbot_settings.LDAP_LOGIN_NAME_FIELD,
+                        username
+                    )
 
-        get_attrs = (
-            str(askbot_settings.LDAP_EMAIL_FIELD),
+        email_field = askbot_settings.LDAP_EMAIL_FIELD
+
+        get_attrs = [
+            email_field.encode(encoding),
+            login_name_field.encode(encoding)
             #str(askbot_settings.LDAP_USERID_FIELD)
             #todo: here we have a chance to get more data from LDAP
             #maybe a point for some plugin
-        )
+        ]
+
+        common_name_field = askbot_settings.LDAP_COMMON_NAME_FIELD.strip()
+        given_name_field = askbot_settings.LDAP_GIVEN_NAME_FIELD.strip()
+        surname_field = askbot_settings.LDAP_SURNAME_FIELD.strip()
+
+        if given_name_field and surname_field:
+            get_attrs.append(given_name_field.encode(encoding))
+            get_attrs.append(surname_field.encode(encoding))
+        elif common_name_field:
+            get_attrs.append(common_name_field.encode(encoding))
 
         # search ldap directory for user
         user_search_result = ldap_session.search_s(
-            askbot_settings.LDAP_BASEDN, ldap.SCOPE_SUBTREE, user_filter, get_attrs 
+            askbot_settings.LDAP_BASE_DN.encode(encoding),
+            ldap.SCOPE_SUBTREE,
+            user_filter.encode(encoding),
+            get_attrs 
         )
         if user_search_result: # User found in LDAP Directory
             user_dn = user_search_result[0][0]
             user_information = user_search_result[0][1]
-            ldap_session.simple_bind_s(user_dn, password) #raises INVALID_CREDENTIALS
+            ldap_session.simple_bind_s(user_dn, password.encode(encoding)) #raises INVALID_CREDENTIALS
             ldap_session.unbind_s()
             
-            exact_username = user_information[askbot_settings.LDAP_USERID_FIELD][0]
-            
-            # Assuming last, first order
-            # --> may be different
-            #last_name, first_name = user_information[askbot_settings.LDAP_COMMONNAME_FIELD][0].rsplit(" ", 1)
+            exact_username = user_information[login_name_field][0]
+            email = user_information[email_field][0]
 
-            email = user_information[askbot_settings.LDAP_EMAIL_FIELD][0]
+            if given_name_field and surname_field:
+                last_name = user_information[surname_field][0]
+                first_name = user_information[given_name_field][0]
+            elif surname_field:
+                common_name_format = askbot_settings.LDAP_COMMON_NAME_FIELD_FORMAT
+                common_name = user_information[common_name_field][0]
+                first_name, last_name = split_name(common_name, common_name_format)
+            
             try:
                 user = User.objects.get(username__exact=exact_username)
                 # always update user profile to synchronize with ldap server
@@ -95,7 +139,7 @@ def ldap_authenticate(username, password):
                 # create new user in local db
                 user = User()
                 user.username = exact_username
-                user.set_password(password)
+                user.set_password(password)#copy password from LDAP locally
                 #user.first_name = first_name
                 #user.last_name = last_name
                 user.email = email
