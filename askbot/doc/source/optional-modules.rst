@@ -83,24 +83,46 @@ To enable authentication via LDAP
 
     pip install python-ldap
 
-After that, add configuration parameters in :ref:`live settings <live-settings>`, section
-"Keys to connect the site with external services ..." 
-(url ``/settings/EXTERNAL_KEYS``, relative to the domain name)
+After that, add configuration parameters in :ref:`live settings <live-settings>`,
+section "LDAP settings" 
+(url ``/settings/LDAP_SETTINGS``, relative to the forum base url)
 
 .. note::
-    Location of these parameters is likely to change in the future.
-    When that happens, an update notice will appear in the documentation.
+    While it is possible to configure LDAP via web interface,
+    it is actually more safe to add them in your ``settings.py`` file in the
+    :ref:`LIVESETTINGS_OPTIONS <live-settings-options>` dictionary.
+    Consider that a breach in security of your forum might open
+    malicious access into your LDAP directory.
 
-The parameters are:
+The parameters are (note that some have pre-set defaults that might work for you)::
 
-* "Use LDAP authentication for the password login" - enable/disable the feature.
-  When enabled, the user name and password will be routed to use the LDAP protocol.
-  Default system password authentication will be overridden.
-* "LDAP service provider name" - any string - just come up with a name for the provider service.
-* "URL fro the LDAP service" - a correct url to access the service.
-* "Explain how to change the LDAP password"
-  - askbot does not provide a method to change LDAP passwords
-  , therefore - use this field to explain users how they can change their passwords.
+* enable/disable LDAP for password login
+* protocol version (``LDAP_PROTOCOL_VERSION``) (version 2 is insecure and deprecated)
+* ldap url (``LDAP_URL``)
+* base distinguished name, 'dn' in LDAP parlance (``LDAP_BASEDN``)
+* user id field name (``LDAP_USERID_FIELD``)
+* email field name (``LDAP_EMAIL_FIELD``)
+* user name filter template (``LDAP_USERNAME_FILTER_TEMPLATE``)
+* user name filter template - must have two string placeholders.
+
+There are three more optional parameters that must go to the ``settings.py`` file::
+
+* ``LDAP_USER``
+* ``LDAP_PASSWORD``
+* ``LDAP_EXTRA_OPTIONS``, a list of two-item tuples - of names and values of
+  the options. Option names must be upper case strings all starting with ``OPT_``
+  as described in the `python ldap library documentation <http://www.python-ldap.org/doc/html/ldap.html#options>`_. An often used option is (`OPT_REFERRALS`, 0).
+
+Use these when you have the "directory master passsword" - 
+for a specific user who can access the rest of the directory,
+these were not added to the live settings due to security concerns.
+
+``LDAP_USER`` and ``LDAP_PASSWORD`` will be used only if both are provided!
+
+Since LDAP authentication requires so many parameters,
+you might need to :ref:`debug <debugging>` the settings.
+The function to look at is `askbot.deps.django_authopenid.backends.ldap_authenticate`.
+If you have problems with LDAP please contact us at support@askbot.com.
 
 Uploaded avatars
 ================

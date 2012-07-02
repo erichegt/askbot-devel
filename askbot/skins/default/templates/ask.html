@@ -16,8 +16,12 @@
     <script type='text/javascript' src='{{"/js/editor.js"|media}}'></script>
     <script type='text/javascript' src='{{"/js/jquery.validate.js"|media}}'></script>
     <script type='text/javascript' src='{{"/js/post.js"|media}}'></script>
-    <script type='text/javascript' src='{{"/js/wmd/showdown.js"|media}}'></script>
-    <script type='text/javascript' src='{{"/js/wmd/wmd.js"|media}}'></script>
+    {% if settings.EDITOR_TYPE == 'markdown' %}
+        <script type='text/javascript' src='{{"/js/wmd/showdown.js"|media}}'></script>
+        <script type='text/javascript' src='{{"/js/wmd/wmd.js"|media}}'></script>
+    {% else %}
+        {% include "meta/tinymce.html" %}
+    {% endif %}
     <script type='text/javascript'>
         var sortMethod = undefined;//need for live_search
         var minSearchWordLength = {{settings.MIN_SEARCH_WORD_LENGTH}};
@@ -26,6 +30,9 @@
     {% include "meta/editor_data.html" %}
     {% if mandatory_tags %}
         {% include "meta/mandatory_tags_js.html" %}
+    {% endif %}
+    {% if settings.TAG_SOURCE == 'category-tree' %}
+        {% include "meta/category_tree_js.html" %}
     {% endif %}
     <script type='text/javascript'>
         askbot['urls']['api_get_questions'] = '{% url api_get_questions %}';
@@ -38,7 +45,6 @@
             liveSearchNewThreadInit();
             //set current module button style
             $('#editor').TextAreaResizer();
-
             //highlight code synctax when editor has new text
             $("#editor").typeWatch({highlight: false, wait: 3000,
                              captureLength: 5, callback: lanai.highlightSyntax});

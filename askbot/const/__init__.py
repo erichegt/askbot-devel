@@ -139,11 +139,13 @@ UNANSWERED_QUESTION_MEANING_CHOICES = (
 #however it will be hard to expect that people will type
 #correct regexes - plus this must be an anchored regex
 #to do full string match
+#IMPRTANT: tag related regexes must be portable between js and python
 TAG_CHARS = r'\w+.#-'
 TAG_REGEX_BARE = r'[%s]+' % TAG_CHARS
 TAG_REGEX = r'^%s$' % TAG_REGEX_BARE
 TAG_SPLIT_REGEX = r'[ ,]+'
 TAG_SEP = ',' # has to be valid TAG_SPLIT_REGEX char and MUST NOT be in const.TAG_CHARS
+#!!! see const.message_keys.TAG_WRONG_CHARS_MESSAGE
 EMAIL_REGEX = re.compile(r'\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b', re.I)
 
 TYPE_ACTIVITY_ASK_QUESTION = 1
@@ -288,10 +290,11 @@ TYPE_RESPONSE = {
 }
 
 POST_STATUS = {
-    'closed'            : _('[closed]'),
-    'deleted'           : _('[deleted]'),
-    'default_version'   : _('initial version'),
-    'retagged'          : _('retagged'),
+    'closed': _('[closed]'),
+    'deleted': _('[deleted]'),
+    'default_version': _('initial version'),
+    'retagged': _('retagged'),
+    'private': _('[private]')   
 }
 
 #choices used in email and display filters

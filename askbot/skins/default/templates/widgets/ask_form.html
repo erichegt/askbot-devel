@@ -26,7 +26,9 @@
             form,
             post_type = 'question',
             edit_title = False,
-            mandatory_tags = mandatory_tags
+            mandatory_tags = mandatory_tags,
+            use_category_selector = (settings.TAG_SOURCE == 'category-tree'),
+            editor_type = settings.EDITOR_TYPE
         )
     }}
     <div class="question-options">
@@ -35,6 +37,9 @@
         {% endif %}
         {% if settings.ALLOW_ASK_ANONYMOUSLY %}
             {{ macros.checkbox_in_div(form.ask_anonymously) }}
+        {% endif %}
+        {% if request.user.is_authenticated() and request.user.can_make_group_private_posts() %}
+            {{ macros.checkbox_in_div(form.post_privately) }}
         {% endif %}
     </div>
     {% if not request.user.is_authenticated() %}

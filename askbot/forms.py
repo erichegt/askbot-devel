@@ -1,6 +1,7 @@
 import re
 from django import forms
 from askbot import const
+from askbot.const import message_keys
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext_lazy, string_concat
 from django.utils.text import get_text_list
@@ -162,7 +163,7 @@ class TitleField(forms.CharField):
                             )
         self.max_length = 255
         self.label  = _('title')
-        self.help_text = _('please enter a descriptive title for your question')
+        self.help_text = _('Please enter a descriptive title for your question')
         self.initial = ''
 
     def clean(self, value):
@@ -236,14 +237,48 @@ class AnswerEditorField(EditorField):
         self.length_error_template_plural = 'answer must be > %d characters'
         self.min_length = askbot_settings.MIN_ANSWER_BODY_LENGTH
 
+def clean_tag(tag_name):
+    """a function that cleans a single tag name"""
+    tag_length = len(tag_name)
+    if tag_length > askbot_settings.MAX_TAG_LENGTH:
+        #singular form is odd in english, but required for pluralization
+        #in other languages
+        msg = ungettext_lazy(
+            #odd but added for completeness
+            'each tag must be shorter than %(max_chars)d character',
+            'each tag must be shorter than %(max_chars)d characters',
+            tag_length
+        ) % {'max_chars':tag_length}
+        raise forms.ValidationError(msg)
+
+    #todo - this needs to come from settings
+    tagname_re = re.compile(const.TAG_REGEX, re.UNICODE)
+    if not tagname_re.search(tag_name):
+        raise forms.ValidationError(
+            _(message_keys.TAG_WRONG_CHARS_MESSAGE)
+        )
+
+    if askbot_settings.FORCE_LOWERCASE_TAGS:
+        #a simpler way to handle tags - just lowercase thew all
+        return tag_name.lower()
+    else:
+        try:
+            from askbot import models
+            stored_tag = models.Tag.objects.get(name__iexact = tag_name)
+            return stored_tag.name
+        except models.Tag.DoesNotExist:
+            return tag_name
+
+
 class TagNamesField(forms.CharField):
     def __init__(self, *args, **kwargs):
         super(TagNamesField, self).__init__(*args, **kwargs)
         self.required = askbot_settings.TAGS_ARE_REQUIRED
-        self.widget = forms.TextInput(attrs={'size' : 50, 'autocomplete' : 'off'})
+        self.widget = forms.TextInput(
+                        attrs={'size' : 50, 'autocomplete' : 'off'}
+                    )
         self.max_length = 255
         self.label = _('tags')
-        #self.help_text = _('please use space to separate tags (this enables autocomplete feature)')
         self.help_text = ungettext_lazy(
             'Tags are short keywords, with no spaces within. '
             'Up to %(max_tags)d tag can be used.',
@@ -256,7 +291,8 @@ class TagNamesField(forms.CharField):
     def need_mandatory_tags(self):
         """true, if list of mandatory tags is not empty"""
         from askbot import models
-        return askbot_settings.TAGS_ARE_REQUIRED and len(models.tag.get_mandatory_tags()) > 0
+        num_mandatory_tags = len(models.tag.get_mandatory_tags())
+        return askbot_settings.TAGS_ARE_REQUIRED and num_mandatory_tags > 0
 
     def tag_string_matches(self, tag_string, mandatory_tag):
         """true if tag string matches the mandatory tag"""
@@ -282,7 +318,9 @@ class TagNamesField(forms.CharField):
         data = value.strip()
         if len(data) < 1:
             if askbot_settings.TAGS_ARE_REQUIRED:
-                    raise forms.ValidationError(_('tags are required'))
+                    raise forms.ValidationError(
+                        _(message_keys.TAGS_ARE_REQUIRED_MESSAGE)
+                    )
             else:
                 return ''#don't test for required characters when tags is ''
         split_re = re.compile(const.TAG_SPLIT_REGEX)
@@ -304,48 +342,11 @@ class TagNamesField(forms.CharField):
                 ) % {'tags': get_text_list(models.tag.get_mandatory_tags())}
                 raise forms.ValidationError(msg)
 
-        for tag in tag_strings:
-            tag_length = len(tag)
-            if tag_length > askbot_settings.MAX_TAG_LENGTH:
-                #singular form is odd in english, but required for pluralization
-                #in other languages
-                msg = ungettext_lazy('each tag must be shorter than %(max_chars)d character',#odd but added for completeness
-                                'each tag must be shorter than %(max_chars)d characters',
-                                tag_length) % {'max_chars':tag_length}
-                raise forms.ValidationError(msg)
-
-            #todo - this needs to come from settings
-            tagname_re = re.compile(const.TAG_REGEX, re.UNICODE)
-            if not tagname_re.search(tag):
-                raise forms.ValidationError(_(
-                    'In tags, please use letters, numbers and characters "-+.#"'
-                ))
-            #only keep unique tags
-            if tag not in entered_tags:
-                entered_tags.append(tag)
-
-        #normalize character case of tags
         cleaned_entered_tags = list()
-        if askbot_settings.FORCE_LOWERCASE_TAGS:
-            #a simpler way to handle tags - just lowercase thew all
-            for name in entered_tags:
-                lowercased_name = name.lower()
-                if lowercased_name not in cleaned_entered_tags:
-                    cleaned_entered_tags.append(lowercased_name)
-        else:
-            #make names of tags in the input to agree with the database
-            for entered_tag in entered_tags:
-                try:
-                    #looks like we have to load tags one-by one
-                    #because we need tag name cases to be the same
-                    #as those stored in the database
-                    stored_tag = models.Tag.objects.get(
-                                            name__iexact = entered_tag
-                                        )
-                    if stored_tag.name not in cleaned_entered_tags:
-                        cleaned_entered_tags.append(stored_tag.name)
-                except models.Tag.DoesNotExist:
-                    cleaned_entered_tags.append(entered_tag)
+        for tag in tag_strings:
+            cleaned_tag = clean_tag(tag)
+            if cleaned_tag not in cleaned_entered_tags:
+                cleaned_entered_tags.append(clean_tag(tag))
 
         return u' '.join(cleaned_entered_tags)
 
@@ -625,7 +626,7 @@ class FeedbackForm(forms.Form):
 
         return self.cleaned_data
 
-class FormWithHideableFields(object):
+class FormWithHideableFields(forms.Form):
     """allows to swap a field widget to HiddenInput() and back"""
 
     def hide_field(self, name):
@@ -646,7 +647,35 @@ class FormWithHideableFields(object):
         if name in self.__hidden_fields:
             self.fields[name] = self.__hidden_fields.pop(name)
 
-class AskForm(forms.Form, FormWithHideableFields):
+class PostPrivatelyForm(FormWithHideableFields):
+    """has a single field `post_privately` with
+    two related methods"""
+
+    post_privately = forms.BooleanField(
+        label = _('keep private within your groups'),
+        required = False
+    )
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        self._user = user
+        super(PostPrivatelyForm, self).__init__(*args, **kwargs)
+        if self.allows_post_privately() == False:
+            self.hide_field('post_privately')
+
+    def allows_post_privately(self):
+        user = self._user
+        return (
+            user and user.is_authenticated() and \
+            user.can_make_group_private_posts()
+        )
+
+    def clean_post_privately(self):
+        if self.allows_post_privately() == False:
+            self.cleaned_data['post_privately'] = False
+        return self.cleaned_data['post_privately']
+
+
+class AskForm(PostPrivatelyForm):
     """the form used to askbot questions
     field ask_anonymously is shown to the user if the
     if ALLOW_ASK_ANONYMOUSLY live setting is True
@@ -666,6 +695,7 @@ class AskForm(forms.Form, FormWithHideableFields):
         ),
         required = False,
     )
+
     openid = forms.CharField(required=False, max_length=255, widget=forms.TextInput(attrs={'size' : 40, 'class':'openid-input'}))
     user   = forms.CharField(required=False, max_length=255, widget=forms.TextInput(attrs={'size' : 35}))
     email  = forms.CharField(required=False, max_length=255, widget=forms.TextInput(attrs={'size' : 35}))
@@ -682,6 +712,7 @@ class AskForm(forms.Form, FormWithHideableFields):
         if askbot_settings.ALLOW_ASK_ANONYMOUSLY == False:
             self.cleaned_data['ask_anonymously'] = False
         return self.cleaned_data['ask_anonymously']
+
 
 ASK_BY_EMAIL_SUBJECT_HELP = _(
     'Subject line is expected in the format: '
@@ -765,7 +796,7 @@ class AskByEmailForm(forms.Form):
             raise forms.ValidationError(ASK_BY_EMAIL_SUBJECT_HELP)
         return self.cleaned_data['subject']
 
-class AnswerForm(forms.Form):
+class AnswerForm(PostPrivatelyForm):
     text   = AnswerEditorField()
     wiki   = WikiField()
     openid = forms.CharField(required=False, max_length=255, widget=forms.TextInput(attrs={'size' : 40, 'class':'openid-input'}))
@@ -821,7 +852,7 @@ class RevisionForm(forms.Form):
             for r in revisions]
         self.fields['revision'].initial = latest_revision.revision
 
-class EditQuestionForm(forms.Form, FormWithHideableFields):
+class EditQuestionForm(PostPrivatelyForm):
     title  = TitleField()
     text   = QuestionEditorField()
     tags   = TagNamesField()
@@ -841,7 +872,7 @@ class EditQuestionForm(forms.Form, FormWithHideableFields):
     def __init__(self, *args, **kwargs):
         """populate EditQuestionForm with initial data"""
         self.question = kwargs.pop('question')
-        self.user = kwargs.pop('user')
+        self.user = kwargs['user']#preserve for superclass
         revision = kwargs.pop('revision')
         super(EditQuestionForm, self).__init__(*args, **kwargs)
         self.fields['title'].initial = revision.title
@@ -851,6 +882,15 @@ class EditQuestionForm(forms.Form, FormWithHideableFields):
         #hide the reveal identity field
         if not self.can_stay_anonymous():
             self.hide_field('reveal_identity')
+
+    def has_changed(self):
+        if super(EditQuestionForm, self).has_changed():
+            return True
+        if askbot_settings.GROUPS_ENABLED:
+            return self.question.is_private() \
+                != self.cleaned_data['post_privately']
+        else:
+            return False
 
     def can_stay_anonymous(self):
         """determines if the user cat keep editing the question
@@ -929,15 +969,27 @@ class EditQuestionForm(forms.Form, FormWithHideableFields):
         self.cleaned_data['stay_anonymous'] = stay_anonymous
         return self.cleaned_data
 
-class EditAnswerForm(forms.Form):
+class EditAnswerForm(PostPrivatelyForm):
     text = AnswerEditorField()
     summary = SummaryField()
     wiki = WikiField()
 
     def __init__(self, answer, revision, *args, **kwargs):
+        self.answer = answer
         super(EditAnswerForm, self).__init__(*args, **kwargs)
         self.fields['text'].initial = revision.text
         self.fields['wiki'].initial = answer.wiki
+
+    def has_changed(self):
+        #todo: this function is almost copy/paste of EditQuestionForm.has_changed()
+        if super(EditAnswerForm, self).has_changed():
+            return True
+        if askbot_settings.GROUPS_ENABLED:
+            return self.answer.is_private() \
+                != self.cleaned_data['post_privately']
+        else:
+            return False
+
 
 class EditTagWikiForm(forms.Form):
     text = forms.CharField(required = False)

@@ -9,6 +9,9 @@
                                                 request.user.is_administrator()
                                                 or request.user.is_moderator()
                                             %}true{% else %}false{% endif %};
+        askbot['data']['userIsAdmin'] = {% if 
+                                            request.user.is_administrator()
+                                        %}true{% else %}false{% endif %};
         askbot['data']['userReputation'] = {{request.user.reputation}};
     {% else %}
         askbot['data']['userIsAuthenticated'] = false;

@@ -13,6 +13,21 @@ FORUM_DATA_RULES = livesettings.ConfigurationGroup(
                         super_group = DATA_AND_FORMATTING
                     )
 
+EDITOR_CHOICES = (
+    ('markdown', 'markdown'),
+    ('tinymce', 'WISYWIG (tinymce)')
+)
+
+settings.register(
+    livesettings.StringValue(
+        FORUM_DATA_RULES,
+        'EDITOR_TYPE',
+        default = 'markdown',
+        choices = EDITOR_CHOICES,
+        description = _('Editor for the posts')
+    )
+)
+
 settings.register(
     livesettings.BooleanValue(
         FORUM_DATA_RULES,
@@ -125,6 +140,36 @@ settings.register(
         'TAGS_ARE_REQUIRED',
         description = _('Are tags required?'),
         default = False,
+    )
+)
+
+settings.register(
+    livesettings.BooleanValue(
+        FORUM_DATA_RULES,
+        'ENABLE_TAG_MODERATION',
+        default = False,
+        description = _('Enable tag moderation'),
+        help_text = _(
+            'If enabled, any new tags will not be applied '
+            'to the questions, but emailed to the moderators. '
+            'To use this feature, tags must be optional.'
+        )
+    )
+)
+
+TAG_SOURCE_CHOICES = (
+    ('category-tree', _('category tree')),
+    ('user-input', _('user input')),
+)
+
+settings.register(
+    livesettings.StringValue(
+        FORUM_DATA_RULES,
+        'TAG_SOURCE',
+        description = _('Source of tags'),
+        #hidden = True,
+        choices = TAG_SOURCE_CHOICES,
+        default = 'user-input'
     )
 )
 

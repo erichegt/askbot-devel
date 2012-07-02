@@ -21,16 +21,10 @@ class Migration(SchemaMigration):
         # Changing field 'ReplyAddress.post'
         db.alter_column('askbot_replyaddress', 'post_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['askbot.Post']))
 
-        try:
-            # Adding field 'User.interesting_tags'
-            db.add_column(u'auth_user', 'email_signature', self.gf('django.db.models.fields.TextField')(blank=True, default = ''), keep_default=False)
-        except:
-            pass
 
     def backwards(self, orm):
         db.delete_column('askbot_post', 'is_private')
         db.delete_column('askbot_replyaddress', 'reply_action')
-        db.delete_column('auth_user', 'email_signature')
         db.alter_column('askbot_replyaddress', 'post_id', self.gf('django.db.models.fields.related.ForeignKey')(default=None, to=orm['askbot.Post']))
 
     models = {

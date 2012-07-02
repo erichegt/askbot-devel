@@ -330,7 +330,7 @@ poor design of the data or methods on data objects #}
     {% endfor %}
 {%- endmacro -%}
 
-{%- macro question_summary(thread, question, extra_class=None, search_state=None) -%}
+{%- macro question_summary(thread, question, extra_class=None, search_state=None, visitor = None) -%}
 {%include "widgets/question_summary.html" %}
 {%- endmacro -%}
 
@@ -495,8 +495,12 @@ for the purposes of the AJAX comment editor #}
 {%- macro edit_post(
                 post_form,
                 post_type = None,
+                post_html = None,
                 mandatory_tags = None,
-                edit_title = False
+                edit_title = False,
+                use_category_selector = False,
+                tag_names = None,
+                editor_type = None
             )
 -%}
 {%include "widgets/edit_post.html" %}

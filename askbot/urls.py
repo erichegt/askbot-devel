@@ -210,6 +210,21 @@ urlpatterns = patterns('',
         name = 'save_tag_wiki_text'
     ),
     url(#ajax only
+        r'^add-tag-category/',
+        views.commands.add_tag_category,
+        name = 'add_tag_category'
+    ),
+    url(#ajax only
+        r'^rename-tag/',
+        views.commands.rename_tag,
+        name = 'rename_tag'
+    ),
+    url(#
+        r'^delete-tag/',
+        views.commands.delete_tag,
+        name = 'delete_tag'
+    ),
+    url(#ajax only
         r'^save-group-logo-url/',
         views.commands.save_group_logo_url,
         name = 'save_group_logo_url'
@@ -294,6 +309,11 @@ urlpatterns = patterns('',
         r'^%s(?P<id>\d+)//*' % _('badges/'),
         views.meta.badge,
         name='badge'
+    ),
+    url(
+        r'get-html-template/',
+        views.commands.get_html_template,
+        name='get_html_template'
     ),
     url(#ajax only
         r'^%s%s$' % (_('messages/'), _('markread/')),

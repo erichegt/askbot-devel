@@ -42,6 +42,7 @@ from askbot.templatetags import extra_tags
 import askbot.conf
 from askbot.conf import settings as askbot_settings
 from askbot.skins.loaders import render_into_skin, get_template #jinja2 template loading enviroment
+from askbot.views import context
 
 # used in index page
 #todo: - take these out of const or settings
@@ -75,10 +76,15 @@ def questions(request, **kwargs):
     if request.method != 'GET':
         return HttpResponseNotAllowed(['GET'])
 
-    search_state = SearchState(user_logged_in=request.user.is_authenticated(), **kwargs)
+    search_state = SearchState(
+                    user_logged_in=request.user.is_authenticated(),
+                    **kwargs
+                )
     page_size = int(askbot_settings.DEFAULT_QUESTIONS_PAGE_SIZE)
 
-    qs, meta_data = models.Thread.objects.run_advanced_search(request_user=request.user, search_state=search_state)
+    qs, meta_data = models.Thread.objects.run_advanced_search(
+                        request_user=request.user, search_state=search_state
+                    )
 
     if meta_data['non_existing_tags']:
         search_state = search_state.remove_tags(meta_data['non_existing_tags'])
@@ -87,19 +93,25 @@ def questions(request, **kwargs):
     if paginator.num_pages < search_state.page:
         search_state.page = 1
     page = paginator.page(search_state.page)
-
-    page.object_list = list(page.object_list) # evaluate queryset
+    page.object_list = list(page.object_list) # evaluate the queryset
 
     # INFO: Because for the time being we need question posts and thread authors
     #       down the pipeline, we have to precache them in thread objects
     models.Thread.objects.precache_view_data_hack(threads=page.object_list)
 
-    related_tags = Tag.objects.get_related_to_search(threads=page.object_list, ignored_tag_names=meta_data.get('ignored_tag_names', []))
+    related_tags = Tag.objects.get_related_to_search(
+                        threads=page.object_list,
+                        ignored_tag_names=meta_data.get('ignored_tag_names',[])
+                    )
     tag_list_type = askbot_settings.TAG_LIST_FORMAT
     if tag_list_type == 'cloud': #force cloud to sort by name
         related_tags = sorted(related_tags, key = operator.attrgetter('name'))
 
-    contributors = list(models.Thread.objects.get_thread_contributors(thread_list=page.object_list).only('id', 'username', 'gravatar'))
+    contributors = list(
+        models.Thread.objects.get_thread_contributors(
+                                        thread_list=page.object_list
+                                    ).only('id', 'username', 'gravatar')
+                        )
 
     paginator_context = {
         'is_paginated' : (paginator.count > page_size),
@@ -155,6 +167,7 @@ def questions(request, **kwargs):
             'threads': page,
             'search_state': search_state,
             'reset_method_count': reset_method_count,
+            'request': request
         }))
 
         ajax_data = {
@@ -435,8 +448,11 @@ def question(request, id):#refactor - long subroutine. display question body, an
     #posts are pre-stuffed with the correctly ordered comments
     updated_question_post, answers, post_to_author = thread.get_cached_post_data(
                                 sort_method = answer_sort_method,
+                                user = request.user
                             )
-    question_post.set_cached_comments(updated_question_post.get_cached_comments())
+    question_post.set_cached_comments(
+        updated_question_post.get_cached_comments()
+    )
 
 
     #Post.objects.precache_comments(for_posts=[question_post] + answers, visitor=request.user)
@@ -541,7 +557,8 @@ def question(request, id):#refactor - long subroutine. display question body, an
         'thread': thread,
         'answer' : answer_form,
         'answers' : page_objects.object_list,
-        'answer_count': len(answers),
+        'answer_count': thread.get_answer_count(request.user),
+        'category_tree_data': askbot_settings.CATEGORY_TREE,
         'user_votes': user_votes,
         'user_post_id_list': user_post_id_list,
         'user_can_post_comment': user_can_post_comment,#in general
@@ -554,6 +571,8 @@ def question(request, id):#refactor - long subroutine. display question body, an
         'show_comment': show_comment,
         'show_comment_position': show_comment_position,
     }
+
+    data.update(context.get_for_tag_editor())
 
     return render_into_skin('question.html', data, request)
 

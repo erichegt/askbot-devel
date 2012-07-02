@@ -17,15 +17,21 @@
         askbot['urls']['swap_question_with_answer'] = '{% url swap_question_with_answer %}';
         askbot['urls']['upvote_comment'] = '{% url upvote_comment %}';
         askbot['urls']['delete_post'] = '{% url delete_post %}';
+        askbot['urls']['get_html_template'] = '{% url get_html_template %}';
         askbot['messages']['addComment'] = '{% trans %}post a comment{% endtrans %}';
         {% if settings.SAVE_COMMENT_ON_ENTER %}
             askbot['settings']['saveCommentOnEnter'] = true;
         {% else %}
             askbot['settings']['saveCommentOnEnter'] = false;
         {% endif %}
+        askbot['settings']['tagSource'] = '{{ settings.TAG_SOURCE }}';
     </script>
-    <script type='text/javascript' src='{{"/js/wmd/showdown.js"|media}}'></script>
-    <script type='text/javascript' src='{{"/js/wmd/wmd.js"|media}}'></script>
+    {% if settings.EDITOR_TYPE == 'markdown' %}
+        <script type='text/javascript' src='{{"/js/wmd/showdown.js"|media}}'></script>
+        <script type='text/javascript' src='{{"/js/wmd/wmd.js"|media}}'></script>
+    {% else %}
+        {% include "meta/tinymce.html" %}
+    {% endif %}
 {% endif %}
 <script type='text/javascript' src='{{"/js/jquery.validate.min.js"|media}}'></script>
 <script type='text/javascript' src='{{"/js/post.js"|media}}'></script>

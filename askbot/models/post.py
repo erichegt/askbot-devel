@@ -24,7 +24,8 @@ import askbot
 from askbot.utils.slug import slugify
 from askbot import const
 from askbot.models.user import EmailFeedSetting
-from askbot.models.tag import Tag, MarkedTag, tags_match_some_wildcard
+from askbot.models.tag import Tag, MarkedTag
+from askbot.models.tag import get_groups, tags_match_some_wildcard
 from askbot.conf import settings as askbot_settings
 from askbot import exceptions
 from askbot.utils import markup
@@ -142,8 +143,21 @@ class PostManager(BaseQuerySetManager):
     def get_questions(self):
         return self.filter(post_type='question')
 
-    def get_answers(self):
-        return self.filter(post_type='answer')
+    def get_answers(self, user = None):
+        """returns query set of answer posts,
+        optionally filtered to exclude posts of groups
+        to which user does not belong"""
+        answers = self.filter(post_type='answer')
+
+        if askbot_settings.GROUPS_ENABLED:
+            if user is None or user.is_anonymous():
+                exclude_groups = get_groups()
+            else:
+                exclude_groups = user.get_foreign_groups()
+            answers = answers.exclude(groups__in = exclude_groups)
+
+        return answers
+
 
     def get_comments(self):
         return self.filter(post_type='comment')
@@ -166,6 +180,7 @@ class PostManager(BaseQuerySetManager):
                 text,
                 parent = None,
                 wiki = False,
+                is_private = False,
                 email_notify = False,
                 post_type = None,
                 by_email = False
@@ -190,7 +205,7 @@ class PostManager(BaseQuerySetManager):
             post.last_edited_at = added_at
             post.wikified_at = added_at
 
-        post.parse_and_save(author=author)
+        post.parse_and_save(author=author, is_private = is_private)
 
         post.add_revision(
             author = author,
@@ -210,6 +225,7 @@ class PostManager(BaseQuerySetManager):
                         added_at,
                         text,
                         wiki = False,
+                        is_private = False,
                         email_notify = False,
                         by_email = False
                     ):
@@ -219,6 +235,7 @@ class PostManager(BaseQuerySetManager):
                             added_at,
                             text,
                             wiki = wiki,
+                            is_private = is_private,
                             post_type = 'answer',
                             by_email = by_email
                         )
@@ -288,6 +305,7 @@ class Post(models.Model):
 
     parent = models.ForeignKey('Post', blank=True, null=True, related_name='comments') # Answer or Question for Comment
     thread = models.ForeignKey('Thread', blank=True, null=True, default = None, related_name='posts')
+    groups = models.ManyToManyField('Tag', related_name = 'group_posts')#used for group-private posts
 
     author = models.ForeignKey(User, related_name='posts')
     added_at = models.DateTimeField(default=datetime.datetime.now)
@@ -332,11 +350,6 @@ class Post(models.Model):
     #the reason is that the title and tags belong to thread,
     #but the question body to Post
     is_anonymous = models.BooleanField(default=False)
-    #When is_private == True
-    #the post is visible only to the some privileged users.
-    #The privilege may be defined through groups to which
-    #the thread belongs or in some other way.
-    is_private = models.BooleanField(default=False)
 
     objects = PostManager()
 
@@ -465,9 +478,19 @@ class Post(models.Model):
 
         created = self.pk is None
 
+        is_private = kwargs.pop('is_private', False)
+
         #this save must precede saving the mention activity
+        #as well as assigning groups to the post
         #because generic relation needs primary key of the related object
         super(self.__class__, self).save(**kwargs)
+
+        if author.can_make_group_private_posts():
+            if is_private:
+                self.make_private(author)
+            else:
+                self.make_public(author)
+
         if last_revision:
             diff = htmldiff(
                         sanitize_html(last_revision),
@@ -513,6 +536,24 @@ class Post(models.Model):
     def is_reject_reason(self):
         return self.post_type == 'reject_reason'
 
+    def make_private(self, user):
+        """makes post private within user's groups"""
+        groups = user.get_groups()
+        self.groups.add(*groups)
+        if self.is_question():
+            self.thread.groups.add(*groups)
+
+    def make_public(self, user):
+        """removes the privacy mark from users groups"""
+        groups = user.get_groups()
+        self.groups.remove(*groups)
+        if self.is_question():
+            self.thread.groups.remove(*groups)
+
+    def is_private(self):
+        """true, if post is private within any groups"""
+        return askbot_settings.GROUPS_ENABLED and self.groups.count() > 0
+
     def needs_moderation(self):
         return self.approved == False
 
@@ -543,6 +584,15 @@ class Post(models.Model):
                 {'url': origin_post.get_absolute_url(thread=thread), 'id':self.id}
 
         raise NotImplementedError
+
+    def get_authorized_group_ids(self):
+        """returns values list query set for the group id's of the post"""
+        if self.is_comment():
+            return self.parent.get_authorized_group_ids()
+        elif self.is_answer() or self.is_question():
+            return self.groups.values_list('id', flat = True)
+        else:
+            raise NotImplementedError()
 
     def delete(self, **kwargs):
         """deletes comment and concomitant response activity
@@ -605,6 +655,27 @@ class Post(models.Model):
         """returns an abbreviated snippet of the content
         """
         return html_utils.strip_tags(self.html)[:max_length] + ' ...'
+
+    def filter_authorized_users(self, candidates):
+        """returns list of users who are allowed to see this post"""
+        if askbot_settings.GROUPS_ENABLED == False:
+            return candidates
+        else:
+            #here we filter candidates against the post authorized groups
+            authorized_group_ids = list(self.get_authorized_group_ids())
+
+            if len(authorized_group_ids) == 0:#if there are no groups - all ok
+                return candidates
+
+            #and filter the users by those groups
+            filtered_candidates = list()
+            for candidate in candidates:
+                c_groups = candidate.get_groups()
+                if c_groups.filter(id__in = authorized_group_ids).count():
+                    filtered_candidates.append(candidate)
+
+            return filtered_candidates
+            
 
     def format_for_email(
         self, quote_level = 0, is_leaf_post = False, format = None
@@ -839,6 +910,7 @@ class Post(models.Model):
             ):
         """get list of users who have subscribed to
         receive instant notifications for a given post
+
         this method works for questions and answers
 
         Arguments:
@@ -902,7 +974,11 @@ class Post(models.Model):
 
         #4) question asked by me (todo: not "edited_by_me" ???)
         question_author = origin_post.author
-        if EmailFeedSetting.objects.filter(subscriber = question_author, frequency = 'i', feed_type = 'q_ask').exists():
+        if EmailFeedSetting.objects.filter(
+            subscriber = question_author,
+            frequency = 'i',
+            feed_type = 'q_ask'
+        ).exists():
             subscriber_set.add(question_author)
 
         #4) questions answered by me -make sure is that people
@@ -1000,22 +1076,30 @@ class Post(models.Model):
 
         return list(subscriber_set)
 
-    def get_instant_notification_subscribers(self, potential_subscribers = None, mentioned_users = None, exclude_list = None):
+    def get_instant_notification_subscribers(
+        self, potential_subscribers = None,
+        mentioned_users = None, exclude_list = None
+    ):
         if self.is_question() or self.is_answer():
-            return self._qa__get_instant_notification_subscribers(
+            subscribers = self._qa__get_instant_notification_subscribers(
                 potential_subscribers=potential_subscribers,
                 mentioned_users=mentioned_users,
                 exclude_list=exclude_list
             )
         elif self.is_comment():
-            return self._comment__get_instant_notification_subscribers(
+            subscribers = self._comment__get_instant_notification_subscribers(
                 potential_subscribers=potential_subscribers,
                 mentioned_users=mentioned_users,
                 exclude_list=exclude_list
             )
         elif self.is_tag_wiki() or self.is_reject_reason():
             return list()
-        raise NotImplementedError
+        else:
+            raise NotImplementedError
+
+        #if askbot_settings.GROUPS_ENABLED and self.is_effectively_private():
+        #    for subscriber in subscribers:
+        return self.filter_authorized_users(subscribers)
 
     def get_latest_revision(self):
         return self.revisions.order_by('-revised_at')[0]
@@ -1264,8 +1348,32 @@ class Post(models.Model):
                        )
             raise exceptions.AnswerHidden(message)
 
+    def assert_is_visible_to_user_groups(self, user):
+        """raises permission denied of the post
+        is hidden due to group memberships"""
+        assert(self.is_comment() == False)
+        post_groups = self.groups.all()
+        if post_groups.count() == 0:
+            return
+
+        if self.is_question():#todo maybe merge the "hidden" exceptions
+            exception = exceptions.QuestionHidden
+        elif self.is_answer():
+            exception = exceptions.AnswerHidden
+        else:
+            raise NotImplementedError
+
+        message = _('This post is temporarily not available')
+        if user.is_anonymous():
+            raise exception(message)
+        else:
+            user_groups_ids = user.get_groups().values_list('id', flat = True)
+            if post_groups.filter(id__in = user_groups_ids).count() == 0:
+                raise exception(message)
 
     def assert_is_visible_to(self, user):
+        if self.is_comment() == False and askbot_settings.GROUPS_ENABLED:
+            self.assert_is_visible_to_user_groups(user)
         if self.is_question():
             return self._question__assert_is_visible_to(user)
         elif self.is_answer():
@@ -1356,8 +1464,16 @@ class Post(models.Model):
                         text = None,
                         comment = None,
                         wiki = False,
+                        is_private = False,
                         by_email = False
                     ):
+
+        #it is important to do this before __apply_edit b/c of signals!!!
+        if self.is_private() != is_private:
+            if is_private:
+                self.make_private(self.author)
+            else:
+                self.make_public(self.author)
 
         self.__apply_edit(
             edited_at = edited_at,
@@ -1367,13 +1483,14 @@ class Post(models.Model):
             wiki = wiki,
             by_email = by_email
         )
+
         if edited_at is None:
             edited_at = datetime.datetime.now()
         self.thread.set_last_activity(last_activity_at=edited_at, last_activity_by=edited_by)
 
     def _question__apply_edit(self, edited_at=None, edited_by=None, title=None,\
                               text=None, comment=None, tags=None, wiki=False,\
-                              edit_anonymously = False,
+                              edit_anonymously = False, is_private = False,
                               by_email = False
                             ):
 
@@ -1396,6 +1513,12 @@ class Post(models.Model):
         self.thread.title = title
         self.thread.tagnames = tags
         self.thread.save()
+
+        if self.is_private() != is_private:
+            if is_private:
+                self.make_private(self.author)
+            else:
+                self.make_public(self.author)
 
         self.__apply_edit(
             edited_at = edited_at,
@@ -1439,8 +1562,7 @@ class Post(models.Model):
                 comment = const.POST_STATUS['default_version']
             else:
                 comment = 'No.%s Revision' % rev_no
-        from askbot.models.post import PostRevision
-        return PostRevision.objects.create_answer_revision(
+        return PostRevision.objects.create(
             post = self,
             author = author,
             revised_at = revised_at,
@@ -1469,8 +1591,7 @@ class Post(models.Model):
             else:
                 comment = 'No.%s Revision' % rev_no
 
-        from askbot.models.post import PostRevision
-        return PostRevision.objects.create_question_revision(
+        return PostRevision.objects.create(
             post = self,
             revision   = rev_no,
             title      = self.thread.title,
@@ -1560,16 +1681,21 @@ class Post(models.Model):
 
 
     def get_response_receivers(self, exclude_list = None):
-        """returns a list of response receiving users"""
+        """returns a list of response receiving users
+        who see the on-screen notifications
+        """
         if self.is_answer():
-            return self._answer__get_response_receivers(exclude_list)
+            receivers = self._answer__get_response_receivers(exclude_list)
         elif self.is_question():
-            return self._question__get_response_receivers(exclude_list)
+            receivers = self._question__get_response_receivers(exclude_list)
         elif self.is_comment():
-            return self._comment__get_response_receivers(exclude_list)
+            receivers = self._comment__get_response_receivers(exclude_list)
         elif self.is_tag_wiki() or self.is_reject_reason():
             return list()#todo: who should get these?
-        raise NotImplementedError
+        else:
+            raise NotImplementedError
+
+        return self.filter_authorized_users(receivers)
 
     def get_question_title(self):
         if self.is_question():
@@ -1636,26 +1762,9 @@ class Post(models.Model):
 
 class PostRevisionManager(models.Manager):
     def create(self, *kargs, **kwargs):
-        raise NotImplementedError  # Prevent accidental creation of PostRevision instance without `revision_type` set
-
-    def create_question_revision(self, *kargs, **kwargs):
-        kwargs['revision_type'] = self.model.QUESTION_REVISION
         revision = super(PostRevisionManager, self).create(*kargs, **kwargs)
         revision.moderate_or_publish()
         return revision
-
-    def create_answer_revision(self, *kargs, **kwargs):
-        kwargs['revision_type'] = self.model.ANSWER_REVISION
-        revision = super(PostRevisionManager, self).create(*kargs, **kwargs)
-        revision.moderate_or_publish()
-        return revision
-
-    def question_revisions(self):
-        return self.filter(revision_type=self.model.QUESTION_REVISION)
-
-    def answer_revisions(self):
-        return self.filter(revision_type=self.model.ANSWER_REVISION)
-
 
 class PostRevision(models.Model):
     QUESTION_REVISION_TEMPLATE_NO_TAGS = (
@@ -1663,20 +1772,7 @@ class PostRevision(models.Model):
         '<div class="text">%(html)s</div>\n'
     )
 
-    QUESTION_REVISION = 1
-    ANSWER_REVISION = 2
-    REVISION_TYPE_CHOICES = (
-        (QUESTION_REVISION, 'question'),
-        (ANSWER_REVISION, 'answer'),
-    )
-    REVISION_TYPE_CHOICES_DICT = dict(REVISION_TYPE_CHOICES)
-
     post = models.ForeignKey('askbot.Post', related_name='revisions', null=True, blank=True)
-
-    #todo: remove this field, as revision type is determined by the
-    #Post.post_type revision_type is a useless field
-    revision_type = models.SmallIntegerField(choices=REVISION_TYPE_CHOICES) # TODO: remove as we have Post now
-
     revision   = models.PositiveIntegerField()
     author     = models.ForeignKey('auth.User', related_name='%(class)ss')
     revised_at = models.DateTimeField()
@@ -1819,24 +1915,16 @@ class PostRevision(models.Model):
             #schedule = askbot_settings.SELF_NOTIFY_WEB_POST_AUTHOR_WHEN
             return False
 
-    def revision_type_str(self):
-        return self.REVISION_TYPE_CHOICES_DICT[self.revision_type]
-
     def __unicode__(self):
-        return u'%s - revision %s of %s' % (self.revision_type_str(), self.revision, self.title)
+        return u'%s - revision %s of %s' % (self.post.post_type, self.revision, self.title)
 
     def parent(self):
         return self.post
 
     def clean(self):
         "Internal cleaning method, called from self.save() by self.full_clean()"
-        # TODO: Remove this when we remove `revision_type`
         if not self.post:
             raise ValidationError('Post field has to be set.')
-
-        if (self.post.post_type == 'question' and not self.is_question_revision()) or \
-           (self.post.post_type == 'answer' and not self.is_answer_revision()):
-            raise ValidationError('Revision_type doesn`t match values in question/answer fields.')
 
     def save(self, **kwargs):
         # Determine the revision number, if not set
@@ -1844,22 +1932,15 @@ class PostRevision(models.Model):
             # TODO: Maybe use Max() aggregation? Or `revisions.count() + 1`
             self.revision = self.parent().revisions.values_list('revision', flat=True)[0] + 1
 
-        # Make sure that everything is ok, in particular that `revision_type` and `revision` are set to valid values
         self.full_clean()
 
         super(PostRevision, self).save(**kwargs)
 
-    def is_question_revision(self):
-        return self.revision_type == self.QUESTION_REVISION
-
-    def is_answer_revision(self):
-        return self.revision_type == self.ANSWER_REVISION
-
     @models.permalink
     def get_absolute_url(self):
-        if self.is_question_revision():
+        if self.post.is_question():
             return 'question_revisions', (self.post.id,), {}
-        elif self.is_answer_revision():
+        elif self.post.is_answer():
             return 'answer_revisions', (), {'id':self.post.id}
 
     def get_question_title(self):
@@ -1875,12 +1956,12 @@ class PostRevision(models.Model):
         markdowner = markup.get_parser()
         sanitized_html = sanitize_html(markdowner.convert(self.text))
 
-        if self.is_question_revision():
+        if self.post.is_question():
             return self.QUESTION_REVISION_TEMPLATE_NO_TAGS % {
                 'title': self.title,
                 'html': sanitized_html
             }
-        elif self.is_answer_revision():
+        elif self.post.is_answer():
             return sanitized_html
 
     def get_snippet(self, max_length = 120):

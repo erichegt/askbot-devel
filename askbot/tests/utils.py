@@ -118,6 +118,7 @@ class AskbotTestCase(TestCase):
                     by_email = False,
                     wiki = False,
                     is_anonymous = False,
+                    is_private = False,
                     follow = False,
                     timestamp = None,
                 ):
@@ -139,6 +140,7 @@ class AskbotTestCase(TestCase):
                             by_email = by_email,
                             wiki = wiki,
                             is_anonymous = is_anonymous,
+                            is_private = is_private,
                             timestamp = timestamp
                         )
 
@@ -160,6 +162,7 @@ class AskbotTestCase(TestCase):
                     by_email = False,
                     follow = False,
                     wiki = False,
+                    is_private = False,
                     timestamp = None
                 ):
 
@@ -171,6 +174,7 @@ class AskbotTestCase(TestCase):
                         by_email = by_email,
                         follow = follow,
                         wiki = wiki,
+                        is_private = is_private,
                         timestamp = timestamp
                     )
 

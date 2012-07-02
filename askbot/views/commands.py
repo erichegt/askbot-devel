@@ -7,6 +7,7 @@ is not always very clean.
 """
 from django.conf import settings as django_settings
 from django.core import exceptions
+#from django.core.management import call_command
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect, Http404, HttpResponseBadRequest
@@ -21,6 +22,7 @@ from askbot import models
 from askbot import forms
 from askbot.conf import should_show_sort_by_relevance
 from askbot.conf import settings as askbot_settings
+from askbot.utils import category_tree
 from askbot.utils import decorators
 from askbot.utils import url_utils
 from askbot import mail
@@ -425,7 +427,8 @@ def mark_tag(request, **kwargs):#tagging system
     action = kwargs['action']
     post_data = simplejson.loads(request.raw_post_data)
     raw_tagnames = post_data['tagnames']
-    reason = kwargs.get('reason', None)
+    reason = post_data['reason']
+    assert reason in ('good', 'bad', 'subscribed')
     #separate plain tag names and wildcard tags
 
     tagnames, wildcards = forms.clean_marked_tagnames(raw_tagnames)
@@ -470,6 +473,20 @@ def get_tags_by_wildcard(request):
     re_data = simplejson.dumps({'tag_count': count, 'tag_names': list(names)})
     return HttpResponse(re_data, mimetype = 'application/json')
 
+@decorators.ajax_only
+def get_html_template(request):
+    """returns rendered template"""
+    template_name = request.REQUEST.get('template_name', None)
+    allowed_templates = (
+        'widgets/tag_category_selector.html',
+    )
+    #have allow simple context for the templates
+    if template_name not in allowed_templates:
+        raise Http404
+    return {
+        'html': get_template(template_name).render()
+    }
+
 @decorators.get_only
 def get_tag_list(request):
     """returns tags to use in the autocomplete
@@ -480,7 +497,7 @@ def get_tag_list(request):
                     ).values_list(
                         'name', flat = True
                     )
-    output = '\n'.join(tag_names)
+    output = '\n'.join(map(escape, tag_names))
     return HttpResponse(output, mimetype = 'text/plain')
 
 @decorators.get_only
@@ -513,7 +530,83 @@ def save_tag_wiki_text(request):
         return {'html': tag_wiki.html}
     else:
         raise ValueError('invalid post data')
-            
+
+@csrf.csrf_exempt
+@decorators.ajax_only
+@decorators.post_only
+def rename_tag(request):
+    if request.user.is_anonymous() \
+        or not request.user.is_administrator_or_moderator():
+        raise exceptions.PermissionDenied()
+    post_data = simplejson.loads(request.raw_post_data)
+    to_name = forms.clean_tag(post_data['to_name'])
+    from_name = forms.clean_tag(post_data['from_name'])
+    path = post_data['path']
+
+    #kwargs = {'from': old_name, 'to': new_name}
+    #call_command('rename_tags', **kwargs)
+
+    tree = category_tree.get_data()
+    category_tree.rename_category(
+        tree,
+        from_name = from_name,
+        to_name = to_name,
+        path = path
+    )
+    category_tree.save_data(tree)
+
+@csrf.csrf_exempt
+@decorators.ajax_only
+@decorators.post_only
+def delete_tag(request):
+    """todo: actually delete tags
+    now it is only deletion of category from the tree"""
+    if request.user.is_anonymous() \
+        or not request.user.is_administrator_or_moderator():
+        raise exceptions.PermissionDenied()
+    post_data = simplejson.loads(request.raw_post_data)
+    tag_name = forms.clean_tag(post_data['tag_name'])
+    path = post_data['path']
+    tree = category_tree.get_data()
+    category_tree.delete_category(tree, tag_name, path)
+    category_tree.save_data(tree)
+    return {'tree_data': tree}
+
+@csrf.csrf_exempt
+@decorators.ajax_only
+@decorators.post_only
+def add_tag_category(request):
+    """adds a category at the tip of a given path expects
+    the following keys in the ``request.POST``
+    * path - array starting with zero giving path to
+      the category page where to add the category
+    * new_category_name - string that must satisfy the
+      same requiremets as a tag
+
+    return json with the category tree data
+    todo: switch to json stored in the live settings
+    now we have indented input
+    """
+    if request.user.is_anonymous() \
+        or not request.user.is_administrator_or_moderator():
+        raise exceptions.PermissionDenied()
+
+    post_data = simplejson.loads(request.raw_post_data)
+    category_name = forms.clean_tag(post_data['new_category_name'])
+    path = post_data['path']
+
+    tree = category_tree.get_data()
+
+    if category_tree.path_is_valid(tree, path) == False:
+        raise ValueError('category insertion path is invalid')
+
+    new_path = category_tree.add_category(tree, category_name, path)
+    category_tree.save_data(tree)
+    return {
+        'tree_data': tree,
+        'new_path': new_path
+    }
+
 
 @decorators.get_only
 def get_groups_list(request):
@@ -576,9 +669,8 @@ def api_get_questions(request):
     #todo: filter out deleted threads, for now there is no way
     threads = threads.distinct()[:30]
     thread_list = [{
-        'url': thread.get_absolute_url(),
         'title': escape(thread.title),
-        'answer_count': thread.answer_count
+        'answer_count': thread.get_answer_count(request.user)
     } for thread in threads]
     json_data = simplejson.dumps(thread_list)
     return HttpResponse(json_data, mimetype = "application/json")
@@ -675,7 +767,7 @@ def swap_question_with_answer(request):
     """
     if request.user.is_authenticated():
         if request.user.is_administrator() or request.user.is_moderator():
-            answer = models.Post.objects.get_answers().get(id = request.POST['answer_id'])
+            answer = models.Post.objects.get_answers(request.user).get(id = request.POST['answer_id'])
             new_question = answer.swap_with_question(new_title = request.POST['new_title'])
             return {
                 'id': new_question.id,

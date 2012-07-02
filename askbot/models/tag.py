@@ -5,6 +5,42 @@ from django.utils.translation import ugettext as _
 from askbot.models.base import BaseQuerySetManager
 from askbot import const
 
+def delete_tags(tags):
+    """deletes tags in the list"""
+    tag_ids = [tag.id for tag in tags]
+    Tag.objects.filter(id__in = tag_ids).delete()
+
+def get_tags_by_names(tag_names):
+    """returns query set of tags
+    and a set of tag names that were not found
+    """
+    tags = Tag.objects.filter(name__in = tag_names)
+    #if there are brand new tags, create them
+    #and finalize the added tag list
+    if tags.count() < len(tag_names):
+        found_tag_names = set([tag.name for tag in tags])
+        new_tag_names = set(tag_names) - found_tag_names
+    else:
+        new_tag_names = set()
+
+    return tags, new_tag_names
+
+
+def separate_unused_tags(tags):
+    """returns two lists::
+    * first where tags whose use counts are >0
+    * second - with use counts == 0
+    """
+    used = list()
+    unused = list()
+    for tag in tags:
+        if tag.used_count == 0:
+            unused.append(tag)
+        else:
+            assert(tag.used_count > 0)
+            used.append(tag)
+    return used, unused
+
 def tags_match_some_wildcard(tag_names, wildcard_tags):
     """Same as 
     :meth:`~askbot.models.tag.TagQuerySet.tags_match_some_wildcard`
@@ -20,12 +56,29 @@ def get_mandatory_tags():
     """returns list of mandatory tags,
     or an empty list, if there aren't any"""
     from askbot.conf import settings as askbot_settings
-    raw_mandatory_tags = askbot_settings.MANDATORY_TAGS.strip()
-    if len(raw_mandatory_tags) == 0:
-        return []
+    #TAG_SOURCE setting is hidden
+    #and only is accessible via livesettings overrides
+    if askbot_settings.TAG_SOURCE == 'category-tree':
+        return []#hack: effectively we disable the mandatory tags feature
     else:
-        split_re = re.compile(const.TAG_SPLIT_REGEX)
-        return split_re.split(raw_mandatory_tags)
+        #todo - in the future clean this up
+        #we might need to have settings:
+        #* prepopulated tags - json structure - either a flat list or a tree
+        #  if structure is tree - then use some multilevel selector for choosing tags
+        #  if it is a list - then make users click on tags to select them
+        #* use prepopulated tags (boolean)
+        #* tags are required
+        #* regular users can create tags (boolean)
+        #the category tree and the mandatory tag lists can be merged
+        #into the same setting - and mandatory tags should use json
+        #keep in mind that in the future multiword tags will be allowed
+        raw_mandatory_tags = askbot_settings.MANDATORY_TAGS.strip()
+        if len(raw_mandatory_tags) == 0:
+            return []
+        else:
+            split_re = re.compile(const.TAG_SPLIT_REGEX)
+            return split_re.split(raw_mandatory_tags)
+
 
 class TagQuerySet(models.query.QuerySet):
     def get_valid_tags(self, page_size):
@@ -37,6 +90,14 @@ class TagQuerySet(models.query.QuerySet):
         for tag in tags:
             tag.used_count = tag.threads.count()
             tag.save()
+
+    def mark_undeleted(self):
+        """removes deleted(+at/by) marks"""
+        self.update(#undelete them
+            deleted = False,
+            deleted_by = None,
+            deleted_at = None
+        )
 
     def tags_match_some_wildcard(self, wildcard_tags = None):
         """True if any one of the tags in the query set
@@ -168,3 +229,10 @@ class MarkedTag(models.Model):
 
     class Meta:
         app_label = 'askbot'
+
+def get_groups():
+    return Tag.group_tags.get_all()
+
+def get_group_names():
+    #todo: cache me
+    return get_groups().values_list('name', flat = True)
