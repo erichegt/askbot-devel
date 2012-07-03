@@ -103,7 +103,16 @@ The parameters are (note that some have pre-set defaults that might work for you
 * user id field name (``LDAP_USERID_FIELD``)
 * email field name (``LDAP_EMAIL_FIELD``)
 * user name filter template (``LDAP_USERNAME_FILTER_TEMPLATE``)
-* user name filter template - must have two string placeholders.
+  must have two string placeholders.
+* given (first) name field (``LDAP_GIVEN_NAME_FIELD``)
+* surname (last name) field (``LDAP_SURNAME_FIELD``)
+* common name field (``LDAP_COMMON_NAME_FIELD``)
+  either given and surname should be used or common name.
+  All three are not necessary - either first two or common.
+  These fields are used to extract users first and last names.
+* Format of common name (``LDAP_COMMON_NAME_FIELD_FORMAT``)
+  values can be only 'first,last' or 'last,first' - used to 
+  extract last and first names from common name
 
 There are three more optional parameters that must go to the ``settings.py`` file::
 
@@ -123,6 +132,10 @@ Since LDAP authentication requires so many parameters,
 you might need to :ref:`debug <debugging>` the settings.
 The function to look at is `askbot.deps.django_authopenid.backends.ldap_authenticate`.
 If you have problems with LDAP please contact us at support@askbot.com.
+
+The easiest way to debug - insert ``import pdb; pdb.set_trace()`` line into function
+`askbot.deps.django_authopenid.backends.ldap_authenticate`,
+start the ``runserver`` and step through.
 
 Uploaded avatars
 ================

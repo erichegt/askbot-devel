@@ -127,10 +127,12 @@ def ldap_authenticate(username, password):
                 common_name = user_information[common_name_field][0]
                 first_name, last_name = split_name(common_name, common_name_format)
             
+            #here we have an opportunity to copy password in the auth_user table
+            #but we don't do it for security reasons
             try:
                 user = User.objects.get(username__exact=exact_username)
                 # always update user profile to synchronize with ldap server
-                user.set_password(password)
+                user.set_unusable_password()
                 #user.first_name = first_name
                 #user.last_name = last_name
                 user.email = email
@@ -139,7 +141,7 @@ def ldap_authenticate(username, password):
                 # create new user in local db
                 user = User()
                 user.username = exact_username
-                user.set_password(password)#copy password from LDAP locally
+                user.set_unusable_password()
                 #user.first_name = first_name
                 #user.last_name = last_name
                 user.email = email

@@ -322,7 +322,7 @@ def signin(request):
                         login(request, user)
                         return HttpResponseRedirect(next_url)
                     else:
-                        user.message_set.create(_('incorrect user name or password'))
+                        request.user.message_set.create(_('Incorrect user name or password'))
                         return HttpResponseRedirect(request.path)
                 else:
                     if password_action == 'login':
