@@ -358,7 +358,12 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
             upload_input.attr('size', 26);
 
             var startUploadHandler = function(){
-                localUploadFileName = $(this).val();
+                localUploadFileName = $(this).val();//this is a local var
+                /* 
+                 * startUploadHandler is passed into the ajaxFileUpload
+                 * in order to re-install the onchange handler
+                 * because the jquery extension ajaxFileUpload removes the handler
+                 */
                 return ajaxFileUpload($('#image-url'), startUploadHandler);
             };
 

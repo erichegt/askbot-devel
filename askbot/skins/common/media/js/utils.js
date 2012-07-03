@@ -303,12 +303,21 @@ Widget.prototype.makeButton = function(label, handler) {
 var TippedInput = function(){
     WrappedElement.call(this);
     this._instruction = null;
+    this._attrs = {};
 };
 inherits(TippedInput, WrappedElement);
 
 TippedInput.prototype.reset = function(){
     $(this._element).val(this._instruction);
     $(this._element).addClass('blank');
+};
+
+TippedInput.prototype.setInstruction = function(text) {
+    this._instruction = text;
+};
+
+TippedInput.prototype.setAttr = function(key, value) {
+    this._attrs[key] = value;
 };
 
 TippedInput.prototype.isBlank = function(){
@@ -330,8 +339,17 @@ TippedInput.prototype.setVal = function(value){
     }
 };
 
+TippedInput.prototype.createDom = function() {
+    this._element = this.makeElement('input');
+    var element = this._element;
+    element.val(this._instruction);
+    this.decorate(element);
+};
+
 TippedInput.prototype.decorate = function(element){
     this._element = element;
+    element.attr(this._attrs);
+
     var instruction_text = this.getVal();
     this._instruction = instruction_text;
     var me = this;
@@ -547,8 +565,268 @@ DeleteIcon.prototype.setContent = function(content){
 }
 
 /**
+ * @contstructor
+ * Simple modal dialog with Ok/Cancel buttons by default
+ */
+var ModalDialog = function() {
+    WrappedElement.call(this);
+    this._accept_button_text = gettext('Ok');
+    this._reject_button_text = gettext('Cancel');
+    this._heading_text = 'Add heading by setHeadingText()';
+    this._initial_content = undefined;
+    this._accept_handler = function(){};
+    var me = this;
+    this._reject_handler = function() { me.hide(); };
+    this._content_element = undefined;
+};
+inherits(ModalDialog, WrappedElement);
+
+ModalDialog.prototype.show = function() {
+    this._element.modal('show');
+};
+
+ModalDialog.prototype.hide = function() {
+    this._element.modal('hide');
+};
+
+ModalDialog.prototype.setContent = function(content) {
+    this._initial_content = content;
+};
+
+ModalDialog.prototype.prependContent = function(content) {
+    this._content_element.prepend(content);
+};
+
+ModalDialog.prototype.setHeadingText = function(text) {
+    this._heading_text = text;
+};
+
+ModalDialog.prototype.setAcceptButtonText = function(text) {
+    this._accept_button_text = text;
+};
+
+ModalDialog.prototype.setRejectButtonText = function(text) {
+    this._reject_button_text = text;
+};
+
+ModalDialog.prototype.setAcceptHandler = function(handler) {
+    this._accept_handler = handler;
+};
+
+ModalDialog.prototype.setRejectHandler = function(handler) {
+    this._reject_handler = handler;
+};
+
+ModalDialog.prototype.clearMessages = function() {
+    this._element.find('.alert').remove();
+};
+
+ModalDialog.prototype.setMessage = function(text, message_type) {
+    var box = new AlertBox();
+    box.setText(text);
+    if (message_type === 'error') {
+        box.setError(true);
+    }
+    this.prependContent(box.getElement());
+};
+
+ModalDialog.prototype.createDom = function() {
+    this._element = this.makeElement('div')
+    var element = this._element;
+
+    element.addClass('modal');
+
+    //1) create header
+    var header = this.makeElement('div')
+    header.addClass('modal-header');
+    element.append(header);
+
+    var close_link = this.makeElement('div');
+    close_link.addClass('close');
+    close_link.attr('data-dismiss', 'modal');
+    close_link.html('x');
+    header.append(close_link);
+
+    var title = this.makeElement('h3');
+    title.html(this._heading_text);
+    header.append(title);
+
+    //2) create content
+    var body = this.makeElement('div')
+    body.addClass('modal-body');
+    element.append(body);
+    this._content_element = body;
+    if (this._initial_content) {
+        this._content_element.append(this._initial_content);
+    }
+
+    //3) create footer with accept and reject buttons (ok/cancel).
+    var footer = this.makeElement('div');
+    footer.addClass('modal-footer');
+    element.append(footer);
+
+    var accept_btn = this.makeElement('button');
+    accept_btn.addClass('btn btn-primary');
+    accept_btn.html(this._accept_button_text);
+    footer.append(accept_btn);
+
+    var reject_btn = this.makeElement('button');
+    reject_btn.addClass('btn cancel');
+    reject_btn.html(this._reject_button_text);
+    footer.append(reject_btn);
+
+    //4) attach event handlers to the buttons
+    setupButtonEventHandlers(accept_btn, this._accept_handler);
+    setupButtonEventHandlers(reject_btn, this._reject_handler);
+    setupButtonEventHandlers(close_link, this._reject_handler);
+
+    this.hide();
+};
+
+/**
+ * @constructor
+ */
+var FileUploadDialog = function() {
+    ModalDialog.call(this);
+    self._post_upload_handler = undefined;
+};
+inherits(FileUploadDialog, ModalDialog);
+
+FileUploadDialog.prototype.setPostUploadHandler = function(handler) {
+    this._post_upload_handler = handler;
+};
+
+FileUploadDialog.prototype.runPostUploadHandler = function(url, descr) {
+    this._post_upload_handler(url, descr);
+};
+
+FileUploadDialog.prototype.setInputId = function(id) {
+    this._input_id = id;
+};
+
+FileUploadDialog.prototype.setUrlInputTooltip = function(text) {
+    this._url_input_tooltip = text;
+};
+
+FileUploadDialog.prototype.getUrl = function() {
+    var url_input = this._url_input;
+    if (url_input.isBlank() === false) {
+        return url_input.getVal();
+    }
+    return '';
+};
+
+//disable description for now
+//FileUploadDialog.prototype.getDescription = function() {
+//    return this._description_input.getVal();
+//};
+
+FileUploadDialog.prototype.resetInputs = function() {
+    this._url_input.reset();
+    //this._description_input.reset();
+    this._upload_input.val('');
+};
+
+FileUploadDialog.prototype.show = function() {
+    //hack around the ajaxFileUpload plugin
+    FileUploadDialog.superClass_.show.call(this);
+    var upload_input = this._upload_input;
+    upload_input.unbind('change');
+    //todo: fix this - make event handler reinstall work
+    upload_input.change(this.getStartUploadHandler());
+};
+
+FileUploadDialog.prototype.getStartUploadHandler = function(){
+    /* startUploadHandler is passed in to re-install the event handler
+     * which is removed by the ajaxFileUpload jQuery extension
+     */
+    var spinner = this._spinner;
+    var upload_input = this._upload_input;
+    var url_input = this._url_input;
+    var handler = function() {
+        var options = {
+            'spinner': spinner,
+            'uploadInput': upload_input,
+            'urlInput': url_input.getElement(),
+            'startUploadHandler': handler//pass in itself
+        };
+        return ajaxFileUpload(options);
+    };
+    return handler;
+};
+
+FileUploadDialog.prototype.createDom = function() {
+
+    var superClass = FileUploadDialog.superClass_;
+
+    var me = this;
+    superClass.setAcceptHandler.call(this, function(){
+        var url = $.trim(me.getUrl());
+        //var description = me.getDescription();
+        //@todo: have url cleaning code here
+        if (url.length > 0) {
+            me.runPostUploadHandler(url);//, description);
+            me.resetInputs();
+        }
+        me.hide();
+    });
+    superClass.setRejectHandler.call(this, function(){
+        me.resetInputs();
+        me.hide();
+    });
+    superClass.createDom.call(this);
+
+    var form = this.makeElement('form');
+    form.css('margin-bottom', 0);
+    this.prependContent(form);
+
+    // File upload button
+    var upload_input = this.makeElement('input');
+    upload_input.attr({
+        id: this._input_id,
+        type: 'file',
+        name: 'file-upload',
+        //size: 26???
+    });
+    form.append(upload_input);
+    this._upload_input = upload_input;
+    form.append($('<br/>'));
+
+    // The url input text box
+    var url_input = new TippedInput();
+    url_input.setInstruction(this._url_input_tooltip || gettext('Or paste file url here'));
+    var url_input_element = url_input.getElement();
+    url_input_element.css({
+        'width': '200px',
+    });
+    form.append(url_input_element);
+    form.append($('<br/>'));
+    this._url_input = url_input;
+
+    /* //Description input box
+    var descr_input = new TippedInput();
+    descr_input.setInstruction(gettext('Describe the image here'));
+    this.makeElement('input');
+    form.append(descr_input.getElement());
+    form.append($('<br/>'));
+    this._description_input = descr_input;
+    */
+    var spinner = this.makeElement('img');
+    spinner.attr('src', mediaUrl('media/images/indicator.gif'));
+    spinner.css('display', 'none');
+    form.append(spinner);
+    this._spinner = spinner;
+
+    upload_input.change(this.getStartUploadHandler());
+};
+
+/**
  * attaches a modal menu with a text editor
  * to a link. The modal menu is from bootstrap.js
+ * todo: this should probably be a subclass of ModalDialog,
+ * triggered by a link click, then a whole bunch of methods
+ * would be simply inherited from the modal dialog:
+ * clearMessages, etc.
  */
 var TextPropertyEditor = function(){
     WrappedElement.call(this);
@@ -572,90 +850,48 @@ TextPropertyEditor.prototype.makeEditor = function(){
     if (this._editor) {
         return this._editor;
     }
-    var editor = this.makeElement('div')
-        .addClass('modal');
+    var editor = new ModalDialog();
     this._editor = editor;
+    editor.setHeadingText(this.getWidgetData()['editor_heading']);
 
-    var header = this.makeElement('div')
-        .addClass('modal-header');
-    editor.append(header);
-
-    var close_link = this.makeElement('div')
-        .addClass('close')
-        .attr('data-dismiss', 'modal')
-        .html('x');
-    header.append(close_link);
-
-    var title = this.makeElement('h3')
-        .html(this.getWidgetData()['editor_heading']);
-    header.append(title);
-
-    var body = this.makeElement('div')
-        .addClass('modal-body');
-    editor.append(body);
-
-    var textarea = this.makeElement('textarea')
-        .addClass('tipped-input blank')
-        .val(this.getWidgetData()['help_text']);
-    body.append(textarea);
+    //create main content for the editor
+    var textarea = this.makeElement('textarea');
+    textarea.addClass('tipped-input blank');
+    textarea.val(this.getWidgetData()['help_text']);
 
     var tipped_input = new TippedInput();
     tipped_input.decorate(textarea);
     this._text_input = tipped_input;
 
-    var footer = this.makeElement('div')
-        .addClass('modal-footer');
-    editor.append(footer);
+    editor.setContent(textarea);
+    //body.append(textarea);
 
-    var save_btn = this.makeElement('button')
-        .addClass('btn btn-primary')
-        .html(gettext('Save'));
-    footer.append(save_btn);
-
-    var cancel_btn = this.makeElement('button')
-        .addClass('btn cancel')
-        .html(gettext('Cancel'));
-    footer.append(cancel_btn);
+    editor.setAcceptButtonText(gettext('Save'));
+    editor.setRejectButtonText(gettext('Cancel'));
 
     var me = this;
-    setupButtonEventHandlers(save_btn, function(){
+    editor.setAcceptHandler(function(){
         me.saveData();
     });
-    setupButtonEventHandlers(cancel_btn, function(){
-        editor.modal('hide');
-    });
-    editor.modal('hide');
 
-    $(document).append(editor);
+    $(document).append(editor.getElement());
     return editor;
 };
 
 TextPropertyEditor.prototype.openEditor = function(){
-    this._editor.modal('show');
+    this._editor.show();
 };
 
 TextPropertyEditor.prototype.clearMessages = function(){
-    this._editor.find('.alert').remove();
-};
-
-TextPropertyEditor.prototype.getAlert = function(){
-    var box = new AlertBox();
-    var modal_body = this._editor.find('.modal-body');
-    modal_body.prepend(box.getElement());
-    return box;
+    this._editor.clearMessages()
 };
 
 TextPropertyEditor.prototype.showAlert = function(text){
-    this.clearMessages();
-    var box = this.getAlert();
-    box.setText(text);
-    return box;
+    this._editor.setMessage(text, 'alert');
 };
 
 TextPropertyEditor.prototype.showError = function(text){
-    var box = this.showAlert(text);
-    box.setError(true);
-    return box;
+    this._editor.setMessage(text, 'error');
 };
 
 TextPropertyEditor.prototype.setText = function(text){
@@ -667,7 +903,7 @@ TextPropertyEditor.prototype.getText = function(){
 };
 
 TextPropertyEditor.prototype.hideDialog = function(){
-    this._editor.modal('hide');
+    this._editor.hide();
 };
 
 TextPropertyEditor.prototype.startOpeningEditor = function(){

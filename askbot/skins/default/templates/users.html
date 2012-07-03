@@ -2,11 +2,6 @@
 {% import "macros.html" as macros %}
 <!-- users.html -->
 {% block title %}{% spaceless %}{% trans %}Users{% endtrans %}{% endspaceless %}{% endblock %}
-{% block before_css %}
-    {% if group and request.user.is_authenticated() and request.user.is_administrator() %}
-        <link href="{{'/bootstrap/css/bootstrap.css'|media}}" rel="stylesheet" type="text/css" />
-    {% endif %}
-{% endblock %}
 {% block forestyle %}
     <link rel="stylesheet" type="text/css" href="{{"/js/wmd/wmd.css"|media}}" />
 {% endblock %}
@@ -84,7 +79,6 @@
         askbot['urls']['delete_group_logo_url'] = '{% url delete_group_logo %}';
         askbot['urls']['join_or_leave_group'] = '{% url join_or_leave_group %}';
     </script>
-    <script type="text/javascript" src='{{"/bootstrap/js/bootstrap.js"|media}}'></script>
     <script type='text/javascript' src='{{"/js/editor.js"|media}}'></script>
     <script type='text/javascript' src='{{"/js/wmd/showdown.js"|media}}'></script>
     <script type='text/javascript' src='{{"/js/wmd/wmd.js"|media}}'></script>
