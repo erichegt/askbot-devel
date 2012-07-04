@@ -704,6 +704,10 @@ FileUploadDialog.prototype.setInputId = function(id) {
     this._input_id = id;
 };
 
+FileUploadDialog.prototype.getInputId = function() {
+    return this._input_id;
+};
+
 FileUploadDialog.prototype.setUrlInputTooltip = function(text) {
     this._url_input_tooltip = text;
 };
@@ -741,13 +745,13 @@ FileUploadDialog.prototype.getStartUploadHandler = function(){
      * which is removed by the ajaxFileUpload jQuery extension
      */
     var spinner = this._spinner;
-    var upload_input = this._upload_input;
-    var url_input = this._url_input;
+    var uploadInputId = this.getInputId();
+    var urlInput = this._url_input;
     var handler = function() {
         var options = {
             'spinner': spinner,
-            'uploadInput': upload_input,
-            'urlInput': url_input.getElement(),
+            'uploadInputId': uploadInputId,
+            'urlInput': urlInput.getElement(),
             'startUploadHandler': handler//pass in itself
         };
         return ajaxFileUpload(options);

@@ -357,6 +357,11 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
             upload_input.attr('id', 'file-upload');
             upload_input.attr('size', 26);
 
+            var spinner = $('<img />');
+            spinner.attr('id', 'loading');
+            spinner.attr('src', mediaUrl("media/images/indicator.gif"));
+            spinner.css('display', 'none');
+
             var startUploadHandler = function(){
                 localUploadFileName = $(this).val();//this is a local var
                 /* 
@@ -364,7 +369,14 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
                  * in order to re-install the onchange handler
                  * because the jquery extension ajaxFileUpload removes the handler
                  */
-                return ajaxFileUpload($('#image-url'), startUploadHandler);
+                var options = {
+                    spinner: spinner,
+                    uploadInputId: 'file-upload',
+                    urlInput: $(input),
+                    startUploadHandler: startUploadHandler
+                };
+                return ajaxFileUpload(options);
+                //$('#image-url'), startUploadHandler);
             };
 
             upload_input.change(startUploadHandler);
@@ -372,12 +384,8 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
             upload_container.append(upload_input);
             upload_container.append($('<br/>'));
 
-            var spinner = $('<img />');
-            spinner.attr('id', 'loading');
-            spinner.attr('src', mediaUrl("media/images/indicator.gif"));
-            spinner.css('display', 'none');
-
             upload_container.append(spinner);
+
             upload_container.css('padding', '5px');
             $(form).append(upload_container);   
         }

@@ -27,6 +27,7 @@
         var dialog = new FileUploadDialog();
         dialog.setHeadingText(modalMenuHeadline);
         dialog.setPostUploadHandler(insertIntoDom);
+        debugger;
         dialog.setInputId('askbot_attachment_input');
         dialog.setUrlInputTooltip(gettext('Or paste file url here'));
         $(document).append(dialog.getElement());

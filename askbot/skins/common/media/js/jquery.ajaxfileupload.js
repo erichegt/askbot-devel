@@ -23,8 +23,7 @@ jQuery.extend({
         document.body.appendChild(io);
         return io;
     },
-    createUploadForm: function(id, fileElementId)
-	{
+    createUploadForm: function(id, fileElementId) {
 		//create form	
 		var formId = 'jUploadForm' + id;
 		var fileId = 'jUploadFile' + id;
@@ -62,8 +61,7 @@ jQuery.extend({
         if ( s.global )
             jQuery.event.trigger("ajaxSend", [xml, s]);
         // Wait for a response to come back
-        var uploadCallback = function(isTimeout)
-		{			
+        var uploadCallback = function(isTimeout) {			
 			var io = document.getElementById(frameId);
             try {				
 				if(io.contentWindow){
@@ -81,12 +79,10 @@ jQuery.extend({
                         io.contentDocument.document.XMLDocument : io.contentDocument.document;
 				}						
             }
-            catch(e)
-			{
+            catch(e) {
 				jQuery.handleError(s, xml, null, e);
 			}
-            if ( xml || isTimeout == "timeout") 
-			{				
+            if ( xml || isTimeout == "timeout") {				
                 requestDone = true;
                 var status;
                 try {
@@ -125,16 +121,15 @@ jQuery.extend({
 
                 jQuery(io).unbind();
 
-                setTimeout(function()
-                    {	try 
-                        {
+                setTimeout(function() {	
+                    try {
                             $(io).remove();
                             $(form).remove();	
                             
-                        } catch(e) {
-                            jQuery.handleError(s, xml, null, e);
-                        }									
-                    }, 100)
+                    } catch(e) {
+                        jQuery.handleError(s, xml, null, e);
+                    }									
+                }, 100);
                 xml = null;
             }
         }
@@ -145,25 +140,21 @@ jQuery.extend({
                 if( !requestDone ) uploadCallback( "timeout" );
             }, s.timeout);
         }
-        try 
-		{
+        try {
            // var io = $('#' + frameId);
 			var form = $('#' + formId);
 			$(form).attr('action', s.url);
 			$(form).attr('method', 'POST');
 			$(form).attr('target', frameId);
-            if(form.encoding)
-			{
+            if(form.encoding) {
                 form.encoding = 'multipart/form-data';				
             }
-            else
-			{				
+            else {				
                 form.enctype = 'multipart/form-data';
             }			
             $(form).submit();
 
-        } catch(e) 
-		{			
+        } catch(e) {			
             jQuery.handleError(s, xml, null, e);
         }
         if(window.attachEvent){

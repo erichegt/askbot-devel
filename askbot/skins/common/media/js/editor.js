@@ -23,7 +23,7 @@ Ajax upload
 function ajaxFileUpload(options) {
 
     var spinner = options['spinner'];
-    var uploadInput = $(options['uploadInput']);
+    var uploadInputId = options['uploadInputId'];
     var urlInput = $(options['urlInput']);
     var startUploadHandler = options['startUploadHandler'];
 
@@ -33,18 +33,19 @@ function ajaxFileUpload(options) {
         $(this).hide();
     });
 
-    uploadInput.ajaxStart(function(){
+    /* important!!! upload input must be loaded by id
+     * because ajaxFileUpload monkey-patches the upload form */
+    $('#' + uploadInputId).ajaxStart(function(){
         $(this).hide();
     }).ajaxComplete(function(){
         $(this).show();
     });
 
     //var localFilePath = upload_input.val();
-
     $.ajaxFileUpload({
         url: askbot['urls']['upload'],
         secureuri: false,
-        fileElementId: uploadInput.attr('id'),
+        fileElementId: uploadInputId,
         dataType: 'xml',
         success: function (data, status) {
 
@@ -65,14 +66,14 @@ function ajaxFileUpload(options) {
              * will remove the handler to prevent double uploading
              * this hack is a manipulation around the 
              * ajaxFileUpload jQuery plugin. */
-            uploadInput.unbind('change').change(startUploadHandler);
+            $('#' + uploadInputId).unbind('change').change(startUploadHandler);
         },
         error: function (data, status, e) {
             alert(e);
             if (startUploadHandler){
                 /* re-install this as the upload extension
                 * will remove the handler to prevent double uploading */
-                uploadInput.unbind('change').change(startUploadHandler);
+                $('#' + uploadInputId).unbind('change').change(startUploadHandler);
             }
         }
     });
