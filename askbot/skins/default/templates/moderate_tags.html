@@ -1,0 +1,39 @@
+{% extends "two_column_body.html" %}
+{% import "macros.html" as macros %}
+<!-- tags.html -->
+{% block title %}{% spaceless %}{% trans %}Moderated Tags{% endtrans %}{% endspaceless %}{% endblock %}
+{% block content %}
+    {% include "tags/header.html" %}
+    {% if tags %}
+        <table>
+            <thead>
+                <tr>
+                    <th>{% trans %}Name{% endtrans %}</th>
+                    <th>{% trans %}Used count{% endtrans %}</th>
+                    <th>{% trans %}Suggested by{% endtrans %}</th>
+                    <th>{% trans %}In questions{% endtrans %}</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for tag in tags %}
+                <tr>
+                    <td>{{ tag.name }}</td>
+                    <td>{{ tag.used_count }}</td>
+                    <td>
+                        {% for user in tag.users.all() %}
+                            <p>{{ user.get_profile_link() }}</p>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% for thread in tag.threads.all() %}
+                            <p><a href="{{ thread.get_absolute_url() }}">{{ thread.title|escape }}</a></p>
+                        {% endfor %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <span>{% trans %}Nothing found{% endtrans %}</span>
+    {% endif %}
+{% endblock %}

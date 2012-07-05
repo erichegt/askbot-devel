@@ -1508,7 +1508,9 @@ class Post(models.Model):
 
         # Update the Question tag associations
         if latest_revision.tagnames != tags:
-            self.thread.update_tags(tagnames = tags, user = edited_by, timestamp = edited_at)
+            self.thread.update_tags(
+                tagnames = tags, user = edited_by, timestamp = edited_at
+            )
 
         self.thread.title = title
         self.thread.tagnames = tags

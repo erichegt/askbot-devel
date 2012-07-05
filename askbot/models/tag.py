@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
 from askbot.models.base import BaseQuerySetManager
 from askbot import const
+from askbot.conf import settings as askbot_settings
 
 def delete_tags(tags):
     """deletes tags in the list"""
@@ -236,3 +237,67 @@ def get_groups():
 def get_group_names():
     #todo: cache me
     return get_groups().values_list('name', flat = True)
+
+class SuggestedTagManager(models.Manager):
+    def create(self, tag_names = None, user = None, thread = None):
+        """creates ``SuggestedTag`` records and saves them
+        in the database"""
+        suggested_tags = list()
+        for tag_name in tag_names:
+            #create new record
+            suggested_tag = SuggestedTag(name = tag_name)
+            suggested_tag.save()
+            #add user and thread
+            suggested_tag.users.add(user)
+            suggested_tag.threads.add(thread)
+            #add to the list that is to be returned
+            suggested_tags.append(suggested_tag)
+
+        #todo: stuff below will probably go after
+        #tag moderation actions are implemented
+        from askbot import mail
+        from askbot.mail import messages
+        body_text = messages.notify_admins_about_new_tags(
+                                tags = tag_names,
+                                user = user,
+                                thread = thread
+                            )
+        site_name = askbot_settings.APP_SHORT_NAME
+        subject_line = _('New tags added to %s') % site_name
+        mail.mail_moderators(
+            subject_line,
+            body_text,
+            headers = {'Reply-To': user.email}
+        )
+
+        msg = _(
+            'Tags %s are new and will be submitted for the '
+            'moderators approval'
+        ) % ', '.join(tag_names)
+        user.message_set.create(message = msg)
+
+        return suggested_tags
+
+class SuggestedTag(models.Model):
+    """Suggested tag knows about who suggested it
+    and in what thread"""
+    name = models.CharField(
+        max_length=255, unique=True, help_text = 'Name for the proposed tag'
+    )
+    used_count = models.PositiveIntegerField(default = 1)
+    #todo: instead these can be associated with revisions
+    #but the problem is that there would be too many joins
+    #to pull out threads
+    #if we used revisions, then we would not need to have
+    #a separate "user" field
+    threads = models.ManyToManyField('Thread')
+    users = models.ManyToManyField(User)
+    thread_ids = models.TextField(
+        help_text = 'comma-separated list of thread ids'
+    )
+
+    objects = SuggestedTagManager()
+
+    class Meta:
+        app_label = 'askbot'
+        ordering = ['-used_count', 'name']

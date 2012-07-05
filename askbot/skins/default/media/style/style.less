@@ -1219,10 +1219,22 @@ ul#related-tags li {
     color: #1A1A1A;
 }
 
-.users-page h1,
-.tags-page h1,
-.groups-page h1 {
-    float: left;
+.users-page,
+.tags-page,
+.groups-page,
+.moderate-tags-page {
+    h1 {
+        float: left;
+        padding-top: 7px;
+    }
+}
+
+.moderate-tags-page {
+    th, tr {
+        vertical-align: top;
+        text-align: left;
+        padding-right: 20px;
+    }
 }
 
 .main-page h1 {
@@ -2299,7 +2311,6 @@ ul#related-tags li {
 /* tags page */
 
 .tabBar-tags{
-    width:270px;
     margin-bottom:15px;
 }
 

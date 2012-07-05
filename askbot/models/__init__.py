@@ -29,7 +29,8 @@ from askbot.skins import utils as skin_utils
 from askbot.mail import messages
 from askbot.models.question import QuestionView, AnonymousQuestion
 from askbot.models.question import FavoriteQuestion
-from askbot.models.tag import Tag, MarkedTag, get_group_names, get_groups
+from askbot.models.tag import Tag, MarkedTag, SuggestedTag
+from askbot.models.tag import get_group_names, get_groups
 from askbot.models.user import EmailFeedSetting, ActivityAuditStatus, Activity
 from askbot.models.user import GroupMembership, GroupProfile
 from askbot.models.post import Post, PostRevision, PostFlagReason, AnonymousAnswer
@@ -343,43 +344,54 @@ def user_can_create_tags(self):
     else:
         return True
 
-def user_try_creating_tags(self,tag_names):
+def user_try_creating_tags(self, tag_names = None, thread = None):
     created_tags = list()
     if self.can_create_tags():
+        suggested_tags = SuggestedTag.objects.filter(name__in = tag_names)
+        suggested_tags_dict = dict([(tag.name, tag) for tag in suggested_tags])
         for name in tag_names:
+            #todo: keep better track of who creates the tag
+            suggested_tag = suggested_tags_dict.get(name, None)
+            if suggested_tag:
+                creator = suggested_tag.users.all()[0]
+            else:
+                creator = self
+
             new_tag = Tag.objects.create(
                                 name = name,
-                                created_by = self,
-                                used_count = 1
+                                created_by = creator,
+                                used_count = 1#wrong, but we are recounting downstream
                             )
             created_tags.append(new_tag)
-        #finally add tags to the relation and extend the modified list
+        #remove added tags from the suggested tag list
+        suggested_tags.delete()
     elif tag_names:#notify admins by email about new tags
         #maybe remove tags to report based on categories
         #todo: maybe move this to tags_updated signal handler
         if askbot_settings.TAG_SOURCE == 'category-tree':
             category_names = category_tree.get_leaf_names()
+            #remove category tree tags from creation list
             tag_names = tag_names - category_names
 
+        #here we put tags on the moderation queue
         if len(tag_names) > 0:
-            #todo: move all message sending codes to a separate module
-            body_text = messages.notify_admins_about_new_tags(
-                                    tags = tag_names,
-                                    user = self,
-                                    thread = self
-                                )
-            site_name = askbot_settings.APP_SHORT_NAME
-            subject_line = _('New tags added to %s') % site_name
-            mail.mail_moderators(
-                subject_line,
-                body_text,
-                headers = {'Reply-To': self.email}
+            suggested_tags = SuggestedTag.objects.filter(name__in = tag_names)
+
+            previously_suggested_tag_names = set()
+            for tag in suggested_tags:
+                tag.used_count += 1
+                tag.threads.add(thread)
+                tag.users.add(self)
+                tag.save()
+                previously_suggested_tag_names.add(tag.name)
+
+            tag_names = set(tag_names) - previously_suggested_tag_names
+
+            SuggestedTag.objects.create(
+                tag_names = tag_names,
+                user = self,
+                thread = thread
             )
-            msg = _(
-                'Tags %s are new and will be submitted for the '
-                'moderators approval'
-            ) % ', '.join(tag_names)
-            self.message_set.create(message = msg)
 
     return created_tags
 
@@ -3412,6 +3424,7 @@ __all__ = [
         'Vote',
         'PostFlagReason',
         'MarkedTag',
+        'SuggestedTag',
 
         'BadgeData',
         'Award',

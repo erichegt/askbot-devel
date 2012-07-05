@@ -5,6 +5,7 @@ This module contains a collection of views displaying all sorts of secondary and
 """
 from django.shortcuts import render_to_response, get_object_or_404
 from django.core.urlresolvers import reverse
+from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.template import RequestContext, Template
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.core.urlresolvers import reverse
@@ -12,14 +13,16 @@ from django.utils.translation import ugettext as _
 from django.views import static
 from django.views.decorators import csrf
 from django.db.models import Max, Count
+from askbot import skins
+from askbot.conf import settings as askbot_settings
 from askbot.forms import FeedbackForm
-from askbot.utils.forms import get_next_url
 from askbot.mail import mail_moderators
-from askbot.models import BadgeData, Award, User
+from askbot.models import BadgeData, Award, User, SuggestedTag
 from askbot.models import badges as badge_data
 from askbot.skins.loaders import get_template, render_into_skin, render_text_into_skin
-from askbot.conf import settings as askbot_settings
-from askbot import skins
+from askbot.utils.decorators import admins_only
+from askbot.utils.forms import get_next_url
+from askbot.utils import functions
 
 def generic_view(request, template = None, page_class = None):
     """this may be not necessary, since it is just a rewrite of render_into_skin"""
@@ -153,3 +156,40 @@ def badge(request, id):
         'page_class': 'meta',
     }
     return render_into_skin('badge.html', data, request)
+
+@admins_only
+def moderate_tags(request):
+    """moderators and administrators can list tags that are
+    in the moderation queue, apply suggested tag to questions
+    or cancel the moderation reuest."""
+    if askbot_settings.ENABLE_TAG_MODERATION == False:
+        raise Http404
+    tags = SuggestedTag.objects.all()
+    #paginate moderated tags
+    paginator = Paginator(SuggestedTag.objects.all(), 20)
+
+    page_no = request.GET.get('page', '1')
+
+    try:
+        page = paginator.page(page_no)
+    except (EmptyPage, InvalidPage):
+        page = paginator.page(paginator.num_pages)
+
+    paginator_context = functions.setup_paginator({
+        'is_paginated' : True,
+        'pages': paginator.num_pages,
+        'page': page_no,
+        'has_previous': page.has_previous(),
+        'has_next': page.has_next(),
+        'previous': page.previous_page_number(),
+        'next': page.next_page_number(),
+        'base_url' : request.path
+    })
+
+    data = {
+        'tags': page.object_list,
+        'active_tab': 'tags',
+        'page_class': 'moderate-tags-page',
+        'paginator_context' : paginator_context,
+    }
+    return render_into_skin('moderate_tags.html', data, request)

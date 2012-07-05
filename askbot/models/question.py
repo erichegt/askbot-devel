@@ -129,7 +129,7 @@ class ThreadManager(BaseQuerySetManager):
         #this is kind of bad, but we save assign privacy groups to posts and thread
         question.parse_and_save(author = author, is_private = is_private)
 
-        question.add_revision(
+        revision = question.add_revision(
             author = author,
             is_anonymous = is_anonymous,
             text = text,
@@ -794,7 +794,9 @@ class Thread(models.Model):
         return removed_tags
 
 
-    def update_tags(self, tagnames = None, user = None, timestamp = None):
+    def update_tags(
+        self, tagnames = None, user = None, timestamp = None
+    ):
         """
         Updates Tag associations for a thread to match the given
         tagname string.
@@ -811,8 +813,10 @@ class Thread(models.Model):
         """
         previous_tags = list(self.tags.all())
 
+        ordered_updated_tagnames = [t for t in tagnames.strip().split(' ')]
+
         previous_tagnames = set([tag.name for tag in previous_tags])
-        updated_tagnames = set(t for t in tagnames.strip().split(' '))
+        updated_tagnames = set(ordered_updated_tagnames)
         removed_tagnames = previous_tagnames - updated_tagnames
 
         #remove tags from the question's tags many2many relation
@@ -834,12 +838,26 @@ class Thread(models.Model):
             reused_tags.mark_undeleted()
 
             added_tags = list(reused_tags)
-            created_tags = user.try_creating_tags(new_tagnames)
+            #tag moderation is in the call below
+            created_tags = user.try_creating_tags(new_tagnames, thread = self)
             added_tags.extend(created_tags)
             #todo: not nice that assignment of added_tags is way above
             self.tags.add(*added_tags)
             modified_tags.extend(added_tags)
 
+        else:
+            added_tags = Tag.objects.none()
+
+        #Save denormalized tag names on thread. Preserve order from user input.
+        added_tagnames = set([tag.name for tag in added_tags])
+        final_tagnames = (previous_tagnames - removed_tagnames) | added_tagnames
+        ordered_final_tagnames = list()
+        for tagname in ordered_updated_tagnames:
+            if tagname in final_tagnames:
+                ordered_final_tagnames.append(tagname)
+
+        self.tagnames = ' '.join(ordered_final_tagnames)
+        self.save()#need to save here?
 
         ####################################################################
         self.update_summary_html() # regenerate question/thread summary html

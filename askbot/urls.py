@@ -159,6 +159,11 @@ urlpatterns = patterns('',
         views.readers.tags, 
         name='tags'
     ),
+    url(
+        r'^%s$' % _('moderate-tags/'),
+        views.meta.moderate_tags,
+        name = 'moderate_tags'
+    ),
     #todo: collapse these three urls and use an extra json data var
     url(#ajax only
         r'^%s%s$' % ('mark-tag/', 'interesting/'),
