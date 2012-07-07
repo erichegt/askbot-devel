@@ -189,7 +189,9 @@ def moderate_tags(request):
     data = {
         'tags': page.object_list,
         'active_tab': 'tags',
+        'tab_id': 'suggested',
         'page_class': 'moderate-tags-page',
+        'page_title': _('Suggested tags'),
         'paginator_context' : paginator_context,
     }
     return render_into_skin('moderate_tags.html', data, request)

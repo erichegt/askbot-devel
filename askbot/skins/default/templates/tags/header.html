@@ -1,8 +1,12 @@
 <div id="content-header">
-    {% if stag %}
-        <h1 class="section-title">{% trans %}Tags, matching "{{ stag }}"{% endtrans %}</h1>
+    {% if page_title %}
+            <h1 class="section-title">{{ page_title }}</h1>
     {% else %}
-        <h1 class="section-title">{% trans %}Tags{% endtrans %}</h1>
+        {% if stag %}
+            <h1 class="section-title">{% trans %}Tags, matching "{{ stag }}"{% endtrans %}</h1>
+        {% else %}
+            <h1 class="section-title">{% trans %}Tags{% endtrans %}</h1>
+        {% endif %}
     {% endif %}
     <div class="tabBar tabBar-tags">
         <div class="tabsA">
@@ -23,9 +27,9 @@
                 {% if request.user.is_authenticated() and request.user.is_administrator_or_moderator() %}
                     <a 
                         href="{% url moderate_tags %}"
-                        {% if tab_id == 'used' %}class="on"{% endif %}
+                        {% if tab_id == 'suggested' %}class="on"{% endif %}
                         title="{% trans %}suggested{% endtrans %}"
-                    ><span>{% trans %}moderated{% endtrans %}</span></a>
+                    ><span>{% trans %}suggested{% endtrans %}</span></a>
                 {% endif %}
             {% endif %}
         </div>

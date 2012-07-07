@@ -1,33 +1,55 @@
 {% extends "two_column_body.html" %}
 {% import "macros.html" as macros %}
 <!-- tags.html -->
-{% block title %}{% spaceless %}{% trans %}Moderated Tags{% endtrans %}{% endspaceless %}{% endblock %}
+{% block title %}{{ page_title }}{% endblock %}
 {% block content %}
     {% include "tags/header.html" %}
     {% if tags %}
-        <table>
+        <table class="suggested-tags-table">
             <thead>
                 <tr>
-                    <th>{% trans %}Name{% endtrans %}</th>
-                    <th>{% trans %}Used count{% endtrans %}</th>
-                    <th>{% trans %}Suggested by{% endtrans %}</th>
-                    <th>{% trans %}In questions{% endtrans %}</th>
+                    <th class="tags-col">{% trans %}Tag{% endtrans %}</th>
+                    <th class="users-col">{% trans %}Suggested by{% endtrans %}</th>
+                    <th class="decision-col">{% trans %}Your decision{% endtrans %}</th>
+                    <th>{% trans %}Suggested tag was used for questions{% endtrans %}</th>
                 </tr>
             </thead>
             <tbody>
             {% for tag in tags %}
-                <tr>
-                    <td>{{ tag.name }}</td>
-                    <td>{{ tag.used_count }}</td>
-                    <td>
+                <tr class="suggested-tag-row" data-tag-id="{{ tag.id }}">
+                    <td class="tags-col">
+                        {{ macros.tag_widget(tag.name, is_link = False) }}
+                        <span class="tag-number">&#215;{{ tag.used_count }}</span>
+                    </td>
+                    <td class="users-col">
                         {% for user in tag.users.all() %}
                             <p>{{ user.get_profile_link() }}</p>
                         {% endfor %}
                     </td>
-                    <td>
+                    <td colspan="2">
+                        <table>{# inner table for the list of questions #}
                         {% for thread in tag.threads.all() %}
-                            <p><a href="{{ thread.get_absolute_url() }}">{{ thread.title|escape }}</a></p>
+                            <tr class="thread-info" data-thread-id="{{ thread.id }}">
+                                <td class="per-thread-controls">
+                                    <button class="btn accept">{% trans %}Accept{% endtrans %}</button>
+                                    <button class="btn reject">{% trans %}Reject{% endtrans %}</button>
+                                </td>
+                                <td class="thread-links-col">
+                                    <a title="{{ thread._question_post().summary|escape }}"
+                                        href="{{ thread.get_absolute_url() }}"
+                                    >{{ thread.title|escape }}</a>
+                                </td>
+                            </tr>
                         {% endfor %}
+                        </table>
+                    </td>
+                </tr>
+                <tr class="per-tag-controls" data-tag-id="{{ tag.id }}">
+                    <td colspan="4">
+                        {% if tag.threads.count() > 1 %}
+                            <button class="btn">{% trans name=tag.name %}Apply tag "{{ name }}" to all above questions{% endtrans %}</button>
+                            <button class="btn">{% trans %}Reject tag{% endtrans %}</button>
+                        {% endif %}
                     </td>
                 </tr>
             {% endfor %}
@@ -36,4 +58,7 @@
     {% else %}
         <span>{% trans %}Nothing found{% endtrans %}</span>
     {% endif %}
+{% endblock %}
+{% block endjs %}
+    <script type="text/javascript" src="{{ '/js/tag_moderation.js'|media }}"></script>
 {% endblock %}
