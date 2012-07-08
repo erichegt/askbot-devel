@@ -8,40 +8,25 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'SuggestedTag'
-        db.create_table('askbot_suggestedtag', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(unique=True, max_length=255)),
-            ('used_count', self.gf('django.db.models.fields.PositiveIntegerField')(default=1)),
-            ('thread_ids', self.gf('django.db.models.fields.TextField')()),
-        ))
-        db.send_create_signal('askbot', ['SuggestedTag'])
+        # Adding field 'Tag.status'
+        db.add_column(u'tag', 'status',
+                      self.gf('django.db.models.fields.SmallIntegerField')(default=1),
+                      keep_default=False)
 
-        # Adding M2M table for field threads on 'SuggestedTag'
-        db.create_table('askbot_suggestedtag_threads', (
+        # Adding M2M table for field suggested_by on 'Tag'
+        db.create_table(u'tag_suggested_by', (
             ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('suggestedtag', models.ForeignKey(orm['askbot.suggestedtag'], null=False)),
-            ('thread', models.ForeignKey(orm['askbot.thread'], null=False))
-        ))
-        db.create_unique('askbot_suggestedtag_threads', ['suggestedtag_id', 'thread_id'])
-
-        # Adding M2M table for field users on 'SuggestedTag'
-        db.create_table('askbot_suggestedtag_users', (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('suggestedtag', models.ForeignKey(orm['askbot.suggestedtag'], null=False)),
+            ('tag', models.ForeignKey(orm['askbot.tag'], null=False)),
             ('user', models.ForeignKey(orm['auth.user'], null=False))
         ))
-        db.create_unique('askbot_suggestedtag_users', ['suggestedtag_id', 'user_id'])
+        db.create_unique(u'tag_suggested_by', ['tag_id', 'user_id'])
 
     def backwards(self, orm):
-        # Deleting model 'SuggestedTag'
-        db.delete_table('askbot_suggestedtag')
+        # Deleting field 'Tag.status'
+        db.delete_column(u'tag', 'status')
 
-        # Removing M2M table for field threads on 'SuggestedTag'
-        db.delete_table('askbot_suggestedtag_threads')
-
-        # Removing M2M table for field users on 'SuggestedTag'
-        db.delete_table('askbot_suggestedtag_users')
+        # Removing M2M table for field suggested_by on 'Tag'
+        db.delete_table('tag_suggested_by')
 
     models = {
         'askbot.activity': {
@@ -236,15 +221,6 @@ class Migration(SchemaMigration):
             'reputed_at': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"})
         },
-        'askbot.suggestedtag': {
-            'Meta': {'ordering': "['-used_count', 'name']", 'object_name': 'SuggestedTag'},
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '255'}),
-            'thread_ids': ('django.db.models.fields.TextField', [], {}),
-            'threads': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['askbot.Thread']", 'symmetrical': 'False'}),
-            'used_count': ('django.db.models.fields.PositiveIntegerField', [], {'default': '1'}),
-            'users': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.User']", 'symmetrical': 'False'})
-        },
         'askbot.tag': {
             'Meta': {'ordering': "('-used_count', 'name')", 'object_name': 'Tag', 'db_table': "u'tag'"},
             'created_by': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'created_tags'", 'to': "orm['auth.User']"}),
@@ -253,6 +229,8 @@ class Migration(SchemaMigration):
             'deleted_by': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'deleted_tags'", 'null': 'True', 'to': "orm['auth.User']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '255'}),
+            'status': ('django.db.models.fields.SmallIntegerField', [], {'default': '1'}),
+            'suggested_by': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'suggested_tags'", 'symmetrical': 'False', 'to': "orm['auth.User']"}),
             'tag_wiki': ('django.db.models.fields.related.OneToOneField', [], {'related_name': "'described_tag'", 'unique': 'True', 'null': 'True', 'to': "orm['askbot.Post']"}),
             'used_count': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'})
         },

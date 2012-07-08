@@ -493,7 +493,8 @@ def get_tag_list(request):
     function
     """
     tag_names = models.Tag.objects.filter(
-                        deleted = False
+                        deleted = False,
+                        status = models.Tag.STATUS_ACCEPTED
                     ).values_list(
                         'name', flat = True
                     )

@@ -17,7 +17,7 @@ from askbot import skins
 from askbot.conf import settings as askbot_settings
 from askbot.forms import FeedbackForm
 from askbot.mail import mail_moderators
-from askbot.models import BadgeData, Award, User, SuggestedTag
+from askbot.models import BadgeData, Award, User, Tag
 from askbot.models import badges as badge_data
 from askbot.skins.loaders import get_template, render_into_skin, render_text_into_skin
 from askbot.utils.decorators import admins_only
@@ -164,9 +164,10 @@ def moderate_tags(request):
     or cancel the moderation reuest."""
     if askbot_settings.ENABLE_TAG_MODERATION == False:
         raise Http404
-    tags = SuggestedTag.objects.all()
+    tags = Tag.objects.filter(status = Tag.STATUS_SUGGESTED)
+    tags = tags.order_by('-used_count', 'name')
     #paginate moderated tags
-    paginator = Paginator(SuggestedTag.objects.all(), 20)
+    paginator = Paginator(tags, 20)
 
     page_no = request.GET.get('page', '1')
 

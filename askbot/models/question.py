@@ -16,6 +16,7 @@ from askbot.conf import settings as askbot_settings
 from askbot import mail
 from askbot.mail import messages
 from askbot.models.tag import Tag, get_groups, get_tags_by_names
+from askbot.models.tag import filter_accepted_tags, filter_suggested_tags
 from askbot.models.tag import delete_tags, separate_unused_tags
 from askbot.models.base import AnonymousContent, BaseQuerySetManager
 from askbot.models.tag import Tag, get_groups
@@ -811,7 +812,7 @@ class Thread(models.Model):
         *IMPORTANT*: self._question_post() has to
         exist when update_tags() is called!
         """
-        previous_tags = list(self.tags.all())
+        previous_tags = list(self.tags.filter(status = Tag.STATUS_ACCEPTED))
 
         ordered_updated_tagnames = [t for t in tagnames.strip().split(' ')]
 
@@ -822,7 +823,9 @@ class Thread(models.Model):
         #remove tags from the question's tags many2many relation
         #used_count values are decremented on all tags
         removed_tags = self.remove_tags_by_names(removed_tagnames)
+
         #modified tags go on to recounting their use
+        #todo - this can actually be done asynchronously - not so important
         modified_tags, unused_tags = separate_unused_tags(removed_tags)
         delete_tags(unused_tags)#tags with used_count == 0 are deleted
 
@@ -831,7 +834,6 @@ class Thread(models.Model):
         #add new tags to the relation
         added_tagnames = updated_tagnames - previous_tagnames
 
-        #todo: the part below is too long and needs to be refactored
         if added_tagnames:
             #find reused tags
             reused_tags, new_tagnames = get_tags_by_names(added_tagnames)
@@ -839,17 +841,20 @@ class Thread(models.Model):
 
             added_tags = list(reused_tags)
             #tag moderation is in the call below
-            created_tags = user.try_creating_tags(new_tagnames, thread = self)
+            created_tags = Tag.objects.create_in_bulk(
+                                            tag_names = new_tagnames, user = user
+                                        )
+
             added_tags.extend(created_tags)
             #todo: not nice that assignment of added_tags is way above
             self.tags.add(*added_tags)
             modified_tags.extend(added_tags)
-
         else:
             added_tags = Tag.objects.none()
 
         #Save denormalized tag names on thread. Preserve order from user input.
-        added_tagnames = set([tag.name for tag in added_tags])
+        accepted_added_tags = filter_accepted_tags(added_tags)
+        added_tagnames = set([tag.name for tag in accepted_added_tags])
         final_tagnames = (previous_tagnames - removed_tagnames) | added_tagnames
         ordered_final_tagnames = list()
         for tagname in ordered_updated_tagnames:
@@ -858,6 +863,21 @@ class Thread(models.Model):
 
         self.tagnames = ' '.join(ordered_final_tagnames)
         self.save()#need to save here?
+
+        #todo: factor out - tell author about suggested tags
+        suggested_tags = filter_suggested_tags(added_tags)
+        if len(suggested_tags) > 0:
+            if len(suggested_tags) == 1:
+                msg = _(
+                    'Tag %s is new and will be submitted for the '
+                    'moderators approval'
+                ) % suggested_tags[0].name
+            else:
+                msg = _(
+                    'Tags %s are new and will be submitted for the '
+                    'moderators approval'
+                ) % ', '.join([tag.name for tag in suggested_tags])
+            user.message_set.create(message = msg)
 
         ####################################################################
         self.update_summary_html() # regenerate question/thread summary html

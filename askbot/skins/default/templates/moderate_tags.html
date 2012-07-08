@@ -22,7 +22,7 @@
                         <span class="tag-number">&#215;{{ tag.used_count }}</span>
                     </td>
                     <td class="users-col">
-                        {% for user in tag.users.all() %}
+                        {% for user in tag.suggested_by.all() %}
                             <p>{{ user.get_profile_link() }}</p>
                         {% endfor %}
                     </td>
