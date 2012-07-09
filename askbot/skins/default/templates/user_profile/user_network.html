@@ -32,7 +32,7 @@
         {% if request.user == view_user %}
             <p>{% trans %}Your network is empty. Would you like to follow someone? - Just visit their profiles and click "follow"{% endtrans %}</p>
         {% else %}
-            <p>{% trans username = view_user.username %}{{username}}'s network is empty{% endtrans %}</p>
+            <p>{% trans username = view_user.username|escape %}{{username}}'s network is empty{% endtrans %}</p>
         {% endif %}
     {% endif %}
 {% endblock %}

@@ -13,6 +13,7 @@ from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from django.contrib.auth.models import User
 from django.utils.safestring import mark_safe
+from django.utils.html import escape
 from django.db import models
 from django.conf import settings as django_settings
 from django.contrib.contenttypes.models import ContentType
@@ -28,7 +29,8 @@ from askbot.skins import utils as skin_utils
 from askbot.mail import messages
 from askbot.models.question import QuestionView, AnonymousQuestion
 from askbot.models.question import FavoriteQuestion
-from askbot.models.tag import Tag, MarkedTag, get_group_names, get_groups
+from askbot.models.tag import Tag, MarkedTag
+from askbot.models.tag import get_group_names, get_groups
 from askbot.models.user import EmailFeedSetting, ActivityAuditStatus, Activity
 from askbot.models.user import GroupMembership, GroupProfile
 from askbot.models.post import Post, PostRevision, PostFlagReason, AnonymousAnswer
@@ -37,9 +39,9 @@ from askbot.models import signals
 from askbot.models.badges import award_badges_signal, get_badge, BadgeData
 from askbot.models.repute import Award, Repute, Vote
 from askbot import auth
-from askbot.utils import category_tree
 from askbot.utils.decorators import auto_now_timestamp
 from askbot.utils.slug import slugify
+from askbot.utils.html import sanitize_html
 from askbot.utils.diff import textDiff as htmldiff
 from askbot.utils.url_utils import strip_path
 from askbot import mail
@@ -86,7 +88,7 @@ User.add_to_class(
                     )
         )
 
-User.add_to_class('email_isvalid', models.BooleanField(default=False))
+User.add_to_class('email_isvalid', models.BooleanField(default=False)) #@UndefinedVariable
 User.add_to_class('email_key', models.CharField(max_length=32, null=True))
 #hardcoded initial reputaion of 1, no setting for this one
 User.add_to_class('reputation',
@@ -126,6 +128,8 @@ User.add_to_class('interesting_tags', models.TextField(blank = True))
 User.add_to_class('ignored_tags', models.TextField(blank = True))
 User.add_to_class('subscribed_tags', models.TextField(blank = True))
 User.add_to_class('email_signature', models.TextField(blank = True))
+User.add_to_class('show_marked_tags', models.BooleanField(default = True))
+
 User.add_to_class(
     'email_tag_filter_strategy',
     models.SmallIntegerField(
@@ -241,6 +245,42 @@ def user_get_old_vote_for_post(self, post):
     except Vote.MultipleObjectsReturned:
         raise AssertionError
 
+def user_get_marked_tags(self, reason):
+    """reason is a type of mark: good, bad or subscribed"""
+    assert(reason in ('good', 'bad', 'subscribed'))
+    if reason == 'subscribed':
+        if askbot_settings.SUBSCRIBED_TAG_SELECTOR_ENABLED == False:
+            return Tag.objects.none()
+
+    return Tag.objects.filter(
+        user_selections__user = self,
+        user_selections__reason = reason
+    )
+
+MARKED_TAG_PROPERTY_MAP = {
+    'good': 'interesting_tags',
+    'bad': 'ignored_tags',
+    'subscribed': 'subscribed_tags'
+}
+def user_get_marked_tag_names(self, reason):
+    """returns list of marked tag names for a give
+    reason: good, bad, or subscribed
+    will add wildcard tags as well, if used
+    """
+    if reason == 'subscribed':
+        if askbot_settings.SUBSCRIBED_TAG_SELECTOR_ENABLED == False:
+            return list()
+
+    tags = self.get_marked_tags(reason)
+    tag_names = list(tags.values_list('name', flat = True))
+
+    if askbot_settings.USE_WILDCARD_TAGS:
+        attr_name = MARKED_TAG_PROPERTY_MAP[reason]
+        wildcard_tags = getattr(self, attr_name).split()
+        tag_names.extend(wildcard_tags)
+        
+    return tag_names
+
 def user_has_affinity_to_question(self, question = None, affinity_type = None):
     """returns True if number of tag overlap of the user tag
     selection with the question is 0 and False otherwise
@@ -302,47 +342,6 @@ def user_can_create_tags(self):
         return self.is_administrator_or_moderator()
     else:
         return True
-
-def user_try_creating_tags(self,tag_names):
-    created_tags = list()
-    if self.can_create_tags():
-        for name in tag_names:
-            new_tag = Tag.objects.create(
-                                name = name,
-                                created_by = self,
-                                used_count = 1
-                            )
-            created_tags.append(new_tag)
-        #finally add tags to the relation and extend the modified list
-    elif tag_names:#notify admins by email about new tags
-        #maybe remove tags to report based on categories
-        #todo: maybe move this to tags_updated signal handler
-        if askbot_settings.TAG_SOURCE == 'category-tree':
-            category_names = category_tree.get_leaf_names()
-            tag_names = tag_names - category_names
-
-        if len(tag_names) > 0:
-            #todo: move all message sending codes to a separate module
-            body_text = messages.notify_admins_about_new_tags(
-                                    tags = tag_names,
-                                    user = self,
-                                    thread = self
-                                )
-            site_name = askbot_settings.APP_SHORT_NAME
-            subject_line = _('New tags added to %s') % site_name
-            mail.mail_moderators(
-                subject_line,
-                body_text,
-                headers = {'Reply-To': self.email}
-            )
-            msg = _(
-                'Tags %s are new and will be submitted for the '
-                'moderators approval'
-            ) % ', '.join(tag_names)
-            self.message_set.create(message = msg)
-
-    return created_tags
-
 
 def user_can_have_strong_url(self):
     """True if user's homepage url can be
@@ -2120,7 +2119,7 @@ def user_get_absolute_url(self):
 
 def get_profile_link(self):
     profile_link = u'<a href="%s">%s</a>' \
-        % (self.get_profile_url(),self.username)
+        % (self.get_profile_url(), escape(self.username))
 
     return mark_safe(profile_link)
 
@@ -2555,6 +2554,8 @@ User.add_to_class('get_absolute_url', user_get_absolute_url)
 User.add_to_class('get_avatar_url', user_get_avatar_url)
 User.add_to_class('get_default_avatar_url', user_get_default_avatar_url)
 User.add_to_class('get_gravatar_url', user_get_gravatar_url)
+User.add_to_class('get_marked_tags', user_get_marked_tags)
+User.add_to_class('get_marked_tag_names', user_get_marked_tag_names)
 User.add_to_class('get_groups', user_get_groups)
 User.add_to_class('get_foreign_groups', user_get_foreign_groups)
 User.add_to_class('strip_email_signature', user_strip_email_signature)
@@ -2610,7 +2611,6 @@ User.add_to_class('set_admin_status', user_set_admin_status)
 User.add_to_class('edit_group_membership', user_edit_group_membership)
 User.add_to_class('is_group_member', user_is_group_member)
 User.add_to_class('remove_admin_status', user_remove_admin_status)
-User.add_to_class('try_creating_tags', user_try_creating_tags)
 User.add_to_class('is_moderator', user_is_moderator)
 User.add_to_class('is_approved', user_is_approved)
 User.add_to_class('is_watched', user_is_watched)
@@ -2728,8 +2728,8 @@ def format_instant_notification_email(
         revisions = post.revisions.all()[:2]
         assert(len(revisions) == 2)
         content_preview = htmldiff(
-                revisions[1].html,
-                revisions[0].html,
+                sanitize_html(revisions[1].html),
+                sanitize_html(revisions[0].html),
                 ins_start = '<b><u style="background-color:#cfc">',
                 ins_end = '</u></b>',
                 del_start = '<del style="color:#600;background-color:#fcc">',

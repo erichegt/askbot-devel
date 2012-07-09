@@ -981,24 +981,18 @@ var questionRetagger = function(){
         initRetagger();
     };
 
-    var render_tag = function(tag_name){
-        //copy-paste from live search!!!
-        var tag = new Tag();
-        tag.setName(tag_name);
-        return tag.getElement().outerHTML();
-    };
-
     var drawNewTags = function(new_tags){
+        tagsDiv.empty();
         if (new_tags === ''){
-            tagsDiv.html('');
             return;
         }
         new_tags = new_tags.split(/\s+/);
         var tags_html = ''
         $.each(new_tags, function(index, name){
-            tags_html += render_tag(name);
+            var tag = new Tag();
+            tag.setName(name);
+            tagsDiv.append(tag.getElement());
         });
-        tagsDiv.html(tags_html);
     };
 
     var doRetag = function(){
@@ -1013,6 +1007,9 @@ var questionRetagger = function(){
                     oldTagsHtml = '';
                     cancelRetag();
                     drawNewTags(new_tags.join(' '));
+                    if (json['message']) {
+                        notify.show(json['message']);
+                    }
                 }
                 else {
                     cancelRetag();
@@ -1091,10 +1088,10 @@ var questionRetagger = function(){
         links.each(function(index, element){
             if (index === 0){
                 //this is pretty bad - we should use Tag.getName()
-                tags_str = $(element).attr('data-tag-name');
+                tags_str = $(element).data('tagName');
             }
             else {
-                tags_str += ' ' + $(element).attr('data-tag-name');
+                tags_str += ' ' + $(element).data('tagName');
             }
         });
         return tags_str;

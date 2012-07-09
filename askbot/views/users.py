@@ -56,7 +56,7 @@ def owner_or_moderator_required(f):
         return f(request, profile_owner, context)
     return wrapped_func
 
-def users(request, by_group = False, group_id = None, group_slug = None):
+def show_users(request, by_group = False, group_id = None, group_slug = None):
     """Users view, including listing of users by group"""
     users = models.User.objects.exclude(status = 'b')
     group = None
@@ -128,7 +128,7 @@ def users(request, by_group = False, group_id = None, group_slug = None):
                             users.order_by(order_by_parameter),
                             const.USERS_PAGE_SIZE
                         )
-        base_url = request.path + '?sort=%s&' % sortby
+        base_url = request.path + '?sort=%s&amp;' % sortby
     else:
         sortby = "reputation"
         matching_users = models.get_users_by_text_query(search_query, users)
@@ -136,7 +136,7 @@ def users(request, by_group = False, group_id = None, group_slug = None):
                             matching_users.order_by('-reputation'),
                             const.USERS_PAGE_SIZE
                         )
-        base_url = request.path + '?name=%s&sort=%s&' % (search_query, sortby)
+        base_url = request.path + '?name=%s&amp;sort=%s&amp;' % (search_query, sortby)
 
     try:
         users_page = objects_list.page(page)
@@ -297,7 +297,7 @@ def edit_user(request, id):
             user.about = sanitize_html(form.cleaned_data['about'])
             user.country = form.cleaned_data['country']
             user.show_country = form.cleaned_data['show_country']
-
+            user.show_marked_tags = form.cleaned_data['show_marked_tags']
             user.save()
             # send user updated signal if full fields have been updated
             award_badges_signal.send(None,
@@ -308,10 +308,12 @@ def edit_user(request, id):
             return HttpResponseRedirect(user.get_profile_url())
     else:
         form = forms.EditUserForm(user)
+
     data = {
         'active_tab': 'users',
         'page_class': 'user-profile-edit-page',
         'form' : form,
+        'marked_tags_setting': askbot_settings.MARKED_TAGS_ARE_PUBLIC_WHEN,
         'support_custom_avatars': ('avatar' in django_settings.INSTALLED_APPS),
         'view_user': user,
     }
@@ -373,6 +375,18 @@ def user_stats(request, user, context):
                     order_by('-user_tag_usage_count')[:const.USER_VIEW_DATA_SIZE]
     user_tags = list(user_tags) # evaluate
 
+    when = askbot_settings.MARKED_TAGS_ARE_PUBLIC_WHEN
+    if when == 'always' or \
+        (when == 'when-user-wants' and user.show_marked_tags == True):
+        #refactor into: user.get_marked_tag_names('good'/'bad'/'subscribed')
+        interesting_tag_names = user.get_marked_tag_names('good')
+        ignored_tag_names = user.get_marked_tag_names('bad')
+        subscribed_tag_names = user.get_marked_tag_names('subscribed')
+    else:
+        interesting_tag_names = None
+        ignored_tag_names = None
+        subscribed_tag_names = None
+        
 #    tags = models.Post.objects.filter(author=user).values('id', 'thread', 'thread__tags')
 #    post_ids = set()
 #    thread_ids = set()
@@ -458,6 +472,9 @@ def user_stats(request, user, context):
         'user_tags' : user_tags,
         'user_groups': user_groups,
         'groups_membership_info': groups_membership_info,
+        'interesting_tag_names': interesting_tag_names,
+        'ignored_tag_names': ignored_tag_names,
+        'subscribed_tag_names': subscribed_tag_names,
         'badges': badges,
         'total_badges' : len(badges),
     }

@@ -17,7 +17,7 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseForbidden, Http404
 from django.utils import simplejson
-from django.utils.html import strip_tags
+from django.utils.html import strip_tags, escape
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 from django.core import exceptions
@@ -294,6 +294,12 @@ def retag_question(request, id):
                         'success': True,
                         'new_tags': question.thread.tagnames
                     }
+
+                    if request.user.message_set.count() > 0:
+                        #todo: here we will possibly junk messages
+                        message = request.user.get_and_delete_messages()[-1]
+                        response_data['message'] = message
+
                     data = simplejson.dumps(response_data)
                     return HttpResponse(data, mimetype="application/json")
                 else:
@@ -562,7 +568,7 @@ def __generate_comments_json(obj, user):#non-view generates json data for the po
             'object_id': obj.id,
             'comment_added_at': str(comment.added_at.replace(microsecond = 0)) + tz,
             'html': comment.html,
-            'user_display_name': comment_owner.username,
+            'user_display_name': escape(comment_owner.username),
             'user_url': comment_owner.get_profile_url(),
             'user_id': comment_owner.id,
             'is_deletable': is_deletable,

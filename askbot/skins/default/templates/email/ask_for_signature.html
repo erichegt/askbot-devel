@@ -1,6 +1,6 @@
 {% import "email/macros.html" as macros %}
 <p style="{{ macros.heading_style() }}">
-    {% trans %}{{ username }}, please reply to this message.{% endtrans %}
+    {% trans user=username|escape %}{{ user }}, please reply to this message.{% endtrans %}
 </p>
 <p>
     {% trans %}Your post could not be published, because we could not detect signature in your email.{% endtrans %}<br/>

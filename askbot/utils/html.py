@@ -5,6 +5,7 @@ import re
 import htmlentitydefs
 from urlparse import urlparse
 from django.core.urlresolvers import reverse
+from django.utils.html import escape
 
 class HTMLSanitizerMixin(sanitizer.HTMLSanitizerMixin):
     acceptable_elements = ('a', 'abbr', 'acronym', 'address', 'b', 'big',

@@ -40,6 +40,7 @@ Programming and documentation
 * `Jim Tittsler <http://wikieducator.org/User:JimTittsler>`_
 * Silvio Heuberger
 * `Alexandros <https://github.com/alexandros-z>`_
+* `Paul Backhouse <https://github.com/powlo>`_
 
 Translations
 ------------

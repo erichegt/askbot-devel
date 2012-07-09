@@ -1031,6 +1031,11 @@ class EditUserForm(forms.Form):
                         required=False
                     )
 
+    show_marked_tags = forms.BooleanField(
+                        label=_('Show tag choices'),
+                        required=False
+                    )
+
     birthday = forms.DateField(
                         label=_('Date of birth'),
                         help_text=_('will not be shown, used to calculate age, format: YYYY-MM-DD'),
@@ -1061,6 +1066,7 @@ class EditUserForm(forms.Form):
             country = user.country
         self.fields['country'].initial = country
         self.fields['show_country'].initial = user.show_country
+        self.fields['show_marked_tags'].initial = user.show_marked_tags
 
         if user.date_of_birth is not None:
             self.fields['birthday'].initial = user.date_of_birth
@@ -1285,3 +1291,13 @@ class EditRejectReasonForm(forms.Form):
     details = CountedWordsField(
         min_words = 6, field_name = _('Description')
     )
+
+class ModerateTagForm(forms.Form):
+    tag_id = forms.IntegerField()
+    thread_id = forms.IntegerField(required = False)
+    action = forms.CharField()
+
+    def clean_action(self):
+        action = self.cleaned_data['action']
+        assert(action in ('accept', 'reject'))
+        return action

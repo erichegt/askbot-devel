@@ -412,9 +412,8 @@ class Post(models.Model):
 
             extra_authors = set()
             for name_seed in extra_name_seeds:
-                extra_authors.update(User.objects.filter(
-                    username__istartswith = name_seed
-                )
+                extra_authors.update(
+                    User.objects.filter(username__istartswith = name_seed)
                 )
 
             #it is important to preserve order here so that authors of post
@@ -493,9 +492,12 @@ class Post(models.Model):
                 self.make_public(author)
 
         if last_revision:
-            diff = htmldiff(last_revision, self.html)
+            diff = htmldiff(
+                        sanitize_html(last_revision),
+                        sanitize_html(self.html)
+                    )
         else:
-            diff = self.get_snippet()
+            diff = sanitize_html(self.get_snippet())
 
         timestamp = self.get_time_of_last_edit()
 
@@ -1506,7 +1508,9 @@ class Post(models.Model):
 
         # Update the Question tag associations
         if latest_revision.tagnames != tags:
-            self.thread.update_tags(tagnames = tags, user = edited_by, timestamp = edited_at)
+            self.thread.update_tags(
+                tagnames = tags, user = edited_by, timestamp = edited_at
+            )
 
         self.thread.title = title
         self.thread.tagnames = tags

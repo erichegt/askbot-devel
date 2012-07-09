@@ -183,10 +183,9 @@ body.user-messages {
     padding: 0;
     text-align: center;
     background-color: #f5dd69;
-    border-top:#fff 1px solid;
     font-family:@main-font;
 
-    p.notification {
+    .notification {
         margin-top: 6px;
         margin-bottom: 6px;
         font-size: 16px;
@@ -1159,6 +1158,10 @@ ul.tags.marked-tags li,
 ul#ab-user-tags li {
     width: 160px;
     margin:5px;
+    margin-left: 0;
+}
+.tags-page ul.tags {
+    margin-left: 5px;
 }
 
 ul#related-tags li {
@@ -1215,10 +1218,69 @@ ul#related-tags li {
     color: #1A1A1A;
 }
 
-.users-page h1,
-.tags-page h1,
-.groups-page h1 {
-    float: left;
+.users-page,
+.tags-page,
+.groups-page,
+.moderate-tags-page {
+    th {
+        padding-bottom: 5px;
+        font-weight: normal;
+    }
+    h1 {
+        float: left;
+        padding-top: 7px;
+    }
+}
+
+.moderate-tags-page {
+    button {
+        line-height: 18px;
+    }
+    table {
+        border-spacing: 0;
+    }
+    table.suggested-tags-table {
+        width: 100%;
+    }
+    th {
+        font-style: italic;
+    }
+    th, tr {
+        vertical-align: top;
+        text-align: left;
+        padding-right: 20px;
+    }
+    td.per-thread-controls {
+        width: 120px;/* 20px more to compensate for the padding */
+        height: 30px;
+        button {
+            display: none;
+        }
+    }
+    th.decision-col,
+    th.tags-col,
+    th.users-col {
+        width: 100px;
+    }
+    tr.per-tag-controls {
+        height: 30px;
+        text-align: center;
+    }
+    tr.thread-info {
+        a {
+            line-height: 18px;
+        }
+    }
+    tr.thread-info td {
+        padding-bottom: 5px;
+    }
+    td.tags-col,
+    td.users-col {
+        padding-top: 7px
+    }
+    td.thread-links-col {
+        padding-top: 5px;
+    }
 }
 
 .main-page h1 {
@@ -1988,8 +2050,8 @@ ul#related-tags li {
         float: left;
         text-align: center;
         padding-top: 2px;
-        margin:10px 10px 0px 3px;
-        /* smalls IE fixes */
+        margin:0px 10px 0px 3px;
+        /* small IE fixes */
         *margin:0; 
         *height:210px;
         *width:30px;
@@ -2295,7 +2357,6 @@ ul#related-tags li {
 /* tags page */
 
 .tabBar-tags{
-    width:270px;
     margin-bottom:15px;
 }
 
@@ -3316,19 +3377,26 @@ p.signup_p {
 .avatar-page li {
     display: inline;
 }
-.user-profile-page .avatar p {
-    margin-bottom: 0px;
+
+.user-profile-page {
+    .avatar p {
+        margin-bottom: 0px;
+    }
+    .tabBar a#stats {
+        margin-left: 0;
+    }
+    img.gravatar {
+        margin: 2px 0 3px 0;
+    }
+    h3 {
+        padding: 0;
+        margin-top: -3px;
+    }
+    ul.tags {
+        margin-left: 5px;
+    }
 }
-.user-profile-page .tabBar a#stats {
-    margin-left: 0;
-}
-.user-profile-page img.gravatar {
-    margin: 2px 0 3px 0;
-}
-.user-profile-page h3 {
-    padding: 0;
-    margin-top: -3px;
-}
+
 .userList {
     font-size: 13px;
 }
@@ -3350,30 +3418,34 @@ a.edit {
     color: #145bff;
 }
 
-.str { color: #080; }
-.kwd { color: #008; }
-.com { color: #800; }
-.typ { color: #606; }
-.lit { color: #066; }
-.pun { color: #660; }
-.pln { color: #000; }
-.tag { color: #008; }/* name conflict here */
-.atn { color: #606; }
-.atv { color: #080; }
-.dec { color: #606; }
+pre {
+    .str { color: #080; }
+    .kwd { color: #008; }
+    .com { color: #800; }
+    .typ { color: #606; }
+    .lit { color: #066; }
+    .pun { color: #660; }
+    .pln { color: #000; }
+    .tag { color: #008; }/* name conflict here with tags */
+    .atn { color: #606; }
+    .atv { color: #080; }
+    .dec { color: #606; }
+}
 pre.prettyprint { clear:both;padding: 3px; border: 0px solid #888; }
 
 @media print {
-  .str { color: #060; }
-  .kwd { color: #006; font-weight: bold; }
-  .com { color: #600; font-style: italic; }
-  .typ { color: #404; font-weight: bold; }
-  .lit { color: #044; }
-  .pun { color: #440; }
-  .pln { color: #000; }
-  .tag { color: #006; font-weight: bold; }
-  .atn { color: #404; }
-  .atv { color: #060; }
+    pre {
+        .str { color: #060; }
+        .kwd { color: #006; font-weight: bold; }
+        .com { color: #600; font-style: italic; }
+        .typ { color: #404; font-weight: bold; }
+        .lit { color: #044; }
+        .pun { color: #440; }
+        .pln { color: #000; }
+        .tag { color: #006; font-weight: bold; }
+        .atn { color: #404; }
+        .atv { color: #060; }
+    }
 }
 
 #leading-sidebar {

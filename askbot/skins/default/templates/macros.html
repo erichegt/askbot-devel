@@ -10,7 +10,7 @@
     {# follow - boolean; name - object type name; alias - e.g. users name; id - object id #}
     <div 
         class="follow-toggle follow-user-toggle" 
-        id="follow-{{ name }}-{{ id }}"
+        id="follow-{{ name|escape }}-{{ id }}"
     >
         {% if follow %}
         <div class="follow">{% trans %}follow {{alias}}{% endtrans %}</div>
@@ -29,18 +29,18 @@
     <div class="face">
     {{ gravatar(response.user, 48) }}
     </div>
-    <a style="font-size:12px" href="{{ response.user.get_absolute_url() }}">{{ response.user.username }}</a>
+    <a style="font-size:12px" href="{{ response.user.get_absolute_url() }}">{{ response.user.username|escape }}</a>
     <a style="text-decoration:none;" href="{{ response.response_url }}">
          {{ response.response_type }}
          ({{ timeago(response.timestamp) }}):<br/>
          {% if inbox_section != 'flags' %}
-             {{ response.response_snippet }}
+             {{ response.response_snippet|escape }}
          {% endif %}
     </a>
     {% if inbox_section == 'flags' %}
          <a class="re_expand" href="{{ response.response_url }}">
-              <!--div class="re_snippet">{{ response.response_snippet }}</div-->
-              <div class="re_content">{{ response.response_content }}</div>
+              <!--div class="re_snippet">{{ response.response_snippet|escape }}</div-->
+              <div class="re_content">{{ response.response_content|escape }}</div>
          </a>
     {% endif %}
 </div>
@@ -291,14 +291,14 @@ poor design of the data or methods on data objects #}
             class="tag tag-right{% if css_class %} {{ css_class }}{% endif %}"
             {% if is_link %}
             href="{{ search_state.add_tag(tag).full_url() }}"
-            title="{% trans %}see questions tagged '{{ tag }}'{% endtrans %}"
+            title="{% trans tag=tag|escape %}see questions tagged '{{ tag }}'{% endtrans %}"
             {% endif %}
             rel="tag"
             data-tag-name="{{ tag|replace('*', '&#10045;')|escape }}"
         >{% if truncate_long_tag -%}
-            {{ tag|replace('*', '&#10045;')|truncate(17, True) }}
+            {{ tag|replace('*', '&#10045;')|truncate(17, True)|escape }}
         {%- else -%}
-            {{ tag|replace('*', '&#10045;') }}
+            {{ tag|replace('*', '&#10045;')|escape }}
         {%- endif %}</{% if not is_link or tag[-1] == '*' %}span{% else %}a{% endif %}>
         {% if deletable %}
             <div class="delete-icon"
@@ -402,7 +402,7 @@ for the purposes of the AJAX comment editor #}
                     </div>
                     <div class="comment-body">
                         {{comment.html}}
-                        <a class="author" href="{{comment.author.get_profile_url()}}">{{comment.author.username}}</a>
+                        <a class="author" href="{{comment.author.get_profile_url()}}">{{comment.author.username|escape}}</a>
                         <span class="age">&nbsp;({{ timeago(comment.added_at) }})</span>
                         <a id="post-{{comment.id}}-edit"
                             class="edit">{% trans %}edit{% endtrans %}</a>
@@ -550,13 +550,13 @@ answer {% if answer.accepted() %}accepted-answer{% endif %} {% if answer.author_
 
 {%- macro follow_user_toggle(visitor = None, subject = None) -%}
     {% if visitor.is_anonymous() %}
-        {{ follow_toggle(True, 'user', subject.username, subject.id) }}
+        {{ follow_toggle(True, 'user', subject.username|escape, subject.id) }}
     {% else %}
         {% if visitor != subject %}
             {% if visitor.is_following(subject) %}
-                {{ follow_toggle(False, 'user', subject.username, subject.id) }}
+                {{ follow_toggle(False, 'user', subject.username|escape, subject.id) }}
             {% else %}
-                {{ follow_toggle(True, 'user', subject.username, subject.id) }}
+                {{ follow_toggle(True, 'user', subject.username|escape, subject.id) }}
             {% endif %}
         {% endif %}
     {% endif %}
@@ -576,7 +576,7 @@ answer {% if answer.accepted() %}accepted-answer{% endif %} {% if answer.author_
                 endtrans %}"
             title="{% trans 
                     country=user.country.name, 
-                    person=user.username %}{{person}} is from {{country}}{%
+                    person=user.username|escape %}{{person}} is from {{country}}{%
                  endtrans %}"
         />
     {% endif %}
@@ -611,8 +611,8 @@ answer {% if answer.accepted() %}accepted-answer{% endif %} {% if answer.author_
 ><img class="gravatar" 
     width="{{size}}" height="{{size}}"
     src="{{ user.get_avatar_url(size) }}"
-    title="{{user.username}}" 
-    alt="{% trans username=user.username %}{{username}} gravatar image{% endtrans %}" 
+    title="{{user.username|escape}}" 
+    alt="{% trans username=user.username|escape %}{{username}} gravatar image{% endtrans %}" 
 /></a>
 {% endspaceless %}
 {%- endmacro -%}
@@ -712,7 +712,7 @@ answer {% if answer.accepted() %}accepted-answer{% endif %} {% if answer.author_
     {% if user.new_response_count > 0 or user.seen_response_count > 0 %}
     <a id='ab-responses' href="{{user.get_absolute_url()}}?sort=inbox&section=forum">
         <img 
-            alt="{% trans username=user.username %}responses for {{username}}{% endtrans %}"
+            alt="{% trans username=user.username|escape %}responses for {{username}}{% endtrans %}"
             {% if user.new_response_count > 0 %}
                 src="{{ "/images/mail-envelope-full.png"|media }}"
                 title="{% trans response_count=user.new_response_count %}you have {{response_count}} new response{% pluralize %}you have {{response_count}} new responses{% endtrans %}"

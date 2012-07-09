@@ -14,21 +14,23 @@ NUM_COMMENTS = 20
 # karma. This can be calculated dynamically - max of MIN_REP_TO_... settings
 INITIAL_REPUTATION = 500
 
+BAD_STUFF = "<script>alert('hohoho')</script>"
+
 # Defining template inputs.
-USERNAME_TEMPLATE = "test_user_%s"
+USERNAME_TEMPLATE = BAD_STUFF + "test_user_%s"
 PASSWORD_TEMPLATE = "test_password_%s"
 EMAIL_TEMPLATE = "test_user_%s@askbot.org"
-TITLE_TEMPLATE = "Test question title No.%s"
-TAGS_TEMPLATE = ["tag-%s-0", "tag-%s-1"] # len(TAGS_TEMPLATE) tags per question
+TITLE_TEMPLATE = "Test question title No.%s" + BAD_STUFF
+TAGS_TEMPLATE = [BAD_STUFF + "tag-%s-0", BAD_STUFF + "tag-%s-1"] # len(TAGS_TEMPLATE) tags per question
 
-CONTENT_TEMPLATE = """Lorem lean startup ipsum product market fit customer
+CONTENT_TEMPLATE = BAD_STUFF + """Lorem lean startup ipsum product market fit customer
                     development acquihire technical cofounder. User engagement
                     **A/B** testing *shrink* a market venture capital pitch."""
 
-ANSWER_TEMPLATE = """Accelerator photo sharing business school drop out ramen
+ANSWER_TEMPLATE = BAD_STUFF + """Accelerator photo sharing business school drop out ramen
                     hustle crush it revenue traction platforms."""
 
-COMMENT_TEMPLATE = """Main differentiators business model micro economics
+COMMENT_TEMPLATE = BAD_STUFF + """Main differentiators business model micro economics
                     marketplace equity augmented reality human computer"""
 
 

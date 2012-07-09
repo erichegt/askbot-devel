@@ -1,9 +1,10 @@
+import datetime
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import ugettext as _
-import datetime
+from django.utils.html import escape
 from askbot import const
 from django.core.urlresolvers import reverse
 
@@ -242,7 +243,7 @@ class Repute(models.Model):
             return '<a href="%(url)s" title="%(link_title)s">%(question_title)s</a>' \
                             % {
                                'url': self.question.get_absolute_url(), 
-                               'question_title': self.question.thread.title,
-                               'link_title': link_title
+                               'question_title': escape(self.question.thread.title),
+                               'link_title': escape(link_title)
                             }
 

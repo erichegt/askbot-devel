@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
 from askbot.models.base import BaseQuerySetManager
 from askbot import const
+from askbot.conf import settings as askbot_settings
+from askbot.utils import category_tree
 
 def delete_tags(tags):
     """deletes tags in the list"""
@@ -25,6 +27,26 @@ def get_tags_by_names(tag_names):
 
     return tags, new_tag_names
 
+def filter_tags_by_status(tags, status = None):
+    """returns a list or a query set of tags which are accepted"""
+    if isinstance(tags, models.query.QuerySet):
+        return tags.filter(status = status)
+    else:
+        return [tag for tag in tags if tag.status == status]
+
+def filter_accepted_tags(tags):
+    return filter_tags_by_status(tags, status = Tag.STATUS_ACCEPTED)
+
+def filter_suggested_tags(tags):
+    return filter_tags_by_status(tags, status = Tag.STATUS_SUGGESTED)
+
+def is_preapproved_tag_name(tag_name):
+    """true if tag name is in the category tree
+    or any other container of preapproved tags"""
+    #get list of preapproved tags, to make exceptions for
+    if askbot_settings.TAG_SOURCE == 'category-tree':
+        return tag_name in category_tree.get_leaf_names()
+    return False
 
 def separate_unused_tags(tags):
     """returns two lists::
@@ -143,6 +165,94 @@ class TagManager(BaseQuerySetManager):
     def get_query_set(self):
         return TagQuerySet(self.model)
 
+    def create(self, name = None, created_by = None, **kwargs):
+        """Creates a new tag"""
+        if created_by.can_create_tags() or is_preapproved_tag_name(name):
+            status = Tag.STATUS_ACCEPTED
+        else:
+            status = Tag.STATUS_SUGGESTED
+
+        kwargs['created_by'] = created_by
+        kwargs['name'] = name
+        kwargs['status'] = status
+
+        return super(TagManager, self).create(**kwargs)
+
+    def create_suggested_tag(self, tag_names = None, user = None):
+        """This function is not used, and will probably need
+        to be retired. In the previous version we were sending
+        email to admins when the new tags were created,
+        now we have a separate page where new tags are listed.
+        """
+        #todo: stuff below will probably go after
+        #tag moderation actions are implemented
+        from askbot import mail
+        from askbot.mail import messages
+        body_text = messages.notify_admins_about_new_tags(
+                                tags = tag_names,
+                                user = user,
+                                thread = self
+                            )
+        site_name = askbot_settings.APP_SHORT_NAME
+        subject_line = _('New tags added to %s') % site_name
+        mail.mail_moderators(
+            subject_line,
+            body_text,
+            headers = {'Reply-To': user.email}
+        )
+
+        msg = _(
+            'Tags %s are new and will be submitted for the '
+            'moderators approval'
+        ) % ', '.join(tag_names)
+        user.message_set.create(message = msg)
+
+    def create_in_bulk(self, tag_names = None, user = None):
+        """creates tags by names. If user can create tags,
+        then they are set status ``STATUS_ACCEPTED``,
+        otherwise the status will be set to ``STATUS_SUGGESTED``.
+
+        One exception: if suggested tag is in the category tree
+        and source of tags is category tree - then status of newly
+        created tag is ``STATUS_ACCEPTED``
+        """
+
+        #load suggested tags
+        pre_suggested_tags = self.filter(
+            name__in = tag_names, status = Tag.STATUS_SUGGESTED
+        )
+
+        #deal with suggested tags
+        if user.can_create_tags():
+            #turn previously suggested tags into accepted
+            pre_suggested_tags.update(status = Tag.STATUS_ACCEPTED)
+        else:
+            #increment use count and add user to "suggested_by"
+            for tag in pre_suggested_tags:
+                tag.times_used += 1
+                tag.suggested_by.add(user)
+                tag.save()
+
+        created_tags = list()
+        pre_suggested_tag_names = list()
+        for tag in pre_suggested_tags:
+            pre_suggested_tag_names.append(tag.name)
+            created_tags.append(tag)
+
+        for tag_name in set(tag_names) - set(pre_suggested_tag_names):
+
+            #status for the new tags is automatically set within the create()
+            new_tag = Tag.objects.create(name = tag_name, created_by = user)
+            created_tags.append(new_tag)
+
+            if new_tag.status == Tag.STATUS_SUGGESTED:
+                new_tag.suggested_by.add(user)
+
+            #todo: here we have a chance to send a signal and notify
+            #whoever wants about the new tag creation
+
+        return created_tags
+
 class GroupTagQuerySet(TagQuerySet):
     """Custom query set for the group"""
 
@@ -191,8 +301,20 @@ class GroupTagManager(BaseQuerySetManager):
         return tag
 
 class Tag(models.Model):
-    name            = models.CharField(max_length=255, unique=True)
-    created_by      = models.ForeignKey(User, related_name='created_tags')
+    #a couple of status constants
+    STATUS_SUGGESTED = 0
+    STATUS_ACCEPTED = 1
+
+    name = models.CharField(max_length=255, unique=True)
+    created_by = models.ForeignKey(User, related_name='created_tags')
+
+    suggested_by = models.ManyToManyField(
+        User, related_name='suggested_tags',
+        help_text = 'Works only for suggested tags for tag moderation'
+    )
+
+    status = models.SmallIntegerField(default = STATUS_ACCEPTED)
+
     # Denormalised data
     used_count = models.PositiveIntegerField(default=0)
 

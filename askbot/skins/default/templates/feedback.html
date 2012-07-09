@@ -11,7 +11,7 @@
 <form method="post" action="{% url feedback %}" accept-charset="utf-8">{% csrf_token %}
     {% if user.is_authenticated() %}
         <p class="message">
-        {% trans user_name=user.username %}
+        {% trans user_name=user.username|escape %}
         <span class='big strong'>Dear {{user_name}}</span>, we look forward to hearing your feedback. 
         Please type and send us your message below.
         {% endtrans %}

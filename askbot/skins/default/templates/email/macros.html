@@ -7,7 +7,7 @@
 %}
     {% spaceless %}
         {{ start_quote(quote_level) }}
-            {% set author = post.author.username %}
+            {% set author = post.author.username|escape %}
             {% if post.post_type == 'question' %}
                 <p>
                     {% if format == 'parent_subthread' %}

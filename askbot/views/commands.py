@@ -5,6 +5,8 @@ This module contains most (but not all) processors for Ajax requests.
 Not so clear if this subdivision was necessary as separation of Ajax and non-ajax views
 is not always very clean.
 """
+import datetime
+import logging
 from django.conf import settings as django_settings
 from django.core import exceptions
 #from django.core.management import call_command
@@ -28,7 +30,6 @@ from askbot.utils import url_utils
 from askbot import mail
 from askbot.skins.loaders import render_into_skin, get_template
 from askbot import const
-import logging
 
 
 @csrf.csrf_exempt
@@ -493,7 +494,8 @@ def get_tag_list(request):
     function
     """
     tag_names = models.Tag.objects.filter(
-                        deleted = False
+                        deleted = False,
+                        status = models.Tag.STATUS_ACCEPTED
                     ).values_list(
                         'name', flat = True
                     )
@@ -669,8 +671,7 @@ def api_get_questions(request):
     #todo: filter out deleted threads, for now there is no way
     threads = threads.distinct()[:30]
     thread_list = [{
-        'url': thread.get_absolute_url(),
-        'title': thread.title,
+        'title': escape(thread.title),
         'answer_count': thread.get_answer_count(request.user)
     } for thread in threads]
     json_data = simplejson.dumps(thread_list)
@@ -1004,5 +1005,54 @@ def save_post_reject_reason(request):
             'title': title,
             'details': details
         }
+    else:
+        raise Exception(forms.format_form_errors(form))
+
+@csrf.csrf_exempt
+@decorators.ajax_only
+@decorators.post_only
+@decorators.admins_only
+def moderate_suggested_tag(request):
+    """accepts or rejects a suggested tag
+    if thread id is given, then tag is 
+    applied to or removed from only one thread, 
+    otherwise the decision applies to all threads
+    """
+    form = forms.ModerateTagForm(request.POST)
+    if form.is_valid():
+        tag_id = form.cleaned_data['tag_id']
+        thread_id = form.cleaned_data.get('thread_id', None)
+
+        try:
+            tag = models.Tag.objects.get(id = tag_id)#can tag not exist?
+        except models.Tag.DoesNotExist:
+            return
+
+        if thread_id:
+            threads = models.Thread.objects.filter(id = thread_id)
+        else:
+            threads = tag.threads.all()
+
+        if form.cleaned_data['action'] == 'accept':
+            #todo: here we lose ability to come back
+            #to the tag moderation and approve tag to
+            #other threads later for the case where tag.used_count > 1
+            tag.status = models.Tag.STATUS_ACCEPTED
+            tag.save()
+            for thread in threads:
+                thread.add_tag(
+                    tag_name = tag.name,
+                    user = tag.created_by,
+                    timestamp = datetime.datetime.now(),
+                    silent = True
+                )
+        else:
+            if tag.threads.count() > len(threads):
+                for thread in threads:
+                    thread.tags.remove(tag)
+                tag.used_count = tag.threads.count()
+                tag.save()
+            elif tag.status == models.Tag.STATUS_SUGGESTED:
+                tag.delete()
     else:
         raise Exception(forms.format_form_errors(form))
