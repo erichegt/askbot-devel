@@ -59,7 +59,6 @@
 			ed.addCommand('mceAskbotImageUploader', function() {
                 //start file uploader modal menu
                 var dialog = getDialog();
-                debugger;
                 dialog.show();
             });
 

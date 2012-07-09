@@ -4551,3 +4551,9 @@ a.thumbnail:hover {
     width: 515px;
     margin-bottom: 0px;
 }
+.modal-backdrop {
+    z-index: 200000;
+}
+.modal {
+    z-index: 200001;
+}
