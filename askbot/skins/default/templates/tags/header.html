@@ -26,7 +26,7 @@
             {% if settings.ENABLE_TAG_MODERATION %}
                 {% if request.user.is_authenticated() and request.user.is_administrator_or_moderator() %}
                     <a 
-                        href="{% url moderate_tags %}"
+                        href="{% url list_suggested_tags %}"
                         {% if tab_id == 'suggested' %}class="on"{% endif %}
                         title="{% trans %}suggested{% endtrans %}"
                     ><span>{% trans %}suggested{% endtrans %}</span></a>

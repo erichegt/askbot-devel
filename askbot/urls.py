@@ -160,9 +160,14 @@ urlpatterns = patterns('',
         name='tags'
     ),
     url(
-        r'^%s$' % _('moderate-tags/'),
-        views.meta.moderate_tags,
-        name = 'moderate_tags'
+        r'^%s$' % _('suggested-tags/'),
+        views.meta.list_suggested_tags,
+        name = 'list_suggested_tags'
+    ),
+    url(#ajax only
+        r'^%s$' % 'moderate-suggested-tag',
+        views.commands.moderate_suggested_tag,
+        name = 'moderate_suggested_tag'
     ),
     #todo: collapse these three urls and use an extra json data var
     url(#ajax only

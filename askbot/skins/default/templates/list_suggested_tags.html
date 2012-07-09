@@ -47,8 +47,8 @@
                 <tr class="per-tag-controls" data-tag-id="{{ tag.id }}">
                     <td colspan="4">
                         {% if tag.threads.count() > 1 %}
-                            <button class="btn">{% trans name=tag.name %}Apply tag "{{ name }}" to all above questions{% endtrans %}</button>
-                            <button class="btn">{% trans %}Reject tag{% endtrans %}</button>
+                            <button class="btn accept">{% trans name=tag.name %}Apply tag "{{ name }}" to all above questions{% endtrans %}</button>
+                            <button class="btn reject">{% trans %}Reject tag{% endtrans %}</button>
                         {% endif %}
                     </td>
                 </tr>
@@ -60,5 +60,8 @@
     {% endif %}
 {% endblock %}
 {% block endjs %}
+    <script type="text/javascript">
+        askbot['urls']['moderateSuggestedTag'] = '{% url "moderate_suggested_tag" %}';
+    </script>
     <script type="text/javascript" src="{{ '/js/tag_moderation.js'|media }}"></script>
 {% endblock %}

@@ -158,7 +158,7 @@ def badge(request, id):
     return render_into_skin('badge.html', data, request)
 
 @admins_only
-def moderate_tags(request):
+def list_suggested_tags(request):
     """moderators and administrators can list tags that are
     in the moderation queue, apply suggested tag to questions
     or cancel the moderation reuest."""
@@ -195,4 +195,4 @@ def moderate_tags(request):
         'page_title': _('Suggested tags'),
         'paginator_context' : paginator_context,
     }
-    return render_into_skin('moderate_tags.html', data, request)
+    return render_into_skin('list_suggested_tags.html', data, request)

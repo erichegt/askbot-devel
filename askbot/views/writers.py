@@ -295,6 +295,12 @@ def retag_question(request, id):
                         'success': True,
                         'new_tags': question.thread.tagnames
                     }
+
+                    if request.user.message_set.count() > 0:
+                        #todo: here we will possibly junk messages
+                        message = request.user.get_and_delete_messages()[-1]
+                        response_data['message'] = message
+
                     data = simplejson.dumps(response_data)
                     return HttpResponse(data, mimetype="application/json")
                 else:

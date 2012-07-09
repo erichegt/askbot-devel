@@ -1291,3 +1291,13 @@ class EditRejectReasonForm(forms.Form):
     details = CountedWordsField(
         min_words = 6, field_name = _('Description')
     )
+
+class ModerateTagForm(forms.Form):
+    tag_id = forms.IntegerField()
+    thread_id = forms.IntegerField(required = False)
+    action = forms.CharField()
+
+    def clean_action(self):
+        action = self.cleaned_data['action']
+        assert(action in ('accept', 'reject'))
+        return action

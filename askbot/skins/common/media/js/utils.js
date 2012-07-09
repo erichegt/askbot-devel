@@ -104,13 +104,18 @@ var setCheckBoxesIn = function(selector, value){
     return $(selector + '> input[type=checkbox]').attr('checked', value);
 };
 
+/*
+ * Old style notify handler
+ */
 var notify = function() {
     var visible = false;
     return {
         show: function(html) {
             if (html) {
                 $("body").addClass('user-messages');
-                $(".notify span").html(html);        
+                var par = $('<p class="notification"></p>');
+                par.html(html);
+                $(".notify").prepend(par);
             }          
             $(".notify").fadeIn("slow");
             visible = true;
@@ -128,7 +133,7 @@ var notify = function() {
         },     
         isVisible: function() { return visible; }     
     };
-} ();
+}();
 
 /* **************************************************** */
 // Search query-string manipulation utils
@@ -1306,6 +1311,7 @@ Tag.prototype.createDom = function(){
     }
     this._inner_element.attr('title', this._title);
     this._inner_element.html(this.getDisplayTagName());
+    this._inner_element.data('tagName', this.getName());
 
     this._element.append(this._inner_element);
 

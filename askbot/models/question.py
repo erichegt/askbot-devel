@@ -896,6 +896,22 @@ class Thread(models.Model):
 
         return False
 
+    def add_tag(
+        self, user = None, timestamp = None, tag_name = None, silent = False
+    ):
+        """adds one tag to thread"""
+        tag_names = self.get_tag_names()
+        if tag_name in tag_names:
+            return
+        tag_names.append(tag_name)
+
+        self.retag(
+            retagged_by = user,
+            retagged_at = timestamp,
+            tagnames = ' '.join(tag_names),
+            silent = silent
+        )
+
     def retag(self, retagged_by=None, retagged_at=None, tagnames=None, silent=False):
         """changes thread tags"""
         if None in (retagged_by, retagged_at, tagnames):

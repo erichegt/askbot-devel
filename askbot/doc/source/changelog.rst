@@ -5,7 +5,7 @@ Development version
 -------------------
 * Updated LDAP configuration: allow protocol change, master login and
   adding "extra options" to the ldap session (Evgeny)
-* Simple tag moderation via email (Evgeny)
+* Tag moderation (Evgeny)
 * Editable optional three level category selector for the tags (Evgeny)
 * Tag editor adding tags as they are typed (Evgeny)
 * Welcome email for the case when replying by email is enabled (Evgeny)
