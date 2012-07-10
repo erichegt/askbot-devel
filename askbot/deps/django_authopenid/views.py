@@ -316,15 +316,14 @@ def signin(request):
 
                     #todo: since django 1.2 there is .exists()
                     user_is_old = (User.objects.filter(username = username).count() > 0)
-
                     user = authenticate(
                                     username=username,
                                     password=password,
                                     method = 'ldap'
                                 )
                     if user is not None:
-                        login(request, user)
                         if user_is_old:
+                            login(request, user)
                             return HttpResponseRedirect(next_url)
                         else:
                             return finalize_generic_signin(

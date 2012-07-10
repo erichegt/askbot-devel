@@ -66,6 +66,7 @@ settings.register(
         LDAP_SETTINGS,
         'LDAP_BASE_DN',
         description=_('Base DN (distinguished name)'),
+        default = '',
         help_text = _(
             'Usually base DN mirrors domain name of your organization, '
             'e.g. "dn=example,dn=com" when your site url is "example.com".'
