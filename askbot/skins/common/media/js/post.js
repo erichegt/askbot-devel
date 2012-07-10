@@ -2505,7 +2505,7 @@ TagEditor.prototype.addTag = function(tag_name) {
 TagEditor.prototype.immediateClearErrorMessage = function() {
     this._error_alert.html('');
     this._error_alert.show();
-    this._element.css('margin-top', '18px');//todo: the margin thing is a hack
+    //this._element.css('margin-top', '18px');//todo: the margin thing is a hack
 }
 
 TagEditor.prototype.clearErrorMessage = function(fade) {
@@ -2526,7 +2526,7 @@ TagEditor.prototype.setErrorMessage = function(text) {
         this._error_alert.hide();
         this._error_alert.fadeIn(100);
     }
-    this._element.css('margin-top', '0');//todo: remove this hack
+    //this._element.css('margin-top', '0');//todo: remove this hack
 };
 
 TagEditor.prototype.getAddTagHandler = function() {
@@ -2678,7 +2678,7 @@ TagEditor.prototype.decorate = function(element) {
     this._element = element;
     this._hidden_tags_input = element.find('input[name="tags"]');//this one is hidden
     this._tags_container = element.find('ul.tags');
-    this._error_alert = $('.tag-editor-error-alert');
+    this._error_alert = $('.tag-editor-error-alert > span');
 
     var me = this;
     this._tags_container.children().each(function(idx, elem){
@@ -3081,6 +3081,7 @@ CategoryAdder.prototype.createDom = function() {
     var input = this.makeElement('input');
     this._input = input;
     input.addClass('add-category');
+    input.attr('name', 'add_category');
     this._element.append(input);
     //add save category button
     var save_button = this.makeElement('button');

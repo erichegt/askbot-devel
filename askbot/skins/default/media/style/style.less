@@ -3637,11 +3637,15 @@ textarea.tipped-input {
             height: 13px;
         }
     }
-    input.new-tags-input {
-        border-style: none;
+    input.new-tags-input,
+    input.new-tags-input:focus {
+        border: none;
         font-size: 15px;
         font-color: @info-text;
         line-height: 16px;
         margin-top: 9px;
+        -webkit-box-shadow: none;/* undo bootstrap glow */
+        -moz-box-shadow: none;
+        box-shadow: none;
     }
 }
