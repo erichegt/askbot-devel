@@ -63,7 +63,7 @@ def ldap_authenticate(username, password):
                     raise ValueError('Invalid LDAP option %s' % key)
 
         #add optional "master" LDAP authentication, if required
-        master_username = getattr(django_settings, 'LDAP_USER', None)
+        master_username = getattr(django_settings, 'LDAP_LOGIN_DN', None)
         master_password = getattr(django_settings, 'LDAP_PASSWORD', None)
 
         login_name_field = askbot_settings.LDAP_LOGIN_NAME_FIELD
@@ -72,9 +72,8 @@ def ldap_authenticate(username, password):
         encoding = askbot_settings.LDAP_ENCODING
 
         if master_username and master_password:
-            login_dn = login_template % master_username
             ldap_session.simple_bind_s(
-                login_dn.encode(encoding),
+                master_username.encode(encoding),
                 master_password.encode(encoding)
             )
 
@@ -117,14 +116,14 @@ def ldap_authenticate(username, password):
             ldap_session.unbind_s()
             
             exact_username = user_information[login_name_field][0]
-            email = user_information[email_field][0]
+            email = user_information.get(email_field, [''])[0]
 
             if given_name_field and surname_field:
-                last_name = user_information[surname_field][0]
-                first_name = user_information[given_name_field][0]
+                last_name = user_information.get(surname_field, [''])[0]
+                first_name = user_information.get(given_name_field, [''])[0]
             elif surname_field:
                 common_name_format = askbot_settings.LDAP_COMMON_NAME_FIELD_FORMAT
-                common_name = user_information[common_name_field][0]
+                common_name = user_information.get(common_name_field, [''])[0]
                 first_name, last_name = split_name(common_name, common_name_format)
             
             #here we have an opportunity to copy password in the auth_user table

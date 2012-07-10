@@ -116,7 +116,7 @@ The parameters are (note that some have pre-set defaults that might work for you
 
 There are three more optional parameters that must go to the ``settings.py`` file::
 
-* ``LDAP_USER``
+* ``LDAP_LOGIN_DN``
 * ``LDAP_PASSWORD``
 * ``LDAP_EXTRA_OPTIONS``, a list of two-item tuples - of names and values of
   the options. Option names must be upper case strings all starting with ``OPT_``
