@@ -322,17 +322,12 @@ def signin(request):
                                     method = 'ldap'
                                 )
                     if user is not None:
+                        login(request, user)
                         if user_is_old:
-                            login(request, user)
                             return HttpResponseRedirect(next_url)
                         else:
-                            return finalize_generic_signin(
-                                            request = request,
-                                            user = user,
-                                            user_identifier = username,#is this right?
-                                            login_provider_name = provider_name,
-                                            redirect_url = next_url
-                                        )
+                            return HttpResponseRedirect(reverse('verify_user_information'))
+
                     else:
                         request.user.message_set.create(_('Incorrect user name or password'))
                         return HttpResponseRedirect(request.path)
@@ -768,6 +763,52 @@ def finalize_generic_signin(
             login(request, user)
             logging.debug('login success')
             return HttpResponseRedirect(redirect_url)
+
+@login_required
+@csrf.protect
+def verify_user_information(request):
+    """this view collects the same information from
+    user ase :func:`register`, but requires that user is
+    already logged in and does not create a new user record
+    or change anything in instances of :class:`UserAssociation`
+    """
+    register_form = forms.OpenidRegisterForm(
+                initial={
+                    'next': get_next_url(request),
+                    'username': request.user.username,
+                    'email': request.user.email
+                }
+            )
+    email_feeds_form = askbot_forms.SimpleEmailSubscribeForm()
+
+    if request.method == 'POST':
+        register_form = forms.OpenidRegisterForm(request.POST)
+        email_feeds_form = askbot_forms.SimpleEmailSubscribeForm(request.POST)
+        if register_form.is_valid() and email_feeds_form.is_valid():
+
+            email_feeds_form.save(request.user)
+
+            request.user.username = register_form.cleaned_data['username']
+            request.user.email = register_form.cleaned_data['email']
+            request.user.save()
+
+            if askbot_settings.EMAIL_VALIDATION == True:
+                logging.debug('sending email validation')
+                send_new_email_key(request.user, nomessage=True)
+                output = validation_email_sent(request)
+                set_email_validation_message(request.user) #message set after generating view
+                return output
+
+            logging.debug('success, send user to main page')
+            return HttpResponseRedirect(get_next_url(request))
+    
+    logging.debug('printing authopenid/complete.html output')
+    data = {
+        'openid_register_form': register_form,
+        'email_feeds_form': email_feeds_form,
+    }
+    return render_into_skin('authopenid/complete.html', data, request)
+
 
 @not_authenticated
 @csrf.csrf_protect
