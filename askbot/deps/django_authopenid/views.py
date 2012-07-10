@@ -313,6 +313,10 @@ def signin(request):
                     username = login_form.cleaned_data['username']
                     password = login_form.cleaned_data['password']
                     # will be None if authentication fails
+
+                    #todo: since django 1.2 there is .exists()
+                    user_is_old = (User.objects.filter(username = username).count() > 0)
+
                     user = authenticate(
                                     username=username,
                                     password=password,
@@ -320,7 +324,16 @@ def signin(request):
                                 )
                     if user is not None:
                         login(request, user)
-                        return HttpResponseRedirect(next_url)
+                        if user_is_old:
+                            return HttpResponseRedirect(next_url)
+                        else:
+                            return finalize_generic_signin(
+                                            request = request,
+                                            user = user,
+                                            user_identifier = username,#is this right?
+                                            login_provider_name = provider_name,
+                                            redirect_url = next_url
+                                        )
                     else:
                         request.user.message_set.create(_('Incorrect user name or password'))
                         return HttpResponseRedirect(request.path)
