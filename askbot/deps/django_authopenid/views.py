@@ -774,7 +774,7 @@ def verify_user_information(request):
     """
     register_form = forms.OpenidRegisterForm(
                 initial={
-                    'next': get_next_url(request),
+                    'next': reverse('index'),
                     'username': request.user.username,
                     'email': request.user.email
                 }
@@ -800,12 +800,13 @@ def verify_user_information(request):
                 return output
 
             logging.debug('success, send user to main page')
-            return HttpResponseRedirect(get_next_url(request))
+            return HttpResponseRedirect(reverse('index'))
     
     logging.debug('printing authopenid/complete.html output')
     data = {
         'openid_register_form': register_form,
         'email_feeds_form': email_feeds_form,
+        'default_form_action': request.path #post to this view
     }
     return render_into_skin('authopenid/complete.html', data, request)
 
@@ -939,6 +940,7 @@ def register(request, login_provider_name=None, user_identifier=None):
     data = {
         'openid_register_form': register_form,
         'email_feeds_form': email_feeds_form,
+        'default_form_action': settings.LOGIN_URL,
         'provider':mark_safe(provider_logo),
         'username': username,
         'email': email,

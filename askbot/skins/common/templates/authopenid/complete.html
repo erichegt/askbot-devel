@@ -34,7 +34,7 @@ parameters:
         {% elif login_type=='facebook' %}
         <form name="fregister" action="" method="POST">{% csrf_token %}
         {% else %}
-        <form name="fregister" action="{{ settings.LOGIN_URL }}" method="POST">{% csrf_token %}
+        <form name="fregister" action="{{ default_form_action }}" method="POST">{% csrf_token %}
         {% endif %}
             {{ openid_register_form.next }}
             <div class="form-row-vertical">
