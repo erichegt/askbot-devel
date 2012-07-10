@@ -20,7 +20,8 @@ BAD_STUFF = "<script>alert('hohoho')</script>"
 USERNAME_TEMPLATE = BAD_STUFF + "test_user_%s"
 PASSWORD_TEMPLATE = "test_password_%s"
 EMAIL_TEMPLATE = "test_user_%s@askbot.org"
-TITLE_TEMPLATE = "Test question title No.%s" + BAD_STUFF
+TITLE_TEMPLATE = "Question No.%s" + BAD_STUFF
+LONG_TITLE_TEMPLATE = TITLE_TEMPLATE + 'a lot more text a lot more text a lot more text '*5
 TAGS_TEMPLATE = [BAD_STUFF + "tag-%s-0", BAD_STUFF + "tag-%s-1"] # len(TAGS_TEMPLATE) tags per question
 
 CONTENT_TEMPLATE = BAD_STUFF + """Lorem lean startup ipsum product market fit customer
@@ -99,11 +100,18 @@ class Command(NoArgsCommand):
             tags = " ".join([t%user.id for t in TAGS_TEMPLATE])
             if i < NUM_QUESTIONS/2:
                 tags += ' one-tag'
+
+            if i % 2 == 0:
+                question_template = TITLE_TEMPLATE
+            else:
+                question_template = LONG_TITLE_TEMPLATE
+
             active_question = user.post_question(
-                        title = TITLE_TEMPLATE % user.id,
+                        title = question_template % user.id,
                         body_text = CONTENT_TEMPLATE,
                         tags = tags,
                     )
+
             self.print_if_verbose("Created Question '%s' with tags: '%s'" % (
                                                 active_question.thread.title, tags,)
                                             )
