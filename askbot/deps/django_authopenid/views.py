@@ -765,7 +765,7 @@ def finalize_generic_signin(
             return HttpResponseRedirect(redirect_url)
 
 @login_required
-@csrf.protect
+@csrf.csrf_protect
 def verify_user_information(request):
     """this view collects the same information from
     user ase :func:`register`, but requires that user is
