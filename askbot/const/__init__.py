@@ -301,11 +301,17 @@ POST_STATUS = {
 INCLUDE_ALL = 0
 EXCLUDE_IGNORED = 1
 INCLUDE_INTERESTING = 2
-TAG_DISPLAY_FILTER_STRATEGY_CHOICES = (
+INCLUDE_SUBSCRIBED = 3
+TAG_DISPLAY_FILTER_STRATEGY_MINIMAL_CHOICES = (
     (INCLUDE_ALL, _('show all tags')),
     (EXCLUDE_IGNORED, _('exclude ignored tags')),
-    (INCLUDE_INTERESTING, _('only interesting tags')),
+    (INCLUDE_INTERESTING, _('only interesting tags'))
 )
+TAG_DISPLAY_FILTER_STRATEGY_CHOICES = \
+    TAG_DISPLAY_FILTER_STRATEGY_MINIMAL_CHOICES + \
+    ((INCLUDE_SUBSCRIBED, _('only subscribed tags')),)
+
+
 TAG_EMAIL_FILTER_STRATEGY_CHOICES = (
     (INCLUDE_ALL, _('email for all tags')),
     (EXCLUDE_IGNORED, _('exclude ignored tags')),

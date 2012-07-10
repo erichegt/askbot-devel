@@ -12,6 +12,7 @@ from askbot.utils.forms import NextUrlField, UserNameField
 from askbot.mail import extract_first_email_address
 from recaptcha_works.fields import RecaptchaField
 from askbot.conf import settings as askbot_settings
+from askbot.conf import get_tag_display_filter_strategy_choices
 import logging
 
 def cleanup_dict(dictionary, key, empty_value):
@@ -1091,11 +1092,15 @@ class EditUserForm(forms.Form):
 
 class TagFilterSelectionForm(forms.ModelForm):
     email_tag_filter_strategy = forms.ChoiceField(
-        choices = const.TAG_DISPLAY_FILTER_STRATEGY_CHOICES,
         initial = const.EXCLUDE_IGNORED,
         label = _('Choose email tag filter'),
         widget = forms.RadioSelect
     )
+    def __init__(self, *args, **kwargs):
+        super(TagFilterSelectionForm, self).__init__(*args, **kwargs)
+        choices = get_tag_display_filter_strategy_choices()
+        self.fields['email_tag_filter_strategy'].choices = choices
+
     class Meta:
         model = User
         fields = ('email_tag_filter_strategy',)

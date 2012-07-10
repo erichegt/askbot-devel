@@ -309,6 +309,7 @@ var TippedInput = function(){
     WrappedElement.call(this);
     this._instruction = null;
     this._attrs = {};
+    //this._is_one_shot = false;//if true on starting typing effect is gone
 };
 inherits(TippedInput, WrappedElement);
 
@@ -316,6 +317,10 @@ TippedInput.prototype.reset = function(){
     $(this._element).val(this._instruction);
     $(this._element).addClass('blank');
 };
+
+/*TippedInput.prototype.setIsOneShot = function(boolValue) {
+    this._is_one_shot = boolValue;
+};*/
 
 TippedInput.prototype.setInstruction = function(text) {
     this._instruction = text;

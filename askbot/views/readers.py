@@ -30,6 +30,7 @@ import askbot
 from askbot import exceptions
 from askbot.utils.diff import textDiff as htmldiff
 from askbot.forms import AnswerForm, ShowQuestionForm
+from askbot import conf
 from askbot import models
 from askbot import schedules
 from askbot.models.tag import Tag
@@ -39,7 +40,6 @@ from askbot.utils.html import sanitize_html
 from askbot.utils.decorators import anonymous_forbidden, ajax_only, get_only
 from askbot.search.state_manager import SearchState, DummySearchState
 from askbot.templatetags import extra_tags
-import askbot.conf
 from askbot.conf import settings as askbot_settings
 from askbot.skins.loaders import render_into_skin, get_template #jinja2 template loading enviroment
 from askbot.views import context
@@ -212,14 +212,14 @@ def questions(request, **kwargs):
             'questions_count' : paginator.count,
             'reset_method_count': reset_method_count,
             'scope': search_state.scope,
-            'show_sort_by_relevance': askbot.conf.should_show_sort_by_relevance(),
+            'show_sort_by_relevance': conf.should_show_sort_by_relevance(),
             'search_tags' : search_state.tags,
             'sort': search_state.sort,
             'tab_id' : search_state.sort,
             'tags' : related_tags,
             'tag_list_type' : tag_list_type,
             'font_size' : extra_tags.get_tag_font_size(related_tags),
-            'display_tag_filter_strategy_choices': const.TAG_DISPLAY_FILTER_STRATEGY_CHOICES,
+            'display_tag_filter_strategy_choices': conf.get_tag_display_filter_strategy_choices(),
             'email_tag_filter_strategy_choices': const.TAG_EMAIL_FILTER_STRATEGY_CHOICES,
             'update_avatar_data': schedules.should_update_avatar_data(request),
             'query_string': search_state.query_string(),

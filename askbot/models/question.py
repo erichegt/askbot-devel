@@ -299,11 +299,13 @@ class ThreadManager(BaseQuerySetManager):
                 user_selections__user = request_user,
                 user_selections__reason = 'bad'
             )
+            subscribed_tags = Tag.objects.none()
             if askbot_settings.SUBSCRIBED_TAG_SELECTOR_ENABLED:
-                meta_data['subscribed_tag_names'] = Tag.objects.filter(
+                subscribed_tags = Tag.objects.filter(
                     user_selections__user = request_user,
                     user_selections__reason = 'subscribed'
-                ).values_list('name', flat = True)
+                )
+                meta_data['subscribed_tag_names'] = [tag.name for tag in subscribed_tags]
 
             meta_data['interesting_tag_names'] = [tag.name for tag in interesting_tags]
             meta_data['ignored_tag_names'] = [tag.name for tag in ignored_tags]
@@ -325,6 +327,10 @@ class ThreadManager(BaseQuerySetManager):
                     ignored_wildcards = request_user.ignored_tags.split()
                     extra_ignored_tags = Tag.objects.get_by_wildcards(ignored_wildcards)
                     qs = qs.exclude(tags__in = extra_ignored_tags)
+
+            if request_user.display_tag_filter_strategy == const.INCLUDE_SUBSCRIBED \
+                and subscribed_tags:
+                qs = qs.filter(tags__in = subscribed_tags)
 
             if askbot_settings.USE_WILDCARD_TAGS:
                 meta_data['interesting_tag_names'].extend(request_user.interesting_tags.split())
