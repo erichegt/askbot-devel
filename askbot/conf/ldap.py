@@ -19,6 +19,20 @@ settings.register(
     )
 )
 
+settings.register(
+    livesettings.BooleanValue(
+        LDAP_SETTINGS,
+        'LDAP_AUTOCREATE_USERS',
+        description = _('Automatically create user accounts when possible'),
+        default = False,
+        help_text = _(
+            'Potentially reduces number of steps in the registration process '
+            'but can expose personal information, e.g. when LDAP login name is '
+            'the same as email address or real name.'
+        )
+    )
+)
+
 LDAP_PROTOCOL_VERSION_CHOICES = (
     ('3', _('Version 3')),
     ('2', _('Version 2 (insecure and deprecated)!!!'))

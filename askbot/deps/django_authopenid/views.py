@@ -48,6 +48,8 @@ from django.utils.safestring import mark_safe
 from django.core.mail import send_mail
 from recaptcha_works.decorators import fix_recaptcha_remote_ip
 from askbot.skins.loaders import render_into_skin, get_template
+from askbot.deps.django_authopenid.ldap_auth import ldap_create_user
+from askbot.deps.django_authopenid.ldap_auth import ldap_authenticate
 from urlparse import urlparse
 
 from openid.consumer.consumer import Consumer, \
@@ -312,25 +314,39 @@ def signin(request):
                     assert(password_action == 'login')
                     username = login_form.cleaned_data['username']
                     password = login_form.cleaned_data['password']
-                    # will be None if authentication fails
 
-                    #todo: since django 1.2 there is .exists()
-                    user_is_old = (User.objects.filter(username = username).count() > 0)
                     user = authenticate(
                                     username=username,
                                     password=password,
                                     method = 'ldap'
                                 )
-                    if user is not None:
-                        login(request, user)
-                        if user_is_old:
-                            return HttpResponseRedirect(next_url)
-                        else:
-                            return HttpResponseRedirect(reverse('verify_user_information'))
 
+                    if user:
+                        login(request, user)
+                        return HttpResponseRedirect(next_url)
                     else:
-                        request.user.message_set.create(_('Incorrect user name or password'))
-                        return HttpResponseRedirect(request.path)
+                        #try to login again via LDAP
+                        user_info = ldap_authenticate(username, password)
+                        if user_info:
+                            if askbot_settings.LDAP_AUTOCREATE_USERS:
+                                #create new user or 
+                                user = ldap_create_user(user_info).user
+                                login(request, user)
+                                return HttpResponseRedirect(next_url)
+                            else:
+                                #continue with proper registration
+                                ldap_username = user_info['ldap_username']
+                                return finalize_generic_signin(
+                                    request,
+                                    login_provider_name = 'ldap', 
+                                    user_identifier = ldap_username + '@ldap',
+                                    redirect_url = next_url
+                                )
+                        else:
+                            request.user.message_set.create(
+                                _('Incorrect user name or password')
+                            )
+                            return HttpResponseRedirect(request.path)
                 else:
                     if password_action == 'login':
                         user = authenticate(
@@ -747,22 +763,21 @@ def finalize_generic_signin(
                     {'provider': login_provider_name}
             request.user.message_set.create(message = msg)
             return HttpResponseRedirect(redirect_url)
+    elif user:
+        #login branch
+        login(request, user)
+        logging.debug('login success')
+        return HttpResponseRedirect(redirect_url)
     else:
-        if user is None:
-            #need to register
-            request.method = 'GET'#this is not a good thing to do
-            #but necessary at the moment to reuse the register()
-            #method
-            return register(
-                        request,
-                        login_provider_name=login_provider_name,
-                        user_identifier=user_identifier
-                    )
-        else:
-            #login branch
-            login(request, user)
-            logging.debug('login success')
-            return HttpResponseRedirect(redirect_url)
+        #need to register
+        request.method = 'GET'#this is not a good thing to do
+        #but necessary at the moment to reuse the register()
+        #method
+        return register(
+                    request,
+                    login_provider_name=login_provider_name,
+                    user_identifier=user_identifier
+                )
 
 @login_required
 @csrf.csrf_protect
@@ -819,6 +834,9 @@ def register(request, login_provider_name=None, user_identifier=None):
     or as a simple function call from "finalize_generic_signin"
     in which case request.method must ge 'GET'
     and login_provider_name and user_identifier arguments must not be None
+
+    user_identifier will be stored in the UserAssociation as openid_url
+    login_provider_name - as provider_name
 
     this function may need to be refactored to simplify the usage pattern
     

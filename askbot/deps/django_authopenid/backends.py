@@ -10,170 +10,12 @@ from django.conf import settings as django_settings
 from django.utils.translation import ugettext as _
 from askbot.deps.django_authopenid.models import UserAssociation
 from askbot.deps.django_authopenid import util
+from askbot.deps.django_authopenid.ldap_auth import ldap_authenticate
+from askbot.deps.django_authopenid.ldap_auth import ldap_create_user
 from askbot.conf import settings as askbot_settings
 from askbot.models.signals import user_registered
 
-log = logging.getLogger('configuration')
-
-def split_name(full_name, name_format):
-    bits = full_name.strip().split()
-    if len(bits) == 1:
-        bits.push('')
-    elif len(bits) == 0:
-        bits = ['', '']
-
-    if name_format == 'first,last':
-        return bits[0], bits[1]
-    elif name_format == 'last,first':
-        return bits[1], bits[0]
-    else:
-        raise ValueError('Unexpected value of name_format')
-
-
-def ldap_authenticate(username, password):
-    """
-    Authenticate using ldap
-    
-    python-ldap must be installed
-    http://pypi.python.org/pypi/python-ldap/2.4.6
-    """
-    import ldap
-    user_information = None
-    try:
-        ldap_session = ldap.initialize(askbot_settings.LDAP_URL)
-
-        #set protocol version
-        if askbot_settings.LDAP_PROTOCOL_VERSION == '2':
-            ldap_session.protocol_version = ldap.VERSION2
-        elif askbot_settings.LDAP_PROTOCOL_VERSION == '3':
-            ldap_session.protocol_version = ldap.VERSION3
-        else:
-            raise NotImplementedError('unsupported version of ldap protocol')
-
-        ldap.set_option(ldap.OPT_REFERRALS, 0)
-
-        #set extra ldap options, if given
-        if hasattr(django_settings, 'LDAP_EXTRA_OPTIONS'):
-            options = django_settings.LDAP_EXTRA_OPTIONS
-            for key, value in options:
-                if key.startswith('OPT_'):
-                    ldap_key = getattr(ldap, key)
-                    ldap.set_option(ldap_key, value)
-                else:
-                    raise ValueError('Invalid LDAP option %s' % key)
-
-        #add optional "master" LDAP authentication, if required
-        master_username = getattr(django_settings, 'LDAP_LOGIN_DN', None)
-        master_password = getattr(django_settings, 'LDAP_PASSWORD', None)
-
-        login_name_field = askbot_settings.LDAP_LOGIN_NAME_FIELD
-        base_dn = askbot_settings.LDAP_BASE_DN
-        login_template = login_name_field + '=%s,' + base_dn
-        encoding = askbot_settings.LDAP_ENCODING
-
-        if master_username and master_password:
-            ldap_session.simple_bind_s(
-                master_username.encode(encoding),
-                master_password.encode(encoding)
-            )
-
-        user_filter = askbot_settings.LDAP_USER_FILTER_TEMPLATE % (
-                        askbot_settings.LDAP_LOGIN_NAME_FIELD,
-                        username
-                    )
-
-        email_field = askbot_settings.LDAP_EMAIL_FIELD
-
-        get_attrs = [
-            email_field.encode(encoding),
-            login_name_field.encode(encoding)
-            #str(askbot_settings.LDAP_USERID_FIELD)
-            #todo: here we have a chance to get more data from LDAP
-            #maybe a point for some plugin
-        ]
-
-        common_name_field = askbot_settings.LDAP_COMMON_NAME_FIELD.strip()
-        given_name_field = askbot_settings.LDAP_GIVEN_NAME_FIELD.strip()
-        surname_field = askbot_settings.LDAP_SURNAME_FIELD.strip()
-
-        if given_name_field and surname_field:
-            get_attrs.append(given_name_field.encode(encoding))
-            get_attrs.append(surname_field.encode(encoding))
-        elif common_name_field:
-            get_attrs.append(common_name_field.encode(encoding))
-
-        # search ldap directory for user
-        user_search_result = ldap_session.search_s(
-            askbot_settings.LDAP_BASE_DN.encode(encoding),
-            ldap.SCOPE_SUBTREE,
-            user_filter.encode(encoding),
-            get_attrs 
-        )
-        if user_search_result: # User found in LDAP Directory
-            user_dn = user_search_result[0][0]
-            user_information = user_search_result[0][1]
-            ldap_session.simple_bind_s(user_dn, password.encode(encoding)) #raises INVALID_CREDENTIALS
-            ldap_session.unbind_s()
-            
-            exact_username = user_information[login_name_field][0]
-            email = user_information.get(email_field, [''])[0]
-
-            if given_name_field and surname_field:
-                last_name = user_information.get(surname_field, [''])[0]
-                first_name = user_information.get(given_name_field, [''])[0]
-            elif surname_field:
-                common_name_format = askbot_settings.LDAP_COMMON_NAME_FIELD_FORMAT
-                common_name = user_information.get(common_name_field, [''])[0]
-                first_name, last_name = split_name(common_name, common_name_format)
-            
-            #here we have an opportunity to copy password in the auth_user table
-            #but we don't do it for security reasons
-            try:
-                user = User.objects.get(username__exact=exact_username)
-                # always update user profile to synchronize with ldap server
-                user.set_unusable_password()
-                #user.first_name = first_name
-                #user.last_name = last_name
-                user.email = email
-                user.save()
-            except User.DoesNotExist:
-                # create new user in local db
-                user = User()
-                user.username = exact_username
-                user.set_unusable_password()
-                #user.first_name = first_name
-                #user.last_name = last_name
-                user.email = email
-                user.is_staff = False
-                user.is_superuser = False
-                user.is_active = True
-                user.save()
-                user_registered.send(None, user = user)
-
-                log.info('Created New User : [{0}]'.format(exact_username))
-            return user
-        else:
-            # Maybe a user created internally (django admin user)
-            try:
-                user = User.objects.get(username__exact=username)
-                if user.check_password(password):
-                    return user
-                else:
-                    return None
-            except User.DoesNotExist:
-                return None 
-
-    except ldap.INVALID_CREDENTIALS, e:
-        return None # Will fail login on return of None
-    except ldap.LDAPError, e:
-        log.error("LDAPError Exception")
-        log.exception(e)
-        return None
-    except Exception, e:
-        log.error("Unexpected Exception Occurred")
-        log.exception(e)
-        return None
-
+LOG = logging.getLogger(__name__)
 
 class AuthBackend(object):
     """Authenticator's authentication backend class
@@ -183,6 +25,8 @@ class AuthBackend(object):
     the reason there is only one class - for simplicity of
     adding this application to a django project - users only need
     to extend the AUTHENTICATION_BACKENDS with a single line
+
+    todo: it is not good to have one giant do all 'authenticate' function
     """
 
     def authenticate(
@@ -222,7 +66,7 @@ class AuthBackend(object):
                     except User.DoesNotExist:
                         return None
                     except User.MultipleObjectsReturned:
-                        logging.critical(
+                        LOG.critical(
                             ('have more than one user with email %s ' +
                             'he/she will not be able to authenticate with ' +
                             'the email address in the place of user name') % email_address
@@ -323,7 +167,34 @@ class AuthBackend(object):
                 return None
 
         elif method == 'ldap':
-            user = ldap_authenticate(username, password)
+            user_info = ldap_authenticate(username, password)
+            if user_info is None:
+                # Maybe a user created internally (django admin user)
+                try:
+                    user = User.objects.get(username__exact=username)
+                    if user.check_password(password):
+                        return user
+                    else:
+                        return None
+                except User.DoesNotExist:
+                    return None 
+            else:
+                #load user by association or maybe auto-create one
+                ldap_username = user_info['ldap_username']
+                try:
+                    #todo: provider_name is hardcoded - possible conflict
+                    assoc = UserAssociation.objects.get(
+                                            openid_url = ldap_username + '@ldap',
+                                            provider_name = 'ldap'
+                                        )
+                    user = assoc.user
+                except UserAssociation.DoesNotExist:
+                    #email address is required
+                    if 'email' in user_info and askbot_settings.LDAP_AUTOCREATE_USERS:
+                        assoc = ldap_create_user(user_info)
+                        user = assoc.user
+                    else:
+                        return None
 
         elif method == 'wordpress_site':
             try:
