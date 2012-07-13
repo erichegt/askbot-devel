@@ -336,6 +336,12 @@ def signin(request):
                             else:
                                 #continue with proper registration
                                 ldap_username = user_info['ldap_username']
+                                request.session['username'] = ldap_username
+                                request.session['email'] = user_info['email']
+                                request.session['first_name'] = \
+                                    user_info['first_name']
+                                request.session['last_name'] = \
+                                    user_info['last_name']
                                 return finalize_generic_signin(
                                     request,
                                     login_provider_name = 'ldap', 
@@ -894,7 +900,14 @@ def register(request, login_provider_name=None, user_identifier=None):
             username = register_form.cleaned_data['username']
             email = register_form.cleaned_data['email']
 
-            user = User.objects.create_user(username, email)
+            user = User()
+            user.username = username
+            user.email = email
+            #todo - maybe hide these names per some option
+            #user.first_name = request.session.get('first_name', '')
+            #user.last_name = request.session.get('last_name', '')
+            user.save()
+
             user_registered.send(None, user = user)
             
             logging.debug('creating new openid user association for %s')

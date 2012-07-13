@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.forms import EmailField
 from askbot.conf import settings as askbot_settings
 from askbot.models.signals import user_registered
+from askbot.deps.django_authopenid.models import UserAssociation
 
 LOG = logging.getLogger(__name__)
 
@@ -167,7 +168,7 @@ def ldap_create_user(user_info):
     user.is_active = True
     user.save()
     user_registered.send(None, user = user)
-    LOG.info('Created New User : [{0}]'.format(exact_username))
+    LOG.info('Created New User : [{0}]'.format(user_info['ldap_username']))
 
     assoc = UserAssociation()
     assoc.user = user
