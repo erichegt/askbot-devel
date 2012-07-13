@@ -9,6 +9,8 @@ from askbot.deps.django_authopenid.models import UserAssociation
 LOG = logging.getLogger(__name__)
 
 def split_name(full_name, name_format):
+    """splits full name into first and last,
+    according to the order given in the name_format parameter"""
     bits = full_name.strip().split()
     if len(bits) == 1:
         bits.push('')
@@ -25,7 +27,10 @@ def split_name(full_name, name_format):
 
 def ldap_authenticate(username, password):
     """
-    Authenticate using ldap
+    Authenticate using ldap.
+    LDAP parameter setup is described in
+    askbot/doc/source/optional-modules.rst
+    See section about LDAP.
 
     returns a dict with keys:
 

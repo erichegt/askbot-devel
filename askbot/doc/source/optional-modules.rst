@@ -96,7 +96,11 @@ section "LDAP settings"
 
 The parameters are (note that some have pre-set defaults that might work for you)::
 
-* enable/disable LDAP for password login
+* in Login Provider Settings select "enable local login"
+  - this makes login/password form available
+* enable/disable LDAP for password login -
+  must check that, to connect the login/password form to LDAP flow
+* create accounts automatically or not (``LDAP_AUTOCREATE_USERS``)
 * protocol version (``LDAP_PROTOCOL_VERSION``) (version 2 is insecure and deprecated)
 * ldap url (``LDAP_URL``)
 * base distinguished name, 'dn' in LDAP parlance (``LDAP_BASEDN``)
