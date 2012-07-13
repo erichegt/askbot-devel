@@ -4,7 +4,7 @@
 <h1 class='section-title'>{% trans %}Help{% endtrans %}</h1>
 <p>
     {% if request.user.is_authenticated() %}
-        {% trans username = request.user.username %}Welcome {{username}},{% endtrans %}
+        {% trans username = request.user.username|escape %}Welcome {{username}},{% endtrans %}
     {% else %}
         {% trans %}Welcome,{% endtrans %}
     {% endif %}

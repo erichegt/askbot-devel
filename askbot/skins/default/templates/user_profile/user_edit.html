@@ -4,7 +4,7 @@
 {% block title %}{% spaceless %}{% trans %}Edit user profile{% endtrans %}{% endspaceless %}{% endblock %}
 {% block content %}
 <h1 class="section-title">
-    {{ request.user.username }} - {% trans %}edit profile{% endtrans %}
+    {{ request.user.username|escape }} - {% trans %}edit profile{% endtrans %}
 </h1>
 <div id="main-body" style="width:100%;padding-top:10px">
     <form name="" action="{% url edit_user request.user.id %}" method="post">{% csrf_token %}
@@ -42,7 +42,7 @@
                     {{ form.username }}
                     <span class="form-error"> {{ form.username.errors }} </span></td>
                 {% else %}
-                    {{ view_user.username }}
+                    {{ view_user.username|escape }}
                 {% endif %}
                 </td>
                 </tr>
@@ -96,6 +96,14 @@
                     <td style="vertical-align:top">{{ form.about.label_tag() }}:</td>
                     <td>{{ form.about }} <span class="form-error"> {{ form.about.errors }} </span></td>
                 </tr>
+                {% if marked_tags_setting == 'when-user-wants' %}
+                <tr>
+                    <td>{{ form.show_marked_tags.label_tag() }}:</td>
+                    <td>{{ form.show_marked_tags }}
+                        <span class="form-error">{{ form.show_marked_tags.errors }}</span>
+                    </td>
+                </tr>
+                {% endif %}
             </table>
             <div style="margin:30px 0 60px 0">
                 <input type="submit" value="{% trans %}Update{% endtrans %}" class="submit" >&nbsp;

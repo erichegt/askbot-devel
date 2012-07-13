@@ -21,15 +21,75 @@ import sys
 import traceback
 
 from django.contrib.contenttypes.models import ContentType
+from django.template import Context
+from django.utils.translation import ugettext as _
 from celery.decorators import task
 from askbot.conf import settings as askbot_settings
-from askbot.models import Activity, Post, Thread, User
+from askbot import const
+from askbot import mail
+from askbot.models import Activity, Post, Thread, User, ReplyAddress
 from askbot.models import send_instant_notifications_about_activity_in_post
 from askbot.models.badges import award_badges_signal
 
 # TODO: Make exceptions raised inside record_post_update_celery_task() ...
 #       ... propagate upwards to test runner, if only CELERY_ALWAYS_EAGER = True
 #       (i.e. if Celery tasks are not deferred but executed straight away)
+
+@task(ignore_result = True)
+def notify_author_of_published_revision_celery_task(revision):
+    #todo: move this to ``askbot.mail`` module
+    #for answerable email only for now, because
+    #we don't yet have the template for the read-only notification
+    if askbot_settings.REPLY_BY_EMAIL:
+        #generate two reply codes (one for edit and one for addition)
+        #to format an answerable email or not answerable email
+        reply_options = {
+            'user': revision.author,
+            'post': revision.post,
+            'reply_action': 'append_content'
+        }
+        append_content_address = ReplyAddress.objects.create_new(
+                                                        **reply_options
+                                                    ).as_email_address()
+        reply_options['reply_action'] = 'replace_content'
+        replace_content_address = ReplyAddress.objects.create_new(
+                                                        **reply_options
+                                                    ).as_email_address()
+
+        #populate template context variables
+        reply_code = append_content_address + ',' + replace_content_address
+        if revision.post.post_type == 'question':
+            mailto_link_subject = revision.post.thread.title
+        else:
+            mailto_link_subject = _('An edit for my answer')
+        #todo: possibly add more mailto thread headers to organize messages
+
+        prompt = _('To add to your post EDIT ABOVE THIS LINE')
+        reply_separator_line = const.SIMPLE_REPLY_SEPARATOR_TEMPLATE % prompt
+        data = {
+            'site_name': askbot_settings.APP_SHORT_NAME,
+            'post': revision.post,
+            'author_email_signature': revision.author.email_signature,
+            'replace_content_address': replace_content_address,
+            'reply_separator_line': reply_separator_line,
+            'mailto_link_subject': mailto_link_subject,
+            'reply_code': reply_code
+        }
+
+        #load the template
+        from askbot.skins.loaders import get_template
+        template = get_template('email/notify_author_about_approved_post.html')
+        #todo: possibly add headers to organize messages in threads
+        headers = {'Reply-To': append_content_address}
+        #send the message
+        mail.send_mail(
+            subject_line = _('Your post at %(site_name)s is now published') % data,
+            body_text = template.render(Context(data)),
+            recipient_list = [revision.author.email,],
+            related_object = revision,
+            activity_type = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT,
+            headers = headers
+        )
 
 @task(ignore_result = True)
 def record_post_update_celery_task(
@@ -156,6 +216,7 @@ def record_post_update(
                             post = post,
                             recipients = notification_subscribers,
                         )
+
                         
 @task(ignore_result = True)
 def record_question_visit(

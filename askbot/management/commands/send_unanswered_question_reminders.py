@@ -3,7 +3,7 @@ from askbot import models
 from askbot import const
 from askbot.conf import settings as askbot_settings
 from django.utils.translation import ungettext
-from askbot.utils import mail
+from askbot import mail
 from askbot.utils.classes import ReminderSchedule
 from askbot.models.question import Thread
 

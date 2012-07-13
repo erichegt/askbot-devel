@@ -9,7 +9,7 @@
 {% block content %}
     <h1 class="section-title">
         {% spaceless %}
-        {% trans username=view_user.username %}{{username}}'s profile{% endtrans %} - {% block profilesection %}{% endblock %}
+        {% trans username=view_user.username|escape %}{{username}}'s profile{% endtrans %} - {% block profilesection %}{% endblock %}
         {% endspaceless %}
     </h1>
     {% include "user_profile/user_tabs.html" %}
@@ -21,7 +21,7 @@
 {% block endjs %}
     <script type="text/javascript">
         var viewUserID = {{view_user.id}};
-        askbot['data']['viewUserName'] = '{{ view_user.username }}';
+        askbot['data']['viewUserName'] = '{{ view_user.username|escape }}';
         askbot['data']['viewUserId'] = {{view_user.id}};
         askbot['urls']['edit_group_membership'] = '{% url edit_group_membership %}';
         askbot['urls']['get_groups_list'] = '{% url get_groups_list %}';
@@ -30,6 +30,8 @@
         <script type='text/javascript' src='{{"/js/jquery.form.js"|media}}'></script>
     {% endif %}
     <script type="text/javascript" src='{{"/js/user.js"|media}}'></script>
+    <script type='text/javascript' src='{{"/js/jquery.validate.min.js"|media}}'></script>
+    <script type="text/javascript" src='{{"/js/post.js"|media}}'></script>
     {% block userjs %}
     {% endblock %}
 {% endblock %}

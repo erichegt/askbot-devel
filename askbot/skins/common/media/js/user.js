@@ -644,13 +644,13 @@ UserGroup.prototype.decorate = function(element){
     this._name = $.trim(element.find('a').html());
     var deleter = new DeleteIcon();
     deleter.setHandler(this.getDeleteHandler());
-    deleter.setContent('x');
-    this._element.find('.group-name').append(deleter.getElement());
+    deleter.setContent(gettext('Remove'));
+    this._element.find('td:last').append(deleter.getElement());
     this._delete_icon = deleter;
 };
 
 UserGroup.prototype.createDom = function(){
-    var element = this.makeElement('li');
+    var element = this.makeElement('tr');
     element.html(this._content);
     this._element = element;
     this.decorate(element);
@@ -675,7 +675,7 @@ GroupsContainer.prototype.decorate = function(element){
     var group_names = [];
     var me = this;
     //collect list of groups
-    $.each(element.find('li'), function(idx, li){
+    $.each(element.find('tr'), function(idx, li){
         var group = new UserGroup();
         group.setGroupsContainer(me);
         group.decorate($(li));
@@ -829,21 +829,25 @@ UserGroupsEditor.prototype.decorate = function(element){
     adder.decorate(add_link);
 
     var groups_container = new GroupsContainer();
-    groups_container.decorate(element.find('ul'));
+    groups_container.decorate(element.find('#groups-list'));
     adder.setGroupsContainer(groups_container);
     //todo - add group deleters
 };
 
 (function(){
-    var fbtn = $('.follow-toggle');
+    var fbtn = $('.follow-user-toggle');
     if (fbtn.length === 1){
         var follow_user = new FollowUser();
         follow_user.decorate(fbtn);
         follow_user.setUserName(askbot['data']['viewUserName']);
     }
-    if (askbot['data']['userIsAdminOrMod']){
-        var group_editor = new UserGroupsEditor();
-        group_editor.decorate($('#user-groups'));
+    if (askbot['data']['userId'] !== askbot['data']['viewUserId']) {
+        if (askbot['data']['userIsAdminOrMod']){
+            var group_editor = new UserGroupsEditor();
+            group_editor.decorate($('#user-groups'));
+        } else {
+            $('#add-group').remove();
+        }
     } else {
         $('#add-group').remove();
     }

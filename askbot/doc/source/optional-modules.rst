@@ -226,7 +226,7 @@ The minimum settings required to enable this feature are defining the port and b
 
     LAMSON_RECEIVER_CONFIG = {'host': 'your.ip.address', 'port': 25}
     
-    LAMSON_HANDLERS = ['askbot.lamson_handlers']
+    LAMSON_HANDLERS = ['askbot.mail.lamson_handlers']
     
     LAMSON_ROUTER_DEFAULTS = {'host': '.+'}
 

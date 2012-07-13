@@ -1159,6 +1159,10 @@ ul.tags.marked-tags li,
 ul#ab-user-tags li {
     width: 160px;
     margin:5px;
+    margin-left: 0;
+}
+.tags-page ul.tags {
+    margin-left: 5px;
 }
 
 ul#related-tags li {
@@ -1215,7 +1219,9 @@ ul#related-tags li {
     color: #1A1A1A;
 }
 
-.users-page h1, .tags-page h1 {
+.users-page h1,
+.tags-page h1,
+.groups-page h1 {
     float: left;
 }
 
@@ -1727,7 +1733,10 @@ ul#related-tags li {
     }
 
     #fmanswer_button{
-        margin:8px 0px ;
+        margin:8px 0px;
+    }
+    #fmanswer_button.answer-own-question {
+        width: 150px;
     }
     .question-img-favorite:hover {
         background: url(../images/vote-favorite-on.png)
@@ -1960,8 +1969,8 @@ ul#related-tags li {
         float: left;
         text-align: center;
         padding-top: 2px;
-        margin:10px 10px 0px 3px;
-        /* smalls IE fixes */
+        margin:0px 10px 0px 3px;
+        /* small IE fixes */
         *margin:0; 
         *height:210px;
         *width:30px;
@@ -3162,6 +3171,11 @@ ul.post-tags li {
 ul.post-retag {
     margin-bottom:0px;
     margin-left:5px;
+    input {
+        width: 400px;
+        height: 1.5em;
+        margin: 3px 0 0 -3px;
+    }
 }
 
 #question-controls .tags {
@@ -3283,19 +3297,26 @@ p.signup_p {
 .avatar-page li {
     display: inline;
 }
-.user-profile-page .avatar p {
-    margin-bottom: 0px;
+
+.user-profile-page {
+    .avatar p {
+        margin-bottom: 0px;
+    }
+    .tabBar a#stats {
+        margin-left: 0;
+    }
+    img.gravatar {
+        margin: 2px 0 3px 0;
+    }
+    h3 {
+        padding: 0;
+        margin-top: -3px;
+    }
+    ul.tags {
+        margin-left: 5px;
+    }
 }
-.user-profile-page .tabBar a#stats {
-    margin-left: 0;
-}
-.user-profile-page img.gravatar {
-    margin: 2px 0 3px 0;
-}
-.user-profile-page h3 {
-    padding: 0;
-    margin-top: -3px;
-}
+
 .userList {
     font-size: 13px;
 }
@@ -3424,18 +3445,13 @@ img.group-logo {
 
 #groups-list {
     margin-left: 0px;
-    li {
-        display: inline;
-        list-style-type: none;
-        list-style-position: inside;
-        float: left;
-        text-align: center;
+    .group-name {
+        padding-right: 20px;
     }
-    .group-logo, .group-name {
-        display: block;
+    td {
+        padding-bottom: 5px;
     }
 }
-
 
 #reject-edit-modal {
     input, textarea {

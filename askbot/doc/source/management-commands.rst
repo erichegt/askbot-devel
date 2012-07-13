@@ -104,6 +104,14 @@ Any configurable options, related to these commands are accessible via "Email" s
 +-------------------------------------+-------------------------------------------------------------+
 | command                             | purpose                                                     |
 +=====================================+=============================================================+
+| `send_respondable_welcome_email`    | Will send a respondable welcome email to **all** registered |
+|                                     | users whose email address was not validated.                |
+|                                     | This feature requires "reply by email" enabled and "lamson" |
+|                                     | email processor installed on the system.                    |
+|                                     | The email will be respondable. When the user responds,      |
+|                                     | askbot will validate the email and capture the signature in |
+|                                     | the end of the message.                                     |
++-------------------------------------+-------------------------------------------------------------+
 | `send_email_alerts`                 | Dispatches email alerts to the users according to           |
 |                                     | their subscription settings. This command does not          |
 |                                     | send instant" alerts because those are sent automatically   |
@@ -187,5 +195,5 @@ the developers of the Askbot project:
 +--------------------------------+-------------------------------------------------------------+
 | `askbot_add_test_content`      | Creates content with dummy data for testing                 |
 +--------------------------------+-------------------------------------------------------------+
-| `askbot_create_test_fixture`   | Creates a test fixture at `askbot/tests/test_data.json`  |
+| `askbot_create_test_fixture`   | Creates a test fixture at `askbot/tests/test_data.json`     |
 +--------------------------------+-------------------------------------------------------------+

@@ -332,6 +332,11 @@ class Post(models.Model):
     #the reason is that the title and tags belong to thread,
     #but the question body to Post
     is_anonymous = models.BooleanField(default=False)
+    #When is_private == True
+    #the post is visible only to the some privileged users.
+    #The privilege may be defined through groups to which
+    #the thread belongs or in some other way.
+    is_private = models.BooleanField(default=False)
 
     objects = PostManager()
 
@@ -340,7 +345,7 @@ class Post(models.Model):
         db_table = 'askbot_post'
 
 
-    def parse_post_text(post):
+    def parse_post_text(self):
         """typically post has a field to store raw source text
         in comment it is called .comment, in Question and Answer it is
         called .text
@@ -356,18 +361,18 @@ class Post(models.Model):
         removed_mentions - list of mention <Activity> objects - for removed ones
         """
 
-        if post.post_type in ('question', 'answer', 'tag_wiki', 'reject_reason'):
+        if self.post_type in ('question', 'answer', 'tag_wiki', 'reject_reason'):
             _urlize = False
             _use_markdown = True
             _escape_html = False #markdow does the escaping
-        elif post.is_comment():
+        elif self.is_comment():
             _urlize = True
             _use_markdown = True
             _escape_html = True
         else:
             raise NotImplementedError
 
-        text = post.text
+        text = self.text
 
         if _escape_html:
             text = cgi.escape(text)
@@ -379,12 +384,12 @@ class Post(models.Model):
             text = sanitize_html(markup.get_parser().convert(text))
 
         #todo, add markdown parser call conditional on
-        #post.use_markdown flag
+        #self.use_markdown flag
         post_html = text
         mentioned_authors = list()
         removed_mentions = list()
         if '@' in text:
-            op = post.get_origin_post()
+            op = self.get_origin_post()
             anticipated_authors = op.get_author_list(
                 include_comments = True,
                 recursive = True
@@ -394,9 +399,8 @@ class Post(models.Model):
 
             extra_authors = set()
             for name_seed in extra_name_seeds:
-                extra_authors.update(User.objects.filter(
-                    username__istartswith = name_seed
-                )
+                extra_authors.update(
+                    User.objects.filter(username__istartswith = name_seed)
                 )
 
             #it is important to preserve order here so that authors of post
@@ -411,10 +415,10 @@ class Post(models.Model):
             #find mentions that were removed and identify any previously
             #entered mentions so that we can send alerts on only new ones
             from askbot.models.user import Activity
-            if post.pk is not None:
+            if self.pk is not None:
                 #only look for previous mentions if post was already saved before
                 prev_mention_qs = Activity.objects.get_mentions(
-                    mentioned_in = post
+                    mentioned_in = self
                 )
                 new_set = set(mentioned_authors)
                 for prev_mention in prev_mention_qs:
@@ -437,51 +441,54 @@ class Post(models.Model):
         return data
 
     #todo: when models are merged, it would be great to remove author parameter
-    def parse_and_save_post(post, author = None, **kwargs):
+    def parse_and_save(self, author = None, **kwargs):
         """generic method to use with posts to be used prior to saving
         post edit or addition
         """
 
         assert(author is not None)
 
-        last_revision = post.html
-        data = post.parse()
+        last_revision = self.html
+        data = self.parse_post_text()
 
-        post.html = data['html']
+        self.html = data['html']
         newly_mentioned_users = set(data['newly_mentioned_users']) - set([author])
         removed_mentions = data['removed_mentions']
 
         #a hack allowing to save denormalized .summary field for questions
-        if hasattr(post, 'summary'):
-            post.summary = post.get_snippet()
+        if hasattr(self, 'summary'):
+            self.summary = self.get_snippet()
 
         #delete removed mentions
         for rm in removed_mentions:
             rm.delete()
 
-        created = post.pk is None
+        created = self.pk is None
 
         #this save must precede saving the mention activity
         #because generic relation needs primary key of the related object
-        super(post.__class__, post).save(**kwargs)
+        super(self.__class__, self).save(**kwargs)
         if last_revision:
-            diff = htmldiff(last_revision, post.html)
+            diff = htmldiff(
+                        sanitize_html(last_revision),
+                        sanitize_html(self.html)
+                    )
         else:
-            diff = post.get_snippet()
+            diff = sanitize_html(self.get_snippet())
 
-        timestamp = post.get_time_of_last_edit()
+        timestamp = self.get_time_of_last_edit()
 
         #todo: this is handled in signal because models for posts
         #are too spread out
         from askbot.models import signals
         signals.post_updated.send(
-            post = post,
+            post = self,
             updated_by = author,
             newly_mentioned_users = newly_mentioned_users,
             timestamp = timestamp,
             created = created,
             diff = diff,
-            sender = post.__class__
+            sender = self.__class__
         )
 
         try:
@@ -490,13 +497,6 @@ class Post(models.Model):
                 ping_google()
         except Exception:
             logging.debug('cannot ping google - did you register with them?')
-
-    ######################################
-    # TODO: Rename the methods above instead of doing this assignment
-    parse = parse_post_text
-    parse_and_save = parse_and_save_post
-    ######################################
-
 
     def is_question(self):
         return self.post_type == 'question'
@@ -606,40 +606,26 @@ class Post(models.Model):
         """
         return html_utils.strip_tags(self.html)[:max_length] + ' ...'
 
-    def format_tags_for_email(self):
-        """formats tags of the question post for email"""
-        tag_style = "white-space: nowrap; " \
-                    + "font-size: 11px; color: #333;" \
-                    + "background-color: #EEE;" \
-                    + "border-left: 3px solid #777;" \
-                    + "border-top: 1px solid #EEE;" \
-                    + "border-bottom: 1px solid #CCC;" \
-                    + "border-right: 1px solid #CCC;" \
-                    + "padding: 1px 8px 1px 8px;" \
-                    + "margin-right:3px;"
-        output = '<div>'
-        for tag_name in self.get_tag_names():
-            output += '<span style="%s">%s</span>' % (tag_style, tag_name)
-        output += '</div>'
-        return output
-
-    def format_for_email(self, quote_level = 0):
+    def format_for_email(
+        self, quote_level = 0, is_leaf_post = False, format = None
+    ):
         """format post for the output in email,
         if quote_level > 0, the post will be indented that number of times
+        todo: move to views?
         """
-        from askbot.templatetags.extra_filters_jinja import absolutize_urls_func
-        output = ''
-        if self.post_type == 'question':
-            output += '<b>%s</b><br/>' % self.thread.title
-            
-        output += absolutize_urls_func(self.html)
-        if self.post_type == 'question':#add tags to the question
-            output += self.format_tags_for_email()
-        quote_style = 'padding-left:5px; border-left: 2px solid #aaa;'
-        while quote_level > 0:
-            quote_level = quote_level - 1
-            output = '<div style="%s">%s</div>' % (quote_style, output)
-        return output
+        from askbot.templatetags.extra_filters_jinja \
+            import absolutize_urls_func
+        from askbot.skins.loaders import get_template
+        from django.template import Context
+        template = get_template('email/quoted_post.html')
+        data = {
+            'post': self,
+            'quote_level': quote_level,
+            #'html': absolutize_urls_func(self.html),
+            'is_leaf_post': is_leaf_post,
+            'format': format
+        }
+        return template.render(Context(data))
 
     def format_for_email_as_parent_thread_summary(self):
         """format for email as summary of parent posts
@@ -652,47 +638,32 @@ class Post(models.Model):
             if parent_post is None:
                 break
             quote_level += 1
+            """
+            output += '<p>'
             output += _(
-                'In reply to %(user)s %(post)s of %(date)s<br/>'
+                'In reply to %(user)s %(post)s of %(date)s'
             ) % {
                 'user': parent_post.author.username,
                 'post': _(parent_post.post_type),
                 'date': parent_post.added_at.strftime(const.DATETIME_FORMAT)
             }
-            output += parent_post.format_for_email(quote_level = quote_level)
+            output += '</p>'
+            """
+            output += parent_post.format_for_email(
+                quote_level = quote_level,
+                format = 'parent_subthread'
+            )
             current_post = parent_post
         return output
-
-    def format_for_email_as_metadata(self):
-        output = _(
-            'Posted by %(user)s on %(date)s'
-        ) % {
-            'user': self.author.username,
-            'date': self.added_at.strftime(const.DATETIME_FORMAT)
-        }
-        return '<p>%s</p>' % output
 
     def format_for_email_as_subthread(self):
         """outputs question or answer and all it's comments
         returns empty string for all other post types
         """
-        if self.post_type in ('question', 'answer'):
-            output = self.format_for_email_as_metadata()
-            output += self.format_for_email()
-            comments = self.get_cached_comments()
-            if comments:
-                comments_heading = ungettext(
-                                    '%(count)d comment:',
-                                    '%(count)d comments:',
-                                    len(comments)
-                                ) % {'count': len(comments)}
-                output += '<p>%s</p>' % comments_heading
-                for comment in comments:
-                    output += comment.format_for_email_as_metadata()
-                    output += comment.format_for_email(quote_level = 1)
-            return output
-        else:
-            return ''
+        from askbot.skins.loaders import get_template
+        from django.template import Context
+        template = get_template('email/post_as_subthread.html')
+        return template.render(Context({'post': self}))
 
     def set_cached_comments(self, comments):
         """caches comments in the lifetime of the object
@@ -1050,10 +1021,7 @@ class Post(models.Model):
         return self.revisions.order_by('-revised_at')[0]
 
     def get_latest_revision_number(self):
-        if self.is_comment():
-            return 1
-        else:
-            return self.get_latest_revision().revision
+        return self.get_latest_revision().revision
 
     def get_time_of_last_edit(self):
         if self.is_comment():
@@ -1672,11 +1640,15 @@ class PostRevisionManager(models.Manager):
 
     def create_question_revision(self, *kargs, **kwargs):
         kwargs['revision_type'] = self.model.QUESTION_REVISION
-        return super(PostRevisionManager, self).create(*kargs, **kwargs)
+        revision = super(PostRevisionManager, self).create(*kargs, **kwargs)
+        revision.moderate_or_publish()
+        return revision
 
     def create_answer_revision(self, *kargs, **kwargs):
         kwargs['revision_type'] = self.model.ANSWER_REVISION
-        return super(PostRevisionManager, self).create(*kargs, **kwargs)
+        revision = super(PostRevisionManager, self).create(*kargs, **kwargs)
+        revision.moderate_or_publish()
+        return revision
 
     def question_revisions(self):
         return self.filter(revision_type=self.model.QUESTION_REVISION)
@@ -1779,7 +1751,8 @@ class PostRevision(models.Model):
                 self.post.thread.save()
             #above changes will hide post from the public display
             if self.by_email:
-                from askbot.utils.mail import send_mail
+                #todo: move this to the askbot.mail module
+                from askbot.mail import send_mail
                 email_context = {
                     'site': askbot_settings.APP_SHORT_NAME
                 }
@@ -1818,6 +1791,33 @@ class PostRevision(models.Model):
         activity.save()
         #todo: make this group-sensitive
         activity.add_recipients(get_admins_and_moderators())
+
+    def moderate_or_publish(self):
+        """either place on moderation queue or announce
+        that this revision is published"""
+        if self.needs_moderation():#moderate
+            self.place_on_moderation_queue()
+        else:#auto-approve
+            from askbot.models import signals
+            signals.post_revision_published.send(None, revision = self)
+
+    def should_notify_author_about_publishing(self, was_approved = False):
+        """True if author should get email about making own post"""
+        if self.by_email:
+            schedule = askbot_settings.SELF_NOTIFY_EMAILED_POST_AUTHOR_WHEN
+            if schedule == const.NEVER:
+                return False
+            elif schedule == const.FOR_FIRST_REVISION:
+                return self.revision == 1
+            elif schedule == const.FOR_ANY_REVISION:
+                return True
+            else:
+                raise ValueError()
+        else:
+            #logic not implemented yet
+            #the ``was_approved`` argument will be used here
+            #schedule = askbot_settings.SELF_NOTIFY_WEB_POST_AUTHOR_WHEN
+            return False
 
     def revision_type_str(self):
         return self.REVISION_TYPE_CHOICES_DICT[self.revision_type]

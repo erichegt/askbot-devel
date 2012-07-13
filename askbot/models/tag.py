@@ -82,43 +82,12 @@ class TagManager(BaseQuerySetManager):
     def get_query_set(self):
         return TagQuerySet(self.model)
 
-#todo: implement this
-#class GroupTagQuerySet(models.query.QuerySet):
-#    """Custom query set for the group"""
-#    def __init__(self, model):
-def clean_group_name(name):
-    """group names allow spaces,
-    tag names do not, so we use this method
-    to replace spaces with dashes"""
-    return re.sub('\s+', '-', name.strip())
+class GroupTagQuerySet(TagQuerySet):
+    """Custom query set for the group"""
 
-class GroupTagManager(TagManager):
-    """manager for group tags"""
-
-#    def get_query_set(self):
-#        return GroupTagQuerySet(self.model)
-
-    def get_or_create(self, group_name = None, user = None):
-        """creates a group tag or finds one, if exists"""
-        #todo: here we might fill out the group profile
-
-        #replace spaces with dashes
-        group_name = clean_group_name(group_name)
-        try:
-            tag = self.get(name = group_name)
-        except self.model.DoesNotExist:
-            tag = self.model(name = group_name, created_by = user)
-            tag.save()
-            from askbot.models.user import GroupProfile
-            group_profile = GroupProfile(group_tag = tag)
-            group_profile.save()
-        return tag
-
-    #todo: maybe move this to query set
     def get_for_user(self, user = None):
         return self.filter(user_memberships__user = user)
 
-    #todo: remove this when the custom query set is done
     def get_all(self):
         return self.annotate(
             member_count = models.Count('user_memberships')
@@ -128,6 +97,37 @@ class GroupTagManager(TagManager):
 
     def get_by_name(self, group_name = None):
         return self.get(name = clean_group_name(group_name))
+
+
+def clean_group_name(name):
+    """group names allow spaces,
+    tag names do not, so we use this method
+    to replace spaces with dashes"""
+    return re.sub('\s+', '-', name.strip())
+
+class GroupTagManager(BaseQuerySetManager):
+    """manager for group tags"""
+
+    def get_query_set(self):
+        return GroupTagQuerySet(self.model)
+
+    def get_or_create(self, group_name = None, user = None):
+        """creates a group tag or finds one, if exists"""
+        #todo: here we might fill out the group profile
+
+        #replace spaces with dashes
+        group_name = clean_group_name(group_name)
+        try:
+            #iexact is important!!! b/c we don't want case variants
+            #of tags
+            tag = self.get(name__iexact = group_name)
+        except self.model.DoesNotExist:
+            tag = self.model(name = group_name, created_by = user)
+            tag.save()
+            from askbot.models.user import GroupProfile
+            group_profile = GroupProfile(group_tag = tag)
+            group_profile.save()
+        return tag
 
 class Tag(models.Model):
     name            = models.CharField(max_length=255, unique=True)

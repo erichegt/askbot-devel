@@ -1,13 +1,14 @@
 from datetime import datetime
 import random
 import string
+import logging
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
 from askbot.models.post import Post
 from askbot.models.base import BaseQuerySetManager
 from askbot.conf import settings as askbot_settings
-from askbot.utils import mail
+from askbot import mail
 
 class ReplyAddressManager(BaseQuerySetManager):
     """A manager for the :class:`ReplyAddress` model"""
@@ -19,13 +20,10 @@ class ReplyAddressManager(BaseQuerySetManager):
             used_at__isnull = True
         )
     
-    def create_new(self, post, user):
+    def create_new(self, **kwargs):
         """creates a new reply address"""
-        reply_address = ReplyAddress(
-            post = post,
-            user = user,
-            allowed_from_email = user.email
-        )
+        kwargs['allowed_from_email'] = kwargs['user'].email
+        reply_address = ReplyAddress(**kwargs)
         while True:
             reply_address.address = ''.join(random.choice(string.letters +
                 string.digits) for i in xrange(random.randint(12, 25))).lower()
@@ -35,14 +33,28 @@ class ReplyAddressManager(BaseQuerySetManager):
         return reply_address
 			
 
+REPLY_ACTION_CHOICES = (
+    ('post_answer', _('Post an answer')),
+    ('post_comment', _('Post a comment')),
+    ('replace_content', _('Edit post')),
+    ('append_content', _('Append to post')),
+    ('auto_answer_or_comment', _('Answer or comment, depending on the size of post')),
+    ('validate_email', _('Validate email and record signature')),
+)
 class ReplyAddress(models.Model):
     """Stores a reply address for the post
     and the user"""
     address = models.CharField(max_length = 25, unique = True)
     post = models.ForeignKey(
                             Post,
+                            null = True,#reply not necessarily to posts
                             related_name = 'reply_addresses'
                         )#the emailed post
+    reply_action = models.CharField(
+                        max_length = 32,
+                        choices = REPLY_ACTION_CHOICES,
+                        default = 'auto_answer_or_comment'
+                    )
     response_post = models.ForeignKey(
                             Post,
                             null = True,
@@ -64,51 +76,97 @@ class ReplyAddress(models.Model):
         """True if was used"""
         return self.used_at != None
 
-    def edit_post(self, parts):
+    def as_email_address(self, prefix = 'reply-'):
+        """returns email address, prefix is added
+        in front of the code"""
+        return '%s%s@%s' % (
+                        prefix,
+                        self.address,
+                        askbot_settings.REPLY_BY_EMAIL_HOSTNAME
+                    )
+
+    def edit_post(
+        self, body_text, title = None, edit_response = False
+    ):
         """edits the created post upon repeated response
         to the same address"""
-        assert self.was_used == True
-        content, stored_files = mail.process_parts(parts)
-        self.user.edit_post(
-            post = self.response_post,
-            body_text = content,
-            revision_comment = _('edited by email'),
-            by_email = True
-        )
-        self.response_post.thread.invalidate_cached_data()
+        if self.was_used or edit_response:
+            reply_action = 'append_content'
+        else:
+            reply_action = self.reply_action
 
-    def create_reply(self, parts):
+        if edit_response:
+            post = self.response_post
+        else:
+            post = self.post
+
+        if reply_action == 'append_content':
+            body_text = post.text + '\n\n' + body_text
+            revision_comment = _('added content by email')
+        else:
+            assert(reply_action == 'replace_content')
+            revision_comment = _('edited by email')
+
+        if post.post_type == 'question':
+            assert(post is self.post)
+            self.user.edit_question(
+                question = post,
+                body_text = body_text,
+                title = title,
+                revision_comment = revision_comment,
+                by_email = True
+            )
+        else:
+            self.user.edit_post(
+                post = post,
+                body_text = body_text,
+                revision_comment = revision_comment,
+                by_email = True
+            )
+        self.post.thread.invalidate_cached_data()
+
+    def create_reply(self, body_text):
         """creates a reply to the post which was emailed
         to the user
         """
         result = None
-        #todo: delete stored files if this function fails
-        content, stored_files = mail.process_parts(parts)
-
         if self.post.post_type == 'answer':
             result = self.user.post_comment(
                                         self.post,
-                                        content,
+                                        body_text,
                                         by_email = True
                                     )
         elif self.post.post_type == 'question':
-            wordcount = len(content)/6#this is a simplistic hack
-            if wordcount > askbot_settings.MIN_WORDS_FOR_ANSWER_BY_EMAIL:
+            if self.reply_action == 'auto_answer_or_comment':
+                wordcount = len(body_text)/6#todo: this is a simplistic hack
+                if wordcount > askbot_settings.MIN_WORDS_FOR_ANSWER_BY_EMAIL:
+                    reply_action = 'post_answer'
+                else:
+                    reply_action = 'post_comment'
+            else:
+                reply_action = self.reply_action
+
+            if reply_action == 'post_answer':
                 result = self.user.post_answer(
                                             self.post,
-                                            content,
+                                            body_text,
+                                            by_email = True
+                                        )
+            elif reply_action == 'post_comment':
+                result = self.user.post_comment(
+                                            self.post,
+                                            body_text,
                                             by_email = True
                                         )
             else:
-                result = self.user.post_comment(
-                                            self.post,
-                                            content,
-                                            by_email = True
-                                        )
+                logging.critical(
+                    'Unexpected reply action: "%s", post by email failed' % reply_action
+                )
+                return None#todo: there may be a better action to take here...
         elif self.post.post_type == 'comment':
             result = self.user.post_comment(
                                     self.post.parent,
-                                    content,
+                                    body_text,
                                     by_email = True
                                 )
         result.thread.invalidate_cached_data()

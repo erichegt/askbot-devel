@@ -9,8 +9,8 @@
 {%- macro follow_toggle(follow, name, alias, id) -%}
     {# follow - boolean; name - object type name; alias - e.g. users name; id - object id #}
     <div 
-        class="follow-toggle" 
-        id="follow-{{ name }}-{{ id }}"
+        class="follow-toggle follow-user-toggle" 
+        id="follow-{{ name|escape }}-{{ id }}"
     >
         {% if follow %}
         <div class="follow">{% trans %}follow {{alias}}{% endtrans %}</div>
@@ -29,18 +29,18 @@
     <div class="face">
     {{ gravatar(response.user, 48) }}
     </div>
-    <a style="font-size:12px" href="{{ response.user.get_absolute_url() }}">{{ response.user.username }}</a>
+    <a style="font-size:12px" href="{{ response.user.get_absolute_url() }}">{{ response.user.username|escape }}</a>
     <a style="text-decoration:none;" href="{{ response.response_url }}">
          {{ response.response_type }}
          ({{ timeago(response.timestamp) }}):<br/>
          {% if inbox_section != 'flags' %}
-             {{ response.response_snippet }}
+             {{ response.response_snippet|escape }}
          {% endif %}
     </a>
     {% if inbox_section == 'flags' %}
          <a class="re_expand" href="{{ response.response_url }}">
-              <!--div class="re_snippet">{{ response.response_snippet }}</div-->
-              <div class="re_content">{{ response.response_content }}</div>
+              <!--div class="re_snippet">{{ response.response_snippet|escape }}</div-->
+              <div class="re_content">{{ response.response_content|escape }}</div>
          </a>
     {% endif %}
 </div>
@@ -200,7 +200,8 @@ poor design of the data or methods on data objects #}
         search_state = None,
         css_class = None,
         tag_css_class = None,
-        tag_html_tag = 'li'
+        tag_html_tag = 'li',
+        truncate_long_tags = False
     )
 -%}
 <ul {% if id %}id="{{ id }}"{% endif %}
@@ -214,29 +215,58 @@ poor design of the data or methods on data objects #}
                 deletable = deletable,
                 is_link = make_links,
                 search_state = search_state,
-                html_tag = tag_html_tag 
+                html_tag = tag_html_tag,
+                truncate_long_tag = False
             )}}
         {% endfor %}
     {% endif %}
 </ul>
 {%- endmacro -%}
 
-{%- macro user_group(group) -%}
-    {% if group.group_profile.logo_url %}
-    <a href="{% url users_by_group group.id, group.name|replace('-', ' ')|slugify %}">
-        <img class="group-logo" src="{{group.group_profile.logo_url}}" alt='{% trans name=group.name|escape %}logo for user group "{{name}}"{% endtrans %}' />
-    </a>
-    {% endif %}
-    <div class="group-name">
-        <a 
+{%- macro user_group(group, membership_info) -%}
+    <td>
+        <a class="group-name"
             href="{% url users_by_group group.id, group.name|replace('-', ' ')|slugify %}"
         >{{ group.name|escape }}</a>
-    </div>
-    <!--div id="group-{{group.id}}-description">
+    </td>
+    <td>
+    <span class="group-description">
     {% if group.tag_wiki %}
-        {{ group.tag_wiki.html }}
+        {{ group.tag_wiki.summary }}
     {% endif %}
-    </div-->
+    </span>
+    </td>
+    <td>
+    {% if membership_info %}
+        {{ group_join_button(
+                group_id = group.id,
+                can_join = membership_info['can_join'],
+                is_member = membership_info['is_member']
+            )
+        }}
+    {% endif %}
+    </td>
+{%- endmacro -%}
+
+{%- macro group_join_button(group_id = None, can_join = False, is_member = False) -%}
+    {% if can_join or is_member %}
+        <button 
+            class="group-join-btn follow-toggle {% if is_member %}on on-state{% endif %}"
+            data-group-id="{{group_id}}"
+            data-off-prompt-text="{% trans %}Leave this group{% endtrans %}"
+            data-on-prompt-text="{% trans %}Join this group{% endtrans %}"
+            data-on-state-text="{% trans %}You are a member{% endtrans %}"
+            data-off-state-text="{% trans %}Join this group{% endtrans %}"
+        >
+            {% if is_member %}
+                {% trans %}You are a member{% endtrans %}
+            {% else %}
+                {% if can_join %}
+                    {% trans %}Join this group{% endtrans %}
+                {% endif %}
+            {% endif %}
+        </button>
+    {% endif %}
 {%- endmacro -%}
 
 {# todo: remove the extra content argument to make its usage more explicit #}
@@ -248,7 +278,8 @@ poor design of the data or methods on data objects #}
             css_class = None,
             search_state = None,
             html_tag = 'div',
-            extra_content = ''
+            extra_content = '',
+            truncate_long_tag = False
         )
 -%}
   {% if not search_state %}  {#  get empty SearchState() if there's none; CAUTION: for some reason this doesn't work inside `spaceless` tag below! #}
@@ -260,10 +291,15 @@ poor design of the data or methods on data objects #}
             class="tag tag-right{% if css_class %} {{ css_class }}{% endif %}"
             {% if is_link %}
             href="{{ search_state.add_tag(tag).full_url() }}"
-            title="{% trans %}see questions tagged '{{ tag }}'{% endtrans %}"
+            title="{% trans tag=tag|escape %}see questions tagged '{{ tag }}'{% endtrans %}"
             {% endif %}
             rel="tag"
-        >{{ tag|replace('*', '&#10045;')|truncate(20,True)}}</{% if not is_link or tag[-1] == '*' %}span{% else %}a{% endif %}>
+            data-tag-name="{{ tag|replace('*', '&#10045;')|escape }}"
+        >{% if truncate_long_tag -%}
+            {{ tag|replace('*', '&#10045;')|truncate(17, True)|escape }}
+        {%- else -%}
+            {{ tag|replace('*', '&#10045;')|escape }}
+        {%- endif %}</{% if not is_link or tag[-1] == '*' %}span{% else %}a{% endif %}>
         {% if deletable %}
             <div class="delete-icon"
                 {% if delete_link_title %}
@@ -366,7 +402,7 @@ for the purposes of the AJAX comment editor #}
                     </div>
                     <div class="comment-body">
                         {{comment.html}}
-                        <a class="author" href="{{comment.author.get_profile_url()}}">{{comment.author.username}}</a>
+                        <a class="author" href="{{comment.author.get_profile_url()}}">{{comment.author.username|escape}}</a>
                         <span class="age">&nbsp;({{ timeago(comment.added_at) }})</span>
                         <a id="post-{{comment.id}}-edit"
                             class="edit">{% trans %}edit{% endtrans %}</a>
@@ -510,13 +546,13 @@ answer {% if answer.accepted() %}accepted-answer{% endif %} {% if answer.author_
 
 {%- macro follow_user_toggle(visitor = None, subject = None) -%}
     {% if visitor.is_anonymous() %}
-        {{ follow_toggle(True, 'user', subject.username, subject.id) }}
+        {{ follow_toggle(True, 'user', subject.username|escape, subject.id) }}
     {% else %}
         {% if visitor != subject %}
             {% if visitor.is_following(subject) %}
-                {{ follow_toggle(False, 'user', subject.username, subject.id) }}
+                {{ follow_toggle(False, 'user', subject.username|escape, subject.id) }}
             {% else %}
-                {{ follow_toggle(True, 'user', subject.username, subject.id) }}
+                {{ follow_toggle(True, 'user', subject.username|escape, subject.id) }}
             {% endif %}
         {% endif %}
     {% endif %}
@@ -536,7 +572,7 @@ answer {% if answer.accepted() %}accepted-answer{% endif %} {% if answer.author_
                 endtrans %}"
             title="{% trans 
                     country=user.country.name, 
-                    person=user.username %}{{person}} is from {{country}}{%
+                    person=user.username|escape %}{{person}} is from {{country}}{%
                  endtrans %}"
         />
     {% endif %}
@@ -571,8 +607,8 @@ answer {% if answer.accepted() %}accepted-answer{% endif %} {% if answer.author_
 ><img class="gravatar" 
     width="{{size}}" height="{{size}}"
     src="{{ user.get_avatar_url(size) }}"
-    title="{{user.username}}" 
-    alt="{% trans username=user.username %}{{username}} gravatar image{% endtrans %}" 
+    title="{{user.username|escape}}" 
+    alt="{% trans username=user.username|escape %}{{username}} gravatar image{% endtrans %}" 
 /></a>
 {% endspaceless %}
 {%- endmacro -%}
@@ -672,7 +708,7 @@ answer {% if answer.accepted() %}accepted-answer{% endif %} {% if answer.author_
     {% if user.new_response_count > 0 or user.seen_response_count > 0 %}
     <a id='ab-responses' href="{{user.get_absolute_url()}}?sort=inbox&section=forum">
         <img 
-            alt="{% trans username=user.username %}responses for {{username}}{% endtrans %}"
+            alt="{% trans username=user.username|escape %}responses for {{username}}{% endtrans %}"
             {% if user.new_response_count > 0 %}
                 src="{{ "/images/mail-envelope-full.png"|media }}"
                 title="{% trans response_count=user.new_response_count %}you have {{response_count}} new response{% pluralize %}you have {{response_count}} new responses{% endtrans %}"

@@ -1062,10 +1062,11 @@ var questionRetagger = function(){
         var tags_str = '';
         links.each(function(index, element){
             if (index === 0){
-                tags_str = $(element).html();
+                //this is pretty bad - we should use Tag.getName()
+                tags_str = $(element).attr('data-tag-name');
             }
             else {
-                tags_str += ' ' + $(element).html();
+                tags_str += ' ' + $(element).attr('data-tag-name');
             }
         });
         return tags_str;
@@ -2354,9 +2355,8 @@ UserGroupProfileEditor.prototype.decorate = function(element){
     logo_changer.decorate(change_logo_btn);
 };
 
-var GroupJoinButton = function(group_id){
+var GroupJoinButton = function(){
     TwoStateToggle.call(this);
-    this._group_id = group_id;
 };
 inherits(GroupJoinButton, TwoStateToggle);
 
@@ -2375,13 +2375,19 @@ GroupJoinButton.prototype.getHandler = function(){
             url: askbot['urls']['join_or_leave_group'],
             success: function(data){
                 if (data['success']){
-                    me.setOn(data['is_member']);
+                    var new_state = data['is_member'] ? 'on-state':'off-state';
+                    me.setState(new_state);
                 } else {
                     showMessage(me.getElement(), data['message']);
                 }
             }
         });
     };
+};
+
+GroupJoinButton.prototype.decorate = function(elem) {
+    GroupJoinButton.superClass_.decorate.call(this, elem);
+    this._group_id = this._element.data('groupId');
 };
 
 $(document).ready(function() {

@@ -130,6 +130,7 @@
                 var add_answer_btn = document.getElementById('add-answer-btn');
                 if (askbot['data']['userIsAuthenticated']){
                     if (askbot['data']['userId'] == {{question.author_id}}){
+                        add_answer_btn.className += ' answer-own-question';
                         add_answer_btn.setAttribute(
                             'value',
                             '{% trans %}Answer Your Own Question{% endtrans %}'
@@ -156,6 +157,9 @@
     </script>
 {% endblock %}
 {% block content %}
+    <div>
+        {{ settings.QUESTION_PAGE_TOP_BANNER }}
+    </div>
     {% if is_cacheable %}
         {% cache long_time "thread-content-html" thread.id %}
             {% include "question/content.html" %}

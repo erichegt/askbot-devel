@@ -33,6 +33,9 @@ _('click to see the most answered questions')
 _('click to see least voted questions')
 _('by votes')
 _('click to see most voted questions')
+_('interesting')
+_('ignored')
+_('subscribed')
 
 def get_i18n_message(key):
     messages = {

@@ -15,6 +15,7 @@ from django.http import HttpResponseRedirect, HttpResponse, Http404, HttpRespons
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.template import Context
 from django.utils import simplejson
+from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from django.utils import translation
@@ -23,6 +24,7 @@ from django.core.urlresolvers import reverse
 from django.core import exceptions as django_exceptions
 from django.contrib.humanize.templatetags import humanize
 from django.http import QueryDict
+from django.conf import settings
 
 import askbot
 from askbot import exceptions
@@ -33,6 +35,7 @@ from askbot import schedules
 from askbot.models.tag import Tag
 from askbot import const
 from askbot.utils import functions
+from askbot.utils.html import sanitize_html
 from askbot.utils.decorators import anonymous_forbidden, ajax_only, get_only
 from askbot.search.state_manager import SearchState, DummySearchState
 from askbot.templatetags import extra_tags
@@ -68,6 +71,7 @@ def questions(request, **kwargs):
     List of Questions, Tagged questions, and Unanswered questions.
     matching search query or user selection
     """
+    #before = datetime.datetime.now()
     if request.method != 'GET':
         return HttpResponseNotAllowed(['GET'])
 
@@ -125,7 +129,7 @@ def questions(request, **kwargs):
         # We have tags in session - pass it to the
         # QueryDict but as a list - we want tags+
         rss_query_dict.setlist("tags", search_state.tags)
-    context_feed_url = '/feeds/rss/?%s' % rss_query_dict.urlencode() # Format the url with the QueryDict
+    context_feed_url = '/%sfeeds/rss/?%s' % (settings.ASKBOT_URL, rss_query_dict.urlencode()) # Format the url with the QueryDict
 
     reset_method_count = len(filter(None, [search_state.query, search_state.tags, meta_data.get('author_name', None)]))
 
@@ -161,7 +165,7 @@ def questions(request, **kwargs):
             },
             'paginator': paginator_html,
             'question_counter': question_counter,
-            'faces': [extra_tags.gravatar(contributor, 48) for contributor in contributors],
+            'faces': [],#[extra_tags.gravatar(contributor, 48) for contributor in contributors],
             'feed_url': context_feed_url,
             'query_string': search_state.query_string(),
             'page_size' : page_size,
@@ -169,7 +173,7 @@ def questions(request, **kwargs):
             'non_existing_tags': meta_data['non_existing_tags']
         }
         ajax_data['related_tags'] = [{
-            'name': tag.name,
+            'name': escape(tag.name),
             'used_count': humanize.intcomma(tag.local_used_count)
         } for tag in related_tags]
 
@@ -311,7 +315,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
     """
     #process url parameters
     #todo: fix inheritance of sort method from questions
-    before = datetime.datetime.now()
+    #before = datetime.datetime.now()
     default_sort_method = request.session.get('questions_sort_method', 'votes')
     form = ShowQuestionForm(request.GET, default_sort_method)
     form.full_clean()#always valid
@@ -551,9 +555,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
         'show_comment_position': show_comment_position,
     }
 
-    result = render_into_skin('question.html', data, request)
-    #print datetime.datetime.now() - before
-    return result
+    return render_into_skin('question.html', data, request)
 
 def revisions(request, id, post_type = None):
     assert post_type in ('question', 'answer')
@@ -562,10 +564,13 @@ def revisions(request, id, post_type = None):
     revisions.reverse()
     for i, revision in enumerate(revisions):
         if i == 0:
-            revision.diff = revisions[i].html
+            revision.diff = sanitize_html(revisions[i].html)
             revision.summary = _('initial version')
         else:
-            revision.diff = htmldiff(revisions[i-1].html, revision.html)
+            revision.diff = htmldiff(
+                sanitize_html(revisions[i-1].html),
+                sanitize_html(revision.html)
+            )
 
     data = {
         'page_class':'revisions-page',

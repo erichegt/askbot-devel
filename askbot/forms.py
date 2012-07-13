@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django_countries import countries
 from askbot.utils.forms import NextUrlField, UserNameField
-from askbot.utils.mail import extract_first_email_address
+from askbot.mail import extract_first_email_address
 from recaptcha_works.fields import RecaptchaField
 from askbot.conf import settings as askbot_settings
 import logging
@@ -979,6 +979,11 @@ class EditUserForm(forms.Form):
                         required=False
                     )
 
+    show_marked_tags = forms.BooleanField(
+                        label=_('Show tag choices'),
+                        required=False
+                    )
+
     birthday = forms.DateField(
                         label=_('Date of birth'),
                         help_text=_('will not be shown, used to calculate age, format: YYYY-MM-DD'),
@@ -1009,6 +1014,7 @@ class EditUserForm(forms.Form):
             country = user.country
         self.fields['country'].initial = country
         self.fields['show_country'].initial = user.show_country
+        self.fields['show_marked_tags'].initial = user.show_marked_tags
 
         if user.date_of_birth is not None:
             self.fields['birthday'].initial = user.date_of_birth

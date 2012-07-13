@@ -67,7 +67,9 @@ class PageLoadTestCase(AskbotTestCase):
 
     def setUp(self):
         self.old_cache = cache.cache
-        cache.cache = DummyCache('', {})  # Disable caching (to not interfere with production cache, not sure if that's possible but let's not risk it)
+        #Disable caching (to not interfere with production cache,
+        #not sure if that's possible but let's not risk it)
+        cache.cache = DummyCache('', {}) 
 
     def tearDown(self):
         cache.cache = self.old_cache  # Restore caching
@@ -610,3 +612,18 @@ class QuestionPageRedirectTests(AskbotTestCase):
         #point to a non-existing comment
         resp = self.client.get(url, data={'comment': 100301})
         self.assertRedirects(resp, expected_url = self.q.get_absolute_url())
+
+class CommandViewTests(AskbotTestCase):
+    def test_get_tag_wiki_text_succeeds(self):
+        tag1 = self.create_tag('tag1')
+        response = self.client.get(
+            reverse('load_tag_wiki_text'),
+            data = {'tag_id': tag1.id}
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_get_tag_wiki_text_fails(self):
+        tag1 = self.create_tag('tag1')
+        response = self.client.get(reverse('load_tag_wiki_text'))
+        self.assertEqual(response.status_code, 400)#bad request
+        

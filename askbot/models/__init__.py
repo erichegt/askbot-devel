@@ -1,9 +1,10 @@
 from askbot import startup_procedures
 startup_procedures.run()
 
-import logging
-import hashlib
+import collections
 import datetime
+import hashlib
+import logging
 import urllib
 from django.core.urlresolvers import reverse, NoReverseMatch
 from django.db.models import signals as django_signals
@@ -12,6 +13,7 @@ from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from django.contrib.auth.models import User
 from django.utils.safestring import mark_safe
+from django.utils.html import escape
 from django.db import models
 from django.conf import settings as django_settings
 from django.contrib.contenttypes.models import ContentType
@@ -37,9 +39,10 @@ from askbot.models.repute import Award, Repute, Vote
 from askbot import auth
 from askbot.utils.decorators import auto_now_timestamp
 from askbot.utils.slug import slugify
+from askbot.utils.html import sanitize_html
 from askbot.utils.diff import textDiff as htmldiff
 from askbot.utils.url_utils import strip_path
-from askbot.utils import mail
+from askbot import mail
 
 def get_model(model_name):
     """a shortcut for getting model for an askbot app"""
@@ -52,6 +55,26 @@ def get_admins_and_moderators():
         models.Q(is_superuser=True) | models.Q(status='m')
     )
 
+def get_users_by_text_query(search_query):
+    """Runs text search in user names and profile.
+    For postgres, search also runs against user group names.
+    """
+    import askbot
+    if 'postgresql_psycopg2' in askbot.get_database_engine_name():
+        from askbot.search import postgresql
+        return postgresql.run_full_text_search(User.objects.all(), search_query)
+    else:
+        return User.objects.filter(
+            models.Q(username__icontains=search_query) |
+            models.Q(about__icontains=search_query)
+        )
+    #if askbot.get_database_engine_name().endswith('mysql') \
+    #    and mysql.supports_full_text_search():
+    #    return User.objects.filter(
+    #        models.Q(username__search = search_query) |
+    #        models.Q(about__search = search_query)
+    #    )
+
 User.add_to_class(
             'status',
             models.CharField(
@@ -61,7 +84,7 @@ User.add_to_class(
                     )
         )
 
-User.add_to_class('email_isvalid', models.BooleanField(default=False))
+User.add_to_class('email_isvalid', models.BooleanField(default=False)) #@UndefinedVariable
 User.add_to_class('email_key', models.CharField(max_length=32, null=True))
 #hardcoded initial reputaion of 1, no setting for this one
 User.add_to_class('reputation',
@@ -100,6 +123,9 @@ User.add_to_class('about', models.TextField(blank=True))
 User.add_to_class('interesting_tags', models.TextField(blank = True))
 User.add_to_class('ignored_tags', models.TextField(blank = True))
 User.add_to_class('subscribed_tags', models.TextField(blank = True))
+User.add_to_class('email_signature', models.TextField(blank = True))
+User.add_to_class('show_marked_tags', models.BooleanField(default = True))
+
 User.add_to_class(
     'email_tag_filter_strategy',
     models.SmallIntegerField(
@@ -183,6 +209,16 @@ def user_update_avatar_type(self):
             self.avatar_type = _check_gravatar(self.gravatar)
     self.save()
 
+def user_strip_email_signature(self, text):
+    """strips email signature from the end of the text"""
+    if self.email_signature.strip() == '':
+        return text
+
+    text = '\n'.join(text.splitlines())#normalize the line endings
+    while text.endswith(self.email_signature):
+        text = text[0:-len(self.email_signature)]
+    return text
+
 def _check_gravatar(gravatar):
     gravatar_url = "http://www.gravatar.com/avatar/%s?d=404" % gravatar
     code = urllib.urlopen(gravatar_url).getcode()
@@ -204,6 +240,42 @@ def user_get_old_vote_for_post(self, post):
         return None
     except Vote.MultipleObjectsReturned:
         raise AssertionError
+
+def user_get_marked_tags(self, reason):
+    """reason is a type of mark: good, bad or subscribed"""
+    assert(reason in ('good', 'bad', 'subscribed'))
+    if reason == 'subscribed':
+        if askbot_settings.SUBSCRIBED_TAG_SELECTOR_ENABLED == False:
+            return Tag.objects.none()
+
+    return Tag.objects.filter(
+        user_selections__user = self,
+        user_selections__reason = reason
+    )
+
+MARKED_TAG_PROPERTY_MAP = {
+    'good': 'interesting_tags',
+    'bad': 'ignored_tags',
+    'subscribed': 'subscribed_tags'
+}
+def user_get_marked_tag_names(self, reason):
+    """returns list of marked tag names for a give
+    reason: good, bad, or subscribed
+    will add wildcard tags as well, if used
+    """
+    if reason == 'subscribed':
+        if askbot_settings.SUBSCRIBED_TAG_SELECTOR_ENABLED == False:
+            return list()
+
+    tags = self.get_marked_tags(reason)
+    tag_names = list(tags.values_list('name', flat = True))
+
+    if askbot_settings.USE_WILDCARD_TAGS:
+        attr_name = MARKED_TAG_PROPERTY_MAP[reason]
+        wildcard_tags = getattr(self, attr_name).split()
+        tag_names.extend(wildcard_tags)
+        
+    return tag_names
 
 def user_has_affinity_to_question(self, question = None, affinity_type = None):
     """returns True if number of tag overlap of the user tag
@@ -265,7 +337,7 @@ def user_can_have_strong_url(self):
     followed by the search engine crawlers"""
     return (self.reputation >= askbot_settings.MIN_REP_TO_HAVE_STRONG_URL)
 
-def user_can_reply_by_email(self):
+def user_can_post_by_email(self):
     """True, if reply by email is enabled 
     and user has sufficient reputatiton"""
     return askbot_settings.REPLY_BY_EMAIL and \
@@ -1220,6 +1292,11 @@ def user_delete_comment(
                     timestamp = None
                 ):
     self.assert_can_delete_comment(comment = comment)
+    #todo: we want to do this
+    #comment.deleted = True
+    #comment.deleted_by = self
+    #comment.deleted_at = timestamp
+    #comment.save()
     comment.delete()
     comment.thread.invalidate_cached_data()
 
@@ -1471,18 +1548,18 @@ def user_edit_post(self,
 
 @auto_now_timestamp
 def user_edit_question(
-                    self,
-                    question = None,
-                    title = None,
-                    body_text = None,
-                    revision_comment = None,
-                    tags = None,
-                    wiki = False,
-                    edit_anonymously = False,
-                    timestamp = None,
-                    force = False,#if True - bypass the assert
-                    by_email = False
-                ):
+                self,
+                question = None,
+                title = None,
+                body_text = None,
+                revision_comment = None,
+                tags = None,
+                wiki = False,
+                edit_anonymously = False,
+                timestamp = None,
+                force = False,#if True - bypass the assert
+                by_email = False
+            ):
     if force == False:
         self.assert_can_edit_question(question)
 
@@ -2019,9 +2096,38 @@ def user_get_absolute_url(self):
 
 def get_profile_link(self):
     profile_link = u'<a href="%s">%s</a>' \
-        % (self.get_profile_url(),self.username)
+        % (self.get_profile_url(), escape(self.username))
 
     return mark_safe(profile_link)
+
+def user_get_groups_membership_info(self, groups):
+    """returts a defaultdict with values that are
+    dictionaries with the following keys and values:
+    * key: can_join, value: True if user can join group
+    * key: is_member, value: True if user is member of group
+
+    ``groups`` is a group tag query set
+    """
+    groups = groups.select_related('group_profile')
+
+    group_ids = groups.values_list('id', flat = True)
+    memberships = GroupMembership.objects.filter(
+                                user__id = self.id,
+                                group__id__in = group_ids
+                            )
+
+    info = collections.defaultdict(
+        lambda: {'can_join': False, 'is_member': False}
+    )
+    for membership in memberships:
+        info[membership.group_id]['is_member'] = True
+
+    for group in groups:
+        info[group.id]['can_join'] = group.group_profile.can_accept_user(self)
+
+    return info
+        
+
 
 def user_get_karma_summary(self):
     """returns human readable sentence about
@@ -2233,11 +2339,17 @@ def user_approve_post_revision(user, post_revision, timestamp = None):
     post = post_revision.post
     post.approved = True
     post.save()
+
     if post_revision.post.post_type == 'question':
         thread = post.thread
         thread.approved = True
         thread.save()
     post.thread.invalidate_cached_data()
+
+    #send the signal of published revision
+    signals.post_revision_published.send(
+        None, revision = post_revision, was_approved = True
+    )
 
 @auto_now_timestamp
 def flag_post(user, post, timestamp=None, cancel=False, cancel_all = False, force = False):
@@ -2404,6 +2516,10 @@ User.add_to_class('get_absolute_url', user_get_absolute_url)
 User.add_to_class('get_avatar_url', user_get_avatar_url)
 User.add_to_class('get_default_avatar_url', user_get_default_avatar_url)
 User.add_to_class('get_gravatar_url', user_get_gravatar_url)
+User.add_to_class('get_marked_tags', user_get_marked_tags)
+User.add_to_class('get_marked_tag_names', user_get_marked_tag_names)
+User.add_to_class('strip_email_signature', user_strip_email_signature)
+User.add_to_class('get_groups_membership_info', user_get_groups_membership_info)
 User.add_to_class('get_anonymous_name', user_get_anonymous_name)
 User.add_to_class('update_avatar_type', user_update_avatar_type)
 User.add_to_class('post_question', user_post_question)
@@ -2445,7 +2561,7 @@ User.add_to_class('is_following_question', user_is_following_question)
 User.add_to_class('mark_tags', user_mark_tags)
 User.add_to_class('update_response_counts', user_update_response_counts)
 User.add_to_class('can_have_strong_url', user_can_have_strong_url)
-User.add_to_class('can_reply_by_email', user_can_reply_by_email)
+User.add_to_class('can_post_by_email', user_can_post_by_email)
 User.add_to_class('can_post_comment', user_can_post_comment)
 User.add_to_class('is_administrator', user_is_administrator)
 User.add_to_class('is_administrator_or_moderator', user_is_administrator_or_moderator)
@@ -2517,11 +2633,13 @@ User.add_to_class(
     user_assert_can_approve_post_revision
 )
 
-#todo: move this to askbot/utils ??
+#todo: move this to askbot/mail ?
 def format_instant_notification_email(
                                         to_user = None,
                                         from_user = None,
                                         post = None,
+                                        reply_address = None,
+                                        alt_reply_address = None,
                                         update_type = None,
                                         template = None,
                                     ):
@@ -2568,16 +2686,16 @@ def format_instant_notification_email(
         revisions = post.revisions.all()[:2]
         assert(len(revisions) == 2)
         content_preview = htmldiff(
-                            revisions[1].html,
-                            revisions[0].html,
-                            ins_start = '<b><u style="background-color:#cfc">',
-                            ins_end = '</u></b>',
-                            del_start = '<del style="color:#600;background-color:#fcc">',
-                            del_end = '</del>'
-                        )
+                sanitize_html(revisions[1].html),
+                sanitize_html(revisions[0].html),
+                ins_start = '<b><u style="background-color:#cfc">',
+                ins_end = '</u></b>',
+                del_start = '<del style="color:#600;background-color:#fcc">',
+                del_end = '</del>'
+            )
         #todo: remove hardcoded style
     else:
-        content_preview = post.format_for_email()
+        content_preview = post.format_for_email(is_leaf_post = True)
 
     #add indented summaries for the parent posts
     content_preview += post.format_for_email_as_parent_thread_summary()
@@ -2611,13 +2729,21 @@ def format_instant_notification_email(
         'post_link': '<a href="%s">%s</a>' % (post_url, _(post.post_type))
     }
 
-    can_reply = to_user.can_reply_by_email()
+    can_reply = to_user.can_post_by_email()
 
     if can_reply:
-        reply_separator = const.REPLY_SEPARATOR_TEMPLATE % {
-                        'user_action': user_action,
-                        'instruction': _('To reply, PLEASE WRITE ABOVE THIS LINE.')
-                    }
+        reply_separator = const.SIMPLE_REPLY_SEPARATOR_TEMPLATE % \
+                    _('To reply, PLEASE WRITE ABOVE THIS LINE.')
+        if post.post_type == 'question' and alt_reply_address:
+            data = {
+                'addr': alt_reply_address,
+                'subject': urllib.quote(
+                        ('Re: ' + post.thread.title).encode('utf-8')
+                    )
+            }
+            reply_separator += '<p>' + \
+                const.REPLY_WITH_COMMENT_TEMPLATE % data
+            reply_separator += '</p>'
     else:
         reply_separator = user_action
                     
@@ -2635,7 +2761,56 @@ def format_instant_notification_email(
         'reply_separator': reply_separator
     }
     subject_line = _('"%(title)s"') % {'title': origin_post.thread.title}
-    return subject_line, template.render(Context(update_data))
+
+    content = template.render(Context(update_data))
+    if can_reply:
+        content += '<p style="font-size:8px;color:#aaa">' + \
+                    reply_address + '</p>'
+
+    return subject_line, content
+
+def get_reply_to_addresses(user, post):
+    """Returns one or two email addresses that can be
+    used by a given `user` to reply to the `post`
+    the first address - always a real email address,
+    the second address is not ``None`` only for "question" posts.
+
+    When the user is notified of a new question - 
+    i.e. `post` is a "quesiton", he/she
+    will need to choose - whether to give a question or a comment,
+    thus we return the second address - for the comment reply.
+
+    When the post is a "question", the first email address
+    is for posting an "answer", and when post is either
+    "comment" or "answer", the address will be for posting
+    a "comment".
+    """
+    #these variables will contain return values
+    primary_addr = django_settings.DEFAULT_FROM_EMAIL
+    secondary_addr = None
+    if user.can_post_by_email():
+        if user.reputation >= askbot_settings.MIN_REP_TO_POST_BY_EMAIL:
+
+            reply_args = {
+                'post': post,
+                'user': user,
+                'reply_action': 'post_comment'
+            }
+            if post.post_type in ('answer', 'comment'):
+                reply_args['reply_action'] = 'post_comment'
+            elif post.post_type == 'question':
+                reply_args['reply_action'] = 'post_answer'
+
+            primary_addr = ReplyAddress.objects.create_new(
+                                                    **reply_args
+                                                ).as_email_address()
+
+            if post.post_type == 'question':
+                reply_args['reply_action'] = 'post_comment'
+                secondary_addr = ReplyAddress.objects.create_new(
+                                                    **reply_args
+                                                ).as_email_address()
+    return primary_addr, secondary_addr
 
 #todo: action
 def send_instant_notifications_about_activity_in_post(
@@ -2659,33 +2834,31 @@ def send_instant_notifications_about_activity_in_post(
     if update_activity.activity_type not in acceptable_types:
         return
 
+    #calculate some variables used in the loop below
     from askbot.skins.loaders import get_template
     update_type_map = const.RESPONSE_ACTIVITY_TYPE_MAP_FOR_TEMPLATES
     update_type = update_type_map[update_activity.activity_type]
-
     origin_post = post.get_origin_post()
+    headers = mail.thread_headers(
+                            post,
+                            origin_post,
+                            update_activity.activity_type
+                        )
+    #send email for all recipients
     for user in recipients:
-      
+        reply_address, alt_reply_address = get_reply_to_addresses(user, post)
+
         subject_line, body_text = format_instant_notification_email(
                             to_user = user,
                             from_user = update_activity.user,
                             post = post,
+                            reply_address = reply_address,
+                            alt_reply_address = alt_reply_address,
                             update_type = update_type,
                             template = get_template('instant_notification.html')
                         )
       
-        #todo: this could be packaged as an "action" - a bundle
-        #of executive function with the activity log recording
-        #TODO check user reputation
-        headers = mail.thread_headers(post, origin_post, update_activity.activity_type)
-        if askbot_settings.REPLY_BY_EMAIL:
-            reply_address = "noreply"
-            if user.reputation >= askbot_settings.MIN_REP_TO_POST_BY_EMAIL:
-                reply_address = ReplyAddress.objects.create_new(post, user).address
-            reply_to = 'reply-%s@%s' % (reply_address, askbot_settings.REPLY_BY_EMAIL_HOSTNAME)
-            headers.update({'Reply-To': reply_to})
-        else:
-            reply_to = django_settings.DEFAULT_FROM_EMAIL
+        headers['Reply-To'] = reply_address
         mail.send_mail(
             subject_line = subject_line,
             body_text = body_text,
@@ -2694,6 +2867,18 @@ def send_instant_notifications_about_activity_in_post(
             activity_type = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT,
             headers = headers
         )
+
+def notify_author_of_published_revision(
+    revision = None, was_approved = None, **kwargs
+):
+    """notifies author about approved post revision,
+    assumes that we have the very first revision
+    """
+    #only email about first revision
+    if revision.should_notify_author_about_publishing(was_approved):
+        from askbot.tasks import notify_author_of_published_revision_celery_task
+        notify_author_of_published_revision_celery_task.delay(revision)
+    
 
 #todo: move to utils
 def calculate_gravatar_hash(instance, **kwargs):
@@ -2740,14 +2925,6 @@ def record_post_update_activity(
         created = created,
         diff = diff,
     )
-    #non-celery version
-    #tasks.record_post_update(
-    #    post = post,
-    #    newly_mentioned_users = newly_mentioned_users,
-    #    updated_by = updated_by,
-    #    timestamp = timestamp,
-    #    created = created,
-    #)
 
 
 def record_award_event(instance, created, **kwargs):
@@ -2980,6 +3157,57 @@ def record_user_full_updated(instance, **kwargs):
                 )
     activity.save()
 
+def send_respondable_email_validation_message(
+    user = None, subject_line = None, data = None, template_name = None
+):
+    """sends email validation message to the user
+
+    We validate email by getting user's reply
+    to the validation message by email, which also gives
+    an opportunity to extract user's email signature.
+    """
+    reply_address = ReplyAddress.objects.create_new(
+                                    user = user,
+                                    reply_action = 'validate_email'
+                                )
+    data['email_code'] = reply_address.address
+
+    from askbot.skins.loaders import get_template
+    template = get_template(template_name)
+    body_text = template.render(Context(data))
+
+    reply_to_address = 'welcome-%s@%s' % (
+                            reply_address.address,
+                            askbot_settings.REPLY_BY_EMAIL_HOSTNAME
+                        )
+
+    mail.send_mail(
+        subject_line = subject_line,
+        body_text = body_text,
+        recipient_list = [user.email, ],
+        activity_type = const.TYPE_ACTIVITY_VALIDATION_EMAIL_SENT,
+        headers = {'Reply-To': reply_to_address}
+    )
+
+
+def send_welcome_email(user, **kwargs):
+    """sends welcome email to the newly created user
+
+    todo: second branch should send email with a simple
+    clickable link.
+    """
+    if askbot_settings.REPLY_BY_EMAIL:#with this on we also collect signature
+        data = {
+            'site_name': askbot_settings.APP_SHORT_NAME
+        }
+        send_respondable_email_validation_message(
+            user = user,
+            subject_line = _('Welcome to %(site_name)s') % data,
+            data = data,
+            template_name = 'email/welcome_lamson_on.html'
+        )
+
+
 def complete_pending_tag_subscriptions(sender, request, *args, **kwargs):
     """save pending tag subscriptions saved in the session"""
     if 'subscribe_for_tags' in request.session:
@@ -3041,22 +3269,10 @@ def make_admin_if_first_user(instance, **kwargs):
         instance.set_admin_status()
     cache.cache.set('admin-created', True)
 
-def place_post_revision_on_moderation_queue(instance, **kwargs):
-    """`instance` is post revision, because we must
-    be able to moderate all the revisions, if necessary,
-    in order to avoid people getting the post past the moderation
-    then make some evil edit.
-    """
-    if instance.needs_moderation():
-        instance.place_on_moderation_queue()
 
 #signal for User model save changes
 django_signals.pre_save.connect(make_admin_if_first_user, sender=User)
 django_signals.pre_save.connect(calculate_gravatar_hash, sender=User)
-django_signals.post_save.connect(
-    place_post_revision_on_moderation_queue,
-    sender=PostRevision
-)
 django_signals.post_save.connect(add_missing_subscriptions, sender=User)
 django_signals.post_save.connect(record_award_event, sender=Award)
 django_signals.post_save.connect(notify_award_message, sender=Award)
@@ -3076,10 +3292,15 @@ signals.delete_question_or_answer.connect(record_delete_question, sender=Post)
 signals.flag_offensive.connect(record_flag_offensive, sender=Post)
 signals.remove_flag_offensive.connect(remove_flag_offensive, sender=Post)
 signals.tags_updated.connect(record_update_tags)
+signals.user_registered.connect(send_welcome_email)
 signals.user_updated.connect(record_user_full_updated, sender=User)
 signals.user_logged_in.connect(complete_pending_tag_subscriptions)#todo: add this to fake onlogin middleware
 signals.user_logged_in.connect(post_anonymous_askbot_content)
 signals.post_updated.connect(record_post_update_activity)
+
+#probably we cannot use post-save here the point of this is
+#to tell when the revision becomes publicly visible, not when it is saved
+signals.post_revision_published.connect(notify_author_of_published_revision)
 signals.site_visited.connect(record_user_visit)
 
 #set up a possibility for the users to follow others

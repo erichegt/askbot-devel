@@ -200,6 +200,21 @@ settings.register(
     )
 )
 
+MARKED_TAG_DISPLAY_CHOICES = (
+    ('always', _('Always, for all users')),
+    ('never', _('Never, for all users')),
+    ('when-user-wants', _('Let users decide'))
+)
+settings.register(
+    livesettings.StringValue(
+        FORUM_DATA_RULES,
+        'MARKED_TAGS_ARE_PUBLIC_WHEN',
+        default = 'always',
+        choices = MARKED_TAG_DISPLAY_CHOICES,
+        description = _('Publicly show user tag selections')
+    )
+)
+
 settings.register(
     livesettings.BooleanValue(
         FORUM_DATA_RULES,

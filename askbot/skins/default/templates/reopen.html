@@ -10,7 +10,7 @@
     </a>
 </p>
 <p>{% trans %}This question has been closed by 
-    <a href="{{closed_by_profile_url}}">{{closed_by_username}}</a>
+    <a href="{{closed_by_profile_url}}">{{closed_by_username|escape}}</a>
 {% endtrans %}
 </p>
 <p>

@@ -100,7 +100,7 @@ settings.register(
     IntegerValue(
         BADGES,
         'POPULAR_QUESTION_BADGE_MIN_VIEWS',
-        default=150,
+        default=15,
         description=_('Popular Question: minimum views')
     )
 )
@@ -109,7 +109,7 @@ settings.register(
     IntegerValue(
         BADGES,
         'NOTABLE_QUESTION_BADGE_MIN_VIEWS',
-        default=250,
+        default=25,
         description=_('Notable Question: minimum views')
     )
 )
@@ -118,7 +118,7 @@ settings.register(
     IntegerValue(
         BADGES,
         'FAMOUS_QUESTION_BADGE_MIN_VIEWS',
-        default=500,
+        default=50,
         description=_('Famous Question: minimum views')
     )
 )
@@ -217,7 +217,7 @@ settings.register(
     IntegerValue(
         BADGES,
         'TAXONOMIST_BADGE_MIN_USE_COUNT',
-        default = 10,
+        default = 5,
         description = _('Taxonomist: minimum tag use count')
     )
 )
@@ -226,7 +226,7 @@ settings.register(
     IntegerValue(
         BADGES,
         'ENTHUSIAST_BADGE_MIN_DAYS',
-        default = 30,
+        default = 5,
         description = _('Enthusiast: minimum days')
     )
 )

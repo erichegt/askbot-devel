@@ -14,6 +14,7 @@ from django.forms import ValidationError, IntegerField, CharField
 from django.shortcuts import get_object_or_404
 from django.views.decorators import csrf
 from django.utils import simplejson
+from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from django.utils.translation import string_concat
 from askbot import models
@@ -22,7 +23,7 @@ from askbot.conf import should_show_sort_by_relevance
 from askbot.conf import settings as askbot_settings
 from askbot.utils import decorators
 from askbot.utils import url_utils
-from askbot.utils import mail
+from askbot import mail
 from askbot.skins.loaders import render_into_skin, get_template
 from askbot import const
 import logging
@@ -485,6 +486,9 @@ def get_tag_list(request):
 @decorators.get_only
 def load_tag_wiki_text(request):
     """returns text of the tag wiki in markdown format"""
+    if 'tag_id' not in request.GET:
+        return HttpResponse('', status = 400)#bad request
+
     tag = get_object_or_404(models.Tag, id = request.GET['tag_id'])
     tag_wiki_text = getattr(tag.tag_wiki, 'text', '').strip()
     return HttpResponse(tag_wiki_text, mimetype = 'text/plain')
@@ -573,7 +577,7 @@ def api_get_questions(request):
     threads = threads.distinct()[:30]
     thread_list = [{
         'url': thread.get_absolute_url(),
-        'title': thread.title,
+        'title': escape(thread.title),
         'answer_count': thread.answer_count
     } for thread in threads]
     json_data = simplejson.dumps(thread_list)

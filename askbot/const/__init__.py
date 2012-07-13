@@ -6,6 +6,7 @@ text in this project, all unicode text go here.
 """
 from django.utils.translation import ugettext as _
 import re
+
 CLOSE_REASONS = (
     (1, _('duplicate question')),
     (2, _('question is off-topic or not relevant')),
@@ -54,8 +55,51 @@ POST_SORT_METHODS = (
 
 POST_TYPES = ('answer', 'comment', 'question', 'tag_wiki', 'reject_reason')
 
+SIMPLE_REPLY_SEPARATOR_TEMPLATE = '==== %s -=-=='
+
+#values for SELF_NOTIFY_WHEN... settings use bits
+NEVER = 'never'
+FOR_FIRST_REVISION = 'first'
+FOR_ANY_REVISION = 'any'
+SELF_NOTIFY_EMAILED_POST_AUTHOR_WHEN_CHOICES = (
+    (NEVER, _('Never')),
+    (FOR_FIRST_REVISION, _('When new post is published')),
+    (FOR_ANY_REVISION, _('When post is published or revised')),
+)
+#need more options for web posts b/c user is looking at the page
+#when posting. when posts are made by email - user is not looking
+#at the site and therefore won't get any feedback unless an email is sent back
+#todo: rename INITIAL -> FIRST and make values of type string
+#FOR_INITIAL_REVISION_WHEN_APPROVED = 1
+#FOR_ANY_REVISION_WHEN_APPROVED = 2
+#FOR_INITIAL_REVISION_ALWAYS = 3
+#FOR_ANY_REVISION_ALWAYS = 4
+#SELF_NOTIFY_WEB_POST_AUTHOR_WHEN_CHOICES = (
+#    (NEVER, _('Never')),
+#    (
+#        FOR_INITIAL_REVISION_WHEN_APPROVED,
+#        _('When inital revision is approved by moderator')
+#    ),
+#    (
+#        FOR_ANY_REVISION_WHEN_APPROVED,
+#        _('When any revision is approved by moderator')
+#    ),
+#    (
+#        FOR_INITIAL_REVISION_ALWAYS,
+#        _('Any time when inital revision is published')
+#    ),
+#    (
+#        FOR_ANY_REVISION_ALWAYS,
+#        _('Any time when revision is published')
+#    )
+#)
+
 REPLY_SEPARATOR_TEMPLATE = '==== %(user_action)s %(instruction)s -=-=='
-REPLY_SEPARATOR_REGEX = re.compile('==== .* -=-==', re.MULTILINE)
+REPLY_WITH_COMMENT_TEMPLATE = _(
+    'Note: to reply with a comment, '
+    'please use <a href="mailto:%(addr)s?subject=%(subject)s">this link</a>'
+)
+REPLY_SEPARATOR_REGEX = re.compile(r'==== .* -=-==', re.MULTILINE|re.DOTALL)
 
 ANSWER_SORT_METHODS = (#no translations needed here
     'latest', 'oldest', 'votes'
@@ -129,6 +173,7 @@ TYPE_ACTIVITY_MODERATED_NEW_POST = 24
 TYPE_ACTIVITY_MODERATED_POST_EDIT = 25
 TYPE_ACTIVITY_CREATE_REJECT_REASON = 26
 TYPE_ACTIVITY_UPDATE_REJECT_REASON = 27
+TYPE_ACTIVITY_VALIDATION_EMAIL_SENT = 28
 #TYPE_ACTIVITY_EDIT_QUESTION = 17
 #TYPE_ACTIVITY_EDIT_ANSWER = 18
 
@@ -181,6 +226,10 @@ TYPE_ACTIVITY = (
     (
         TYPE_ACTIVITY_UPDATE_REJECT_REASON,
         _('updated post reject reason')
+    ),
+    (
+        TYPE_ACTIVITY_VALIDATION_EMAIL_SENT,
+        'sent email address validation message'#don't translate, internal
     ),
 )
 

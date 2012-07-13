@@ -123,7 +123,7 @@ class RssLastestQuestionsFeed(Feed):
     def item_author_link(self, item):
         """get url of the author's profile
         """
-        return item.author.get_profile_url()
+        return askbot_settings.APP_URL + item.author.get_profile_url()
 
     def item_pubdate(self, item):
         """get date of creation for the item

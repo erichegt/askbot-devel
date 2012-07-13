@@ -4844,7 +4844,7 @@ msgstr "редактировать"
 #: skins/default/templates/macros.html:525
 #: skins/default/templates/question.html:511
 msgid "add comment"
-msgstr "добавить комментарий"
+msgstr "добавить"
 
 #: skins/default/templates/macros.html:518
 #, python-format
@@ -8403,7 +8403,7 @@ msgstr "Сорт. по &raquo;"
 
 #: skins/default/templates/main_page/headline.html:12
 msgid "Tagged"
-msgstr "Отмечено"
+msgstr "В тегах"
 
 #: skins/default/templates/main_page/nothing_found.html:8
 msgid "Please follow some questions or follow some users."

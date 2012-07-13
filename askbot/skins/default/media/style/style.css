@@ -594,13 +594,13 @@ body.anon #searchBar .searchInputCancelable {
 .box .inputs #ignoredTagInput,
 .box .inputs #subscribedTagInput,
 .box .inputs #ab-tag-search {
-  width: 153px;
+  width: 156px;
   padding-left: 5px;
   border: #c9c9b5 1px solid;
   height: 25px;
 }
 .box .inputs #ab-tag-search {
-  width: 135px;
+  width: 138px;
 }
 .box .inputs #interestingTagAdd,
 .box .inputs #ignoredTagAdd,
@@ -661,7 +661,6 @@ body.anon #searchBar .searchInputCancelable {
 }
 .box .inputs #ab-tag-search-add {
   width: 47px;
-  margin-left: 3px;
 }
 .box img.gravatar {
   margin: 1px;
@@ -1238,7 +1237,8 @@ ul#related-tags li {
   color: #1A1A1A;
 }
 .users-page h1,
-.tags-page h1 {
+.tags-page h1,
+.groups-page h1 {
   float: left;
 }
 .main-page h1 {
@@ -1294,7 +1294,7 @@ ul#related-tags li {
 }
 #askFormBar {
   display: inline-block;
-  padding: 4px 7px 5px 0px;
+  padding: 4px 7px 0px 0px;
   margin-top: 0px;
 }
 #askFormBar p {
@@ -1314,10 +1314,8 @@ ul#related-tags li {
 }
 .ask-page div#question-list,
 .edit-question-page div#question-list {
-  float: none;
   border-bottom: #f0f0ec 1px solid;
-  float: left;
-  margin-bottom: 10px;
+  float: none;
 }
 .ask-page div#question-list a,
 .edit-question-page div#question-list a {
@@ -1367,6 +1365,7 @@ ul#related-tags li {
 .title-desc {
   color: #707070;
   font-size: 13px;
+  margin-bottom: 5px;
 }
 #fmanswer input.submit,
 .ask-page input.submit,
@@ -1776,7 +1775,10 @@ ul#related-tags li {
   background: url(../images/vote-arrow-down-on-new.png) no-repeat;
 }
 .question-page #fmanswer_button {
-  margin: 8px 0px ;
+  margin: 8px 0px;
+}
+.question-page #fmanswer_button.answer-own-question {
+  width: 150px;
 }
 .question-page .question-img-favorite:hover {
   background: url(../images/vote-favorite-on.png);
@@ -2517,7 +2519,7 @@ a:hover.medal {
   margin-top: -2px;
   width: 100px;
   height: 26px;
-  font-size: 12px;
+  font-size: 14px;
   text-align: center;
   text-decoration: none;
   cursor: pointer;
@@ -3258,6 +3260,11 @@ ul.post-retag {
   margin-bottom: 0px;
   margin-left: 5px;
 }
+ul.post-retag input {
+  width: 400px;
+  height: 1.5em;
+  margin: 3px 0 0 -3px;
+}
 #question-controls .tags {
   margin: 0 0 3px 0;
 }
@@ -3526,16 +3533,11 @@ img.group-logo {
 #groups-list {
   margin-left: 0px;
 }
-#groups-list li {
-  display: inline;
-  list-style-type: none;
-  list-style-position: inside;
-  float: left;
-  text-align: center;
-}
-#groups-list .group-logo,
 #groups-list .group-name {
-  display: block;
+  padding-right: 20px;
+}
+#groups-list td {
+  padding-bottom: 5px;
 }
 #reject-edit-modal input,
 #reject-edit-modal textarea {

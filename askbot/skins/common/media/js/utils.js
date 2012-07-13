@@ -109,7 +109,7 @@ var notify = function() {
     return {
         show: function(html) {
             if (html) {
-                $("body").css("margin-top", "2.2em");
+                $("body").addClass('user-messages');
                 $(".notify span").html(html);        
             }          
             $(".notify").fadeIn("slow");
@@ -123,7 +123,7 @@ var notify = function() {
                );
             }
             $(".notify").fadeOut("fast");
-            $("body").css("margin-top", "0");
+            $('body').removeClass('user-messages');
             visible = false;
         },     
         isVisible: function() { return visible; }     
@@ -786,9 +786,7 @@ TwoStateToggle.prototype.decorate = function(element){
     this.toggleUrl = element.attr('data-toggle-url');
 
     //detect state and save it
-    if (
-        element.attr('nodeName') === 'INPUT' && element.attr('type', 'checkbox')
-    ) {
+    if (this.isCheckBox()) {
         this._state = element.attr('checked') ? 'state-on' : 'state-off';
     } else {
         var text = $.trim(element.html());
@@ -989,7 +987,9 @@ Tag.prototype.decorate = function(element){
         this._delete_icon.decorate(del);
     }
     this._inner_element = this._element.find('.tag');
-    this._name = this.decodeTagName($.trim(this._inner_element.html()));
+    this._name = this.decodeTagName(
+        $.trim(this._inner_element.attr('data-tag-name'))
+    );
     if (this._title !== null){
         this._inner_element.attr('title', this._title);
     }

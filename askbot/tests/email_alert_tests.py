@@ -11,7 +11,7 @@ from django.test import TestCase
 from django.test.client import Client
 from askbot.tests import utils
 from askbot import models
-from askbot.utils import mail
+from askbot import mail
 from askbot.conf import settings as askbot_settings
 from askbot import const
 from askbot.models.question import Thread
@@ -949,3 +949,67 @@ class EmailFeedSettingTests(utils.AskbotTestCase):
         new_user.add_missing_askbot_subscriptions()
         data_after = TO_JSON(self.get_user_feeds())
         self.assertEquals(data_before, data_after)
+
+class PostApprovalTests(utils.AskbotTestCase):
+    """test notifications sent to authors when their posts
+    are approved or published"""
+    def setUp(self):
+        self.reply_by_email = askbot_settings.REPLY_BY_EMAIL
+        askbot_settings.update('REPLY_BY_EMAIL', True)
+        self.enable_content_moderation = \
+            askbot_settings.ENABLE_CONTENT_MODERATION
+        askbot_settings.update('ENABLE_CONTENT_MODERATION', True)
+        self.self_notify_when = \
+            askbot_settings.SELF_NOTIFY_EMAILED_POST_AUTHOR_WHEN
+        when = const.FOR_FIRST_REVISION
+        askbot_settings.update('SELF_NOTIFY_EMAILED_POST_AUTHOR_WHEN', when)
+        assert(
+            django_settings.EMAIL_BACKEND == 'django.core.mail.backends.locmem.EmailBackend'
+        )
+
+    def tearDown(self):
+        askbot_settings.update(
+            'REPLY_BY_EMAIL', self.reply_by_email
+        )
+        askbot_settings.update(
+            'ENABLE_CONTENT_MODERATION',
+            self.enable_content_moderation
+        )
+        askbot_settings.update(
+            'SELF_NOTIFY_EMAILED_POST_AUTHOR_WHEN', 
+            self.self_notify_when
+        )
+
+    def test_emailed_question_answerable_approval_notification(self):
+        self.u1 = self.create_user('user1', status = 'a')#regular user
+        question = self.post_question(user = self.u1, by_email = True)
+        outbox = django.core.mail.outbox
+        #here we should get just the notification of the post
+        #being placed on the moderation queue
+        self.assertEquals(len(outbox), 1)
+        self.assertEquals(outbox[0].recipients(), [self.u1.email])
+
+    def test_moderated_question_answerable_approval_notification(self):
+        u1 = self.create_user('user1', status = 'a')
+        question = self.post_question(user = u1, by_email = True)
+
+        self.assertEquals(question.approved, False)
+
+        u2 = self.create_user('admin', status = 'd')
+
+        self.assertEquals(question.revisions.count(), 1)
+        u2.approve_post_revision(question.get_latest_revision())
+
+        outbox = django.core.mail.outbox
+        self.assertEquals(len(outbox), 2)
+        #moderation notification
+        self.assertEquals(outbox[0].recipients(), [u1.email,])
+        self.assertEquals(outbox[1].recipients(), [u1.email,])#approval
+
+
+class MailMessagesTests(utils.AskbotTestCase):
+    def test_ask_for_signature(self):
+        from askbot.mail import messages
+        user = self.create_user('user')
+        message = messages.ask_for_signature(user, footer_code = 'nothing')
+        self.assertTrue(user.username in message)

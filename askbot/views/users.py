@@ -13,7 +13,7 @@ import datetime
 import logging
 import operator
 
-from django.db.models import Count, Q
+from django.db.models import Count
 from django.conf import settings as django_settings
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
@@ -28,7 +28,7 @@ from django.views.decorators import csrf
 
 from askbot.utils.slug import slugify
 from askbot.utils.html import sanitize_html
-from askbot.utils.mail import send_mail
+from askbot.mail import send_mail
 from askbot.utils.http import get_request_info
 from askbot.utils import functions
 from askbot import forms
@@ -56,7 +56,7 @@ def owner_or_moderator_required(f):
         return f(request, profile_owner, context)
     return wrapped_func
 
-def users(request, by_group = False, group_id = None, group_slug = None):
+def show_users(request, by_group = False, group_id = None, group_slug = None):
     """Users view, including listing of users by group"""
     users = models.User.objects.exclude(status = 'b')
     group = None
@@ -81,11 +81,15 @@ def users(request, by_group = False, group_id = None, group_slug = None):
                 except models.Tag.DoesNotExist:
                     raise Http404
                 if group_slug == slugify(group.name):
-                    users = models.User.objects.filter(
+                    group_users = models.User.objects.filter(
                         group_memberships__group__id = group_id
                     )
                     if request.user.is_authenticated():
-                        user_is_group_member = bool(users.filter(id = request.user.id).count())
+                        user_is_group_member = bool(
+                                                    group_users.filter(
+                                                        id = request.user.id
+                                                    ).count()
+                                                )
                 else:
                     group_page_url = reverse(
                                         'users_by_group',
@@ -103,13 +107,13 @@ def users(request, by_group = False, group_id = None, group_slug = None):
     if askbot_settings.KARMA_MODE == 'private' and sortby == 'reputation':
         sortby = 'newest'
 
-    suser = request.REQUEST.get('query',  "")
     try:
         page = int(request.GET.get('page', '1'))
     except ValueError:
         page = 1
 
-    if suser == "":
+    search_query = request.REQUEST.get('query',  "")
+    if search_query == "":
         if sortby == "newest":
             order_by_parameter = '-date_joined'
         elif sortby == "last":
@@ -121,21 +125,18 @@ def users(request, by_group = False, group_id = None, group_slug = None):
             order_by_parameter = '-reputation'
 
         objects_list = Paginator(
-                            users.order_by(order_by_parameter),
+                            models.User.objects.order_by(order_by_parameter),
                             const.USERS_PAGE_SIZE
                         )
-        base_url = request.path + '?sort=%s&' % sortby
+        base_url = request.path + '?sort=%s&amp;' % sortby
     else:
         sortby = "reputation"
+        matching_users = models.get_users_by_text_query(search_query)
         objects_list = Paginator(
-                            users.filter(
-                                username__icontains = suser
-                            ).order_by(
-                                '-reputation'
-                            ),
+                            matching_users.order_by('-reputation'),
                             const.USERS_PAGE_SIZE
                         )
-        base_url = request.path + '?name=%s&sort=%s&' % (suser, sortby)
+        base_url = request.path + '?name=%s&amp;sort=%s&amp;' % (search_query, sortby)
 
     try:
         users_page = objects_list.page(page)
@@ -158,8 +159,7 @@ def users(request, by_group = False, group_id = None, group_slug = None):
         'page_class': 'users-page',
         'users' : users_page,
         'group': group,
-        'suser' : suser,
-        'keywords' : suser,
+        'search_query' : search_query,
         'tab_id' : sortby,
         'paginator_context' : paginator_context,
         'group_email_moderation_enabled': group_email_moderation_enabled,
@@ -297,7 +297,7 @@ def edit_user(request, id):
             user.about = sanitize_html(form.cleaned_data['about'])
             user.country = form.cleaned_data['country']
             user.show_country = form.cleaned_data['show_country']
-
+            user.show_marked_tags = form.cleaned_data['show_marked_tags']
             user.save()
             # send user updated signal if full fields have been updated
             award_badges_signal.send(None,
@@ -308,10 +308,12 @@ def edit_user(request, id):
             return HttpResponseRedirect(user.get_profile_url())
     else:
         form = forms.EditUserForm(user)
+
     data = {
         'active_tab': 'users',
         'page_class': 'user-profile-edit-page',
         'form' : form,
+        'marked_tags_setting': askbot_settings.MARKED_TAGS_ARE_PUBLIC_WHEN,
         'support_custom_avatars': ('avatar' in django_settings.INSTALLED_APPS),
         'view_user': user,
     }
@@ -368,6 +370,18 @@ def user_stats(request, user, context):
                     order_by('-user_tag_usage_count')[:const.USER_VIEW_DATA_SIZE]
     user_tags = list(user_tags) # evaluate
 
+    when = askbot_settings.MARKED_TAGS_ARE_PUBLIC_WHEN
+    if when == 'always' or \
+        (when == 'when-user-wants' and user.show_marked_tags == True):
+        #refactor into: user.get_marked_tag_names('good'/'bad'/'subscribed')
+        interesting_tag_names = user.get_marked_tag_names('good')
+        ignored_tag_names = user.get_marked_tag_names('bad')
+        subscribed_tag_names = user.get_marked_tag_names('subscribed')
+    else:
+        interesting_tag_names = None
+        ignored_tag_names = None
+        subscribed_tag_names = None
+        
 #    tags = models.Post.objects.filter(author=user).values('id', 'thread', 'thread__tags')
 #    post_ids = set()
 #    thread_ids = set()
@@ -423,6 +437,13 @@ def user_stats(request, user, context):
     badges = badges_dict.items()
     badges.sort(key=operator.itemgetter(1), reverse=True)
 
+    user_groups = models.Tag.group_tags.get_for_user(user = user)
+
+    if request.user == user:
+        groups_membership_info = user.get_groups_membership_info(user_groups)
+    else:
+        groups_membership_info = collections.defaultdict()
+
     data = {
         'active_tab':'users',
         'page_class': 'user-profile-page',
@@ -444,7 +465,11 @@ def user_stats(request, user, context):
         'votes_total_per_day': votes_total,
 
         'user_tags' : user_tags,
-        'user_groups': models.Tag.group_tags.get_for_user(user = user),
+        'user_groups': user_groups,
+        'groups_membership_info': groups_membership_info,
+        'interesting_tag_names': interesting_tag_names,
+        'ignored_tag_names': ignored_tag_names,
+        'subscribed_tag_names': subscribed_tag_names,
         'badges': badges,
         'total_badges' : len(badges),
     }
@@ -585,12 +610,13 @@ def user_recent(request, user, context):
 
         elif activity.activity_type == const.TYPE_ACTIVITY_PRIZE:
             award = activity.content_object
-            activities.append(AwardEvent(
-                time=award.awarded_at,
-                type=activity.activity_type,
-                content_object=award.content_object,
-                badge=award.badge,
-            ))
+            if award is not None:#todo: work around halfa$$ comment deletion
+                activities.append(AwardEvent(
+                    time=award.awarded_at,
+                    type=activity.activity_type,
+                    content_object=award.content_object,
+                    badge=award.badge,
+                ))
 
     activities.sort(key=operator.attrgetter('time'), reverse=True)
 
@@ -691,7 +717,7 @@ def user_responses(request, user, context):
     #6) sort responses by time
     filtered_response_list.sort(lambda x,y: cmp(y['timestamp'], x['timestamp']))
 
-    reject_reasons = models.PostFlagReason.objects.all().order_by('title');
+    reject_reasons = models.PostFlagReason.objects.all().order_by('title')
     data = {
         'active_tab':'users',
         'page_class': 'user-profile-page',
@@ -896,8 +922,11 @@ def user(request, id, slug=None, tab_name=None):
     elif askbot_settings.KARMA_MODE == 'hidden':
         can_show_karma = False
     else:
-        if request.user.is_administrator_or_moderator() \
-            or request.user == profile_owner:
+        if request.user.is_anonymous():
+            can_show_karma = False
+        elif request.user.is_administrator_or_moderator():
+            can_show_karma = True
+        elif request.user == profile_owner:
             can_show_karma = True
         else:
             can_show_karma = False
@@ -944,12 +973,38 @@ def groups(request, id = None, slug = None):
     """
     if askbot_settings.GROUPS_ENABLED == False:
         raise Http404
-    groups = models.Tag.group_tags.get_all()
-    can_edit = request.user.is_authenticated() and \
+
+    #6 lines of input cleaning code
+    if request.user.is_authenticated():
+        scope = request.GET.get('sort', 'all-groups')
+        if scope not in ('all-groups', 'my-groups'):
+            scope = 'all-groups'
+    else:
+        scope = 'all-groups'
+
+    if scope == 'all-groups':
+        groups = models.Tag.group_tags.get_all()
+    else:
+        groups = models.Tag.group_tags.get_for_user(
+                                        user = request.user
+                                    )
+
+    groups = groups.select_related('group_profile')
+
+    user_can_add_groups = request.user.is_authenticated() and \
             request.user.is_administrator_or_moderator()
+
+    groups_membership_info = collections.defaultdict()
+    if request.user.is_authenticated():
+        #collect group memberhship information
+        groups_membership_info = request.user.get_groups_membership_info(groups)
+
     data = {
         'groups': groups,
-        'can_edit': can_edit,
-        'active_tab': 'users'
+        'groups_membership_info': groups_membership_info,
+        'user_can_add_groups': user_can_add_groups,
+        'active_tab': 'groups',#todo vars active_tab and tab_name are too similar
+        'tab_name': scope,
+        'page_class': 'groups-page'
     }
     return render_into_skin('groups.html', data, request)

@@ -23,6 +23,5 @@ class Command(NoArgsCommand):
         """function that handles the command job
         """
         self.remove_save_signals()
-        questions = models.Question.objects.all()
-        for question in questions:
-            question.thread.update_answer_count()
+        for thread in models.Thread.objects.all():
+            thread.update_answer_count()
