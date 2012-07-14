@@ -3,11 +3,6 @@
 {# ==== BEGIN: question/question_card.html ==== #}
 {% include "question/question_card.html" %}
 {# ==== END: question/question_card.html ==== #}
-{% if thread.closed %}
-    {# ==== START: question/closed_question_info.html ==== #}
-    {% include "question/closed_question_info.html" %}
-    {# ==== END: question/closed_question_info.html ==== #}
-{% endif %}
 
 {% if answers %}
     <div class="clean"></div>
