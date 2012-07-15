@@ -1940,7 +1940,7 @@ QASwapper.prototype.startSwapping = function(){
  */
 var WMD = function(){
     WrappedElement.call(this);
-    this._markdown = undefined;
+    this._text = undefined;
     this._enabled_buttons = 'bold italic link blockquote code ' +
         'image attachment ol ul heading hr';
     this._is_previewer_enabled = true;
@@ -1995,14 +1995,14 @@ WMD.prototype.createDom = function(){
     }
 };
 
-WMD.prototype.setMarkdown = function(text){
+WMD.prototype.setText = function(text){
     this._markdown = text;
     if (this._textarea){
         this._textarea.val(text);
     }
 };
 
-WMD.prototype.getMarkdown = function(){
+WMD.prototype.getText = function(){
     return this._textarea.val();
 };
 
@@ -2094,7 +2094,7 @@ TagWikiEditor.prototype.startActivatingEditor = function(){
         cache: false,
         success: function(data){
             me.backupContent();
-            editor.setMarkdown(data);
+            editor.setText(data);
             me.setContent(editor.getElement());
             me.setState('edit');
             if (me.isEditorLoaded() === false){
@@ -2107,7 +2107,7 @@ TagWikiEditor.prototype.startActivatingEditor = function(){
 
 TagWikiEditor.prototype.saveData = function(){
     var me = this;
-    var text = this._editor.getMarkdown();
+    var text = this._editor.getText();
     $.ajax({
         type: 'POST',
         dataType: 'json',
@@ -2157,7 +2157,11 @@ TagWikiEditor.prototype.decorate = function(element){
     this._tag_id = element.attr('id').split('-').pop();
 
     var me = this;
-    var editor = new WMD();
+    if (askbot['settings']['editorType'] === 'markdown') {
+        var editor = new WMD();
+    } else {
+        var editor = new TinyMCEWrapper();
+    }
     if (this._enabled_editor_buttons){
         editor.setEnabledButtons(this._enabled_editor_buttons);
     }

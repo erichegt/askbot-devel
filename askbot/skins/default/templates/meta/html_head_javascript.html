@@ -19,6 +19,7 @@
     {% endif %}
     askbot['urls'] = {};
     askbot['settings'] = {};
+    askbot['settings']['editorType'] = '{{ settings.EDITOR_TYPE }}';
     askbot['messages'] = {};
 </script>
 {# avoid adding javascript here so that pages load faster #}
