@@ -6,23 +6,6 @@
     >{% if icon == False %}{% if site_label %}{{ site_label }}{% else %}{{ site }}{% endif %}{% endif %}</a>
 {%- endmacro -%}
 
-{%- macro follow_toggle(follow, name, alias, id) -%}
-    {# follow - boolean; name - object type name; alias - e.g. users name; id - object id #}
-    <div 
-        class="follow-toggle follow-user-toggle" 
-        id="follow-{{ name|escape }}-{{ id }}"
-    >
-        {% if follow %}
-        <div class="follow">{% trans %}follow {{alias}}{% endtrans %}</div>
-        {% else %}
-        <div class="unfollow">
-          <div class="unfollow-red">{% trans %}unfollow {{alias}}{% endtrans %}</div>
-          <div class="unfollow-green">{% trans %}following {{alias}}{% endtrans %}</div>
-        </div>
-        {% endif %}
-    </div>
-{%- endmacro -%}
-
 {%- macro inbox_post_snippet(response, inbox_section) -%}
 <div id="re_{{response.id}}" class="re{% if response.is_new %} new highlight{% else %} seen{% endif %}">
     <input type="checkbox" />
@@ -530,8 +513,8 @@ answer {% if answer.accepted() %}accepted-answer{% endif %} {% if answer.author_
 {%- macro follow_toggle(follow, name, alias, id) -%}
     {# follow - boolean; name - object type name; alias - e.g. users name; id - object id #}
     <div 
-        class="follow-toggle" 
-        id="follow-{{ name }}-{{ id }}"
+        class="follow-toggle follow-user-toggle" 
+        id="follow-{{ name|escape }}-{{ id }}"
     >
         {% if follow %}
         <div class="follow">{% trans %}follow {{alias}}{% endtrans %}</div>
