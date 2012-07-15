@@ -270,12 +270,13 @@ body.user-messages {
 
 #metaNav {/* Top Navigation bar containing links for tags, people and badges, check widgets/header.html */
     float: right;/* for #header.with-logo it is modified */
+    margin-right: 7px;
 
     a {
         color: #e2e2ae;
         padding: 0px 0px 0px 35px;
         height: 25px;
-        line-height: 30px;
+        line-height: 25px;
         margin:5px 0px 0px 10px;
         font-size: 18px;
         font-weight: 100;
@@ -368,11 +369,11 @@ body.user-messages {
          }
 
         .scope-selector{
-            font-size:21px;
-            color:#5a5a4b;
+            font-size:20px;
+            color:#7a7a6b;
             height:55px;
             line-height:55px;
-            margin-left:24px
+            margin-left:16px
         }
         .on{
             background:url(../images/scopearrow.png) no-repeat center bottom;
@@ -385,9 +386,9 @@ body.user-messages {
 }
 
 #searchBar { /* Main search form , check widgets/search_bar.html */
-    display:inline-block;
+    display: inline-block;
     background-color: #fff;
-    width:412px;
+    width: 400px;
     border: 1px solid #c9c9b5;
     float:right;
     height:42px;
@@ -395,7 +396,7 @@ body.user-messages {
 
     .searchInput, .searchInputCancelable{
         font-size: 30px;
-        height: 40px;
+        height: 39px;
         font-weight:300;
         background:#FFF;
         border:0px;
@@ -406,7 +407,7 @@ body.user-messages {
     }
 
     .searchInput,{
-        width: 352px;
+        width: 340px;
     }
 
     .searchInputCancelable {
@@ -472,7 +473,7 @@ body.anon {
     margin-top:6px;
     float:right;
     text-transform:uppercase;
-    .button-style(200px, 42px, 23px);
+    .button-style(200px, 42px, 20px);
 }
 
 #askButton:hover{
@@ -546,12 +547,10 @@ body.anon {
     label {
         color: @info-text;
         font-size:15px;
-        display: block;
-        float: right;
+        vertical-align: bottom;
+        display: inline;
         text-align:left;
         font-family:@main-font;
-        width:80px;
-        margin-right:18px;
     }
 
     #displayTagFilterControl label,
@@ -659,7 +658,7 @@ body.anon {
 
     /* notify by email box */
     .notify-sidebar #question-subscribe-sidebar {
-        margin: 7px 0 0 3px;
+        margin: 0 0 0 3px;
     }
 }
 
@@ -813,12 +812,12 @@ body.anon {
 
 #questionCount{
     font-weight:bold;
-    font-size:23px;
+    font-size:20px;
     color:@section-title;
     width:200px;
     float:left;
-    margin-bottom:8px;
-    padding-top:6px;
+    margin-bottom:6px;
+    padding-top: 6px;
     font-family:@main-font;
 }
 
@@ -868,16 +867,16 @@ ul#searchTags {
 .short-summary {
     position: relative;
     filter: inherit;
-    padding: 10px;
+    padding: 10px 0;
     border-bottom: 1px solid #DDDBCE;
     margin-bottom:1px;
     overflow: hidden;
-    width: 710px;
+    width: 733px;
     float: left;
-    background: url(../images/summary-background.png) repeat-x;
-    
+    /*background: url(../images/summary-background.png) repeat-x;*/
+
     h2 {
-        font-size: 24px;
+        font-size: 20px;
         font-weight:normal;
         line-height: 26px;
         padding-left: 0;
@@ -935,7 +934,7 @@ ul#searchTags {
     }
     
     .tags {
-        margin-top: 0;
+        margin: 0 0 0 1px;
     }
     
     .votes, .answers, .favorites, .views {
@@ -1518,14 +1517,14 @@ ul#related-tags li {
 
     h1{
         padding-top:0px;
-       font-family:@main-font;
-    }
-    
-    h1 a{
-         color:@question-link;
-        font-size:30px;
-        font-weight:normal;
-        line-height:1;
+        font-family:@main-font;
+
+        a {
+            color:@question-link;
+            font-size:26px;
+            font-weight:normal;
+            line-height:1;
+        }
     }
 
     p.rss {
@@ -1533,7 +1532,7 @@ ul#related-tags li {
         clear:both;
         padding: 3px 0 0 23px;
         font-size: 15px;
-        width:110px;
+        width:130px;
         background-position:center left;
         margin-left:0px !important;
     }
@@ -1542,7 +1541,7 @@ ul#related-tags li {
         font-family:@main-font;
         vertical-align: top;
     }
-       
+
     .question-content{
         float:right;
         width:682px;
@@ -1556,7 +1555,7 @@ ul#related-tags li {
 
     #question-table,
     .answer-table {
-        margin: 6px 0 6px 0;
+        margin: 8px 0 6px 0;
         border-spacing: 0px;
         width: 670px;
         padding-right:10px;
@@ -1700,7 +1699,7 @@ ul#related-tags li {
     .tabBar{
        width:100%;
     }
-    
+
     #questionCount{
         float:left;
         font-family:@main-font;
@@ -1982,7 +1981,7 @@ ul#related-tags li {
 
     .vote-number {
         font-family: @main-font;
-        padding: 0px 0 5px 0;
+        padding: 2px 0 5px 0;
         font-size: 25px;
         font-weight: bold;
         color: #777;
@@ -1990,10 +1989,11 @@ ul#related-tags li {
 
     .vote-buttons .notify-sidebar {
         text-align: left;
-        width:120px;
-    }
-    .vote-buttons .notify-sidebar label {
-        vertical-align: top;
+        width:130px;
+        margin-top: 7px;
+        label {
+            vertical-align: top;
+        }
     }
 
     .tabBar-answer{
@@ -2010,7 +2010,7 @@ ul#related-tags li {
     .accepted-answer {
         background-color: #f7fecc;
         border-bottom-color: #9BD59B;
-        
+
         .vote-buttons {
             width:27px;
            margin-right:10px;
