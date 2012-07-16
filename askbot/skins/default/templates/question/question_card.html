@@ -25,6 +25,12 @@
                 }
             })();
         </script>
+        {% if thread.closed %}
+            <div class="clearfix"></div>
+            {# ==== START: question/closed_question_info.html ==== #}
+            {% include "question/closed_question_info.html" %}
+            {# ==== END: question/closed_question_info.html ==== #}
+        {% endif %}
         {% include "question/question_comments.html" %}
     </div>
 

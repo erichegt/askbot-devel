@@ -195,7 +195,7 @@ body.user-messages {
   text-align: center;
   background-color: #f5dd69;
   border-top: #fff 1px solid;
-  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
+  font-family: 'Open Sans Condensed', Arial, sans-serif;
 }
 .notify p.notification {
   margin-top: 6px;
@@ -222,7 +222,7 @@ body.user-messages {
 #header {
   margin-top: 0px;
   background: #16160f;
-  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
+  font-family: 'Open Sans Condensed', Arial, sans-serif;
 }
 .content-wrapper {
   /* wrapper positioning class */
@@ -275,12 +275,13 @@ body.user-messages {
   float: right;
   /* for #header.with-logo it is modified */
 
+  margin-right: 7px;
 }
 #metaNav a {
   color: #e2e2ae;
   padding: 0px 0px 0px 35px;
   height: 25px;
-  line-height: 30px;
+  line-height: 25px;
   margin: 5px 0px 0px 10px;
   font-size: 18px;
   font-weight: 100;
@@ -337,7 +338,7 @@ body.user-messages {
   border-bottom: #d3d3c2 1px solid;
   border-top: #fcfcfc 1px solid;
   margin-bottom: 10px;
-  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
+  font-family: 'Open Sans Condensed', Arial, sans-serif;
 }
 #secondaryHeader #homeButton {
   border-right: #afaf9e 1px solid;
@@ -359,11 +360,11 @@ body.user-messages {
   float: left;
 }
 #secondaryHeader #scopeWrapper .scope-selector {
-  font-size: 21px;
-  color: #5a5a4b;
+  font-size: 20px;
+  color: #7a7a6b;
   height: 55px;
   line-height: 55px;
-  margin-left: 24px;
+  margin-left: 16px;
 }
 #secondaryHeader #scopeWrapper .on {
   background: url(../images/scopearrow.png) no-repeat center bottom;
@@ -376,7 +377,7 @@ body.user-messages {
 
   display: inline-block;
   background-color: #fff;
-  width: 412px;
+  width: 400px;
   border: 1px solid #c9c9b5;
   float: right;
   height: 42px;
@@ -384,21 +385,22 @@ body.user-messages {
 }
 #searchBar .searchInput,
 #searchBar .searchInputCancelable {
-  font-size: 30px;
-  height: 40px;
+  font-size: 26px;
+  height: 39px;
   font-weight: 300;
   background: #FFF;
   border: 0px;
   color: #484848;
   padding-left: 10px;
+  padding-top: 1px;
   font-family: Arial;
-  vertical-align: middle;
+  vertical-align: top;
 }
 #searchBar .searchInput {
-  width: 352px;
+  width: 340px;
 }
 #searchBar .searchInputCancelable {
-  width: 317px;
+  width: 305px;
 }
 #searchBar .logoutsearch {
   width: 337px;
@@ -450,14 +452,13 @@ body.anon #searchBar .searchInputCancelable {
   margin-top: 6px;
   float: right;
   text-transform: uppercase;
-  width: 200px;
   height: 42px;
-  font-size: 23px;
+  font-size: 20px;
   text-align: center;
   text-decoration: none;
   cursor: pointer;
   color: #4a757f;
-  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
+  font-family: 'Open Sans Condensed', Arial, sans-serif;
   text-shadow: 0px 1px 0px #c6d9dd;
   -moz-text-shadow: 0px 1px 0px #c6d9dd;
   -webkit-text-shadow: 0px 1px 0px #c6d9dd;
@@ -478,6 +479,9 @@ body.anon #searchBar .searchInputCancelable {
   -webkit-box-shadow: 1px 1px 2px #636363;
   -moz-box-shadow: 1px 1px 2px #636363;
   box-shadow: 1px 1px 2px #636363;
+  width: 200px;
+  /* to match width of sidebar */
+
 }
 #askButton:hover {
   background-color: #cde5e9;
@@ -522,7 +526,7 @@ body.anon #searchBar .searchInputCancelable {
 .box p {
   margin-bottom: 4px;
   color: #707070;
-  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
+  font-family: 'Open Sans Condensed', Arial, sans-serif;
 }
 .box p.info-box-follow-up-links {
   text-align: right;
@@ -539,7 +543,7 @@ body.anon #searchBar .searchInputCancelable {
   color: #656565;
   padding-right: 10px;
   margin-bottom: 10px;
-  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
+  font-family: 'Open Sans Condensed', Arial, sans-serif;
   width: 190px;
 }
 .box h3 {
@@ -547,7 +551,7 @@ body.anon #searchBar .searchInputCancelable {
   font-size: 18px;
   text-align: left;
   font-weight: normal;
-  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
+  font-family: 'Open Sans Condensed', Arial, sans-serif;
   padding-left: 0px;
 }
 .box .contributorback {
@@ -556,12 +560,10 @@ body.anon #searchBar .searchInputCancelable {
 .box label {
   color: #707070;
   font-size: 15px;
-  display: block;
-  float: right;
+  vertical-align: bottom;
+  display: inline;
   text-align: left;
-  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
-  width: 80px;
-  margin-right: 18px;
+  font-family: 'Open Sans Condensed', Arial, sans-serif;
 }
 .box #displayTagFilterControl label,
 .box #emailTagFilterControl label {
@@ -594,7 +596,7 @@ body.anon #searchBar .searchInputCancelable {
 .box .inputs #ignoredTagInput,
 .box .inputs #subscribedTagInput,
 .box .inputs #ab-tag-search {
-  width: 156px;
+  width: 152px;
   padding-left: 5px;
   border: #c9c9b5 1px solid;
   height: 25px;
@@ -609,14 +611,13 @@ body.anon #searchBar .searchInputCancelable {
   border: 0;
   font-weight: bold;
   margin-top: -2px;
-  width: 30px;
   height: 27px;
   font-size: 14px;
   text-align: center;
   text-decoration: none;
   cursor: pointer;
   color: #4a757f;
-  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
+  font-family: 'Open Sans Condensed', Arial, sans-serif;
   text-shadow: 0px 1px 0px #c6d9dd;
   -moz-text-shadow: 0px 1px 0px #c6d9dd;
   -webkit-text-shadow: 0px 1px 0px #c6d9dd;
@@ -672,14 +673,13 @@ body.anon #searchBar .searchInputCancelable {
   font-weight: normal;
   margin-top: 3px;
   display: block;
-  width: 120px;
   height: 34px;
   font-size: 21px;
   text-align: center;
   text-decoration: none;
   cursor: pointer;
   color: #4a757f;
-  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
+  font-family: 'Open Sans Condensed', Arial, sans-serif;
   text-shadow: 0px 1px 0px #c6d9dd;
   -moz-text-shadow: 0px 1px 0px #c6d9dd;
   -webkit-text-shadow: 0px 1px 0px #c6d9dd;
@@ -702,6 +702,7 @@ body.anon #searchBar .searchInputCancelable {
   box-shadow: 1px 1px 2px #636363;
   margin: 0 auto;
   padding: 0;
+  width: 130px;
 }
 .box a.followed:hover,
 .box a.follow:hover {
@@ -740,7 +741,7 @@ body.anon #searchBar .searchInputCancelable {
   text-align: center;
 }
 .box .notify-sidebar #question-subscribe-sidebar {
-  margin: 7px 0 0 3px;
+  margin: 0 0 0 3px;
 }
 .users-page .box label {
   display: inline;
@@ -877,20 +878,20 @@ body.anon #searchBar .searchInputCancelable {
 /* ----- Headline, containing number of questions and tags selected, check main_page/headline.html ----- */
 #questionCount {
   font-weight: bold;
-  font-size: 23px;
+  font-size: 20px;
   color: #7ea9b3;
   width: 200px;
   float: left;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   padding-top: 6px;
-  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
+  font-family: 'Open Sans Condensed', Arial, sans-serif;
 }
 #listSearchTags {
   float: left;
   margin-top: 3px;
   color: #707070;
   font-size: 16px;
-  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
+  font-family: 'Open Sans Condensed', Arial, sans-serif;
 }
 ul#searchTags {
   margin-left: 10px;
@@ -904,7 +905,7 @@ ul#searchTags {
   margin: 5px 0 10px 0;
   padding: 0px;
   float: left;
-  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
+  font-family: 'Open Sans Condensed', Arial, sans-serif;
 }
 .search-tips a {
   text-decoration: underline;
@@ -918,28 +919,26 @@ ul#searchTags {
   padding: 0;
   width: 100%;
 }
-.main-page #question-list {
-  margin-top: 10px;
-}
 .short-summary {
   position: relative;
   filter: inherit;
-  padding: 10px;
+  padding: 10px 0 3px 0;
   border-bottom: 1px solid #DDDBCE;
   margin-bottom: 1px;
   overflow: hidden;
-  width: 710px;
+  width: 733px;
   float: left;
-  background: url(../images/summary-background.png) repeat-x;
+  /*background: url(../images/summary-background.png) repeat-x;*/
+
 }
 .short-summary h2 {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: normal;
   line-height: 26px;
   padding-left: 0;
-  margin-bottom: 6px;
+  margin-bottom: 7px;
   display: block;
-  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
+  font-family: 'Open Sans Condensed', Arial, sans-serif;
 }
 .short-summary a {
   color: #464646;
@@ -964,12 +963,12 @@ ul#searchTags {
 .short-summary .counts {
   float: right;
   margin: 4px 0 0 5px;
-  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
+  font-family: 'Open Sans Condensed', Arial, sans-serif;
 }
 .short-summary .counts .item-count {
   padding: 0px 5px 0px 5px;
   font-size: 25px;
-  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
+  font-family: 'Open Sans Condensed', Arial, sans-serif;
 }
 .short-summary .counts .votes div,
 .short-summary .counts .views div,
@@ -981,7 +980,7 @@ ul#searchTags {
   color: #646464;
 }
 .short-summary .tags {
-  margin-top: 0;
+  margin: 0 0 0 1px;
 }
 .short-summary .votes,
 .short-summary .answers,
@@ -1179,6 +1178,10 @@ ul.tags.marked-tags li,
 ul#ab-user-tags li {
   width: 160px;
   margin: 5px;
+  margin-left: 0;
+}
+.tags-page ul.tags {
+  margin-left: 5px;
 }
 ul#related-tags li {
   margin: 0 5px 8px 0;
@@ -1284,7 +1287,7 @@ ul#related-tags li {
 /* ----- Ask and Edit Question Form template----- */
 .section-title {
   color: #7ea9b3;
-  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
+  font-family: 'Open Sans Condensed', Arial, sans-serif;
   font-weight: bold;
   font-size: 24px;
 }
@@ -1373,14 +1376,13 @@ ul#related-tags li {
   float: left;
   font-weight: normal;
   margin-top: 3px;
-  width: 160px;
   height: 34px;
   font-size: 21px;
   text-align: center;
   text-decoration: none;
   cursor: pointer;
   color: #4a757f;
-  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
+  font-family: 'Open Sans Condensed', Arial, sans-serif;
   text-shadow: 0px 1px 0px #c6d9dd;
   -moz-text-shadow: 0px 1px 0px #c6d9dd;
   -webkit-text-shadow: 0px 1px 0px #c6d9dd;
@@ -1560,11 +1562,11 @@ ul#related-tags li {
 /* ----- Question template ----- */
 .question-page h1 {
   padding-top: 0px;
-  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
+  font-family: 'Open Sans Condensed', Arial, sans-serif;
 }
 .question-page h1 a {
   color: #464646;
-  font-size: 30px;
+  font-size: 26px;
   font-weight: normal;
   line-height: 1;
 }
@@ -1573,12 +1575,12 @@ ul#related-tags li {
   clear: both;
   padding: 3px 0 0 23px;
   font-size: 15px;
-  width: 110px;
+  width: 130px;
   background-position: center left;
   margin-left: 0px !important;
 }
 .question-page p.rss a {
-  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
+  font-family: 'Open Sans Condensed', Arial, sans-serif;
   vertical-align: top;
 }
 .question-page .question-content {
@@ -1592,7 +1594,7 @@ ul#related-tags li {
 }
 .question-page #question-table,
 .question-page .answer-table {
-  margin: 6px 0 6px 0;
+  margin: 8px 0 6px 0;
   border-spacing: 0px;
   width: 670px;
   padding-right: 10px;
@@ -1743,7 +1745,7 @@ ul#related-tags li {
 }
 .question-page #questionCount {
   float: left;
-  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
+  font-family: 'Open Sans Condensed', Arial, sans-serif;
   line-height: 15px;
 }
 .question-page .question-img-upvote,
@@ -1792,7 +1794,7 @@ ul#related-tags li {
   color: #7ea9b3;
   width: 200px;
   float: left;
-  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
+  font-family: 'Open Sans Condensed', Arial, sans-serif;
 }
 .question-page .comments {
   font-size: 12px;
@@ -1855,14 +1857,13 @@ ul#related-tags li {
 .question-page .comments button {
   line-height: 25px;
   margin-bottom: 5px;
-  width: 100px;
   height: 27px;
   font-size: 12px;
   text-align: center;
   text-decoration: none;
   cursor: pointer;
   color: #4a757f;
-  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
+  font-family: 'Open Sans Condensed', Arial, sans-serif;
   text-shadow: 0px 1px 0px #c6d9dd;
   -moz-text-shadow: 0px 1px 0px #c6d9dd;
   -webkit-text-shadow: 0px 1px 0px #c6d9dd;
@@ -2035,8 +2036,8 @@ ul#related-tags li {
   float: left;
   text-align: center;
   padding-top: 2px;
-  margin: 10px 10px 0px 3px;
-  /* smalls IE fixes */
+  margin: 0px 10px 0px 3px;
+  /* small IE fixes */
 
   *margin: 0;
   *height: 210px;
@@ -2046,15 +2047,16 @@ ul#related-tags li {
   cursor: pointer;
 }
 .question-page .vote-number {
-  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
-  padding: 0px 0 5px 0;
+  font-family: 'Open Sans Condensed', Arial, sans-serif;
+  padding: 2px 0 5px 0;
   font-size: 25px;
   font-weight: bold;
   color: #777;
 }
 .question-page .vote-buttons .notify-sidebar {
   text-align: left;
-  width: 120px;
+  width: 130px;
+  margin-top: 7px;
 }
 .question-page .vote-buttons .notify-sidebar label {
   vertical-align: top;
@@ -2124,7 +2126,7 @@ ul#related-tags li {
   margin-top: 10px;
 }
 .question-page #fmanswer h2 {
-  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
+  font-family: 'Open Sans Condensed', Arial, sans-serif;
   color: #7ea9b3;
   font-size: 24px;
 }
@@ -2245,14 +2247,13 @@ ul#related-tags li {
 .user-profile-page input.submit {
   font-weight: normal;
   margin: 5px 0px;
-  width: 100px;
   height: 26px;
   font-size: 15px;
   text-align: center;
   text-decoration: none;
   cursor: pointer;
   color: #4a757f;
-  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
+  font-family: 'Open Sans Condensed', Arial, sans-serif;
   text-shadow: 0px 1px 0px #c6d9dd;
   -moz-text-shadow: 0px 1px 0px #c6d9dd;
   -webkit-text-shadow: 0px 1px 0px #c6d9dd;
@@ -2341,14 +2342,13 @@ ul#related-tags li {
 #local_login_buttons .submit-b,
 #password-fs .submit-b,
 #openid-fs .submit-b {
-  width: 100px;
   height: 24px;
   font-size: 15px;
   text-align: center;
   text-decoration: none;
   cursor: pointer;
   color: #4a757f;
-  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
+  font-family: 'Open Sans Condensed', Arial, sans-serif;
   text-shadow: 0px 1px 0px #c6d9dd;
   -moz-text-shadow: 0px 1px 0px #c6d9dd;
   -webkit-text-shadow: 0px 1px 0px #c6d9dd;
@@ -2492,7 +2492,7 @@ a:hover.medal {
 }
 .user-profile-page h2 {
   padding: 10px 0px 10px 0px;
-  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
+  font-family: 'Open Sans Condensed', Arial, sans-serif;
 }
 .user-details {
   font-size: 13px;
@@ -2517,14 +2517,13 @@ a:hover.medal {
   font-weight: bold;
   line-height: 26px;
   margin-top: -2px;
-  width: 100px;
   height: 26px;
   font-size: 14px;
   text-align: center;
   text-decoration: none;
   cursor: pointer;
   color: #4a757f;
-  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
+  font-family: 'Open Sans Condensed', Arial, sans-serif;
   text-shadow: 0px 1px 0px #c6d9dd;
   -moz-text-shadow: 0px 1px 0px #c6d9dd;
   -webkit-text-shadow: 0px 1px 0px #c6d9dd;
@@ -2579,13 +2578,13 @@ a:hover.medal {
   display: none;
 }
 .count {
-  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
+  font-family: 'Open Sans Condensed', Arial, sans-serif;
   font-size: 200%;
   font-weight: 700;
   color: #777777;
 }
 .scoreNumber {
-  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
+  font-family: 'Open Sans Condensed', Arial, sans-serif;
   font-size: 35px;
   font-weight: 800;
   color: #777;
@@ -2696,7 +2695,7 @@ a:hover.medal {
   color: #525252;
 }
 .revision h3 {
-  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
+  font-family: 'Open Sans Condensed', Arial, sans-serif;
   font-size: 21px;
   padding-left: 0px;
 }
@@ -2803,7 +2802,7 @@ ins {
   padding: 6px 0 0 0;
   background: #16160f;
   font-size: 16px;
-  font-family: 'Yanone Kaffeesatz', Arial, sans-serif;
+  font-family: 'Open Sans Condensed', Arial, sans-serif;
 }
 #ground p {
   margin-bottom: 0;
@@ -3375,6 +3374,9 @@ p.signup_p {
   padding: 0;
   margin-top: -3px;
 }
+.user-profile-page ul.tags {
+  margin-left: 5px;
+}
 .userList {
   font-size: 13px;
 }
@@ -3518,7 +3520,6 @@ body.anon.lang-es #searchBar .searchInputCancelable {
   margin: 0 5px 3px 0;
 }
 .group-wiki .follow-toggle.group-join-btn {
-  width: 150px;
   margin: 4px auto 10px auto;
   display: block;
 }

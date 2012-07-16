@@ -9,8 +9,8 @@
         <span class="big">{{ question.get_question_title()|escape }}</span>
     </a>
 </p>
-<p>{% trans %}This question has been closed by 
-    <a href="{{closed_by_profile_url}}">{{closed_by_username|escape}}</a>
+<p>{% trans username = closed_by_username|escape %}This question has been closed by 
+    <a href="{{closed_by_profile_url}}">{{username}}</a>
 {% endtrans %}
 </p>
 <p>
