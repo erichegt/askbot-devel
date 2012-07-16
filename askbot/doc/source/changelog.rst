@@ -3,6 +3,7 @@ Changes in Askbot
 
 Development version
 -------------------
+* Added management command `build_livesettings_cache` (Adolfo)
 * Welcome email for the case when replying by email is enabled (Evgeny)
 * Detection of email signature based on the response to the welcome email (Evgeny)
 * Hide "website" and "about" section of the blocked user profiles
