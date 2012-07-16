@@ -181,6 +181,8 @@ INSTALLED_APPS = (
 CACHE_BACKEND = 'locmem://'
 #needed for django-keyedcache
 CACHE_TIMEOUT = 6000
+#sets a special timeout for livesettings if you want to make them different
+LIVESETTINGS_CACHE_TIMEOUT = CACHE_TIMEOUT
 CACHE_PREFIX = 'askbot' #make this unique
 CACHE_MIDDLEWARE_ANONYMOUS_ONLY = True
 #If you use memcache you may want to uncomment the following line to enable memcached based sessions
@@ -229,3 +231,4 @@ CSRF_COOKIE_NAME = 'askbot_csrf'
 STATICFILES_DIRS = ( os.path.join(ASKBOT_ROOT, 'skins'),)
 
 RECAPTCHA_USE_SSL = True
+

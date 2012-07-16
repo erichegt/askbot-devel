@@ -35,7 +35,7 @@ def get_overrides(siteid=-1):
                 }
             }
 
-    In the settings dict above, the "val" entries must exactly match the format 
+    In the settings dict above, the "val" entries must exactly match the format
     stored in the database for a setting.  Do not use a literal True or an integer,
     it needs to be the string representation of them.
 
@@ -45,7 +45,7 @@ def get_overrides(siteid=-1):
     if hasattr(djangosettings, 'LIVESETTINGS_OPTIONS'):
         if siteid == -1:
             siteid = _safe_get_siteid(None)
-        
+
         opts = djangosettings.LIVESETTINGS_OPTIONS
         if opts.has_key(siteid):
             opts = opts[siteid]
