@@ -474,7 +474,8 @@ body.anon {
     margin-top:6px;
     float:right;
     text-transform:uppercase;
-    .button-style(200px, 42px, 20px);
+    .button-style(42px, 20px);
+    padding: 0 15px;
 }
 
 #askButton:hover{
@@ -587,7 +588,7 @@ body.anon {
         #ignoredTagInput,
         #subscribedTagInput,
         #ab-tag-search {
-            width:156px;
+            width:152px;
             padding-left:5px;
             border:#c9c9b5 1px solid;
             height:25px;
@@ -602,7 +603,7 @@ body.anon {
             border:0;
             font-weight:bold;
             margin-top:-2px;
-            .button-style(30px, 27px, 14px);
+            .button-style(27px, 14px);
             .rounded-corners(4px);
         }
        #interestingTagAdd:hover,
@@ -627,8 +628,9 @@ body.anon {
         font-weight:normal;
         margin-top:3px;
         display:block;
-        .button-style(120px,34px,21px);
+        .button-style(34px,21px);
         .center;
+        width: 130px;
     }
 
     a.followed:hover, a.follow:hover{
@@ -861,14 +863,10 @@ ul#searchTags {
     width: 100%;
 }
 
-.main-page #question-list {
-    margin-top: 10px;
-}
-
 .short-summary {
     position: relative;
     filter: inherit;
-    padding: 10px 0;
+    padding: 10px 0 3px 0;
     border-bottom: 1px solid #DDDBCE;
     margin-bottom:1px;
     overflow: hidden;
@@ -881,7 +879,7 @@ ul#searchTags {
         font-weight:normal;
         line-height: 26px;
         padding-left: 0;
-        margin-bottom:6px;
+        margin-bottom:7px;
         display:block;
         font-family:@main-font;
     }
@@ -1361,7 +1359,7 @@ ul#related-tags li {
     float: left;
     font-weight:normal;
     margin-top:3px;
-    .button-style(160px,34px,21px);
+    .button-style(34px,21px);
     margin-right:7px;
 }
 
@@ -1820,7 +1818,7 @@ ul#related-tags li {
         button{
             line-height:25px;
             margin-bottom:5px;
-            .button-style(100px, 27px, 12px);
+            .button-style(27px, 12px);
             font-family:@body-font;
             font-weight:bold;
         }
@@ -2173,7 +2171,7 @@ ul#related-tags li {
     input.submit{
         font-weight:normal;
         margin:5px 0px;
-        .button-style(100px,26px,15px);
+        .button-style(26px,15px);
         font-family:@body-font;
     }
     input.submit:hover{
@@ -2204,7 +2202,7 @@ ul#related-tags li {
         width:200px;
     }
     .submit-b{
-        .button-style(100px,24px,15px);
+        .button-style(24px,15px);
         font-family:@body-font;
         font-weight:bold;
         padding-right:10px;
@@ -2363,7 +2361,7 @@ a:hover.medal {
     font-weight:bold;
     line-height:26px;
     margin-top:-2px;
-    .button-style(100px,26px,14px);
+    .button-style(26px,14px);
 }
 
 .follow-toggle:hover, .submit:hover {
@@ -3431,7 +3429,6 @@ body.anon.lang-es {
         margin: 0 5px 3px 0;
     }
     .follow-toggle.group-join-btn {
-        width: 150px;
         margin: 4px auto 10px auto;
         display: block;
     }
