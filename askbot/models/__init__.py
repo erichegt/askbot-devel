@@ -2846,6 +2846,10 @@ def send_instant_notifications_about_activity_in_post(
                         )
     #send email for all recipients
     for user in recipients:
+
+        if user.is_blocked():
+            continue
+
         reply_address, alt_reply_address = get_reply_to_addresses(user, post)
 
         subject_line, body_text = format_instant_notification_email(
