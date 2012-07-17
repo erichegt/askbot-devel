@@ -31,6 +31,11 @@
 {# ==== START: question/new_answer_form.html ==== #}
 {% include "question/new_answer_form.html" %}
 {# ==== END: question/new_answer_form.html ==== #}
-{% if request.user == question.author %}{# this is outside the form on purpose #}
-    <input type="button" class="submit after-editor answer-own-question" id="fmanswer_button"  value="{% trans %}Answer Your Own Question{% endtrans %}"/>
-{%endif%}
+{% if question.closed == False and request.user == question.author %}{# this is outside the form on purpose #}
+<input 
+  type="button"
+  class="submit after-editor answer-own-question"
+  id="fmanswer_button"
+  value="{% trans %}Answer Your Own Question{% endtrans %}"
+/>
+{% endif %}
