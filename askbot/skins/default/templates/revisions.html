@@ -79,8 +79,7 @@
         $("#nav_questions").attr('className',"on");
         $('div.revision div[id^=rev-header-]').bind('click', function(){
             var revId = this.id.substr(11);
-            toggleRev(revId); 
-        
+            toggleRev(revId);
         });
         lanai.highlightSyntax();
     });
@@ -88,13 +87,13 @@
     function toggleRev(id) {
         var arrow = $("#rev-arrow-" + id);
         var visible = arrow.attr("src").indexOf("hide") > -1;
-        var path = mediaUrl(
-                            "media/images/expander-arrow-" + 
-                            (visible ? "show" : "hide") + 
-                            ".gif" + 
-                            "?v={{settings.MEDIA_RESOURCE_REVISION}}"
-                        );
-        arrow.attr("src", path);
+        if (visible) {
+            var image_path = '{{ "/images/expander-arrow-show.gif"|media }}';
+        } else {
+            var image_path = '{{ "/images/expander-arrow-hide.gif"|media }}';
+        }
+        image_path = image_path + "?v={{settings.MEDIA_RESOURCE_REVISION}}";
+        arrow.attr("src", image_path);
         $("#rev-body-" + id).slideToggle("fast");
     }
 </script>
