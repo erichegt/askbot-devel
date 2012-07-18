@@ -479,6 +479,7 @@ class Post(models.Model):
         created = self.pk is None
 
         is_private = kwargs.pop('is_private', False)
+        group_id = kwargs.pop('group_id', None)
 
         #this save must precede saving the mention activity
         #as well as assigning groups to the post
@@ -486,8 +487,8 @@ class Post(models.Model):
         super(self.__class__, self).save(**kwargs)
 
         if author.can_make_group_private_posts():
-            if is_private:
-                self.make_private(author)
+            if is_private or group_id:
+                self.make_private(author, group_id = group_id)
             else:
                 self.make_public(author)
 
@@ -536,12 +537,18 @@ class Post(models.Model):
     def is_reject_reason(self):
         return self.post_type == 'reject_reason'
 
-    def make_private(self, user):
+    def make_private(self, user, group_id = None):
         """makes post private within user's groups"""
         groups = user.get_groups()
-        self.groups.add(*groups)
-        if self.is_question():
-            self.thread.groups.add(*groups)
+        if group_id:
+            for group in groups:
+                if group.id == group_id:
+                    groups = [group]
+                    break
+        if groups:
+            self.groups.add(*groups)
+            if self.is_question():
+                self.thread.groups.add(*groups)
 
     def make_public(self, user):
         """removes the privacy mark from users groups"""

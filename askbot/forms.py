@@ -687,6 +687,7 @@ class AskForm(PostPrivatelyForm):
     text   = QuestionEditorField()
     tags   = TagNamesField()
     wiki = WikiField()
+    group_id = forms.IntegerField(required = False, widget = forms.HiddenInput)
     ask_anonymously = forms.BooleanField(
         label = _('ask anonymously'),
         help_text = _(

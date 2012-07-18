@@ -90,6 +90,7 @@ class ThreadManager(BaseQuerySetManager):
                 tagnames = None,
                 is_anonymous = False,
                 is_private = False,
+                group_id = None,
                 by_email = False,
                 email_address = None
             ):
@@ -140,8 +141,8 @@ class ThreadManager(BaseQuerySetManager):
             email_address = email_address
         )
 
-        if is_private:#add groups to thread and question
-            thread.make_private(author)
+        if is_private or group_id:#add groups to thread and question
+            thread.make_private(author, group_id = group_id)
 
         # INFO: Question has to be saved before update_tags() is called
         thread.update_tags(tagnames = tagnames, user = author, timestamp = added_at)
@@ -784,10 +785,23 @@ class Thread(models.Model):
             return self.followed_by.filter(id = user.id).count() > 0
         return False
 
-    def make_private(self, user):
+    def make_private(self, user, group_id = None):
         groups = list(user.get_groups())
-        self.groups.add(*groups)
-        self._question_post().groups.add(*groups)
+        group_found = False
+        if group_id:
+            for group in groups:
+                if group.id == group_id:
+                    groups = [group]
+                    break
+        if groups:
+            self.groups.add(*groups)
+            self._question_post().groups.add(*groups)
+        else:
+            message = _(
+                'Posted your question publicly because you '
+                'do not belong to the requested group'
+            )
+            user.message_set.create(message = message)
 
     def is_private(self):
         return askbot_settings.GROUPS_ENABLED and self.groups.count() > 0

@@ -1471,6 +1471,7 @@ def user_post_question(
                     wiki = False,
                     is_anonymous = False,
                     is_private = False,
+                    group_id = None,
                     timestamp = None,
                     by_email = False,
                     email_address = None
@@ -1501,6 +1502,7 @@ def user_post_question(
                                     wiki = wiki,
                                     is_anonymous = is_anonymous,
                                     is_private = is_private,
+                                    group_id = group_id,
                                     by_email = by_email,
                                     email_address = email_address
                                 )
