@@ -34,12 +34,12 @@ settings.register(
 )
 
 settings.register(
-    livesettings.StringValue(
+    livesettings.BooleanValue(
         USER_SETTINGS,
         'AUTOFILL_USER_DATA',
         default = True,
         description = _('Auto-fill user name, email, etc on registration'),
-        help_text = _('... when users register via external services')
+        help_text = _('Implemented only for LDAP logins at this point')
     )
 )
 
