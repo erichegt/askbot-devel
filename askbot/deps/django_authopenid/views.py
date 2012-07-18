@@ -338,12 +338,13 @@ def signin(request):
                             else:
                                 #continue with proper registration
                                 ldap_username = user_info['ldap_username']
-                                request.session['username'] = ldap_username
                                 request.session['email'] = user_info['email']
-                                request.session['first_name'] = \
-                                    user_info['first_name']
-                                request.session['last_name'] = \
-                                    user_info['last_name']
+                                if askbot_settings.AUTOFILL_USER_DATA:
+                                    request.session['username'] = ldap_username
+                                    request.session['first_name'] = \
+                                        user_info['first_name']
+                                    request.session['last_name'] = \
+                                        user_info['last_name']
                                 return finalize_generic_signin(
                                     request,
                                     login_provider_name = 'ldap', 

@@ -34,6 +34,16 @@ settings.register(
 )
 
 settings.register(
+    livesettings.StringValue(
+        USER_SETTINGS,
+        'AUTOFILL_USER_DATA',
+        default = True,
+        description = _('Auto-fill user name, email, etc on registration'),
+        help_text = _('... when users register via external services')
+    )
+)
+
+settings.register(
     livesettings.BooleanValue(
         USER_SETTINGS,
         'EDITABLE_EMAIL',
