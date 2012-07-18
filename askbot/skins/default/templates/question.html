@@ -91,6 +91,9 @@
             }
             function render_add_comment_button(post_id, extra_comment_count){
                 var can_add = false;
+                if (data['user_posts'] === undefined) {
+                    return;
+                }
                 {% if user_can_post_comment %}
                     can_add = true;
                 {% else %}
