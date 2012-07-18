@@ -168,7 +168,7 @@ class AuthBackend(object):
 
         elif method == 'ldap':
             user_info = ldap_authenticate(username, password)
-            if user_info is None:
+            if user_info['success'] == False:
                 # Maybe a user created internally (django admin user)
                 try:
                     user = User.objects.get(username__exact=username)

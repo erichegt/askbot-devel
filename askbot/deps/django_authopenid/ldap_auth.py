@@ -55,6 +55,7 @@ def ldap_authenticate_default(username, password):
     """
     import ldap
     user_information = None
+    user_info = {}#the return value
     try:
         ldap_session = ldap.initialize(askbot_settings.LDAP_URL)
 
@@ -155,7 +156,6 @@ def ldap_authenticate_default(username, password):
             user_info['success'] = False
 
     except ldap.INVALID_CREDENTIALS, e:
-        return None # Will fail login on return of None
         user_info['success'] = False
     except ldap.LDAPError, e:
         LOG.error("LDAPError Exception")

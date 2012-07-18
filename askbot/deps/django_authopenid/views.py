@@ -361,10 +361,7 @@ def signin(request):
                                 auth_fail_func = load_module(auth_fail_func_path)
                                 auth_fail_func(user_info, login_form)
                             else:
-                                errors = login_form._errors.setdefault('__all__', ErrorList())
-                                errors.append(
-                                    _('Login failed, were your password/login name correct?')
-                                )
+                                login_form.set_password_login_error()
                             #return HttpResponseRedirect(request.path)
                 else:
                     if password_action == 'login':
