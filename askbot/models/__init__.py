@@ -562,9 +562,16 @@ def user_assert_can_post_question(self):
     )
 
 
-def user_assert_can_post_answer(self):
+def user_assert_can_post_answer(self, thread = None):
     """same as user_can_post_question
     """
+    limit_answers = askbot_settings.LIMIT_ONE_ANSWER_PER_USER
+    if limit_answers and thread.has_answer_by_user(self):
+        message = _(
+            'Sorry, you already gave an answer, please edit it instead.'
+        )
+        raise askbot_exceptions.AnswerAlreadyGiven(message)
+
     self.assert_can_post_question()
 
 
@@ -848,7 +855,9 @@ def user_assert_can_close_question(self, question = None):
 def user_assert_can_reopen_question(self, question = None):
     assert(question.post_type == 'question')
 
+    #for some reason rep to reopen own questions != rep to close own q's
     owner_min_rep_setting =  askbot_settings.MIN_REP_TO_REOPEN_OWN_QUESTIONS
+    min_rep_setting = askbot_settings.MIN_REP_TO_CLOSE_OTHERS_QUESTIONS
 
     general_error_message = _(
                         'Sorry, only administrators, moderators '
@@ -861,15 +870,27 @@ def user_assert_can_reopen_question(self, question = None):
                         'a minimum reputation of %(min_rep)s is required'
                     ) % {'min_rep': owner_min_rep_setting}
 
+    blocked_error_message = _(
+            'Sorry, you cannot reopen questions '
+            'because your account is blocked'
+        )
+
+    suspended_error_message = _(
+            'Sorry, you cannot reopen questions '
+            'because your account is suspended'
+        )
+
     _assert_user_can(
         user = self,
         post = question,
-        admin_or_moderator_required = True,
         owner_can = True,
         suspended_owner_cannot = True,
         owner_min_rep_setting = owner_min_rep_setting,
+        min_rep_setting = min_rep_setting,
         owner_low_rep_error_message = owner_low_rep_error_message,
-        general_error_message = general_error_message
+        general_error_message = general_error_message,
+        blocked_error_message = blocked_error_message,
+        suspended_error_message = suspended_error_message
     )
 
 
@@ -1725,7 +1746,7 @@ def user_post_answer(
             assert(error_message is not None)
             raise django_exceptions.PermissionDenied(error_message)
 
-    self.assert_can_post_answer()
+    self.assert_can_post_answer(thread = question.thread)
 
     if getattr(question, 'post_type', '') != 'question':
         raise TypeError('question argument must be provided')
@@ -2888,6 +2909,10 @@ def send_instant_notifications_about_activity_in_post(
                         )
     #send email for all recipients
     for user in recipients:
+
+        if user.is_blocked():
+            continue
+
         reply_address, alt_reply_address = get_reply_to_addresses(user, post)
 
         subject_line, body_text = format_instant_notification_email(

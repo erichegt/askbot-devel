@@ -81,7 +81,7 @@ def show_users(request, by_group = False, group_id = None, group_slug = None):
                 except models.Tag.DoesNotExist:
                     raise Http404
                 if group_slug == slugify(group.name):
-                    users = models.User.objects.filter(
+                    users = users.filter(
                         group_memberships__group__id = group_id
                     )
                     if request.user.is_authenticated():
@@ -99,7 +99,6 @@ def show_users(request, by_group = False, group_id = None, group_slug = None):
                                         }
                                     )
                     return HttpResponseRedirect(group_page_url)
-            
 
     is_paginated = True
 

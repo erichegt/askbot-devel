@@ -24,6 +24,7 @@ from django.core import exceptions
 from django.conf import settings
 from django.views.decorators import csrf
 
+from askbot import exceptions as askbot_exceptions
 from askbot import forms
 from askbot import models
 from askbot.conf import settings as askbot_settings
@@ -522,6 +523,10 @@ def answer(request, id):#process a new answer
                                         is_private = is_private,
                                         timestamp = update_time,
                                     )
+                    return HttpResponseRedirect(answer.get_absolute_url())
+                except askbot_exceptions.AnswerAlreadyGiven, e:
+                    request.user.message_set.create(message = unicode(e))
+                    answer = question.thread.get_answers_by_user(request.user)[0]
                     return HttpResponseRedirect(answer.get_absolute_url())
                 except exceptions.PermissionDenied, e:
                     request.user.message_set.create(message = unicode(e))

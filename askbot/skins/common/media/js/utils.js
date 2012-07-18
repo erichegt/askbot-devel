@@ -1,6 +1,10 @@
 //var $, scriptUrl, askbotSkin
+/**
+ * attention - this function needs to be retired
+ * as it cannot accurately give url to the media file
+ */
 var mediaUrl = function(resource){
-    return askbot['settings']['static_url'] + askbotSkin + '/' + resource;
+    return askbot['settings']['static_url'] + 'default' + '/' + resource;
 };
 
 var cleanUrl = function(url){

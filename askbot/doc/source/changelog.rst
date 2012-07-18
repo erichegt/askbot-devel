@@ -8,6 +8,8 @@ Development version
 * Tag moderation (Evgeny)
 * Editable optional three level category selector for the tags (Evgeny)
 * Tag editor adding tags as they are typed (Evgeny)
+* Optionally allow limiting one answer per question per person (Evgeny)
+* Added management command `build_livesettings_cache` (Adolfo)
 * Welcome email for the case when replying by email is enabled (Evgeny)
 * Detection of email signature based on the response to the welcome email (Evgeny)
 * Hide "website" and "about" section of the blocked user profiles

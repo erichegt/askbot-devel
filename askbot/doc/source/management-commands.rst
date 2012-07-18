@@ -80,6 +80,8 @@ The bulk of the management commands fall into this group and will probably be th
 +---------------------------------+-------------------------------------------------------------+
 | `build_thread_summary_cache`    | Rebuilds cache for the question summary snippet.            |
 +---------------------------------+-------------------------------------------------------------+
+| `build_livesettings_cache`      | Rebuilds cache for the live settings.                       |
++---------------------------------+-------------------------------------------------------------+
 | `delete_contextless_...`        | `delete_contextless_badge_award_activities`                 |
 |                                 | Deletes Activity objects of type badge award where the      |
 |                                 | related context object is lost.                             |
