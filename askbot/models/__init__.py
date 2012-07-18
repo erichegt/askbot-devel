@@ -3232,22 +3232,30 @@ def send_respondable_email_validation_message(
     )
 
 
-def send_welcome_email(user, **kwargs):
+def greet_new_user(user, **kwargs):
     """sends welcome email to the newly created user
 
     todo: second branch should send email with a simple
     clickable link.
     """
+    if askbot_settings.NEW_USER_GREETING:
+        user.message_set.create(message = askbot_settings.NEW_USER_GREETING)
+
     if askbot_settings.REPLY_BY_EMAIL:#with this on we also collect signature
-        data = {
-            'site_name': askbot_settings.APP_SHORT_NAME
-        }
-        send_respondable_email_validation_message(
-            user = user,
-            subject_line = _('Welcome to %(site_name)s') % data,
-            data = data,
-            template_name = 'email/welcome_lamson_on.html'
-        )
+        template_name = 'email/welcome_lamson_on.html'
+    else:
+        template_name = 'email/welcome_lamson_off.html'
+
+    data = {
+        'site_name': askbot_settings.APP_SHORT_NAME
+    }
+    send_respondable_email_validation_message(
+        user = user,
+        subject_line = _('Welcome to %(site_name)s') % data,
+        data = data,
+        template_name = template_name
+    )
+
 
 
 def complete_pending_tag_subscriptions(sender, request, *args, **kwargs):
@@ -3334,7 +3342,7 @@ signals.delete_question_or_answer.connect(record_delete_question, sender=Post)
 signals.flag_offensive.connect(record_flag_offensive, sender=Post)
 signals.remove_flag_offensive.connect(remove_flag_offensive, sender=Post)
 signals.tags_updated.connect(record_update_tags)
-signals.user_registered.connect(send_welcome_email)
+signals.user_registered.connect(greet_new_user)
 signals.user_updated.connect(record_user_full_updated, sender=User)
 signals.user_logged_in.connect(complete_pending_tag_subscriptions)#todo: add this to fake onlogin middleware
 signals.user_logged_in.connect(post_anonymous_askbot_content)
