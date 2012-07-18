@@ -498,6 +498,14 @@ class Thread(models.Model):
                 output += answer.format_for_email_as_subthread()
         return output
 
+    def get_answers_by_user(self, user):
+        """regardless - deleted or not"""
+        return self.posts.filter(post_type = 'answer', author = user)
+
+    def has_answer_by_user(self, user):
+        #use len to cache the queryset
+        return len(self.get_answers_by_user(user)) > 0
+
     def tagname_meta_generator(self):
         return u','.join([unicode(tag) for tag in self.get_tag_names()])
 
@@ -920,6 +928,7 @@ class AnonymousQuestion(AnonymousContent):
 
     def publish(self,user):
         added_at = datetime.datetime.now()
+        #todo: wrong - use User.post_question() instead
         Thread.objects.create_new(
             title = self.title,
             added_at = added_at,

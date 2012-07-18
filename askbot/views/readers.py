@@ -455,7 +455,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
         user_post_id_list = [
             id for id in post_to_author if post_to_author[id] == request.user.id
         ]
-        
+
     #resolve page number and comment number for permalinks
     show_comment_position = None
     if show_comment:
@@ -520,7 +520,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
         is_cacheable = False
     elif show_comment_position > askbot_settings.MAX_COMMENTS_TO_SHOW:
         is_cacheable = False
-        
+
     answer_form = AnswerForm(
         initial = {
             'wiki': question_post.wiki and askbot_settings.WIKI_ON,
@@ -531,6 +531,16 @@ def question(request, id):#refactor - long subroutine. display question body, an
     user_can_post_comment = (
         request.user.is_authenticated() and request.user.can_post_comment()
     )
+
+    user_already_gave_answer = False
+    previous_answer = None
+    if request.user.is_authenticated():
+        if askbot_settings.LIMIT_ONE_ANSWER_PER_USER:
+            for answer in answers:
+                if answer.author == request.user:
+                    user_already_gave_answer = True
+                    previous_answer = answer
+                    break
 
     data = {
         'is_cacheable': False,#is_cacheable, #temporary, until invalidation fix
@@ -545,6 +555,8 @@ def question(request, id):#refactor - long subroutine. display question body, an
         'user_votes': user_votes,
         'user_post_id_list': user_post_id_list,
         'user_can_post_comment': user_can_post_comment,#in general
+        'user_already_gave_answer': user_already_gave_answer,
+        'previous_answer': previous_answer,
         'tab_id' : answer_sort_method,
         'favorited' : favorited,
         'similar_threads' : thread.get_similar_threads(),
