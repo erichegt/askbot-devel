@@ -125,6 +125,22 @@ There are three more optional parameters that must go to the ``settings.py`` fil
 * ``LDAP_EXTRA_OPTIONS``, a list of two-item tuples - of names and values of
   the options. Option names must be upper case strings all starting with ``OPT_``
   as described in the `python ldap library documentation <http://www.python-ldap.org/doc/html/ldap.html#options>`_. An often used option is (`OPT_REFERRALS`, 0).
+* ``LDAP_AUTHENTICATE_FUNCTION`` - dotted python path to optional function that
+  can override the default `ldap_authenticate` function. This function allows to
+  completely customize the LDAP login procedure.
+  To see what is expected of this function (input parameters and the return value) -
+  look at the end of the doc string at
+  `askbot.deps.django_authopenid.ldap_auth.ldap_authenticate_default`.
+  One use case for the custom function is determining to which group
+  a user might belong or check any additional access rules that might be
+  stored in your LDAP directory. Another use case - is the case when 
+  the default procedure just does not work for you.
+* ``LDAP_AUTHENICATE_FAILURE_FUNCTION`` - python dotted path to an additional function
+  that may be called after a unsuccessful authentication.
+  This function can be used to set custom error messages to the login form.
+  The function should take two parameters (in the following order): user_info, login_form.
+  user_info - is the same dictionary
+  that is returned by the `ldap_authenticate` function.
 
 Use these when you have the "directory master passsword" - 
 for a specific user who can access the rest of the directory,

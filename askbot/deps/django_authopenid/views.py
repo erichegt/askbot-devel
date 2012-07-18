@@ -34,12 +34,13 @@ import datetime
 from django.http import HttpResponseRedirect, get_host, Http404
 from django.http import HttpResponse
 from django.template import RequestContext, Context
-from django.conf import settings
+from django.conf import settings as django_settings
 from askbot.conf import settings as askbot_settings
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
 from django.core.urlresolvers import reverse
+from django.forms.util import ErrorList
 from django.views.decorators import csrf
 from django.utils.encoding import smart_unicode
 from django.utils.html import escape
@@ -50,6 +51,7 @@ from recaptcha_works.decorators import fix_recaptcha_remote_ip
 from askbot.skins.loaders import render_into_skin, get_template
 from askbot.deps.django_authopenid.ldap_auth import ldap_create_user
 from askbot.deps.django_authopenid.ldap_auth import ldap_authenticate
+from askbot.utils.loading import load_module
 from urlparse import urlparse
 
 from openid.consumer.consumer import Consumer, \
@@ -136,10 +138,10 @@ def ask_openid(
     on_failure = on_failure or signin_failure
     
     trust_root = getattr(
-        settings, 'OPENID_TRUST_ROOT', get_url_host(request) + '/'
+        django_settings, 'OPENID_TRUST_ROOT', get_url_host(request) + '/'
     )
     if xri.identifierScheme(openid_url) == 'XRI' and getattr(
-            settings, 'OPENID_DISALLOW_INAMES', False
+            django_settings, 'OPENID_DISALLOW_INAMES', False
     ):
         msg = _("i-names are not supported")
         logging.debug('openid failed because i-names are not supported')
@@ -287,7 +289,7 @@ def signin(request):
     #1) url parameter "next" - if explicitly set
     #2) url from django setting LOGIN_REDIRECT_URL
     #3) home page of the forum
-    login_redirect_url = getattr(settings, 'LOGIN_REDIRECT_URL', None)
+    login_redirect_url = getattr(django_settings, 'LOGIN_REDIRECT_URL', None)
     next_url = get_next_url(request, default = login_redirect_url)
     logging.debug('next url is %s' % next_url)
 
@@ -327,7 +329,7 @@ def signin(request):
                     else:
                         #try to login again via LDAP
                         user_info = ldap_authenticate(username, password)
-                        if user_info:
+                        if user_info['success']:
                             if askbot_settings.LDAP_AUTOCREATE_USERS:
                                 #create new user or 
                                 user = ldap_create_user(user_info).user
@@ -349,10 +351,21 @@ def signin(request):
                                     redirect_url = next_url
                                 )
                         else:
-                            request.user.message_set.create(
-                                _('Incorrect user name or password')
-                            )
-                            return HttpResponseRedirect(request.path)
+                            auth_fail_func_path = getattr(
+                                                django_settings,
+                                                'LDAP_AUTHENTICATE_FAILURE_FUNCTION',
+                                                None
+                                            )
+
+                            if auth_fail_func_path:
+                                auth_fail_func = load_module(auth_fail_func_path)
+                                auth_fail_func(user_info, login_form)
+                            else:
+                                errors = login_form._errors.setdefault('__all__', ErrorList())
+                                errors.append(
+                                    _('Login failed, were your password/login name correct?')
+                                )
+                            #return HttpResponseRedirect(request.path)
                 else:
                     if password_action == 'login':
                         user = authenticate(
@@ -845,10 +858,10 @@ def register(request, login_provider_name=None, user_identifier=None):
     login_provider_name - as provider_name
 
     this function may need to be refactored to simplify the usage pattern
-    
+
     template : authopenid/complete.html
     """
-    
+
     logging.debug('')
 
     next_url = get_next_url(request)
@@ -909,7 +922,7 @@ def register(request, login_provider_name=None, user_identifier=None):
             user.save()
 
             user_registered.send(None, user = user)
-            
+
             logging.debug('creating new openid user association for %s')
 
             UserAssociation(
@@ -921,7 +934,7 @@ def register(request, login_provider_name=None, user_identifier=None):
 
             del request.session['user_identifier']
             del request.session['login_provider_name']
-            
+
             logging.debug('logging the user in')
 
             user = authenticate(method = 'force', user_id = user.id)
@@ -971,7 +984,7 @@ def register(request, login_provider_name=None, user_identifier=None):
     data = {
         'openid_register_form': register_form,
         'email_feeds_form': email_feeds_form,
-        'default_form_action': settings.LOGIN_URL,
+        'default_form_action': django_settings.LOGIN_URL,
         'provider':mark_safe(provider_logo),
         'username': username,
         'email': email,
@@ -1062,7 +1075,7 @@ def signup_with_password(request):
             #    'password': password,
             #})
             #message = message_template.render(message_context)
-            #send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, 
+            #send_mail(subject, message, django_settings.DEFAULT_FROM_EMAIL, 
             #        [user.email])
             #logging.debug('new password acct created, confirmation email sent!')
             return HttpResponseRedirect(next)
@@ -1175,7 +1188,7 @@ def _send_email_key(user):
     }
     template = get_template('authopenid/email_validation.txt')
     message = template.render(data)
-    send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
+    send_mail(subject, message, django_settings.DEFAULT_FROM_EMAIL, [user.email])
 
 def send_new_email_key(user,nomessage=False):
     import random

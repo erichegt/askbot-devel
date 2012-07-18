@@ -1,10 +1,11 @@
 import logging
 from django.conf import settings as django_settings
 from django.contrib.auth.models import User
-from django.forms import EmailField
+from django.forms import EmailField, ValidationError
 from askbot.conf import settings as askbot_settings
-from askbot.models.signals import user_registered
 from askbot.deps.django_authopenid.models import UserAssociation
+from askbot.models.signals import user_registered
+from askbot.utils.loading import load_module
 
 LOG = logging.getLogger(__name__)
 
@@ -25,7 +26,7 @@ def split_name(full_name, name_format):
         raise ValueError('Unexpected value of name_format')
 
 
-def ldap_authenticate(username, password):
+def ldap_authenticate_default(username, password):
     """
     Authenticate using ldap.
     LDAP parameter setup is described in
@@ -38,9 +39,19 @@ def ldap_authenticate(username, password):
     * last_name
     * ldap_username
     * email (optional only if there is valid email)
-    
+    * success - boolean, True if authentication succeeded
+
     python-ldap must be installed
     http://pypi.python.org/pypi/python-ldap/2.4.6
+
+    NOTE: if you are planning to implement a custom
+    LDAP authenticate function (python path to which can
+    be provided via setting `ASKBOT_LDAP_AUTHENTICATE`
+    setting in the settings.py file) - implement
+    the function just like this - accepting user name
+    and password and returning dict with the same values.
+    The returned dictionary can contain additional values
+    that you might find useful.
     """
     import ldap
     user_information = None
@@ -112,14 +123,14 @@ def ldap_authenticate(username, password):
             askbot_settings.LDAP_BASE_DN.encode(encoding),
             ldap.SCOPE_SUBTREE,
             user_filter.encode(encoding),
-            get_attrs 
+            get_attrs
         )
         if user_search_result: # User found in LDAP Directory
             user_dn = user_search_result[0][0]
             user_information = user_search_result[0][1]
             ldap_session.simple_bind_s(user_dn, password.encode(encoding)) #raises INVALID_CREDENTIALS
             ldap_session.unbind_s()
-            
+
             if given_name_field and surname_field:
                 last_name = user_information.get(surname_field, [''])[0]
                 first_name = user_information.get(given_name_field, [''])[0]
@@ -131,7 +142,8 @@ def ldap_authenticate(username, password):
             user_info = {
                 'first_name': first_name,
                 'last_name': last_name,
-                'ldap_username': user_information[login_name_field][0]
+                'ldap_username': user_information[login_name_field][0],
+                'success': True
             }
 
             try:
@@ -139,21 +151,22 @@ def ldap_authenticate(username, password):
                 user_info['email'] = EmailField().clean(email)
             except ValidationError:
                 pass
-
-            return user_info
         else:
-            return None
+            user_info['success'] = False
 
     except ldap.INVALID_CREDENTIALS, e:
         return None # Will fail login on return of None
+        user_info['success'] = False
     except ldap.LDAPError, e:
         LOG.error("LDAPError Exception")
         LOG.exception(e)
-        return None
+        user_info['success'] = False
     except Exception, e:
         LOG.error("Unexpected Exception Occurred")
         LOG.exception(e)
-        return None
+        user_info['success'] = False
+
+    return user_info
 
 
 def ldap_create_user(user_info):
@@ -181,3 +194,9 @@ def ldap_create_user(user_info):
     assoc.provider_name = 'ldap'
     assoc.save()
     return assoc
+
+LDAP_AUTH_FUNC_PATH = getattr(django_settings, 'LDAP_AUTHENTICATE_FUNCTION', None)
+if LDAP_AUTH_FUNC_PATH:
+    ldap_authenticate = load_module(LDAP_AUTH_FUNC_PATH)
+else:
+    ldap_authenticate = ldap_authenticate_default
