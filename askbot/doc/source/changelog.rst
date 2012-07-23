@@ -3,6 +3,7 @@ Changes in Askbot
 
 Development version
 -------------------
+* Added optional support for unicode slugs (Evgeny)
 * Optionally allow limiting one answer per question per person (Evgeny)
 * Added management command `build_livesettings_cache` (Adolfo)
 * Welcome email for the case when replying by email is enabled (Evgeny)
