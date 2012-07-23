@@ -29,8 +29,16 @@
 {% endif %}
 
 {# ==== START: question/new_answer_form.html ==== #}
-{% include "question/new_answer_form.html" %}
-{# ==== END: question/new_answer_form.html ==== #}
+{# buttons below cannot be cached yet #}
+{% if user_already_gave_answer %}
+    <a
+        class="submit"
+        href="{% url "edit_answer" previous_answer.id %}"
+    >{% trans %}Edit Your Previous Answer{% endtrans %}</a>
+    <span>{% trans %}(only one answer per question is allowed){% endtrans %}</span>
+{% else %}
+    {% include "question/new_answer_form.html" %}
+{% endif %}
 {% if question.closed == False and request.user == question.author %}{# this is outside the form on purpose #}
 <input 
   type="button"

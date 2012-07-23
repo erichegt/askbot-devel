@@ -108,7 +108,7 @@ class UserNameField(StrippedNonEmptyCharField):
             raise forms.ValidationError(self.error_messages['invalid'])
         if username in self.RESERVED_NAMES:
             raise forms.ValidationError(self.error_messages['forbidden'])
-        if slugify(username, force_unidecode = True) == '':
+        if slugify(username) == '':
             raise forms.ValidationError(self.error_messages['meaningless'])
         try:
             user = self.db_model.objects.get(

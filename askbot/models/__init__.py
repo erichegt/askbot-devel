@@ -551,9 +551,16 @@ def user_assert_can_post_question(self):
     )
 
 
-def user_assert_can_post_answer(self):
+def user_assert_can_post_answer(self, thread = None):
     """same as user_can_post_question
     """
+    limit_answers = askbot_settings.LIMIT_ONE_ANSWER_PER_USER
+    if limit_answers and thread.has_answer_by_user(self):
+        message = _(
+            'Sorry, you already gave an answer, please edit it instead.'
+        )
+        raise askbot_exceptions.AnswerAlreadyGiven(message)
+
     self.assert_can_post_question()
 
 
@@ -1718,7 +1725,7 @@ def user_post_answer(
             assert(error_message is not None)
             raise django_exceptions.PermissionDenied(error_message)
 
-    self.assert_can_post_answer()
+    self.assert_can_post_answer(thread = question.thread)
 
     if getattr(question, 'post_type', '') != 'question':
         raise TypeError('question argument must be provided')

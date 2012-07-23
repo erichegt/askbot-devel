@@ -68,7 +68,8 @@ class BadgeTests(AskbotTestCase):
         self.assert_have_badge(badge_key, recipient = self.u2, expected_count = 1)
         
         #post another question and check that there are no new badges
-        answer2 = self.post_answer(user = self.u2, question = question)
+        question2 = self.post_question(user = self.u1)
+        answer2 = self.post_answer(user = self.u2, question = question2)
         answer2.score = min_score - 1
         answer2.save()
         self.u1.upvote(answer2)
@@ -269,7 +270,8 @@ class BadgeTests(AskbotTestCase):
         answer = self.post_answer(user = self.u2, question = question)
         self.u1.accept_best_answer(answer)
         self.assert_have_badge('scholar', recipient = self.u1)
-        answer2 = self.post_answer(user = self.u2, question = question)
+        question2 = self.post_question(user = self.u1)
+        answer2 = self.post_answer(user = self.u2, question = question2)
         self.u1.accept_best_answer(answer2)
         self.assert_have_badge(
             'scholar',
