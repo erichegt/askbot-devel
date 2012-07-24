@@ -70,7 +70,7 @@ inbox_section - forum|flags
     {% include "user_profile/reject_post_dialog.html" %}
     <div id="responses">
     {% for response in responses %}
-        <div class="response-parent">
+        <div class="response-parent" data-response-id="{{response.id}}">
             <p class="headline">
                 <strong>"{{ response.response_title.strip()|escape}}"</strong>
             </p>
@@ -79,6 +79,7 @@ inbox_section - forum|flags
                 {{ macros.inbox_post_snippet(nested_response, inbox_section) }}
             {%endfor%}
         </div>
+        <div class="clearfix"></div>
     {% endfor %}
     </div>
     </div>
@@ -90,6 +91,13 @@ inbox_section - forum|flags
         askbot['urls']['manageInbox'] = '{% url manage_inbox %}';
         askbot['urls']['save_post_reject_reason'] = '{% url save_post_reject_reason %}';
         askbot['urls']['delete_post_reject_reason'] = '{% url delete_post_reject_reason %}';
+        {% if request.user.is_administrator_or_moderator() %}
+            askbot['data']['postRejectReasons'] = [
+                {% for reason in post_reject_reasons %}
+                {'id': {{reason.id}}, 'title': '{{reason.title|escapejs}}'},
+                {% endfor %}
+            ];
+        {% endif %}
         $(document).ready(function(){
             setup_inbox();
         });

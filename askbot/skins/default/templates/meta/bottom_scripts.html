@@ -71,6 +71,9 @@
         {% else %}
             animateHashes();
         {% endif %}
+        if (askbot['data']['userIsAdminOrMod']) {
+            $('body').addClass('admin');
+        }
     });
 {% if user_messages %}
     $('#validate_email_alert').click(function(){notify.close(true)})
