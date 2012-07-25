@@ -834,6 +834,9 @@ class Thread(models.Model):
         *IMPORTANT*: self._question_post() has to
         exist when update_tags() is called!
         """
+        if tagnames.strip() == '':
+            return
+
         previous_tags = list(self.tags.filter(status = Tag.STATUS_ACCEPTED))
 
         ordered_updated_tagnames = [t for t in tagnames.strip().split(' ')]

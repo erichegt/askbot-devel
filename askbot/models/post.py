@@ -748,7 +748,7 @@ class Post(models.Model):
         does not talk to the actual cache system
         """
         self._cached_comments = comments
-    
+
     def get_cached_comments(self):
         try:
             return self._cached_comments
