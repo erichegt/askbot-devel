@@ -23,6 +23,8 @@ from askbot import skins
 
 def generic_view(request, template = None, page_class = None):
     """this may be not necessary, since it is just a rewrite of render_into_skin"""
+    if request is None:  # a plug for strange import errors in django startup
+        return render_to_response('django_error.html')
     return render_into_skin(template, {'page_class': page_class}, request)
 
 def config_variable(request, variable_name = None, mimetype = None):

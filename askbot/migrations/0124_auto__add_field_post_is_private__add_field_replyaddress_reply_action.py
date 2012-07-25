@@ -9,6 +9,7 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         # Adding field 'Post.is_private'
+        db.start_transaction()
         db.add_column('askbot_post', 'is_private',
                       self.gf('django.db.models.fields.BooleanField')(default=False),
                       keep_default=False)
@@ -20,11 +21,15 @@ class Migration(SchemaMigration):
 
         # Changing field 'ReplyAddress.post'
         db.alter_column('askbot_replyaddress', 'post_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['askbot.Post']))
+        db.commit_transaction()
 
         try:
+            db.start_transaction()
             # Adding field 'User.interesting_tags'
             db.add_column(u'auth_user', 'email_signature', self.gf('django.db.models.fields.TextField')(blank=True, default = ''), keep_default=False)
+            db.commit_transaction()
         except:
+            db.rollback_transaction()
             pass
 
     def backwards(self, orm):
