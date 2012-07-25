@@ -43,6 +43,10 @@ class Command(NoArgsCommand):
             user_questions = questions.exclude(author = user)
             user_questions = user.get_tag_filtered_questions(user_questions)
 
+            if askbot_settings.GROUPS_ENABLED:
+                user_groups = user.get_groups()
+                user_questions = user_questions.filter(groups__in = user_groups)
+
             final_question_list = user_questions.get_questions_needing_reminder(
                 user = user,
                 activity_type = const.TYPE_ACTIVITY_UNANSWERED_REMINDER_SENT,
