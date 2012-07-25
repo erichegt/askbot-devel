@@ -46,6 +46,13 @@ class DBApiTests(AskbotTestCase):
         self.assertTrue(post.deleted_by == None)
         self.assertTrue(post.deleted_at == None)
 
+    def test_blank_tags_impossible(self):
+        self.post_question(tags='')
+        self.assertEqual(
+            models.Tag.objects.filter(name='').count(),
+            0
+        )
+
     def test_flag_question(self):
         self.user.set_status('m')
         self.user.flag_post(self.question)

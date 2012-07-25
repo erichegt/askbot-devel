@@ -722,6 +722,9 @@ class Thread(models.Model):
 
         *IMPORTANT*: self._question_post() has to exist when update_tags() is called!
         """
+        if tagnames.strip() == '':
+            return
+
         previous_tags = list(self.tags.all())
 
         previous_tagnames = set([tag.name for tag in previous_tags])
