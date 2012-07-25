@@ -17,6 +17,7 @@ from django.utils.translation import ungettext
 from django.utils.http import urlquote as django_urlquote
 from django.core import exceptions as django_exceptions
 from django.core.exceptions import ValidationError
+from django.core.urlresolvers import reverse
 from django.contrib.contenttypes.models import ContentType
 
 import askbot
@@ -1945,12 +1946,13 @@ class PostRevision(models.Model):
 
         super(PostRevision, self).save(**kwargs)
 
-    @models.permalink
     def get_absolute_url(self):
         if self.post.is_question():
-            return 'question_revisions', (self.post.id,), {}
+            return reverse('question_revisions', args = (self.post.id,))
         elif self.post.is_answer():
-            return 'answer_revisions', (), {'id':self.post.id}
+            return reverse('answer_revisions', kwargs = {'id':self.post.id})
+        else:
+            return self.post.get_absolute_url()
 
     def get_question_title(self):
         #INFO: ack-grepping shows that it's only used for Questions, so there's no code for Answers
