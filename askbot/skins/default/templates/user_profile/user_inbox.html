@@ -99,6 +99,7 @@ inbox_section - forum|flags
             ];
         {% endif %}
         $(document).ready(function(){
+            $('body').addClass('inbox-{{ inbox_section }}');
             setup_inbox();
         });
     </script>

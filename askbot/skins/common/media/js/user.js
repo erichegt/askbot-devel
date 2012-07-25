@@ -126,7 +126,7 @@ var setup_inbox = function(){
         }
     );
 
-    if (askbot['data']['userIsAdminOrMod']) {
+    if ($('body').hasClass('inbox-flags')) {
         var responses = $('.response-parent');
         responses.each(function(idx, response) {
             var control = new PostModerationControls();
