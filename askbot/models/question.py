@@ -18,7 +18,7 @@ from askbot.mail import messages
 from askbot.models.tag import Tag, get_groups, get_tags_by_names
 from askbot.models.tag import filter_accepted_tags, filter_suggested_tags
 from askbot.models.tag import delete_tags, separate_unused_tags
-from askbot.models.base import AnonymousContent, BaseQuerySetManager
+from askbot.models.base import DraftContent, BaseQuerySetManager
 from askbot.models.tag import Tag, get_groups
 from askbot.models.post import Post, PostRevision
 from askbot.models import signals
@@ -1068,7 +1068,7 @@ class FavoriteQuestion(models.Model):
         return '[%s] favorited at %s' %(self.user, self.added_at)
 
 
-class AnonymousQuestion(AnonymousContent):
+class AnonymousQuestion(DraftContent):
     """question that was asked before logging in
     maybe the name is a little misleading, the user still
     may or may not want to stay anonymous after the question
