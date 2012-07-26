@@ -1056,3 +1056,63 @@ def moderate_suggested_tag(request):
                 tag.delete()
     else:
         raise Exception(forms.format_form_errors(form))
+
+
+@csrf.csrf_exempt
+@decorators.ajax_only
+@decorators.post_only
+def save_draft_question(request):
+    """saves draft questions"""
+    #todo: allow drafts for anonymous users
+    if request.user.is_anonymous():
+        return
+
+    form = forms.DraftQuestionForm(request.POST)
+    if form.is_valid():
+        title = form.cleaned_data.get('title', '')
+        text = form.cleaned_data.get('text', '')
+        tagnames = form.cleaned_data.get('tagnames', '')
+        if title or text or tagnames:
+            try:
+                draft = models.DraftQuestion.objects.get(author=request.user)
+            except models.DraftQuestion.DoesNotExist:
+                draft = models.DraftQuestion()
+
+            draft.title = title
+            draft.text = text
+            draft.tagnames = tagnames
+            draft.author = request.user
+            draft.save()
+
+
+@csrf.csrf_exempt
+@decorators.ajax_only
+@decorators.post_only
+def save_draft_answer(request):
+    """saves draft answers"""
+    #todo: allow drafts for anonymous users
+    if request.user.is_anonymous():
+        return
+
+    import pdb
+    pdb.set_trace()
+
+    form = forms.DraftAnswerForm(request.POST)
+    if form.is_valid():
+        thread_id = form.cleaned_data['thread_id']
+        try:
+            thread = models.Thread.objects.get(id=thread_id)
+        except models.Thread.DoesNotExist:
+            return
+        try:
+            draft = models.DraftAnswer.objects.get(
+                                            thread=thread,
+                                            author=request.user
+                                    )
+        except models.DraftAnswer.DoesNotExist:
+            draft = models.DraftAnswer()
+
+        draft.author = request.user
+        draft.thread = thread
+        draft.text = form.cleaned_data.get('text', '')
+        draft.save()

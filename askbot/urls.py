@@ -79,6 +79,16 @@ urlpatterns = patterns('',
         name = 'api_get_questions'
     ),
     url(
+        r'^save-draft-question/',
+        views.commands.save_draft_question,
+        name = 'save_draft_question'
+    ),
+    url(
+        r'^save-draft-answer/',
+        views.commands.save_draft_answer,
+        name = 'save_draft_answer'
+    ),
+    url(
         r'^%s%s$' % (_('questions/'), _('ask/')), 
         views.writers.ask, 
         name='ask'

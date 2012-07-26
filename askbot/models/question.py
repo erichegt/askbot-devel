@@ -1068,6 +1068,19 @@ class FavoriteQuestion(models.Model):
         return '[%s] favorited at %s' %(self.user, self.added_at)
 
 
+class DraftQuestion(models.Model):
+    """Provides space to solve unpublished draft
+    questions. Contents is used to populate the Ask form.
+    """
+    author = models.ForeignKey(User)
+    title = models.CharField(max_length=300, null=True)
+    text = models.TextField(null=True)
+    tagnames = models.CharField(max_length=125, null=True)
+
+    class Meta:
+        app_label = 'askbot'
+
+
 class AnonymousQuestion(DraftContent):
     """question that was asked before logging in
     maybe the name is a little misleading, the user still

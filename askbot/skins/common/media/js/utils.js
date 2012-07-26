@@ -114,7 +114,7 @@ var setCheckBoxesIn = function(selector, value){
 var notify = function() {
     var visible = false;
     return {
-        show: function(html) {
+        show: function(html, autohide) {
             if (html) {
                 $("body").addClass('user-messages');
                 var par = $('<p class="notification"></p>');
@@ -123,7 +123,19 @@ var notify = function() {
             }          
             $(".notify").fadeIn("slow");
             visible = true;
+            if (autohide) {
+                setTimeout(
+                    function() { 
+                        notify.close(false);
+                        notify.clear();
+                    },
+                    3000
+                );
+            }
         },       
+        clear: function() {
+            $('.notify').empty();
+        },
         close: function(doPostback) {
             if (doPostback) {
                $.post(

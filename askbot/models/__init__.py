@@ -28,12 +28,14 @@ from askbot.models.question import Thread
 from askbot.skins import utils as skin_utils
 from askbot.mail import messages
 from askbot.models.question import QuestionView, AnonymousQuestion
+from askbot.models.question import DraftQuestion
 from askbot.models.question import FavoriteQuestion
 from askbot.models.tag import Tag, MarkedTag
 from askbot.models.tag import get_group_names, get_groups
 from askbot.models.user import EmailFeedSetting, ActivityAuditStatus, Activity
 from askbot.models.user import GroupMembership, GroupProfile
 from askbot.models.post import Post, PostRevision, PostFlagReason, AnonymousAnswer
+from askbot.models.post import DraftAnswer
 from askbot.models.reply_by_email import ReplyAddress
 from askbot.models import signals
 from askbot.models.badges import award_badges_signal, get_badge, BadgeData
@@ -3394,8 +3396,10 @@ __all__ = [
         'QuestionView',
         'FavoriteQuestion',
         'AnonymousQuestion',
+        'DraftQuestion',
 
         'AnonymousAnswer',
+        'DraftAnswer',
 
         'Post',
         'PostRevision',

@@ -1998,7 +1998,21 @@ class PostFlagReason(models.Model):
         app_label = 'askbot'
 
 
+class DraftAnswer(models.Model):
+    """Provides space for draft answers,
+    note that unlike ``AnonymousAnswer`` the foreign key
+    is going to ``Thread`` as it should.
+    """
+    thread = models.ForeignKey('Thread', related_name='draft_answers')
+    author = models.ForeignKey(User, related_name='draft_answers')
+    text = models.TextField(null=True)
+
+    class Meta:
+        app_label = 'askbot'
+
+
 class AnonymousAnswer(DraftContent):
+    """Todo: re-route the foreign key to ``Thread``"""
     question = models.ForeignKey(Post, related_name='anonymous_answers')
 
     def publish(self, user):

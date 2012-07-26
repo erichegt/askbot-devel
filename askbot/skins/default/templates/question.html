@@ -94,7 +94,7 @@
                 {% if user_can_post_comment %}
                     can_add = true;
                 {% else %}
-                    if (post_id in data['user_posts']){
+                    if (data['user_posts'] && post_id in data['user_posts']){
                         can_add = true;
                     }
                 {% endif %}

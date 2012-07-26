@@ -222,6 +222,10 @@ def ask(request):#view used to ask a new question
             group_id = form.cleaned_data.get('group_id', None)
 
             if request.user.is_authenticated():
+                drafts = models.DraftQuestion.objects.filter(
+                                                author=request.user
+                                            )
+                drafts.delete()
                 try:
                     question = request.user.post_question(
                         title = title,
@@ -258,11 +262,21 @@ def ask(request):#view used to ask a new question
     if request.method == 'GET':
         form = forms.AskForm()
 
+    draft_title = ''
+    draft_text = ''
+    draft_tagnames = ''
+    if request.user.is_authenticated():
+        drafts = models.DraftQuestion.objects.filter(author=request.user)
+        if len(drafts) > 0:
+            draft = drafts[0]
+            draft_title = draft.title
+            draft_text = draft.text
+            draft_tagnames = draft.tagnames
 
     form.initial = {
-        'title': request.REQUEST.get('title', ''),
-        'text': request.REQUEST.get('text', ''),
-        'tags': request.REQUEST.get('tags', ''),
+        'title': request.REQUEST.get('title', draft_title),
+        'text': request.REQUEST.get('text', draft_text),
+        'tags': request.REQUEST.get('tags', draft_tagnames),
         'wiki': request.REQUEST.get('wiki', False),
         'ask_anonymously': request.REQUEST.get('ask_anonymousy', False),
         'post_privately': request.REQUEST.get('post_privately', False)
@@ -271,7 +285,7 @@ def ask(request):#view used to ask a new question
         try:
             group_id = int(request.GET.get('group_id', None))
             form.initial['group_id'] = group_id
-        except Exeption:
+        except Exception:
             pass
 
     data = {

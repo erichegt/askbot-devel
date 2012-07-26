@@ -218,7 +218,7 @@ class TitleField(forms.CharField):
     """Fild receiving question title"""
     def __init__(self, *args, **kwargs):
         super(TitleField, self).__init__(*args, **kwargs)
-        self.required = True
+        self.required = kwargs.get('required', True)
         self.widget = forms.TextInput(
                             attrs={'size': 70, 'autocomplete': 'off'}
                         )
@@ -271,7 +271,7 @@ class EditorField(forms.CharField):
 
     def __init__(self, *args, **kwargs):
         super(EditorField, self).__init__(*args, **kwargs)
-        self.required = True
+        self.required = kwargs.get('required', True)
         self.widget = forms.Textarea(attrs={'id': 'editor'})
         self.label = _('content')
         self.help_text = u''
@@ -754,6 +754,19 @@ class PostPrivatelyForm(forms.Form, FormWithHideableFields):
         if self.allows_post_privately() == False:
             self.cleaned_data['post_privately'] = False
         return self.cleaned_data['post_privately']
+
+
+class DraftQuestionForm(forms.Form):
+    """No real validation required for this form"""
+    title = forms.CharField(required=False)
+    text = forms.CharField(required=False)
+    tagnames = forms.CharField(required=False)
+
+
+class DraftAnswerForm(forms.Form):
+    """Only thread_id is required"""
+    thread_id = forms.IntegerField()
+    text = forms.CharField(required=False)
 
 
 class AskForm(PostPrivatelyForm):
