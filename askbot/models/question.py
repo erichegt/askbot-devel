@@ -14,7 +14,7 @@ from django.utils.translation import ungettext
 import askbot
 import askbot.conf
 from askbot.models.tag import Tag
-from askbot.models.base import AnonymousContent
+from askbot.models.base import DraftContent
 from askbot.models.post import Post, PostRevision
 from askbot.models import signals
 from askbot import const
@@ -919,7 +919,7 @@ class FavoriteQuestion(models.Model):
         return '[%s] favorited at %s' %(self.user, self.added_at)
 
 
-class AnonymousQuestion(AnonymousContent):
+class AnonymousQuestion(DraftContent):
     """question that was asked before logging in
     maybe the name is a little misleading, the user still
     may or may not want to stay anonymous after the question

@@ -29,7 +29,7 @@ from askbot.conf import settings as askbot_settings
 from askbot import exceptions
 from askbot.utils import markup
 from askbot.utils.html import sanitize_html
-from askbot.models.base import BaseQuerySetManager, AnonymousContent
+from askbot.models.base import BaseQuerySetManager, DraftContent
 
 #todo: maybe merge askbot.utils.markup and forum.utils.html
 from askbot.utils.diff import textDiff as htmldiff
@@ -1897,7 +1897,7 @@ class PostFlagReason(models.Model):
         app_label = 'askbot'
 
 
-class AnonymousAnswer(AnonymousContent):
+class AnonymousAnswer(DraftContent):
     question = models.ForeignKey(Post, related_name='anonymous_answers')
 
     def publish(self, user):
