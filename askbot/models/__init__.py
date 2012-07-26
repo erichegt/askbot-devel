@@ -2888,7 +2888,7 @@ def send_instant_notifications_about_activity_in_post(
     newly mentioned users are carried through to reduce
     database hits
     """
-    if askbot_settings.ENABLE_CONTENT_MODERATION and post.approved == False:
+    if post.is_approved() is False:
         return
 
     if recipients is None:

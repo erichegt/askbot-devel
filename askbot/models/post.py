@@ -562,8 +562,18 @@ class Post(models.Model):
         """true, if post is private within any groups"""
         return askbot_settings.GROUPS_ENABLED and self.groups.count() > 0
 
+    def is_approved(self):
+        """``False`` only when moderation is ``True`` and post
+        ``self.approved is False``
+        """
+        if askbot_settings.ENABLE_CONTENT_MODERATION:
+            if self.approved == False:
+                return False
+        return True
+
     def needs_moderation(self):
-        return self.approved == False
+        #todo: do we need this, can't we just use is_approved()?
+        return self.approved is False
 
     def get_absolute_url(self, no_slug = False, question_post=None, thread=None):
         from askbot.utils.slug import slugify
@@ -1299,9 +1309,8 @@ class Post(models.Model):
 
     def _question__assert_is_visible_to(self, user):
         """raises QuestionHidden"""
-        if askbot_settings.ENABLE_CONTENT_MODERATION:
-            if self.approved == False:
-                raise exceptions.QuestionHidden()
+        if self.is_approved() is False:
+            raise exceptions.QuestionHidden()
         if self.deleted:
             message = _(
                 'Sorry, this question has been '
