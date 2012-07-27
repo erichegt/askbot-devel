@@ -536,12 +536,21 @@ def question(request, id):#refactor - long subroutine. display question body, an
     elif show_comment_position > askbot_settings.MAX_COMMENTS_TO_SHOW:
         is_cacheable = False
 
-    answer_form = AnswerForm(
-        initial = {
-            'wiki': question_post.wiki and askbot_settings.WIKI_ON,
-            'email_notify': thread.is_followed_by(request.user)
-        }
-    )
+    initial = {
+        'wiki': question_post.wiki and askbot_settings.WIKI_ON,
+        'email_notify': thread.is_followed_by(request.user)
+    }
+    #maybe load draft
+    if request.user.is_authenticated():
+        #todo: refactor into methor on thread
+        drafts = models.DraftAnswer.objects.filter(
+                                        author=request.user,
+                                        thread=thread
+                                    )
+        if drafts.count() > 0:
+            initial['text'] = drafts[0].text
+
+    answer_form = AnswerForm(initial)
 
     user_can_post_comment = (
         request.user.is_authenticated() and request.user.can_post_comment()

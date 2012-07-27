@@ -1094,9 +1094,6 @@ def save_draft_answer(request):
     if request.user.is_anonymous():
         return
 
-    import pdb
-    pdb.set_trace()
-
     form = forms.DraftAnswerForm(request.POST)
     if form.is_valid():
         thread_id = form.cleaned_data['thread_id']

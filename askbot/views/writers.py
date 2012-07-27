@@ -535,6 +535,11 @@ def answer(request, id):#process a new answer
             update_time = datetime.datetime.now()
 
             if request.user.is_authenticated():
+                drafts = models.DraftAnswer.objects.filter(
+                                                author=request.user,
+                                                thread=question.thread
+                                            )
+                drafts.delete()
                 try:
                     follow = form.cleaned_data['email_notify']
                     is_private = form.cleaned_data['post_privately']

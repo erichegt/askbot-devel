@@ -74,8 +74,8 @@
                 window.onbeforeunload = function() {
                     var saveHandler = draftHandler.getSaveHandler();
                     saveHandler(true);
-                    var msg = gettext("%s, we've saved your draft, but...");
-                    return interpolate(msg, [askbot['data']['userName']]);
+                    //var msg = gettext("%s, we've saved your draft, but...");
+                    //return interpolate(msg, [askbot['data']['userName']]);
                 };
             }
         });
