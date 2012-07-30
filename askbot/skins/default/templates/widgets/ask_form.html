@@ -27,7 +27,8 @@
             edit_title = False,
             mandatory_tags = mandatory_tags,
             use_category_selector = (settings.TAG_SOURCE == 'category-tree'),
-            editor_type = settings.EDITOR_TYPE
+            editor_type = settings.EDITOR_TYPE,
+            user = request.user
         )
     }}
     {{ form.group_id }}

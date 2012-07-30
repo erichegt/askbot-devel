@@ -1113,3 +1113,25 @@ def save_draft_answer(request):
         draft.thread = thread
         draft.text = form.cleaned_data.get('text', '')
         draft.save()
+
+@decorators.get_only
+@decorators.admins_only
+def get_users_info(request):
+    """retuns list of user names and email addresses
+    of "fake" users - so that admins can post on their
+    behalf"""
+    user_info_list = models.User.objects.filter(
+                        is_fake=True
+                    ).values_list(
+                        'username',
+                        'email'
+                    )
+
+    result_list = list()
+    for user_info in user_info_list:
+        username = user_info[0]
+        email = user_info[1]
+        result_list.append('%s|%s' % (username, email))
+
+    output = '\n'.join(result_list)
+    return HttpResponse(output, mimetype = 'text/plain')
