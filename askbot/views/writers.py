@@ -15,6 +15,7 @@ import time
 import urlparse
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseForbidden, Http404
 from django.utils import simplejson
 from django.utils.html import strip_tags, escape
@@ -218,8 +219,10 @@ def ask(request):#view used to ask a new question
             ask_anonymously = form.cleaned_data['ask_anonymously']
 
             if request.user.is_authenticated():
+                
+                user = form.get_post_user(request.user)
                 try:
-                    question = request.user.post_question(
+                    question = user.post_question(
                         title = title,
                         body_text = text,
                         tags = tagnames,
@@ -376,7 +379,9 @@ def edit_question(request, id):
                         is_anon_edit = form.cleaned_data['stay_anonymous']
                         is_wiki = form.cleaned_data.get('wiki', question.wiki)
 
-                        request.user.edit_question(
+                        user = form.get_post_user(request.user)
+
+                        user.edit_question(
                             question = question,
                             title = form.cleaned_data['title'],
                             body_text = form.cleaned_data['text'],
@@ -446,7 +451,8 @@ def edit_answer(request, id):
 
                 if form.is_valid():
                     if form.has_changed():
-                        request.user.edit_answer(
+                        user = form.get_post_user(request.user)
+                        user.edit_answer(
                                 answer = answer,
                                 body_text = form.cleaned_data['text'],
                                 revision_comment = form.cleaned_data['summary'],
@@ -492,7 +498,10 @@ def answer(request, id):#process a new answer
             if request.user.is_authenticated():
                 try:
                     follow = form.cleaned_data['email_notify']
-                    answer = request.user.post_answer(
+
+                    user = form.get_post_user(request.user)
+
+                    answer = user.post_answer(
                                         question = question,
                                         body_text = text,
                                         follow = follow,

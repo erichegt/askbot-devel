@@ -313,6 +313,7 @@ TippedInput.prototype.decorate = function(element){
     this._element = element;
     var instruction_text = this.getVal();
     this._instruction = instruction_text;
+    this.reset();
     var me = this;
     $(element).focus(function(){
         if (me.isBlank()){

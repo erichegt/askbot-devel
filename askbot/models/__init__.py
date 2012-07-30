@@ -83,6 +83,7 @@ User.add_to_class(
                         choices = const.USER_STATUS_CHOICES
                     )
         )
+User.add_to_class('is_fake', models.BooleanField(default=False))
 
 User.add_to_class('email_isvalid', models.BooleanField(default=False)) #@UndefinedVariable
 User.add_to_class('email_key', models.CharField(max_length=32, null=True))
@@ -342,6 +343,24 @@ def user_can_post_by_email(self):
     and user has sufficient reputatiton"""
     return askbot_settings.REPLY_BY_EMAIL and \
         self.reputation > askbot_settings.MIN_REP_TO_POST_BY_EMAIL
+
+def user_get_or_create_fake_user(self, username, email):
+    """
+    Get's or creates a user, most likely with the purpose
+    of posting under that account.
+    """
+    assert(self.is_administrator())
+
+    try:
+        user = User.objects.get(username=username)
+    except User.DoesNotExist:
+        user = User()
+        user.username = username
+        user.email = email
+        user.is_fake = True
+        user.set_unusable_password()
+        user.save()
+    return user
 
 def _assert_user_can(
                         user = None,
@@ -2537,6 +2556,7 @@ User.add_to_class('get_absolute_url', user_get_absolute_url)
 User.add_to_class('get_avatar_url', user_get_avatar_url)
 User.add_to_class('get_default_avatar_url', user_get_default_avatar_url)
 User.add_to_class('get_gravatar_url', user_get_gravatar_url)
+User.add_to_class('get_or_create_fake_user', user_get_or_create_fake_user)
 User.add_to_class('get_marked_tags', user_get_marked_tags)
 User.add_to_class('get_marked_tag_names', user_get_marked_tag_names)
 User.add_to_class('strip_email_signature', user_strip_email_signature)

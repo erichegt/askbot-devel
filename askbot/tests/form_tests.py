@@ -334,3 +334,30 @@ class AnswerEditorFieldTests(AskbotTestCase):
             self.field.clean(10*'a'),
             10*'a'
         )
+
+
+class PostAsSomeoneFormTests(AskbotTestCase):
+
+    form = forms.PostAsSomeoneForm
+
+    def setUp(self):
+        self.good_data = {
+            'username': 'me',
+            'email': 'me@example.com'
+        }
+
+    def test_blank_form_validates(self):
+        form = forms.PostAsSomeoneForm({})
+        self.assertEqual(form.is_valid(), True)
+
+    def test_complete_form_validates(self):
+        form = forms.PostAsSomeoneForm(self.good_data)
+        self.assertEqual(form.is_valid(), True)
+
+    def test_missing_email_fails(self):
+        form = forms.PostAsSomeoneForm({'post_author_username': 'me'})
+        self.assertEqual(form.is_valid(), False)
+
+    def test_missing_username_fails(self):
+        form = forms.PostAsSomeoneForm({'post_author_email': 'me@example.com'})
+        self.assertEqual(form.is_valid(), False)
