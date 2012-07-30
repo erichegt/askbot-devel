@@ -41,6 +41,7 @@ Programming and documentation
 * Silvio Heuberger
 * `Alexandros <https://github.com/alexandros-z>`_
 * `Paul Backhouse <https://github.com/powlo>`_
+* `jtrain <https://github.com/jtrain>`_
 
 Translations
 ------------
