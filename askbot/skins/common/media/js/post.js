@@ -264,13 +264,13 @@ DraftPost.prototype.decorate = function(element) {
     this._element = element;
     this.assignContentElements();
     this.backupData();
-    setInterval(this.getSaveHandler(), 5000);
+    setInterval(this.getSaveHandler(), 30000);//auto-save twice a minute
     var me = this;
     window.onbeforeunload = function() {
         var saveHandler = me.getSaveHandler();
         saveHandler(true);
-        var msg = gettext("%s, we've saved your draft, but...");
-        return interpolate(msg, [askbot['data']['userName']]);
+        //var msg = gettext("%s, we've saved your draft, but...");
+        //return interpolate(msg, [askbot['data']['userName']]);
     };
 };
 
