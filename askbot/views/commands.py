@@ -1135,3 +1135,26 @@ def get_users_info(request):
 
     output = '\n'.join(result_list)
     return HttpResponse(output, mimetype = 'text/plain')
+
+@csrf.csrf_protect
+def share_question_with_group(request):
+    form = forms.ShareQuestionForm(request.POST)
+    try:
+        import pdb
+        pdb.set_trace()
+        if form.is_valid():
+
+            thread_id = form.cleaned_data['thread_id']
+            group_name = form.cleaned_data['group_name']
+
+            thread = models.Thread.objects.get(id=thread_id)
+            group = models.Tag.group_tags.get(name=group_name)
+
+            thread.groups.add(group)
+            thread._question_post().groups.add(group)
+
+            return HttpResponseRedirect(thread.get_absolute_url())
+    except Exception:
+        error_message = _('Sorry, looks like sharing request was invalid')
+        request.user.message_set.create(message=error_message)
+        return HttpResponseRedirect(thread.get_absolute_url())

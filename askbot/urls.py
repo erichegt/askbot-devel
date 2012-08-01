@@ -89,6 +89,11 @@ urlpatterns = patterns('',
         name = 'save_draft_answer'
     ),
     url(
+        r'^share-question-with-group/',
+        views.commands.share_question_with_group,
+        name = 'share_question_with_group'
+    ),
+    url(
         r'^get-users-info/',
         views.commands.get_users_info,
         name='get_users_info'

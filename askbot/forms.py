@@ -1515,3 +1515,7 @@ class ModerateTagForm(forms.Form):
         action = self.cleaned_data['action']
         assert(action in ('accept', 'reject'))
         return action
+
+class ShareQuestionForm(forms.Form):
+    thread_id = forms.IntegerField()
+    group_name = forms.CharField()
