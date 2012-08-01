@@ -641,6 +641,8 @@ class Thread(models.Model):
         """
 
         def get_data():
+            # todo: code in this function would be simpler if
+            # we had question post id denormalized on the thread
             tags_list = self.get_tag_names()
             similar_threads = Thread.objects.filter(
                                         tags__name__in=tags_list
@@ -659,20 +661,28 @@ class Thread(models.Model):
             similar_threads = similar_threads[:10]
 
             # Denormalize questions to speed up template rendering
+            # todo: just denormalize question_post_id on the thread!
             thread_map = dict([(thread.id, thread) for thread in similar_threads])
             questions = Post.objects.get_questions()
             questions = questions.select_related('thread').filter(thread__in=similar_threads)
             for q in questions:
                 thread_map[q.thread_id].question_denorm = q
 
-            # Postprocess data
-            similar_threads = [
-                {
-                    'url': thread.question_denorm.get_absolute_url(),
-                    'title': thread.get_title(thread.question_denorm)
-                } for thread in similar_threads
-            ]
-            return similar_threads
+            # Postprocess data for the final output
+            result = list()
+            for thread in similar_threads:
+                question_post = getattr(thread, 'question_denorm', None)
+                # unfortunately the if statement below is necessary due to
+                # a possible bug
+                # all this proves that it's wrong to reference threads by
+                # the question post id in the question page urls!!!
+                # this is a "legacy" problem inherited from the old models
+                if question_post:
+                    url = question_post.get_absolute_url()
+                    title = thread.get_title(question_post)
+                    result.append({'url': url, 'title': title})
+                
+            return result 
 
         def get_cached_data():
             """similar thread data will expire
