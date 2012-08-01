@@ -237,6 +237,12 @@ DraftPost.prototype.backupData = function() {
     this._old_data = this.getData();
 };
 
+DraftPost.prototype.showNotification = function() {
+    var note = $('.editor-status span');
+    note.hide();
+    note.html(gettext('draft saved...'));
+    note.fadeIn().delay(3000).fadeOut();
+};
 
 DraftPost.prototype.getSaveHandler = function() {
     var me = this;
@@ -251,7 +257,7 @@ DraftPost.prototype.getSaveHandler = function() {
                 data: me.getData(),
                 success: function(data) {
                     if (data['success'] && !save_synchronously) {
-                        notify.show(gettext('Draft saved'), true);
+                        me.showNotification();
                     }
                     me.backupData();
                 }
@@ -264,7 +270,7 @@ DraftPost.prototype.decorate = function(element) {
     this._element = element;
     this.assignContentElements();
     this.backupData();
-    setInterval(this.getSaveHandler(), 30000);//auto-save twice a minute
+    setInterval(this.getSaveHandler(), 5000);//auto-save twice a minute
     var me = this;
     window.onbeforeunload = function() {
         var saveHandler = me.getSaveHandler();

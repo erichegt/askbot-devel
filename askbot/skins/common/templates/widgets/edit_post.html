@@ -22,6 +22,7 @@
 {% endif %}
 <div class="form-item">
     <label for="editor" class="form-error">{{ post_form.text.errors }}</label>
+    <p class="editor-status action-status"><span></span></p>
 </div>
 {# need label element for resizable input, b/c form validation won't find span #}
 {% if post_type == 'question' %}
