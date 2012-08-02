@@ -11,6 +11,9 @@ recursive-exclude .git
 prune dist
 prune tmp
 prune build
+prune static
+prune django
+prune lamson
 exclude db
 exclude lint
 exclude settings.py

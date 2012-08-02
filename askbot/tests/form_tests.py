@@ -47,9 +47,12 @@ class AskByEmailFormTests(AskbotTestCase):
             'subject': '[tag-one] where is titanic?',
             'body_text': 'where is titanic?'
         }
+
     def test_subject_line(self):
         """loops through various forms of the subject line
         and makes sure that tags and title are parsed out"""
+        setting_backup = askbot_settings.TAGS_ARE_REQUIRED
+        askbot_settings.update('TAGS_ARE_REQUIRED', True)
         for test_case in SUBJECT_LINE_CASES:
             self.data['subject'] = test_case[0]
             form = forms.AskByEmailForm(self.data)
@@ -66,6 +69,7 @@ class AskByEmailFormTests(AskbotTestCase):
                     form.cleaned_data['title'],
                     output[1]
                 )
+        askbot_settings.update('TAGS_ARE_REQUIRED', setting_backup)
 
     def test_email(self):
         """loops through variants of the from field 
@@ -303,5 +307,30 @@ class UserNameFieldTest(AskbotTestCase):
         #invalid username and username in reserved words
         self.assertRaises(django_forms.ValidationError, self.username_field.clean, '  ')
         self.assertRaises(django_forms.ValidationError, self.username_field.clean, 'fuck')
+        self.assertRaises(django_forms.ValidationError, self.username_field.clean, '......')
 
         #TODO: test more things
+
+class AnswerEditorFieldTests(AskbotTestCase):
+    """don't need to test the QuestionEditorFieldTests, b/c the
+    class is identical"""
+    def setUp(self):
+        self.old_min_length = askbot_settings.MIN_ANSWER_BODY_LENGTH
+        askbot_settings.update('MIN_ANSWER_BODY_LENGTH', 10)
+        self.field = forms.AnswerEditorField()
+
+    def tearDown(self):
+        askbot_settings.update('MIN_ANSWER_BODY_LENGTH', self.old_min_length)
+
+    def test_fail_short_body(self):
+        self.assertRaises(
+            django_forms.ValidationError,
+            self.field.clean,
+            'a'
+        )
+    
+    def test_pass_long_body(self):
+        self.assertEquals(
+            self.field.clean(10*'a'),
+            10*'a'
+        )

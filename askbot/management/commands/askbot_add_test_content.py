@@ -14,21 +14,23 @@ NUM_COMMENTS = 20
 # karma. This can be calculated dynamically - max of MIN_REP_TO_... settings
 INITIAL_REPUTATION = 500
 
+BAD_STUFF = "<script>alert('hohoho')</script>"
+
 # Defining template inputs.
-USERNAME_TEMPLATE = "test_user_%s"
+USERNAME_TEMPLATE = BAD_STUFF + "test_user_%s"
 PASSWORD_TEMPLATE = "test_password_%s"
 EMAIL_TEMPLATE = "test_user_%s@askbot.org"
-TITLE_TEMPLATE = "Test question title No.%s"
-TAGS_TEMPLATE = ["tag-%s-0", "tag-%s-1"] # len(TAGS_TEMPLATE) tags per question
+TITLE_TEMPLATE = "Test question title No.%s" + BAD_STUFF
+TAGS_TEMPLATE = [BAD_STUFF + "tag-%s-0", BAD_STUFF + "tag-%s-1"] # len(TAGS_TEMPLATE) tags per question
 
-CONTENT_TEMPLATE = """Lorem lean startup ipsum product market fit customer
+CONTENT_TEMPLATE = BAD_STUFF + """Lorem lean startup ipsum product market fit customer
                     development acquihire technical cofounder. User engagement
                     **A/B** testing *shrink* a market venture capital pitch."""
 
-ANSWER_TEMPLATE = """Accelerator photo sharing business school drop out ramen
+ANSWER_TEMPLATE = BAD_STUFF + """Accelerator photo sharing business school drop out ramen
                     hustle crush it revenue traction platforms."""
 
-COMMENT_TEMPLATE = """Main differentiators business model micro economics
+COMMENT_TEMPLATE = BAD_STUFF + """Main differentiators business model micro economics
                     marketplace equity augmented reality human computer"""
 
 
@@ -47,6 +49,12 @@ class Command(NoArgsCommand):
         "Create the users and return an array of created users"
         users = []
 
+        #add admin with the same password
+        admin = User.objects.create_user('admin', 'admin@example.com')
+        admin.set_password('admin')
+        self.print_if_verbose("Created User 'admin'")
+        users.append(admin)
+
         # Keeping the created users in array - we will iterate over them
         # several times, we don't want querying the model each and every time.
         for i in range(NUM_USERS):
@@ -58,6 +66,7 @@ class Command(NoArgsCommand):
             user.save()
             self.print_if_verbose("Created User '%s'" % user.username)
             users.append(user)
+
         return users
 
 
@@ -69,7 +78,8 @@ class Command(NoArgsCommand):
         active_question = None
         last_vote = False
         # Each user posts a question
-        for user in users[:NUM_QUESTIONS]:
+        for i in range(NUM_QUESTIONS):
+            user = users[i]
             # Downvote/upvote the questions - It's reproducible, yet
             # gives good randomized data
             if not active_question is None:
@@ -87,13 +97,15 @@ class Command(NoArgsCommand):
 
             # len(TAGS_TEMPLATE) tags per question - each tag is different
             tags = " ".join([t%user.id for t in TAGS_TEMPLATE])
+            if i < NUM_QUESTIONS/2:
+                tags += ' one-tag'
             active_question = user.post_question(
                         title = TITLE_TEMPLATE % user.id,
                         body_text = CONTENT_TEMPLATE,
                         tags = tags,
                     )
             self.print_if_verbose("Created Question '%s' with tags: '%s'" % (
-                                                active_question.title, tags,)
+                                                active_question.thread.title, tags,)
                                             )
         return active_question
 
@@ -220,14 +232,14 @@ class Command(NoArgsCommand):
                         )
         self.print_if_verbose("User has edited the active answer")
 
-        active_answer_comment.user.edit_comment(
-                            comment = active_answer_comment,
+        active_answer_comment.author.edit_comment(
+                            comment_post = active_answer_comment,
                             body_text = ANSWER_TEMPLATE
                         )
         self.print_if_verbose("User has edited the active answer comment")
 
-        active_question_comment.user.edit_comment(
-                            comment = active_question_comment,
+        active_question_comment.author.edit_comment(
+                            comment_post = active_question_comment,
                             body_text = ANSWER_TEMPLATE
                         )
         self.print_if_verbose("User has edited the active question comment")

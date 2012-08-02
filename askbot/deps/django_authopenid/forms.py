@@ -392,7 +392,7 @@ class AccountRecoveryForm(forms.Form):
         if 'email' in self.cleaned_data:
             email = self.cleaned_data['email']
             try:
-                user = User.objects.get(email=email)
+                user = User.objects.get(email__iexact=email)
                 self.cleaned_data['user'] = user
             except User.DoesNotExist:
                 del self.cleaned_data['email']
@@ -447,5 +447,5 @@ class EmailPasswordForm(forms.Form):
                 self.user_cache = User.objects.get(
                         username = self.cleaned_data['username'])
             except:
-                raise forms.ValidationError(_("Incorrect username."))
+                raise forms.ValidationError(_("sorry, there is no such user name"))
         return self.cleaned_data['username']

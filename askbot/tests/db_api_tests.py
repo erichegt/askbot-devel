@@ -7,6 +7,7 @@ from django.core import exceptions
 from django.core.urlresolvers import reverse
 from django.test.client import Client
 from django.conf import settings
+from django import forms
 from askbot.tests.utils import AskbotTestCase
 from askbot import models
 from askbot import const
@@ -14,6 +15,9 @@ from askbot.conf import settings as askbot_settings
 import datetime
 
 class DBApiTests(AskbotTestCase):
+    """tests methods on User object,
+    that were added for askbot
+    """
 
     def setUp(self):
         self.create_user()
@@ -41,6 +45,13 @@ class DBApiTests(AskbotTestCase):
         self.assertTrue(post.deleted == False)
         self.assertTrue(post.deleted_by == None)
         self.assertTrue(post.deleted_at == None)
+
+    def test_blank_tags_impossible(self):
+        self.post_question(tags='')
+        self.assertEqual(
+            models.Tag.objects.filter(name='').count(),
+            0
+        )
 
     def test_flag_question(self):
         self.user.set_status('m')
@@ -74,6 +85,14 @@ class DBApiTests(AskbotTestCase):
         rev = q.revisions.all()[0]
         self.assertTrue(rev.is_anonymous)
 
+    def test_post_bodyless_question(self):
+        q = self.user.post_question(
+            body_text = '',
+            title = 'aeuaouaousaotuhao',
+            tags = 'test'
+        )
+        self.assertEquals(q.text.strip(), '')
+
     def test_reveal_asker_identity(self):
         q = self.ask_anonymous_question()
         self.other_user.set_status('m')
@@ -85,7 +104,7 @@ class DBApiTests(AskbotTestCase):
                             tags = 'aoeuaoeu',
                             revision_comment = 'hahahah'
                         )
-        q.remove_author_anonymity()
+        q.thread.remove_author_anonymity()
         q = self.reload_object(q)
         self.assertFalse(q.is_anonymous)
         for rev in q.revisions.all():
@@ -111,11 +130,8 @@ class DBApiTests(AskbotTestCase):
         self.post_answer(question = self.question)
         self.user.delete_answer(self.answer)
         self.assert_post_is_deleted(self.answer)
-        saved_question = models.Question.objects.get(id = self.question.id)
-        self.assertEquals(
-                saved_question.answer_count,
-                0
-            )
+        saved_question = models.Post.objects.get_questions().get(id = self.question.id)
+        self.assertEquals(0, saved_question.thread.answer_count)
 
     def test_restore_answer(self):
         self.post_answer()
@@ -130,12 +146,12 @@ class DBApiTests(AskbotTestCase):
         self.post_answer(user = self.other_user)
         self.user.delete_question(self.question)
         self.assert_post_is_deleted(self.question)
-        answer_count = self.question.get_answers(user = self.user).count()
-        answer = self.question.answers.all()[0]
+        answer_count = self.question.thread.get_answers(user = self.user).count()
+        answer = self.question.thread.posts.get_answers()[0]
         self.assert_post_is_not_deleted(answer)
         self.assertTrue(answer_count == 1)
-        saved_question = models.Question.objects.get(id = self.question.id)
-        self.assertTrue(saved_question.answer_count == 1)
+        saved_question = models.Post.objects.get_questions().get(id = self.question.id)
+        self.assertTrue(saved_question.thread.answer_count == 1)
 
     def test_unused_tag_is_auto_deleted(self):
         self.user.retag_question(self.question, tags = 'one-tag')
@@ -152,10 +168,11 @@ class DBApiTests(AskbotTestCase):
             user = self.user,
             body_text = "ahahahahahahah database'"
         )
-        matches = models.Question.objects.get_by_text_query("database'")
+        matches = models.Post.objects.get_questions().get_by_text_query("database'")
         self.assertTrue(len(matches) == 1)
 
-class UserLikeTests(AskbotTestCase):
+class UserLikeTagTests(AskbotTestCase):
+    """tests for user liking and disliking tags"""
     def setUp(self):
         self.create_user()
         self.question = self.post_question(tags = 'one two three')
@@ -368,15 +385,27 @@ class CommentTests(AskbotTestCase):
 
     def test_other_user_can_upvote_comment(self):
         self.other_user.upvote(self.comment)
-        comments = self.question.get_comments(visitor = self.other_user)
+        models.Post.objects.precache_comments(for_posts=[self.question], visitor = self.other_user)
+        comments = self.question._cached_comments
         self.assertEquals(len(comments), 1)
         self.assertEquals(comments[0].upvoted_by_user, True)
         self.assertEquals(comments[0].is_upvoted_by(self.other_user), True)
 
     def test_other_user_can_cancel_upvote(self):
         self.test_other_user_can_upvote_comment()
-        comment = models.Comment.objects.get(id = self.comment.id)
+        comment = models.Post.objects.get_comments().get(id = self.comment.id)
         self.assertEquals(comment.score, 1)
         self.other_user.upvote(comment, cancel = True)
-        comment = models.Comment.objects.get(id = self.comment.id)
+        comment = models.Post.objects.get_comments().get(id = self.comment.id)
         self.assertEquals(comment.score, 0)
+
+class TagAndGroupTests(AskbotTestCase):
+    def setUp(self):
+        self.u1 = self.create_user('u1')
+        
+    def test_group_cannot_create_case_variant_tag(self):
+        self.post_question(user = self.u1, tags = 'one two three')
+        models.Tag.group_tags.get_or_create(user = self.u1, group_name = 'One')
+        tag_one = models.Tag.objects.filter(name__iexact = 'one')
+        self.assertEqual(tag_one.count(), 1)
+        self.assertEqual(tag_one[0].name, 'one')

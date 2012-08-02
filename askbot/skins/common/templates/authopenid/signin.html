@@ -1,5 +1,6 @@
 {% extends "two_column_body.html" %}
 {% import "authopenid/authopenid_macros.html" as login_macros %}
+{% from "macros.html" import timeago %}
 <!-- signin.html -->
 {% block title %}{% spaceless %}{% trans %}User login{% endtrans %}{% endspaceless %}{% endblock %}
 {% block forestyle %}
@@ -11,21 +12,21 @@
 {% endif %}
     {% if answer %}
         <div class="message">
-        {% trans title=answer.question.title, summary=answer.summary %}
+        {% trans title=answer.question.title|escape, summary=answer.summary|escape %}
         Your answer to {{title}} {{summary}} will be posted once you log in
         {% endtrans %}
         </div>
     {% endif %}
     {% if question %}
         <div class="message">
-        {% trans title=question.title, summary=question.summary %}Your question 
+        {% trans title=question.title|escape, summary=question.summary|escape %}Your question 
         {{title}} {{summary}} will be posted once you log in
         {% endtrans %}
         </div>
     {% endif %}
     <p id='login-intro'>
     {% if view_subtype == 'default' and have_buttons %}
-        {% trans %}Take a pick of your favorite service below to sign in using secure OpenID or similar technology. Your external service password always stays confidential and you don't have to rememeber or create another one.{% endtrans %}
+        {% trans %}Choose your favorite service below to sign in using secure OpenID or similar technology. Your external service password always stays confidential and you don't have to rememeber or create another one.{% endtrans %}
     {% elif view_subtype == 'add_openid' and have_buttons %}
         {% if existing_login_methods %}
             {% trans %}It's a good idea to make sure that your existing login methods still work, or add a new one. Please click any of the icons below to check/change or add new login methods.{% endtrans %}
@@ -61,7 +62,8 @@
                 minor_login_providers = minor_login_providers,
                 hide_local_login = settings.SIGNIN_ALWAYS_SHOW_LOCAL_LOGIN,
                 settings = settings,
-                logged_in = user.is_authenticated()
+                logged_in = user.is_authenticated(),
+                show_buttons = have_buttons
             )
         }}
           {% if use_password_login == True %}
@@ -83,9 +85,15 @@
         >
             {{login_form.password_action}}
             {% if user.is_anonymous() %}
-                <h2 id="password-heading">
-                    {% trans %}Please enter your <span>user name and password</span>, then sign in{% endtrans %}
-                </h2>
+                {% if have_buttons %}
+                    <h2 id="password-heading">
+                        {% trans %}or enter your <span>user name and password</span>, then sign in{% endtrans %}
+                    </h2>
+                {% else %}
+                    <h1 class="section-title">
+                        {% trans %}Please, sign in{% endtrans %}
+                    </h1>
+                {% endif %}
                 {% if have_buttons %}
                     <p class="hint">{% trans %}(or select another login method above){% endtrans %}</p>
                 {% endif %}
@@ -103,7 +111,7 @@
                     </tr>
                 </table>
                 <p id="local_login_buttons">
-                    <input class="submit-b" name="login_with_password" type="submit" value="{% trans %}Login{% endtrans %}" />
+                    <input class="submit-b" name="login_with_password" type="submit" value="{% trans %}Sign in{% endtrans %}" />
                     {% if settings.USE_LDAP_FOR_PASSWORD_LOGIN == False %}
                     <a class="create-password-account" style="vertical-align:middle" href="{% url user_signup_with_password %}?login_provider=local">{% trans %}Create a password-protected account{% endtrans %}</a>
                     {% endif %}
@@ -117,6 +125,8 @@
                         <td><label for="id_new_password">{% trans %}New password{% endtrans %}</label></td>
                         <td>
                             {{login_form.new_password}}
+                        </td>
+                        <td>
                             <span class="error">{{login_form.new_password.errors[0]}}</span>
                         </td>
                     </tr>
@@ -124,6 +134,8 @@
                         <td><label for="id_new_password_retyped">{% trans %}Please, retype{% endtrans %}</label></td>
                         <td>
                             {{login_form.new_password_retyped}}
+                        </td>
+                        <td>
                             <span class="error">{{login_form.new_password_retyped.errors[0]}}</span>
                         </td>
                     </tr>
@@ -158,7 +170,7 @@
                 </td>
                 <td>
                     {% if login_method.last_used_timestamp %}
-                        {{login_method.last_used_timestamp|diff_date}}
+                        {{ timeago(login_method.last_used_timestamp) }}
                     {% endif %}
                 </td>
                 <td>
@@ -209,33 +221,7 @@
         {% endif %}
     {% endif %}
 {% endblock %}
-
-{% block sidebar %}
-    {% if have_buttons %}
-        <div class="box">
-            <h2>{% trans %}Why use OpenID?{% endtrans %}</h2>
-            <ul>
-                <li>
-                    {% trans %}with openid it is easier{% endtrans %}
-                </li>
-                <li>
-                    {% trans %}reuse openid{% endtrans %}
-                </li>
-                <li>
-                    {% trans %}openid is widely adopted{% endtrans %}
-                </li>
-                <li>
-                    {% trans %}openid is supported open standard{% endtrans %}
-                </li>
-            </ul>
-            <p class="info-box-follow-up-links">
-                <a href="http://openid.net/what/" target="_blank">{% trans %}Find out more{% endtrans %} »</a><br/>
-                <a href="http://openid.net/get/" target="_blank">{% trans %}Get OpenID{% endtrans %} »</a>
-            </p>
-        </div>
-    {% endif %}
-{% endblock%}
-{%block endjs%}
-{%include "authopenid/providers_javascript.html" %}
-{%endblock%}
+{% block endjs %}
+{% include "authopenid/providers_javascript.html" %}
+{% endblock %}
 <!-- end signin.html -->

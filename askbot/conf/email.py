@@ -31,6 +31,15 @@ settings.register(
 )
 
 settings.register(
+    livesettings.BooleanValue(
+        EMAIL,
+        'ENABLE_EMAIL_ALERTS',
+        default = True,
+        description = _('Enable email alerts'),
+    )
+)
+
+settings.register(
     livesettings.IntegerValue(
         EMAIL,
         'MAX_ALERTS_PER_EMAIL',
@@ -262,5 +271,64 @@ settings.register(
             'This setting applies to tags written in the subject line '
             'of questions asked by email'
         )
+    )
+)
+
+settings.register(
+     livesettings.BooleanValue(
+         EMAIL,
+        'REPLY_BY_EMAIL',
+        default = False,
+        description=_('Enable posting answers and comments by email'),
+        #TODO give a better explanation depending on lamson startup procedure
+        help_text=_(
+            'To enable this feature make sure lamson is running'
+            
+        )
+    )
+)
+
+settings.register(
+    livesettings.StringValue(
+        EMAIL,
+        'SELF_NOTIFY_EMAILED_POST_AUTHOR_WHEN',
+        description = _(
+            'Emailed post: when to notify author about publishing'
+        ),
+        choices = const.SELF_NOTIFY_EMAILED_POST_AUTHOR_WHEN_CHOICES,
+        default = const.NEVER
+    )
+)
+
+#not implemented at this point
+#settings.register(
+#    livesettings.IntegerValue(
+#        EMAIL,
+#        'SELF_NOTIFY_WEB_POST_AUTHOR_WHEN',
+#        description = _(
+#            'Web post: when to notify author about publishing'
+#        ),
+#        choices = const.SELF_NOTIFY_WEB_POST_AUTHOR_WHEN_CHOICES,
+#        default =  const.NEVER
+#    )
+#)
+
+settings.register(
+     livesettings.StringValue(
+         EMAIL,
+        'REPLY_BY_EMAIL_HOSTNAME',
+        default = "",
+        description=_('Reply by email hostname'),
+        #TODO give a better explanation depending on lamson startup procedure
+        
+    )
+)
+
+settings.register(
+    livesettings.IntegerValue(
+        EMAIL,
+        'MIN_WORDS_FOR_ANSWER_BY_EMAIL',
+        default=14,
+        description=_('Email replies having fewer words than this number will be posted as comments instead of answers')
     )
 )

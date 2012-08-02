@@ -1,11 +1,11 @@
 {% extends "two_column_body.html" %}
 <!-- question_retag.html -->
-{% block title %}{% spaceless %}{% trans %}Change tags{% endtrans %}{% endspaceless %}{% endblock %}
+{% block title %}{% spaceless %}{% trans %}Retag question{% endtrans %}{% endspaceless %}{% endblock %}
 {% block content %}
-<h1>{% trans %}Change tags{% endtrans %} [<a href="{{ question.get_absolute_url() }}">{% trans %}back{% endtrans %}</a>]</h1>
+<h1>{% trans %}Retag question{% endtrans %} [<a href="{{ question.get_absolute_url() }}">{% trans %}back{% endtrans %}</a>]</h1>
 <form id="fmretag" action="{% url retag_question question.id %}" method="post" >{% csrf_token %}
     <h2>
-        {{ question.get_question_title() }}
+        {{ question.thread.get_title()|escape }}
     </h2>
     <div id="description" class="edit-content-html">
         {{ question.html }}

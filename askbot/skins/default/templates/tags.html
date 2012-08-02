@@ -1,29 +1,31 @@
 {% extends "two_column_body.html" %}
 {% import "macros.html" as macros %}
 <!-- tags.html -->
-{% block title %}{% spaceless %}{% trans %}Tag list{% endtrans %}{% endspaceless %}{% endblock %}
+{% block title %}{% spaceless %}{% trans %}Tags{% endtrans %}{% endspaceless %}{% endblock %}
 {% block content %}
 <!-- Tabs -->
-{% if stag %}
-    <h1 class="section-title">{% trans %}Tags, matching "{{ stag }}"{% endtrans %}</h1>
-{% else %}
-    <h1 class="section-title">{% trans %}Tag list{% endtrans %}</h1>
-{% endif %}
-<div class="tabBar tabBar-tags">
-    <div class="tabsA">
-        <span class="label">{% trans %}Sort by &raquo;{% endtrans %}</span>
-        <a
-            id="sort_name"
-            href="{% url tags %}?sort=name"
-            {% if tab_id == 'name' %}class="on"{% endif %}
-            title="{% trans %}sorted alphabetically{% endtrans %}"
-        ><span>{% trans %}by name{% endtrans %}</span></a>
-        <a
-            id="sort_used"
-            href="{% url tags %}?sort=used"
-            {% if tab_id == 'used' %}class="on"{% endif %}
-            title="{% trans %}sorted by frequency of tag use{% endtrans %}"
-        ><span>{% trans %}by popularity{% endtrans %}</span></a>
+<div id="content-header">
+    {% if stag %}
+        <h1 class="section-title">{% trans %}Tags, matching "{{ stag }}"{% endtrans %}</h1>
+    {% else %}
+        <h1 class="section-title">{% trans %}Tag list{% endtrans %}</h1>
+    {% endif %}
+    <div class="tabBar tabBar-tags">
+        <div class="tabsA">
+            <span class="label">{% trans %}Sort by &raquo;{% endtrans %}</span>
+            <a
+                id="sort_name"
+                href="{% url tags %}?sort=name"
+                {% if tab_id == 'name' %}class="on"{% endif %}
+                title="{% trans %}sorted alphabetically{% endtrans %}"
+            ><span>{% trans %}by name{% endtrans %}</span></a>
+            <a
+                id="sort_used"
+                href="{% url tags %}?sort=used"
+                {% if tab_id == 'used' %}class="on"{% endif %}
+                title="{% trans %}sorted by frequency of tag use{% endtrans %}"
+            ><span>{% trans %}by popularity{% endtrans %}</span></a>
+        </div>
     </div>
 </div>
 {% if tag_list_type == 'list' %}
@@ -37,8 +39,8 @@
             <li>
                 {{ macros.tag_widget(
                             tag = tag.name,
-                            url_params = 'start_over=true',
                             html_tag = 'div',
+                            truncate_long_tag = True,
                             extra_content = '<span class="tag-number">&#215; ' ~
                                             tag.used_count|intcomma ~ '</span>'
                     )
@@ -56,7 +58,7 @@
     {% if not tags %}
         <span>{% trans %}Nothing found{% endtrans %}</span>
     {% endif %}
-    {{ macros.tag_cloud(tags = tags, font_sizes = font_size) }}
+    {{ macros.tag_cloud(tags = tags, font_sizes = font_size, search_state = search_state) }}
 {% endif %}
 
 {% endblock %}

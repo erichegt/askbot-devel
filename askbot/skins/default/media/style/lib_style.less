@@ -14,8 +14,44 @@
 
 @body-font:Arial; /* "Trebuchet MS", sans-serif;*/
 @sort-font:Georgia, serif;
-@main-font:'Yanone Kaffeesatz', sans-serif;
+@main-font:'Open Sans Condensed', Arial, sans-serif;
 @secondary-font:Arial;
+
+/* Buttons */
+
+.button-style(@h:20px, @f:14px){
+    height:@h;
+    font-size:@f;
+    text-align:center;
+    text-decoration:none;
+    cursor:pointer;
+    color:@button-label;
+    font-family:@main-font;
+    .text-shadow(0px,1px,0px,#c6d9dd);
+    border-top:#eaf2f3 1px solid;
+    .linear-gradient(#d1e2e5,#a9c2c7);
+    .rounded-corners(4px);
+    .box-shadow(1px, 1px, 2px, #636363)
+}
+
+.button-style-hover{
+    .linear-gradient(#cde5e9,#94b3ba);
+    text-decoration:none;
+    .text-shadow(0px, 1px, 0px, #c6d9dd);
+}
+
+/* General styles for gradients */
+
+.linear-gradient(@start:#eee,@end:#fff,@stop:25%){
+    background-color: @start;
+    background-repeat: no-repeat;
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(@start), color-stop(@stop, @start), to(@end));
+    background-image: -webkit-linear-gradient(@start, @start @stop, @end);
+    background-image: -moz-linear-gradient(top, @start, @start @stop, @end);
+    background-image: -ms-linear-gradient(@start, @start @stop, @end);
+    background-image: -o-linear-gradient(@start, @start @stop, @end);
+    background-image: linear-gradient(@start, @start @stop, @end);
+}
 
 /* Receive exactly positions for background Sprite  */
 
@@ -26,7 +62,7 @@
 /* CSS3 Elements */
 
 .box-shadow (@hor: 0px, @vert: 0px, @blur: 5px, @shadow: #929292){
-    -webkit-box-shadow: @arguments;
+    -webkit-box-shadow: @arguments ;
     -moz-box-shadow: @arguments;
     box-shadow: @arguments;
 }
@@ -53,3 +89,13 @@
     -webkit-border-top-left-radius:@radio;
     -webkit-border-top-right-radius:@radio;
 }
+
+.rounded-corners-right(@radio:5px){
+    border-top-right-radius:@radio;
+    border-bottom-right-radius:@radio;
+    -moz-border-radius-topright:@radio;
+    -moz-border-radius-bottomright:@radio;
+    -webkit-border-bottom-right-radius:@radio;
+    -webkit-border-top-right-radius:@radio;
+}
+

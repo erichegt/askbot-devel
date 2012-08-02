@@ -1,0 +1,305 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+msgid ""
+msgstr ""
+"Project-Id-Version: 0.7\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-04-18 18:52-0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: zh_TW\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Translate Toolkit 1.9.0\n"
+
+#: skins/common/media/jquery-openid/jquery.openid.js:73
+#, perl-format
+msgid "Are you sure you want to remove your %s login?"
+msgstr ""
+
+#: skins/common/media/jquery-openid/jquery.openid.js:90
+msgid "Please add one or more login methods."
+msgstr ""
+
+#: skins/common/media/jquery-openid/jquery.openid.js:93
+msgid ""
+"You don't have a method to log in right now, please add one or more by "
+"clicking any of the icons below."
+msgstr ""
+
+#: skins/common/media/jquery-openid/jquery.openid.js:135
+msgid "passwords do not match"
+msgstr ""
+
+#: skins/common/media/jquery-openid/jquery.openid.js:161
+msgid "Show/change current login methods"
+msgstr ""
+
+#: skins/common/media/jquery-openid/jquery.openid.js:226
+#, perl-format
+msgid "Please enter your %s, then proceed"
+msgstr ""
+
+#: skins/common/media/jquery-openid/jquery.openid.js:228
+msgid "Connect your %(provider_name)s account to %(site)s"
+msgstr ""
+
+#: skins/common/media/jquery-openid/jquery.openid.js:322
+#, perl-format
+msgid "Change your %s password"
+msgstr ""
+
+#: skins/common/media/jquery-openid/jquery.openid.js:323
+msgid "Change password"
+msgstr ""
+
+#: skins/common/media/jquery-openid/jquery.openid.js:326
+#, perl-format
+msgid "Create a password for %s"
+msgstr ""
+
+#: skins/common/media/jquery-openid/jquery.openid.js:327
+msgid "Create password"
+msgstr ""
+
+#: skins/common/media/jquery-openid/jquery.openid.js:343
+msgid "Create a password-protected account"
+msgstr ""
+
+#: skins/common/media/js/post.js:28
+msgid "loading..."
+msgstr "讀取中..."
+
+#: skins/common/media/js/post.js:318
+msgid "insufficient privilege"
+msgstr "權限不足"
+
+#: skins/common/media/js/post.js:319
+msgid "cannot pick own answer as best"
+msgstr "不能蔽掃自珍"
+
+#: skins/common/media/js/post.js:324
+msgid "please login"
+msgstr "請先登錄"
+
+#: skins/common/media/js/post.js:326
+msgid "anonymous users cannot follow questions"
+msgstr ""
+
+#: skins/common/media/js/post.js:327
+msgid "anonymous users cannot subscribe to questions"
+msgstr ""
+
+#: skins/common/media/js/post.js:328
+msgid "anonymous users cannot vote"
+msgstr ""
+
+#: skins/common/media/js/post.js:330
+msgid "please confirm offensive"
+msgstr "確定要歸類該帖為廣告、人身攻擊、惡意言論嗎？"
+
+#: skins/common/media/js/post.js:331
+#, fuzzy
+msgid "please confirm removal of offensive flag"
+msgstr "確定要歸類該帖為廣告、人身攻擊、惡意言論嗎？"
+
+#: skins/common/media/js/post.js:332
+msgid "anonymous users cannot flag offensive posts"
+msgstr "匿名用戶不能操作"
+
+#: skins/common/media/js/post.js:333
+msgid "confirm delete"
+msgstr "確定刪除"
+
+#: skins/common/media/js/post.js:334
+msgid "anonymous users cannot delete/undelete"
+msgstr "匿名用戶不能刪除或恢復帖子"
+
+#: skins/common/media/js/post.js:335
+msgid "post recovered"
+msgstr "操作成功！該帖子已被恢複。"
+
+#: skins/common/media/js/post.js:336
+msgid "post deleted"
+msgstr "操作成功！該帖子已刪除。"
+
+#: skins/common/media/js/post.js:1206
+msgid "add comment"
+msgstr "添加評論"
+
+#: skins/common/media/js/post.js:1209
+msgid "save comment"
+msgstr ""
+
+#: skins/common/media/js/post.js:1874
+msgid "Please enter question title (>10 characters)"
+msgstr ""
+
+#: skins/common/media/js/tag_selector.js:15
+msgid "Tag \"<span></span>\" matches:"
+msgstr ""
+
+#: skins/common/media/js/tag_selector.js:84
+#, perl-format
+msgid "and %s more, not shown..."
+msgstr ""
+
+#: skins/common/media/js/user.js:14
+msgid "Please select at least one item"
+msgstr ""
+
+#: skins/common/media/js/user.js:58
+msgid "Delete this notification?"
+msgid_plural "Delete these notifications?"
+msgstr[0] ""
+
+#: skins/common/media/js/user.js:65
+#, fuzzy
+msgid "Close this entry?"
+msgid_plural "Close these entries?"
+msgstr[0] "刪除此評論"
+
+#: skins/common/media/js/user.js:72
+msgid "Remove all flags on this entry?"
+msgid_plural "Remove all flags on these entries?"
+msgstr[0] ""
+
+#: skins/common/media/js/user.js:79
+#, fuzzy
+msgid "Delete this entry?"
+msgid_plural "Delete these entries?"
+msgstr[0] "刪除此評論"
+
+#: skins/common/media/js/user.js:159
+msgid "Please <a href=\"%(signin_url)s\">signin</a> to follow %(username)s"
+msgstr ""
+
+#: skins/common/media/js/user.js:191
+#, perl-format
+msgid "unfollow %s"
+msgstr ""
+
+#: skins/common/media/js/user.js:194
+#, perl-format
+msgid "following %s"
+msgstr ""
+
+#: skins/common/media/js/user.js:200
+#, perl-format
+msgid "follow %s"
+msgstr ""
+
+#: skins/common/media/js/utils.js:44
+msgid "click to close"
+msgstr "點擊消息框關閉"
+
+#: skins/common/media/js/wmd/wmd.js:26
+msgid "bold"
+msgstr "粗體"
+
+#: skins/common/media/js/wmd/wmd.js:27
+msgid "italic"
+msgstr "斜體"
+
+#: skins/common/media/js/wmd/wmd.js:28
+msgid "link"
+msgstr "超連接"
+
+#: skins/common/media/js/wmd/wmd.js:29
+msgid "quote"
+msgstr "引用"
+
+#: skins/common/media/js/wmd/wmd.js:30
+msgid "preformatted text"
+msgstr "代碼"
+
+#: skins/common/media/js/wmd/wmd.js:31
+msgid "image"
+msgstr "圖片"
+
+#: skins/common/media/js/wmd/wmd.js:32
+msgid "attachment"
+msgstr ""
+
+#: skins/common/media/js/wmd/wmd.js:33
+msgid "numbered list"
+msgstr "數字編號列表"
+
+#: skins/common/media/js/wmd/wmd.js:34
+msgid "bulleted list"
+msgstr "項目符號列表"
+
+#: skins/common/media/js/wmd/wmd.js:35
+msgid "heading"
+msgstr "標題"
+
+#: skins/common/media/js/wmd/wmd.js:36
+msgid "horizontal bar"
+msgstr "水平線"
+
+#: skins/common/media/js/wmd/wmd.js:37
+msgid "undo"
+msgstr "撤銷"
+
+#: skins/common/media/js/wmd/wmd.js:38 skins/common/media/js/wmd/wmd.js:1053
+msgid "redo"
+msgstr "重做"
+
+#: skins/common/media/js/wmd/wmd.js:47
+msgid "enter image url"
+msgstr ""
+"<b>輸入圖片地址</b></p><p>示例：<br />http://www.example.com/image.jpg   \"我"
+"的截圖\""
+
+#: skins/common/media/js/wmd/wmd.js:48
+msgid "enter url"
+msgstr ""
+"<b>輸入Web地址</b></p><p>示例：<br />http://www.cnprog.com/   \"我的網站\"</"
+"p>"
+
+#: skins/common/media/js/wmd/wmd.js:49
+msgid "upload file attachment"
+msgstr ""
+
+#~ msgid "tags cannot be empty"
+#~ msgstr "標籤不能為空白"
+
+#~ msgid "content cannot be empty"
+#~ msgstr "內容不能為空白"
+
+#~ msgid "%s content minchars"
+#~ msgstr "請輸入至少 %s 字符。"
+
+#~ msgid "please enter title"
+#~ msgstr "請輸入標題。"
+
+#~ msgid "%s title minchars"
+#~ msgstr "請輸入至少 %s 字符。"
+
+#, fuzzy
+#~ msgid "%s follower"
+#~ msgid_plural "%s followers"
+#~ msgstr[0] ""
+#~ "#-#-#-#-#  djangojs.po (0.7)  #-#-#-#-#\n"
+#~ "#-#-#-#-#  djangojs.po (0.7)  #-#-#-#-#\n"
+#~ msgstr[1] "#-#-#-#-#  djangojs.po (0.7)  #-#-#-#-#\n"
+
+#~ msgid "undelete"
+#~ msgstr "取消"
+
+#~ msgid "delete"
+#~ msgstr "刪除"
+
+#~ msgid "enter %s more characters"
+#~ msgstr "還可寫%s字"
+
+#~ msgid "%s characters left"
+#~ msgstr "還可寫%s字"
+
+#~ msgid "confirm delete comment"
+#~ msgstr "刪除評論確認"

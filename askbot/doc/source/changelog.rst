@@ -1,6 +1,89 @@
 Changes in Askbot
 =================
 
+Development version
+-------------------
+* Added optional support for unicode slugs (Evgeny)
+* Optionally allow limiting one answer per question per person (Evgeny)
+* Added management command `build_livesettings_cache` (Adolfo)
+* Welcome email for the case when replying by email is enabled (Evgeny)
+* Detection of email signature based on the response to the welcome email (Evgeny)
+* Hide "website" and "about" section of the blocked user profiles
+  to help prevent user profile spam (Evgeny)
+* Added a function to create a custom user profile tab,
+  the feature requires access to the server (Evgeny)
+* Added optional top banner to the question page (Evgeny)
+* Made "bootstrap mode" default and created instead "large site mode" (Evgeny)
+* Added interesting/ignored/subscribed tags to the user profile page (Paul Backhouse, Evgeny)
+
+0.7.43 (May 14, 2012)
+---------------------
+* User groups (Evgeny)
+* Public/Private/Hidden reputation (Evgeny)
+* Enabling/disabling the badges system (Evgeny)
+* Created a basic post moderation feature (Evgeny)
+* Created a way to specify reasons for rejecting posts in a modal dialog (Evgeny)
+* A number of bug fixes (Adolfo Fitoria, Jim Tittsler, 
+  Evgeny Fadeev, Robin Stocker, Radim Řehůřek, Silvio Heuberger)
+
+0.7.41, 0.7.42 (April 21, 2012)
+-------------------------------
+* Bug fixes
+
+0.7.40 (March 29, 2012)
+-----------------------
+* New data models!!! (`Tomasz Zieliński <http://pyconsultant.eu>`_)
+* Made email recovery link work when askbot is deployed on subdirectory (Evgeny)
+* Added tests for the CSRF_COOKIE_DOMAIN setting in the startup_procedures (Evgeny)
+* Askbot now respects django's staticfiles app (Radim Řehůřek, Evgeny)
+* Fixed the url translation bug (Evgeny)
+* Added left sidebar option (Evgeny)
+* Added "help" page and links to in the header and the footer (Evgeny)
+* Removed url parameters and the hash fragment from uploaded files -
+  amazon S3 for some reason adds weird expiration parameters (Evgeny)
+* Reduced memory usage in data migrations (Evgeny)
+* Added progress bars to slow data migrations (Evgeny)
+* Added a management command to build_thread_summary_cache (Evgeny)
+* Added a management delete_contextless_badge_award_activities (Evgeny)
+* Fixed a file upload issue in FF and IE found by jerry_gzy (Evgeny)
+* Added test on maximum length of title working for utf-8 text (Evgeny)
+* Added caching and invalidation to the question page (Evgeny)
+* Added a management command delete_contextless_activities (Evgeny)
+* LDAP login configuration (github user `monkut <https://github.com/monkut>`_)
+* Check order of middleware classes (Daniel Mican)
+* Added "reply by email" function (`Vasil Vangelovski <http://www.atomidata.com>`_)
+* Enabled "ask by email" via Lamson (Evgeny)
+* Tags can be optional (Evgeny)
+* Fixed dependency of Django up to 1.3.1, because settings must be upgraded
+  for Django 1.4 (Evgeny)
+
+0.7.39 (Jan 11, 2012)
+---------------------
+* restored facebook login after FB changed the procedure (Evgeny)
+
+0.7.38 (Jan 11, 2012)
+---------------------
+* xss vulnerability fix, issue found by Radim Řehůřek (Evgeny)
+
+0.7.37 (Jan 8, 2012)
+--------------------
+* added basic slugification treatment to question titles with 
+  ``ALLOW_UNICODE_SLUGS = True`` (Evgeny)
+* added verification of the project directory name to
+  make sure it does not contain a `.` (dot) symbol (Evgeny)
+* made askbot compatible with django's `CSRFViewMiddleware`
+  that may be used for other projects (Evgeny)
+* added more rigorous test for the user name to make it slug safe (Evgeny)
+* made setting `ASKBOT_FILE_UPLOAD_DIR` work (Radim Řehůřek)
+* added minimal length of question title ond body
+  text to live settings and allowed body-less questions (Radim Řehůřek, Evgeny)
+* allowed disabling use of gravatar site-wide (Rosandra Cuello Suñol)
+* when internal login app is disabled - links to login/logout/add-remove-login-methods are gone (Evgeny)
+* replaced setting `ASKBOT_FILE_UPLOAD_DIR` with django's `MEDIA_ROOT` (Evgeny)
+* replaced setting `ASKBOT_UPLOADED_FILES_URL` with django's `MEDIA_URL` (Evgeny)
+* allowed changing file storage backend for file uploads by configuration (Evgeny)
+* file uploads to amazon S3 now work with proper configuration (Evgeny)
+
 0.7.36 (Dec 20, 2011)
 ---------------------
 * bugfix and made the logo not used by default

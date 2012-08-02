@@ -7,11 +7,11 @@ from django.core import exceptions
 from askbot.tests import utils
 from askbot.conf import settings as askbot_settings
 from askbot import models
-from askbot.templatetags import extra_filters as template_filters
-from askbot.tests.utils import skipIf
+from askbot.templatetags import extra_filters_jinja as template_filters
+from askbot.tests.utils import skipIf, AskbotTestCase
 
 
-class PermissionAssertionTestCase(TestCase):
+class PermissionAssertionTestCase(AskbotTestCase):
     """base TestCase class for permission
     assertion tests
 
@@ -447,9 +447,9 @@ class ReopenQuestionPermissionAssertionTests(utils.AskbotTestCase):
         )
 
 
-    def test_high_rep_nonowner_cannot_reopen(self):
+    def test_high_rep_nonowner_can_reopen(self):
         self.other_user.reputation = 1000000
-        self.assert_cannot_reopen(user = self.other_user)
+        self.assert_can_reopen(user = self.other_user)
 
     def test_low_rep_admin_can_reopen(self):
         self.other_user.set_admin_status()
@@ -482,7 +482,7 @@ class ReopenQuestionPermissionAssertionTests(utils.AskbotTestCase):
         self.assert_cannot_reopen(user = self.other_user)
 
 class EditQuestionPermissionAssertionTests(utils.AskbotTestCase):
-    
+
     def setUp(self):
         self.create_user()
         self.create_user(username = 'other_user')
@@ -1107,7 +1107,7 @@ class CommentPermissionAssertionTests(PermissionAssertionTestCase):
                                     parent_post = answer,
                                     body_text = 'test comment'
                                 )
-        self.assertTrue(isinstance(comment, models.Comment))
+        self.assertTrue(isinstance(comment, models.Post) and comment.is_comment())
         self.assertTrue(
             template_filters.can_post_comment(
                 self.user,
@@ -1124,7 +1124,7 @@ class CommentPermissionAssertionTests(PermissionAssertionTestCase):
                             parent_post = question,
                             body_text = 'test comment'
                         )
-        self.assertTrue(isinstance(comment, models.Comment))
+        self.assertTrue(isinstance(comment, models.Post) and comment.is_comment())
         self.assertTrue(
             template_filters.can_post_comment(
                 self.user,
@@ -1155,7 +1155,7 @@ class CommentPermissionAssertionTests(PermissionAssertionTestCase):
                             parent_post = question,
                             body_text = 'test comment'
                         )
-        self.assertTrue(isinstance(comment, models.Comment))
+        self.assertTrue(isinstance(comment, models.Post) and comment.is_comment())
         self.assertTrue(
             template_filters.can_post_comment(
                 self.user,
@@ -1173,7 +1173,7 @@ class CommentPermissionAssertionTests(PermissionAssertionTestCase):
                             parent_post = question,
                             body_text = 'test comment'
                         )
-        self.assertTrue(isinstance(comment, models.Comment))
+        self.assertTrue(isinstance(comment, models.Post) and comment.is_comment())
         self.assertTrue(
             template_filters.can_post_comment(
                 self.other_user,
@@ -1190,7 +1190,7 @@ class CommentPermissionAssertionTests(PermissionAssertionTestCase):
                             parent_post = question,
                             body_text = 'test comment'
                         )
-        self.assertTrue(isinstance(comment, models.Comment))
+        self.assertTrue(isinstance(comment, models.Post) and comment.is_comment())
         self.assertTrue(
             template_filters.can_post_comment(
                 self.other_user,

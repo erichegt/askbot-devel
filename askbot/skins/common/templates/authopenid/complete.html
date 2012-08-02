@@ -20,25 +20,7 @@ parameters:
 {% block head %}{% endblock %}
 {% block title %}{% spaceless %}{% trans %}Registration{% endtrans %}{% endspaceless %}{% endblock %}
 {% block content %}
-    <h1>{% trans %}Registration{% endtrans %}</h1>
-    <div id="completetxt" >
-        <div class="message">
-            {% if login_type=='openid' %}
-                {% trans %}register new {{provider}} account info, see {{gravatar_faq_url}}{% endtrans %}
-            {% elif login_type=='legacy' %}
-                    {% if external_login_name_is_taken %}
-                        {% trans %}{{username}} already exists, choose another name for 
-                            {{provider}}. Email is required too, see {{gravatar_faq_url}}
-                        {% endtrans %} 
-                    {% else %}
-                        {% trans %}register new external {{provider}} account info, see {{gravatar_faq_url}}{% endtrans %}
-                    {% endif %}
-            {% else %}
-                {% trans %}register new Facebook connect account info, see {{gravatar_faq_url}}{% endtrans %}
-            {% endif %}
-        </div>
-        <p style="display:none">{% trans %}This account already exists, please use another.{% endtrans %}</p>
-    </div>
+    <h1>{% trans %}User registration{% endtrans %}</h1>
     {% if openid_register_form.errors %}
         <ul class="errorlist">
         {% for error in openid_register_form.non_field_errors() %}
@@ -56,28 +38,33 @@ parameters:
         {% endif %}
             {{ openid_register_form.next }}
             <div class="form-row-vertical">
-                <label for="id_username">{% trans %}Screen name label{% endtrans %}</label>
+                <label for="id_username">
+                    {%- trans %}<strong>Screen Name</strong> (<i>will be shown to others</i>){% endtrans %}
+                </label>
                 {% if openid_register_form.username.errors %} 
                     <p class="error">{{ openid_register_form.username.errors|join(", ") }}</p>
                 {% endif %}
                 {{ openid_register_form.username }}
             </div>
             <div class="form-row-vertical margin-bottom">
-                <label for="id_email">{% trans %}Email address label{% endtrans %}</label>
+                <label for="id_email">
+                    {%- trans %}<strong>Email Address</strong> (<i>will <strong>not</strong> be shared with 
+anyone, must be valid</i>)
+                    {% endtrans -%}
+                </label>
                 {% if openid_register_form.email.errors %} 
                     <p class="error">{{ openid_register_form.email.errors|join(", ") }}</p>
                 {% endif %}
                 {{ openid_register_form.email }}
             </div>
-            <p>{% trans %}receive updates motivational blurb{% endtrans %}</p>
+            <p>{% trans %}<strong>Receive forum updates by email</strong>{% endtrans %}</p>
             <div class='simple-subscribe-options'>
             {{email_feeds_form.subscribe}}
             {% if email_feeds_form.errors %}
             <p class="error">{% trans %}please select one of the options above{% endtrans %}</p>
             {% endif %}
             </div>
-            <p class='space-above'>{% trans %}Tag filter tool will be your right panel, once you log in.{% endtrans %}</p>
-            <div class="submit-row"><input type="submit" class="submit" name="bnewaccount" value="{% trans %}create account{% endtrans %}"/></div>
+            <div class="submit-row"><input type="submit" class="submit" name="bnewaccount" value="{% trans %}Signup{% endtrans %}"/></div>
         </form>
     </div>
 {% endblock %}

@@ -11,10 +11,10 @@ from django.test import TestCase
 from django.test.client import Client
 from askbot.tests import utils
 from askbot import models
-from askbot.utils import mail
+from askbot import mail
 from askbot.conf import settings as askbot_settings
 from askbot import const
-from askbot.models.question import get_tag_summary_from_questions
+from askbot.models.question import Thread
 
 TO_JSON = functools.partial(serializers.serialize, 'json')
 
@@ -670,6 +670,7 @@ class InstantMentionsAndCommentsEmailAlertTests(EmailAlertTests):
                     body_text = 'yoyo @target do look here'
                 )
 
+
 class InstantQAnsEmailAlertTests(EmailAlertTests):
     @setup_email_alert_tests
     def setUp(self):
@@ -680,39 +681,26 @@ class InstantQAnsEmailAlertTests(EmailAlertTests):
 
 class DelayedAlertSubjectLineTests(TestCase):
     def test_topics_in_subject_line(self):
-        q1 = models.Question(id=1, tagnames='one two three four five')
-        q2 = models.Question(id=2, tagnames='two three four five')
-        q3 = models.Question(id=3, tagnames='three four five')
-        q4 = models.Question(id=4, tagnames='four five')
-        q5 = models.Question(id=5, tagnames='five')
-        q6 = models.Question(id=6, tagnames='six')
-        q7 = models.Question(id=7, tagnames='six')
-        q8 = models.Question(id=8, tagnames='six')
-        q9 = models.Question(id=9, tagnames='six')
-        q10 = models.Question(id=10, tagnames='six')
-        q11 = models.Question(id=11, tagnames='six')
-        q_dict = {
-                    q1:'', q2:'', q3:'', q4:'', q5:'', q6:'', q7:'',
-                    q8:'', q9:'', q10:'', q11:'',
-                }
-        subject = get_tag_summary_from_questions(q_dict.keys())
+        threads = [
+            models.Thread(tagnames='one two three four five'),
+            models.Thread(tagnames='two three four five'),
+            models.Thread(tagnames='three four five'),
+            models.Thread(tagnames='four five'),
+            models.Thread(tagnames='five'),
+        ]
+        subject = Thread.objects.get_tag_summary_from_threads(threads)
+        self.assertEqual('"five", "four", "three", "two" and "one"', subject)
 
-        self.assertTrue('one' not in subject)
-        self.assertTrue('two' in subject)
-        self.assertTrue('three' in subject)
-        self.assertTrue('four' in subject)
-        self.assertTrue('five' in subject)
-        self.assertTrue('six' in subject)
-        i2 = subject.index('two')
-        i3 = subject.index('three')
-        i4 = subject.index('four')
-        i5 = subject.index('five')
-        i6 = subject.index('six')
-        order = [i6, i5, i4, i3, i2]
-        self.assertEquals(
-            order,
-            sorted(order)
-        )
+        threads += [
+            models.Thread(tagnames='six'),
+            models.Thread(tagnames='six'),
+            models.Thread(tagnames='six'),
+            models.Thread(tagnames='six'),
+            models.Thread(tagnames='six'),
+            models.Thread(tagnames='six'),
+        ]
+        subject = Thread.objects.get_tag_summary_from_threads(threads)
+        self.assertEqual('"six", "five", "four", "three", "two" and more', subject)
 
 class FeedbackTests(utils.AskbotTestCase):
     def setUp(self):
@@ -961,3 +949,67 @@ class EmailFeedSettingTests(utils.AskbotTestCase):
         new_user.add_missing_askbot_subscriptions()
         data_after = TO_JSON(self.get_user_feeds())
         self.assertEquals(data_before, data_after)
+
+class PostApprovalTests(utils.AskbotTestCase):
+    """test notifications sent to authors when their posts
+    are approved or published"""
+    def setUp(self):
+        self.reply_by_email = askbot_settings.REPLY_BY_EMAIL
+        askbot_settings.update('REPLY_BY_EMAIL', True)
+        self.enable_content_moderation = \
+            askbot_settings.ENABLE_CONTENT_MODERATION
+        askbot_settings.update('ENABLE_CONTENT_MODERATION', True)
+        self.self_notify_when = \
+            askbot_settings.SELF_NOTIFY_EMAILED_POST_AUTHOR_WHEN
+        when = const.FOR_FIRST_REVISION
+        askbot_settings.update('SELF_NOTIFY_EMAILED_POST_AUTHOR_WHEN', when)
+        assert(
+            django_settings.EMAIL_BACKEND == 'django.core.mail.backends.locmem.EmailBackend'
+        )
+
+    def tearDown(self):
+        askbot_settings.update(
+            'REPLY_BY_EMAIL', self.reply_by_email
+        )
+        askbot_settings.update(
+            'ENABLE_CONTENT_MODERATION',
+            self.enable_content_moderation
+        )
+        askbot_settings.update(
+            'SELF_NOTIFY_EMAILED_POST_AUTHOR_WHEN', 
+            self.self_notify_when
+        )
+
+    def test_emailed_question_answerable_approval_notification(self):
+        self.u1 = self.create_user('user1', status = 'a')#regular user
+        question = self.post_question(user = self.u1, by_email = True)
+        outbox = django.core.mail.outbox
+        #here we should get just the notification of the post
+        #being placed on the moderation queue
+        self.assertEquals(len(outbox), 1)
+        self.assertEquals(outbox[0].recipients(), [self.u1.email])
+
+    def test_moderated_question_answerable_approval_notification(self):
+        u1 = self.create_user('user1', status = 'a')
+        question = self.post_question(user = u1, by_email = True)
+
+        self.assertEquals(question.approved, False)
+
+        u2 = self.create_user('admin', status = 'd')
+
+        self.assertEquals(question.revisions.count(), 1)
+        u2.approve_post_revision(question.get_latest_revision())
+
+        outbox = django.core.mail.outbox
+        self.assertEquals(len(outbox), 2)
+        #moderation notification
+        self.assertEquals(outbox[0].recipients(), [u1.email,])
+        self.assertEquals(outbox[1].recipients(), [u1.email,])#approval
+
+
+class MailMessagesTests(utils.AskbotTestCase):
+    def test_ask_for_signature(self):
+        from askbot.mail import messages
+        user = self.create_user('user')
+        message = messages.ask_for_signature(user, footer_code = 'nothing')
+        self.assertTrue(user.username in message)

@@ -115,10 +115,11 @@ class AskbotTestCase(TestCase):
                     title = 'test question title',
                     body_text = 'test question body text',
                     tags = 'test',
+                    by_email = False,
                     wiki = False,
                     is_anonymous = False,
                     follow = False,
-                    timestamp = None
+                    timestamp = None,
                 ):
         """posts and returns question on behalf
         of user. If user is not given, it will be self.user
@@ -135,6 +136,7 @@ class AskbotTestCase(TestCase):
                             title = title,
                             body_text = body_text,
                             tags = tags,
+                            by_email = by_email,
                             wiki = wiki,
                             is_anonymous = is_anonymous,
                             timestamp = timestamp
@@ -155,6 +157,7 @@ class AskbotTestCase(TestCase):
                     user = None,
                     question = None,
                     body_text = 'test answer text',
+                    by_email = False,
                     follow = False,
                     wiki = False,
                     timestamp = None
@@ -165,16 +168,30 @@ class AskbotTestCase(TestCase):
         return user.post_answer(
                         question = question,
                         body_text = body_text,
+                        by_email = by_email,
                         follow = follow,
                         wiki = wiki,
                         timestamp = timestamp
                     )
+
+    def create_tag(self, tag_name, user = None):
+        """creates a user, b/c it is necessary"""
+        if user is None:
+            try:
+                user = models.User.objects.get(username = 'tag_creator')
+            except models.User.DoesNotExist:
+                user = self.create_user('tag_creator')
+
+        tag = models.Tag(created_by = user, name = tag_name)
+        tag.save()
+        return tag
 
     def post_comment(
                 self,
                 user = None,
                 parent_post = None,
                 body_text = 'test comment text',
+                by_email = False,
                 timestamp = None
             ):
         """posts and returns a comment to parent post, uses 
@@ -187,6 +204,7 @@ class AskbotTestCase(TestCase):
         comment = user.post_comment(
                         parent_post = parent_post,
                         body_text = body_text,
+                        by_email = by_email,
                         timestamp = timestamp,
                     )
 

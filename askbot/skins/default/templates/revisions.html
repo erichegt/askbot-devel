@@ -19,7 +19,7 @@
                 <td width="20" style="vertical-align:middle">
                     <img 
                         id="rev-arrow-{{ revision.revision }}" 
-                        src="{{"/images/expander-arrow-show.gif"|media}}"
+                        src="{{"/images/expander-arrow-hide.gif"|media}}"
                         alt="{% trans %}click to hide/show revision{% endtrans %}"
                         />
                 </td>
@@ -30,11 +30,16 @@
                 <td width="200px" style="vertical-align:middle">
                     {% if revision.summary %}
                         <div class="summary">
-                            <span>{{ revision.summary }}</span>
+                            <span>{{ revision.summary|escape }}</span>
                         </div>
                     {% endif %}
                     {% if request.user|can_edit_post(post) %}
-                    <a href="{% url edit_answer post.id %}?revision={{ revision.revision }}">{% trans %}edit{% endtrans %}</a>
+                        {% if post.post_type == 'answer' %}
+                            <a href="{% url edit_answer post.id %}?revision={{ revision.revision }}">{% trans %}edit{% endtrans %}</a>
+                        {% endif %}
+                        {% if post.post_type == 'question' %}
+                            <a href="{% url edit_question post.id %}?revision={{ revision.revision }}">{% trans %}edit{% endtrans %}</a>
+                        {% endif %}
                     {% endif %}
                 </td>
                 <td align="right">
@@ -45,7 +50,7 @@
                             {% set contributor_type = "last_updater" %}
                         {% endif %}
                         {{ macros.post_contributor_info(
-                                    revision,
+                                    revision.post,
                                     contributor_type,
                                     False,
                                     0
@@ -74,8 +79,7 @@
         $("#nav_questions").attr('className',"on");
         $('div.revision div[id^=rev-header-]').bind('click', function(){
             var revId = this.id.substr(11);
-            toggleRev(revId); 
-        
+            toggleRev(revId);
         });
         lanai.highlightSyntax();
     });
@@ -83,13 +87,13 @@
     function toggleRev(id) {
         var arrow = $("#rev-arrow-" + id);
         var visible = arrow.attr("src").indexOf("hide") > -1;
-        var path = mediaUrl(
-                            "media/images/expander-arrow-" + 
-                            (visible ? "show" : "hide") + 
-                            ".gif" + 
-                            "?v={{settings.MEDIA_RESOURCE_REVISION}}"
-                        );
-        arrow.attr("src", path);
+        if (visible) {
+            var image_path = '{{ "/images/expander-arrow-show.gif"|media }}';
+        } else {
+            var image_path = '{{ "/images/expander-arrow-hide.gif"|media }}';
+        }
+        image_path = image_path + "?v={{settings.MEDIA_RESOURCE_REVISION}}";
+        arrow.attr("src", image_path);
         $("#rev-body-" + id).slideToggle("fast");
     }
 </script>

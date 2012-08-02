@@ -20,11 +20,13 @@ at the forum_ or by email at admin@askbot.org
    Initialize the database tables <initialize-database-tables>
    Deploy on a webserver <deployment>
    Import data (StackExchange & ZenDesk) <import-data>
+   Moderation <moderation>
    Appendix A: Maintenance procedures <management-commands>
    Appendix B: Sending email to askbot <sending-email-to-askbot>
    Appendix C: Optional modules <optional-modules>
    Appendix D: Askbot as reusable Django application <askbot-as-reusable-django-application>
    Appendix E: Customizing skin in askbot <customizing-skin-in-askbot>
+   Appendix F: Intranet setup <intranet-setup>
    Footnotes <footnotes>
    Contributors <contributors>
    Changelog<changelog>

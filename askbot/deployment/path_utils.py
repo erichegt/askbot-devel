@@ -154,7 +154,7 @@ def deploy_into(directory, new_project = False, verbosity = 1, context = None):
     """
     assert(isinstance(new_project, bool))
     if new_project:
-        copy_files = ('__init__.py', 'manage.py', 'urls.py')
+        copy_files = ('__init__.py', 'manage.py', 'urls.py', 'django.wsgi')
         blank_files = ('__init__.py', 'manage.py')
         if verbosity >= 1:
             print 'Copying files: '
@@ -230,14 +230,20 @@ def deploy_into(directory, new_project = False, verbosity = 1, context = None):
     if verbosity >= 1:
         print ''
 
-def dir_name_acceptable(directory):
+def dir_name_unacceptable_for_django_project(directory):
+    dir_name = os.path.basename(directory)
+    if re.match(r'[_a-zA-Z][\w-]*$', dir_name):
+        return False
+    return True
+
+def dir_taken_by_python_module(directory):
     """True if directory is not taken by another python module"""
     dir_name = os.path.basename(directory)
     try:
         imp.find_module(dir_name)
-        return False
-    except ImportError:
         return True
+    except ImportError:
+        return False
 
 def get_install_directory(force = False):
     """returns a directory where a new django app/project 
@@ -277,8 +283,13 @@ def get_install_directory(force = False):
         if should_create_new == 'no':
             return None
 
-    if not dir_name_acceptable(directory):
+    if dir_taken_by_python_module(directory):
         print messages.format_msg_bad_dir_name(directory)
+        return None
+    if dir_name_unacceptable_for_django_project(directory):
+        print """\nDirectory %s is not acceptable for a Django project.
+Please use lower case characters, numbers and underscore.
+The first character cannot be a number.\n""" % os.path.basename(directory)
         return None
 
     return directory

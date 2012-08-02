@@ -12,7 +12,7 @@ from askbot.conf.super_groups import CONTENT_AND_UI
 
 GENERAL_SKIN_SETTINGS = ConfigurationGroup(
                     'GENERAL_SKIN_SETTINGS',
-                    _('Logos and HTML <head> parts'),
+                    _('Skin, logos and HTML <head> parts'),
                     super_group = CONTENT_AND_UI
                 )
 
@@ -25,12 +25,46 @@ settings.register(
                         'To change the logo, select new file, '
                         'then submit this whole form.'
                     ),
-        upload_directory = django_settings.ASKBOT_FILE_UPLOAD_DIR,
-        upload_url = '/' + django_settings.ASKBOT_UPLOADED_FILES_URL,
         default = '/images/logo.gif',
         url_resolver = skin_utils.get_media_url
     )
 )
+
+LANGUAGE_CHOICES = (
+            ('en', _("English")),
+            ('es', _("Spanish")),
+            ('ca', _("Catalan")),
+            ('de', _("German")),
+            ('el', _("Greek")),
+            ('fi', _("Finnish")),
+            ('fr', _("French")),
+            ('hi', _("Hindi")),
+            ('hu', _("Hungarian")),
+            ('it', _("Italian")),
+            ('ja', _("Japanese")),
+            ('ko', _("Korean")),
+            ('pt', _("Portuguese")),
+            ('pt_BR', _("Brazilian Portuguese")),
+            ('ro', _("Romanian")),
+            ('ru', _("Russian")),
+            ('sr', _("Serbian")),
+            ('tr', _("Turkish")),
+            ('vi', _("Vietnamese")),
+            ('zh_CN', _("Chinese")),
+            ('zh_TW', _("Chinese (Taiwan)")),
+        )
+
+"""
+settings.register(
+    values.StringValue(
+        GENERAL_SKIN_SETTINGS,
+        'ASKBOT_LANGUAGE',
+        default = 'en',
+        choices =  LANGUAGE_CHOICES,
+        description = _('Select Language'),
+    )
+)
+"""
 
 settings.register(
     values.BooleanValue(
@@ -58,9 +92,7 @@ settings.register(
                         'about favicon '
                         'at <a href="%(favicon_info_url)s">this page</a>.'
                     ) % {'favicon_info_url': const.DEPENDENCY_URLS['favicon']},
-        upload_directory = django_settings.ASKBOT_FILE_UPLOAD_DIR,
         allowed_file_extensions = ('ico',),#only allow .ico files
-        upload_url = '/' + django_settings.ASKBOT_UPLOADED_FILES_URL,
         default = '/images/favicon.gif',
         url_resolver = skin_utils.get_media_url
     )
@@ -75,8 +107,6 @@ settings.register(
                         'An 88x38 pixel image that is used on the login screen '
                         'for the password login button.'
                     ),
-        upload_directory = django_settings.ASKBOT_FILE_UPLOAD_DIR,
-        upload_url = '/' + django_settings.ASKBOT_UPLOADED_FILES_URL,
         default = '/images/pw-login.gif',
         url_resolver = skin_utils.get_media_url
     )
@@ -204,7 +234,7 @@ settings.register(
         description = _('Apply custom style sheet (CSS)'),
         help_text = _(
                     'Check if you want to change appearance '
-                    'of your form by adding custom style sheet rules ' 
+                    'of your form by adding custom style sheet rules '
                     '(please see the next item)'
                     ),
         default = False
@@ -220,7 +250,7 @@ settings.register(
                     '<strong>To use this function</strong>, check '
                     '"Apply custom style sheet" option above. '
                     'The CSS rules added in this window will be applied '
-                    'after the default style sheet rules. ' 
+                    'after the default style sheet rules. '
                     'The custom style sheet will be served dynamically at '
                     'url "&lt;forum url&gt;/custom.css", where '
                     'the "&lt;forum url&gt; part depends (default is '

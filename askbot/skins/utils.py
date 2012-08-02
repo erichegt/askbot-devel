@@ -3,7 +3,7 @@
 the lookup resolution process for templates and media works as follows:
 * look up item in selected skin
 * if not found look in 'default'
-* raise an exception 
+* raise an exception
 """
 import os
 import logging
@@ -56,7 +56,7 @@ def get_available_skins(selected=None):
 
     #re-insert default as a last item
     skins['default'] = default_dir
-    skins['common'] = common_dir 
+    skins['common'] = common_dir
     return skins
 
 
@@ -71,9 +71,11 @@ def get_path_to_skin(skin):
     return skin_dirs.get(skin, None)
 
 def get_skin_choices():
-    """returns a tuple for use as a set of 
+    """returns a tuple for use as a set of
     choices in the form"""
-    skin_names = list(reversed(get_available_skins().keys()))
+    available_skins = get_available_skins().keys()
+    available_skins.remove('common')
+    skin_names = list(reversed(available_skins))
     return zip(skin_names, skin_names)
 
 def resolve_skin_for_media(media=None, preferred_skin = None):
@@ -86,7 +88,7 @@ def resolve_skin_for_media(media=None, preferred_skin = None):
 
 def get_media_url(url, ignore_missing = False):
     """returns url prefixed with the skin name
-    of the first skin that contains the file 
+    of the first skin that contains the file
     directories are searched in this order:
     askbot_settings.ASKBOT_DEFAULT_SKIN, then 'default', then 'commmon'
     if file is not found - returns None
@@ -98,18 +100,23 @@ def get_media_url(url, ignore_missing = False):
     #before = datetime.datetime.now()
     url = urllib.unquote(unicode(url))
     while url[0] == '/': url = url[1:]
+
+    #a hack allowing urls media stored on external locations to
+    #just pass through unchanged
+    if url.startswith('http://') or url.startswith('https://'):
+        return url
     #todo: handles case of multiple skin directories
 
     #if file is in upfiles directory, then give that
     url_copy = url
-    if url_copy.startswith(django_settings.ASKBOT_UPLOADED_FILES_URL):
+    if url_copy.startswith(django_settings.MEDIA_URL[1:]):
         file_path = url_copy.replace(
-                                django_settings.ASKBOT_UPLOADED_FILES_URL,
+                                django_settings.MEDIA_URL[1:],
                                 '',
                                 1
                             )
         file_path = os.path.join(
-                            django_settings.ASKBOT_FILE_UPLOAD_DIR,
+                            django_settings.MEDIA_ROOT,
                             file_path
                         )
         if os.path.isfile(file_path):
@@ -149,14 +156,9 @@ def get_media_url(url, ignore_missing = False):
             logging.critical(log_message)
         return None
 
-    url = use_skin + '/media/' + url
-    url = '///' + django_settings.ASKBOT_URL + 'm/' + url
-    url = os.path.normpath(url).replace(
-                                    '\\', '/'
-                                ).replace(
-                                    '///', '/'
-                                )
-    
+    url = django_settings.STATIC_URL + use_skin + '/media/' + url
+    url = os.path.normpath(url).replace('\\', '/')
+
     if resource_revision:
         url +=  '?v=%d' % resource_revision
 
@@ -174,12 +176,15 @@ def update_media_revision(skin = None):
         if skin in get_skin_choices():
             skin_path = get_path_to_skin(skin)
         else:
-            raise MediaNotFound('Skin %s not found' % skin) 
+            raise MediaNotFound('Skin %s not found' % skin)
     else:
         skin = 'default'
         skin_path = get_path_to_skin(askbot_settings.ASKBOT_DEFAULT_SKIN)
 
-    media_dirs = [os.path.join(skin_path, 'media'),]
+    media_dirs = [
+        os.path.join(skin_path, 'media'),
+        os.path.join(get_path_to_skin('common'), 'media')#we always use common
+    ]
 
     if skin != 'default':
         #we have default skin as parent of the custom skin
@@ -190,6 +195,5 @@ def update_media_revision(skin = None):
 
     if current_hash != askbot_settings.MEDIA_RESOURCE_REVISION_HASH:
         askbot_settings.update('MEDIA_RESOURCE_REVISION', resource_revision + 1)
-        askbot_settings.update('MEDIA_RESOURCE_REVISION_HASH', current_hash) 
+        askbot_settings.update('MEDIA_RESOURCE_REVISION_HASH', current_hash)
         logging.debug('MEDIA_RESOURCE_REVISION changed')
-    askbot_settings.MEDIA_RESOURCE_REVISION

@@ -21,8 +21,10 @@
                     {% endif %}
                 {% endif %}
             </div>
-            <div class="scoreNumber">{{view_user.reputation|intcomma}}</div>
-            <p><b style="color:#777;">{% trans %}reputation{% endtrans %}</b></p>
+            {% if can_show_karma %}
+                <div class="scoreNumber">{{view_user.reputation|intcomma}}</div>
+                <p><b style="color:#777;">{% trans %}karma{% endtrans %}</b></p>
+            {% endif %}
             {% if user_follow_feature_on %}
                 {{ macros.follow_user_toggle(visitor = request.user, subject = view_user) }}
             {% endif %}
@@ -35,7 +37,7 @@
                         <a href="{% url edit_user view_user.id %}">
                             {% trans %}update profile{% endtrans %}
                         </a>
-                        {% if request.user == view_user and settings.ALLOW_ADD_REMOVE_LOGIN_METHODS %}
+                        {% if settings.USE_ASKBOT_LOGIN_SYSTEM and request.user == view_user and settings.ALLOW_ADD_REMOVE_LOGIN_METHODS %}
                             | <a href="{{ settings.LOGIN_URL }}?next={{ settings.LOGIN_URL }}">
                                 {% trans %}manage login methods{% endtrans %}
                             </a>
@@ -55,18 +57,18 @@
                 </tr>
                 {% endif %}
                 <tr>
-                    <td>{% trans %}member for{% endtrans %}</td>
-                    <td><strong>{{ view_user.date_joined|diff_date }}</strong></td>
+                    <td>{% trans %}member since{% endtrans %}</td>
+                    <td><strong>{{ macros.timeago(view_user.date_joined) }}</strong></td>
                 </tr>
                 {% if view_user.last_seen %}
                 <tr>
                     <td>{% trans %}last seen{% endtrans %}</td>
-                    <td><strong title="{{ view_user.last_seen }}">{{view_user.last_seen|diff_date}}</strong></td>
+                    <td><strong title="{{ view_user.last_seen }}">{{ macros.timeago(view_user.last_seen) }}</strong></td>
                 </tr>
                 {% endif %}
-                {% if view_user.website %}
+                {% if view_user.website and (not view_user.is_blocked()) %}
                 <tr>
-                    <td>{% trans %}user website{% endtrans %}</td>
+                    <td>{% trans %}website{% endtrans %}</td>
                     <td>{{ macros.user_website_link(view_user, max_display_length = 30) }}</td>
                 </tr>
                 {% endif  %}
@@ -93,7 +95,7 @@
         </td>
         <td width="380">
             <div class="user-about">
-            {% if view_user.about %}
+            {% if view_user.about and (not view_user.is_blocked()) %}
                 {{view_user.about|linebreaks}}
             {% endif %}
             </div>

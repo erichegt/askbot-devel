@@ -5,7 +5,7 @@
 {% endblock %}
 {% block usercontent %}
 {% if request.user != view_user %}
-    <h3>{% trans username=view_user.username, status=view_user.get_status_display() %}{{username}}'s current status is "{{status}}"{% endtrans %}
+    <h3>{% trans username=view_user.username|escape, status=view_user.get_status_display() %}{{username}}'s current status is "{{status}}"{% endtrans %}
     </h3>
     {% if user_status_changed %}
         <p class="action-status"><span>{% trans %}User status changed{% endtrans %}</span></p>
@@ -40,7 +40,7 @@
 </form>
 {% if request.user != view_user %}
 <hr/>
-<h3>{% trans username=view_user.username %}Send message to {{username}}{% endtrans %}</h3>
+<h3>{% trans username=view_user.username|escape %}Send message to {{username}}{% endtrans %}</h3>
 <p>{% trans %}An email will be sent to the user with 'reply-to' field set to your email address. Please make sure that your address is entered correctly.{% endtrans %}</p>
     {% if message_sent %}
         <p class="action-status"><span>{% trans %}Message sent{% endtrans %}</span></p>
@@ -83,7 +83,7 @@
                 $('#id_user_status_info').html("{% trans %}Suspended users can only edit or delete their own posts.{% endtrans %}");
                 $('#id_user_status_info').show('slow');
             } else if (optionValue == "b"){
-                $('#id_user_status_info').html("{% trans %}Blocked users can only login and send feedback to the site administrators.{% endtrans %}");
+                $('#id_user_status_info').html("{% trans %}Blocked users can only login and send feedback to the site administrators, their url and profile will also be hidden.{% endtrans %}");
                 $('#id_user_status_info').show('slow');
             } else {
                 $('#id_user_status_info').hide('slow');

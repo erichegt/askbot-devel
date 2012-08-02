@@ -1,11 +1,91 @@
+import datetime
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import ugettext as _
-import datetime
+from django.utils.html import escape
 from askbot import const
 from django.core.urlresolvers import reverse
+
+class VoteManager(models.Manager):
+    def get_up_vote_count_from_user(self, user):
+        if user is not None:
+            return self.filter(user=user, vote=1).count()
+        else:
+            return 0
+
+    def get_down_vote_count_from_user(self, user):
+        if user is not None:
+            return self.filter(user=user, vote=-1).count()
+        else:
+            return 0
+
+    def get_votes_count_today_from_user(self, user):
+        if user is not None:
+            today = datetime.date.today()
+            return self.filter(user=user, voted_at__range=(today, today + datetime.timedelta(1))).count()
+        else:
+            return 0
+
+
+class Vote(models.Model):
+    VOTE_UP = +1
+    VOTE_DOWN = -1
+    VOTE_CHOICES = (
+        (VOTE_UP,   u'Up'),
+        (VOTE_DOWN, u'Down'),
+    )
+    user = models.ForeignKey('auth.User', related_name='votes')
+    voted_post = models.ForeignKey('Post', related_name='votes')
+
+    vote           = models.SmallIntegerField(choices=VOTE_CHOICES)
+    voted_at       = models.DateTimeField(default=datetime.datetime.now)
+
+    objects = VoteManager()
+
+    class Meta:
+        unique_together = ('user', 'voted_post')
+        app_label = 'askbot'
+        db_table = u'vote'
+
+    def __unicode__(self):
+        return '[%s] voted at %s: %s' %(self.user, self.voted_at, self.vote)
+
+    def __int__(self):
+        """1 if upvote -1 if downvote"""
+        return self.vote
+
+    def is_upvote(self):
+        return self.vote == self.VOTE_UP
+
+    def is_downvote(self):
+        return self.vote == self.VOTE_DOWN
+
+    def is_opposite(self, vote_type):
+        assert(vote_type in (self.VOTE_UP, self.VOTE_DOWN))
+        return self.vote != vote_type
+
+    def cancel(self):
+        """cancel the vote
+        while taking into account whether vote was up
+        or down
+
+        return change in score on the post
+        """
+        #importing locally because of circular dependency
+        from askbot import auth
+        score_before = self.voted_post.score
+        if self.vote > 0:
+            # cancel upvote
+            auth.onUpVotedCanceled(self, self.voted_post, self.user)
+        else:
+            # cancel downvote
+            auth.onDownVotedCanceled(self, self.voted_post, self.user)
+        score_after = self.voted_post.score
+
+        return score_after - score_before
+
 
 class BadgeData(models.Model):
     """Awarded for notable actions performed on the site by Users."""
@@ -13,25 +93,27 @@ class BadgeData(models.Model):
     awarded_count = models.PositiveIntegerField(default=0)
     awarded_to    = models.ManyToManyField(User, through='Award', related_name='badges')
 
+    def _get_meta_data(self):
+        """retrieves badge metadata stored 
+        in a file"""
+        from askbot.models import badges
+        return badges.get_badge(self.slug)
+
     @property
     def name(self):
-        from askbot.models import badges
-        return badges.get_badge(self.slug).name
+        return self._get_meta_data().name
 
     @property
     def description(self):
-        from askbot.models import badges
-        return badges.get_badge(self.slug).description
+        return self._get_meta_data().description
 
     @property
     def css_class(self):
-        from askbot.models import badges
-        return badges.get_badge(self.slug).css_class
+        return self._get_meta_data().css_class
 
     def get_type_display(self):
-        from askbot.models import badges
         #todo - rename "type" -> "level" in this model
-        return badges.get_badge(self.slug).get_level_display()
+        return self._get_meta_data().get_level_display()
 
     class Meta:
         app_label = 'askbot'
@@ -109,8 +191,7 @@ class Repute(models.Model):
     #todo: combine positive and negative to one value
     positive = models.SmallIntegerField(default=0)
     negative = models.SmallIntegerField(default=0)
-    #FK must be to Post() - in the future
-    question = models.ForeignKey('Question', null=True, blank=True)
+    question = models.ForeignKey('Post', null=True, blank=True)
     reputed_at = models.DateTimeField(default=datetime.datetime.now)
     reputation_type = models.SmallIntegerField(choices=const.TYPE_REPUTATION)
     reputation = models.IntegerField(default=1)
@@ -146,7 +227,7 @@ class Repute(models.Model):
             link_title_data = {
                                 'points': abs(delta),
                                 'username': self.user.username,
-                                'question_title': self.question.title
+                                'question_title': self.question.thread.title
                             }
             if delta > 0:
                 link_title = _(
@@ -162,6 +243,7 @@ class Repute(models.Model):
             return '<a href="%(url)s" title="%(link_title)s">%(question_title)s</a>' \
                             % {
                                'url': self.question.get_absolute_url(), 
-                               'question_title': self.question.title,
-                               'link_title': link_title
+                               'question_title': escape(self.question.thread.title),
+                               'link_title': escape(link_title)
                             }
+

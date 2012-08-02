@@ -65,7 +65,7 @@ settings.register(
     IntegerValue(
         VOTE_RULES,
         'MIN_FLAGS_TO_HIDE_POST',
-        default=3,
+        default=2,
         description=_('Number of flags required to automatically hide posts')
     )
 )
@@ -74,7 +74,7 @@ settings.register(
     IntegerValue(
         VOTE_RULES,
         'MIN_FLAGS_TO_DELETE_POST',
-        default=5,
+        default=3,
         description=_('Number of flags required to automatically delete posts')
     )
 )

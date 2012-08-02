@@ -43,9 +43,9 @@
 <script>
     $(document).ready(function(){
         if (typeof FB != 'undefined'){
-            var ret = FB.init({appId: '{{settings.FACEBOOK_KEY}}', status: true, cookie: true, xfbml: true});
-            FB.Event.subscribe('auth.sessionChange', function(response){
-                    if (response.session) {
+            var ret = FB.init({appId: '{{settings.FACEBOOK_KEY}}', status: true, cookie: true, xfbml: true, oauth: true});
+            FB.Event.subscribe('auth.authResponseChange', function(response){
+                    if (response.authResponse) {
                         $('#signin-form').submit();
                     } 
             });

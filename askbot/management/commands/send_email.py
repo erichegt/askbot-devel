@@ -1,4 +1,4 @@
-from askbot.utils.mail import send_mail
+from askbot.mail import send_mail
 from django.core.exceptions import ValidationError
 from django.core.management.base import BaseCommand, CommandError
 from django.core.validators import validate_email

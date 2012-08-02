@@ -11,12 +11,11 @@ import logging
 import urllib
 import operator
 from django.shortcuts import get_object_or_404
-from django.http import HttpResponseRedirect, HttpResponse, Http404
-from django.conf import settings as django_settings
+from django.http import HttpResponseRedirect, HttpResponse, Http404, HttpResponseNotAllowed
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.template import Context
-from django.utils.http import urlencode
 from django.utils import simplejson
+from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from django.utils import translation
@@ -24,28 +23,30 @@ from django.views.decorators import csrf
 from django.core.urlresolvers import reverse
 from django.core import exceptions as django_exceptions
 from django.contrib.humanize.templatetags import humanize
-from django.views.decorators.cache import cache_page
 from django.http import QueryDict
+from django.conf import settings
 
 import askbot
 from askbot import exceptions
 from askbot.utils.diff import textDiff as htmldiff
-from askbot.forms import AdvancedSearchForm, AnswerForm, ShowQuestionForm
+from askbot.forms import AnswerForm, ShowQuestionForm
 from askbot import models
 from askbot import schedules
-from askbot.models.badges import award_badges_signal
+from askbot.models.tag import Tag
 from askbot import const
 from askbot.utils import functions
+from askbot.utils.html import sanitize_html
 from askbot.utils.decorators import anonymous_forbidden, ajax_only, get_only
-from askbot.search.state_manager import SearchState
+from askbot.search.state_manager import SearchState, DummySearchState
 from askbot.templatetags import extra_tags
-from askbot.templatetags import extra_filters
 import askbot.conf
 from askbot.conf import settings as askbot_settings
-from askbot.skins.loaders import render_into_skin, get_template#jinja2 template loading enviroment
+from askbot.skins.loaders import render_into_skin, get_template #jinja2 template loading enviroment
 
 # used in index page
 #todo: - take these out of const or settings
+from askbot.models import Post, Vote
+
 INDEX_PAGE_SIZE = 30
 INDEX_AWARD_SIZE = 15
 INDEX_TAGS_SIZE = 25
@@ -65,65 +66,53 @@ def index(request):#generates front page - shows listing of questions sorted in 
     """
     return HttpResponseRedirect(reverse('questions'))
 
-def questions(request):
+def questions(request, **kwargs):
     """
     List of Questions, Tagged questions, and Unanswered questions.
     matching search query or user selection
     """
     #before = datetime.datetime.now()
-    #don't allow to post to this view
-    if request.method == 'POST':
-        raise Http404
+    if request.method != 'GET':
+        return HttpResponseNotAllowed(['GET'])
 
-    #update search state
-    form = AdvancedSearchForm(request.GET)
-    if form.is_valid():
-        user_input = form.cleaned_data
-    else:
-        user_input = None
-    search_state = request.session.get('search_state', SearchState())
-    view_log = request.session['view_log']
-    search_state.update(user_input, view_log, request.user)
-    request.session['search_state'] = search_state
-    request.session.modified = True
+    search_state = SearchState(user_logged_in=request.user.is_authenticated(), **kwargs)
+    page_size = int(askbot_settings.DEFAULT_QUESTIONS_PAGE_SIZE)
 
-    #force reset for debugging
-    #search_state.reset()
-    #request.session.modified = True
+    qs, meta_data = models.Thread.objects.run_advanced_search(request_user=request.user, search_state=search_state)
 
-    #todo: have this call implemented for sphinx, mysql and pgsql
-    (qs, meta_data, related_tags) = models.Question.objects.run_advanced_search(
-                                            request_user = request.user,
-                                            search_state = search_state,
-                                        )
+    if meta_data['non_existing_tags']:
+        search_state = search_state.remove_tags(meta_data['non_existing_tags'])
 
-    tag_list_type = askbot_settings.TAG_LIST_FORMAT
-
-    #force cloud to sort by name
-    if tag_list_type == 'cloud':
-        related_tags = sorted(related_tags, key = operator.attrgetter('name'))
-
-    font_size = extra_tags.get_tag_font_size(related_tags)
-
-    paginator = Paginator(qs, search_state.page_size)
-
+    paginator = Paginator(qs, page_size)
     if paginator.num_pages < search_state.page:
-        raise Http404
-
+        search_state.page = 1
     page = paginator.page(search_state.page)
 
-    contributors = models.Question.objects.get_question_and_answer_contributors(page.object_list)
+    page.object_list = list(page.object_list) # evaluate queryset
+
+    # INFO: Because for the time being we need question posts and thread authors
+    #       down the pipeline, we have to precache them in thread objects
+    models.Thread.objects.precache_view_data_hack(threads=page.object_list)
+
+    related_tags = Tag.objects.get_related_to_search(threads=page.object_list, ignored_tag_names=meta_data.get('ignored_tag_names', []))
+    tag_list_type = askbot_settings.TAG_LIST_FORMAT
+    if tag_list_type == 'cloud': #force cloud to sort by name
+        related_tags = sorted(related_tags, key = operator.attrgetter('name'))
+
+    contributors = list(models.Thread.objects.get_thread_contributors(thread_list=page.object_list).only('id', 'username', 'gravatar'))
 
     paginator_context = {
-        'is_paginated' : (paginator.count > search_state.page_size),
+        'is_paginated' : (paginator.count > page_size),
+
         'pages': paginator.num_pages,
         'page': search_state.page,
         'has_previous': page.has_previous(),
         'has_next': page.has_next(),
         'previous': page.previous_page_number(),
         'next': page.next_page_number(),
-        'base_url' : request.path + '?sort=%s&amp;' % search_state.sort,#todo in T sort=>sort_method
-        'page_size' : search_state.page_size,#todo in T pagesize -> page_size
+
+        'base_url' : search_state.query_string(),
+        'page_size' : page_size,
     }
 
     # We need to pass the rss feed url based
@@ -140,148 +129,93 @@ def questions(request):
         # We have tags in session - pass it to the
         # QueryDict but as a list - we want tags+
         rss_query_dict.setlist("tags", search_state.tags)
-    
-    # Format the url with the QueryDict
-    context_feed_url = '/feeds/rss/?%s' % rss_query_dict.urlencode()
+    context_feed_url = '/%sfeeds/rss/?%s' % (settings.ASKBOT_URL, rss_query_dict.urlencode()) # Format the url with the QueryDict
+
+    reset_method_count = len(filter(None, [search_state.query, search_state.tags, meta_data.get('author_name', None)]))
 
     if request.is_ajax():
-
         q_count = paginator.count
-        if search_state.tags:
-            question_counter = ungettext(
-                                    '%(q_num)s question, tagged',
-                                    '%(q_num)s questions, tagged',
-                                    q_count
-                                ) % {
-                                    'q_num': humanize.intcomma(q_count),
-                                }
-        else:
-            question_counter = ungettext(
-                                    '%(q_num)s question',
-                                    '%(q_num)s questions',
-                                    q_count
-                                ) % {
-                                    'q_num': humanize.intcomma(q_count),
-                                }
 
-        if q_count > search_state.page_size:
+        question_counter = ungettext('%(q_num)s question', '%(q_num)s questions', q_count)
+        question_counter = question_counter % {'q_num': humanize.intcomma(q_count),}
+
+        if q_count > page_size:
             paginator_tpl = get_template('main_page/paginator.html', request)
-            #todo: remove this patch on context after all templates are moved to jinja
-            paginator_context['base_url'] = request.path + '?sort=%s&' % search_state.sort
-            data = {
-                'context': extra_tags.cnprog_paginator(paginator_context),
-                'questions_count': q_count
-            }
-            paginator_html = paginator_tpl.render(Context(data))
+            paginator_html = paginator_tpl.render(Context({
+                'context': functions.setup_paginator(paginator_context),
+                'questions_count': q_count,
+                'page_size' : page_size,
+                'search_state': search_state,
+            }))
         else:
             paginator_html = ''
-        search_tags = list()
-        if search_state.tags:
-            search_tags = list(search_state.tags)
-        query_data = {
-            'tags': search_tags,
-            'sort_order': search_state.sort
-        }
+
+        questions_tpl = get_template('main_page/questions_loop.html', request)
+        questions_html = questions_tpl.render(Context({
+            'threads': page,
+            'search_state': search_state,
+            'reset_method_count': reset_method_count,
+        }))
+
         ajax_data = {
-            #current page is 1 by default now
-            #because ajax is only called by update in the search button
-            'query_data': query_data,
+            'query_data': {
+                'tags': search_state.tags,
+                'sort_order': search_state.sort,
+                'ask_query_string': search_state.ask_query_string(),
+            },
             'paginator': paginator_html,
             'question_counter': question_counter,
-            'questions': list(),
-            'related_tags': list(),
-            'faces': list(),
+            'faces': [],#[extra_tags.gravatar(contributor, 48) for contributor in contributors],
+            'feed_url': context_feed_url,
+            'query_string': search_state.query_string(),
+            'page_size' : page_size,
+            'questions': questions_html.replace('\n',''),
+            'non_existing_tags': meta_data['non_existing_tags']
+        }
+        ajax_data['related_tags'] = [{
+            'name': escape(tag.name),
+            'used_count': humanize.intcomma(tag.local_used_count)
+        } for tag in related_tags]
+
+        return HttpResponse(simplejson.dumps(ajax_data), mimetype = 'application/json')
+
+    else: # non-AJAX branch
+
+        template_data = {
+            'active_tab': 'questions',
+            'author_name' : meta_data.get('author_name',None),
+            'contributors' : contributors,
+            'context' : paginator_context,
+            'is_unanswered' : False,#remove this from template
+            'interesting_tag_names': meta_data.get('interesting_tag_names', None),
+            'ignored_tag_names': meta_data.get('ignored_tag_names', None),
+            'subscribed_tag_names': meta_data.get('subscribed_tag_names', None),
+            'language_code': translation.get_language(),
+            'name_of_anonymous_user' : models.get_name_of_anonymous_user(),
+            'page_class': 'main-page',
+            'page_size': page_size,
+            'query': search_state.query,
+            'threads' : page,
+            'questions_count' : paginator.count,
+            'reset_method_count': reset_method_count,
+            'scope': search_state.scope,
+            'show_sort_by_relevance': askbot.conf.should_show_sort_by_relevance(),
+            'search_tags' : search_state.tags,
+            'sort': search_state.sort,
+            'tab_id' : search_state.sort,
+            'tags' : related_tags,
+            'tag_list_type' : tag_list_type,
+            'font_size' : extra_tags.get_tag_font_size(related_tags),
+            'display_tag_filter_strategy_choices': const.TAG_DISPLAY_FILTER_STRATEGY_CHOICES,
+            'email_tag_filter_strategy_choices': const.TAG_EMAIL_FILTER_STRATEGY_CHOICES,
+            'update_avatar_data': schedules.should_update_avatar_data(request),
+            'query_string': search_state.query_string(),
+            'search_state': search_state,
             'feed_url': context_feed_url,
         }
 
-        badge_levels = dict(const.BADGE_TYPE_CHOICES)
-        def pluralize_badge_count(count, level):
-            return ungettext(
-                '%(badge_count)d %(badge_level)s badge',
-                '%(badge_count)d %(badge_level)s badges',
-                count
-            ) % {
-                'badge_count': count,
-                'badge_level': badge_levels[level]
-            }
+        return render_into_skin('main_page.html', template_data, request)
 
-        gold_badge_css_class = const.BADGE_CSS_CLASSES[const.GOLD_BADGE],
-        silver_badge_css_class = const.BADGE_CSS_CLASSES[const.SILVER_BADGE],
-        bronze_badge_css_class = const.BADGE_CSS_CLASSES[const.BRONZE_BADGE],
-
-        for tag in related_tags:
-            tag_data = {
-                'name': tag.name,
-                'used_count': humanize.intcomma(tag.local_used_count)
-            }
-            ajax_data['related_tags'].append(tag_data)
-
-        for contributor in contributors:
-            ajax_data['faces'].append(extra_tags.gravatar(contributor, 48))
-        #we render the template
-        #from django.template import RequestContext
-        questions_tpl = get_template('main_page/questions_loop.html', request)
-        #todo: remove this patch on context after all templates are moved to jinja
-        data = {
-            'questions': page,
-            'questions_count': q_count,
-            'context': paginator_context,
-            'language_code': translation.get_language(),
-            'query': search_state.query,
-        }
-
-        questions_html = questions_tpl.render(Context(data))
-        ajax_data['questions'] = questions_html.replace('\n','')
-        return HttpResponse(
-                    simplejson.dumps(ajax_data),
-                    mimetype = 'application/json'
-                )
-
-    reset_method_count = 0
-    if search_state.query:
-        reset_method_count += 1
-    if search_state.tags:
-        reset_method_count += 1
-    if meta_data.get('author_name',None):
-        reset_method_count += 1
-    
-
-    template_data = {
-        'active_tab': 'questions',
-        'author_name' : meta_data.get('author_name',None),
-        'contributors' : contributors,
-        'context' : paginator_context,
-        'is_unanswered' : False,#remove this from template
-        'interesting_tag_names': meta_data.get('interesting_tag_names',None),
-        'ignored_tag_names': meta_data.get('ignored_tag_names',None),
-        'language_code': translation.get_language(),
-        'name_of_anonymous_user' : models.get_name_of_anonymous_user(),
-        'page_class': 'main-page',
-        'query': search_state.query,
-        'questions' : page,
-        'questions_count' : paginator.count,
-        'reset_method_count': reset_method_count,
-        'scope': search_state.scope,
-        'show_sort_by_relevance': askbot.conf.should_show_sort_by_relevance(),
-        'search_tags' : search_state.tags,
-        'sort': search_state.sort,
-        'tab_id' : search_state.sort,
-        'tags' : related_tags,
-        'tag_list_type' : tag_list_type,
-        'font_size' : font_size,
-        'tag_filter_strategy_choices': const.TAG_FILTER_STRATEGY_CHOICES,
-        'update_avatar_data': schedules.should_update_avatar_data(request),
-        'feed_url': context_feed_url,
-    }
-
-    assert(request.is_ajax() == False)
-    #ajax request is handled in a separate branch above
-
-    #before = datetime.datetime.now()
-    response = render_into_skin('main_page.html', template_data, request)
-    #after = datetime.datetime.now()
-    #print after - before
-    return response
 
 def tags(request):#view showing a listing of available tags - plain list
 
@@ -330,7 +264,7 @@ def tags(request):#view showing a listing of available tags - plain list
             'next': tags.next_page_number(),
             'base_url' : reverse('tags') + '?sort=%s&amp;' % sortby
         }
-        paginator_context = extra_tags.cnprog_paginator(paginator_data)
+        paginator_context = functions.setup_paginator(paginator_data)
         data = {
             'active_tab': 'tags',
             'page_class': 'tags-page',
@@ -339,7 +273,7 @@ def tags(request):#view showing a listing of available tags - plain list
             'stag' : stag,
             'tab_id' : sortby,
             'keywords' : stag,
-            'paginator_context' : paginator_context
+            'paginator_context' : paginator_context,
         }
 
     else:
@@ -368,6 +302,7 @@ def tags(request):#view showing a listing of available tags - plain list
             'stag' : stag,
             'tab_id' : sortby,
             'keywords' : stag,
+            'search_state': SearchState(*[None for x in range(7)])
         }
 
     return render_into_skin('tags.html', data, request)
@@ -380,14 +315,62 @@ def question(request, id):#refactor - long subroutine. display question body, an
     """
     #process url parameters
     #todo: fix inheritance of sort method from questions
+    #before = datetime.datetime.now()
     default_sort_method = request.session.get('questions_sort_method', 'votes')
     form = ShowQuestionForm(request.GET, default_sort_method)
     form.full_clean()#always valid
     show_answer = form.cleaned_data['show_answer']
     show_comment = form.cleaned_data['show_comment']
     show_page = form.cleaned_data['show_page']
-    is_permalink = form.cleaned_data['is_permalink']
     answer_sort_method = form.cleaned_data['answer_sort_method']
+
+    #load question and maybe refuse showing deleted question
+    #if the question does not exist - try mapping to old questions
+    #and and if it is not found again - then give up
+    try:
+        question_post = models.Post.objects.filter(
+                                post_type = 'question',
+                                id = id
+                            ).select_related('thread')[0]
+    except IndexError:
+    # Handle URL mapping - from old Q/A/C/ URLs to the new one
+        try:
+            question_post = models.Post.objects.filter(
+                                    post_type='question',
+                                    old_question_id = id
+                                ).select_related('thread')[0]
+        except IndexError:
+            raise Http404
+
+        if show_answer:
+            try:
+                old_answer = models.Post.objects.get_answers().get(old_answer_id=show_answer)
+                return HttpResponseRedirect(old_answer.get_absolute_url())
+            except models.Post.DoesNotExist:
+                pass
+
+        elif show_comment:
+            try:
+                old_comment = models.Post.objects.get_comments().get(old_comment_id=show_comment)
+                return HttpResponseRedirect(old_comment.get_absolute_url())
+            except models.Post.DoesNotExist:
+                pass
+
+    try:
+        question_post.assert_is_visible_to(request.user)
+    except exceptions.QuestionHidden, error:
+        request.user.message_set.create(message = unicode(error))
+        return HttpResponseRedirect(reverse('index'))
+
+    #redirect if slug in the url is wrong
+    if request.path.split('/')[-2] != question_post.slug:
+        logging.debug('no slug match!')
+        question_url = '?'.join((
+                            question_post.get_absolute_url(),
+                            urllib.urlencode(request.GET)
+                        ))
+        return HttpResponseRedirect(question_url)
+
 
     #resolve comment and answer permalinks
     #they go first because in theory both can be moved to another question
@@ -396,7 +379,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
     #in the case if the permalinked items or their parents are gone - redirect
     #redirect also happens if id of the object's origin post != requested id
     show_post = None #used for permalinks
-    if show_comment is not None:
+    if show_comment:
         #if url calls for display of a specific comment,
         #check that comment exists, that it belongs to
         #the current question
@@ -406,18 +389,21 @@ def question(request, id):#refactor - long subroutine. display question body, an
         #in addition - if url points to a comment and the comment
         #is for the answer - we need the answer object
         try:
-            show_comment = models.Comment.objects.get(id = show_comment)
-            if str(show_comment.get_origin_post().id) != id:
-                return HttpResponseRedirect(show_comment.get_absolute_url())
-            show_post = show_comment.content_object
-            show_comment.assert_is_visible_to(request.user)
-        except models.Comment.DoesNotExist:
+            show_comment = models.Post.objects.get_comments().get(id=show_comment)
+        except models.Post.DoesNotExist:
             error_message = _(
                 'Sorry, the comment you are looking for has been '
                 'deleted and is no longer accessible'
             )
             request.user.message_set.create(message = error_message)
-            return HttpResponseRedirect(reverse('question', kwargs = {'id': id}))
+            return HttpResponseRedirect(question_post.thread.get_absolute_url())
+
+        if str(show_comment.thread._question_post().id) != str(id):
+            return HttpResponseRedirect(show_comment.get_absolute_url())
+        show_post = show_comment.parent
+
+        try:
+            show_comment.assert_is_visible_to(request.user)
         except exceptions.AnswerHidden, error:
             request.user.message_set.create(message = unicode(error))
             #use reverse function here because question is not yet loaded
@@ -426,77 +412,65 @@ def question(request, id):#refactor - long subroutine. display question body, an
             request.user.message_set.create(message = unicode(error))
             return HttpResponseRedirect(reverse('index'))
 
-    elif show_answer is not None:
+    elif show_answer:
         #if the url calls to view a particular answer to 
         #question - we must check whether the question exists
         #whether answer is actually corresponding to the current question
         #and that the visitor is allowed to see it
+        show_post = get_object_or_404(models.Post, post_type='answer', id=show_answer)
+        if str(show_post.thread._question_post().id) != str(id):
+            return HttpResponseRedirect(show_post.get_absolute_url())
+
         try:
-            show_post = get_object_or_404(models.Answer, id = show_answer)
-            if str(show_post.question.id) != id:
-                return HttpResponseRedirect(show_post.get_absolute_url())
             show_post.assert_is_visible_to(request.user)
         except django_exceptions.PermissionDenied, error:
             request.user.message_set.create(message = unicode(error))
             return HttpResponseRedirect(reverse('question', kwargs = {'id': id}))
 
-    #load question and maybe refuse showing deleted question
-    try:
-        question = get_object_or_404(models.Question, id=id)
-        question.assert_is_visible_to(request.user)
-    except exceptions.QuestionHidden, error:
-        request.user.message_set.create(message = unicode(error))
-        return HttpResponseRedirect(reverse('index'))
-
-    #redirect if slug in the url is wrong
-    if request.path.split('/')[-1] != question.slug:
-        logging.debug('no slug match!')
-        question_url = '?'.join((
-                            question.get_absolute_url(),
-                            urllib.urlencode(request.GET)
-                        ))
-        return HttpResponseRedirect(question_url)
-
+    thread = question_post.thread
 
     logging.debug('answer_sort_method=' + unicode(answer_sort_method))
-    #load answers
-    answers = question.get_answers(user = request.user)
-    answers = answers.select_related(depth=1)
 
-    user_answer_votes = {}
+    #load answers and post id's->athor_id mapping
+    #posts are pre-stuffed with the correctly ordered comments
+    updated_question_post, answers, post_to_author = thread.get_cached_post_data(
+                                sort_method = answer_sort_method,
+                            )
+    question_post.set_cached_comments(updated_question_post.get_cached_comments())
+
+
+    #Post.objects.precache_comments(for_posts=[question_post] + answers, visitor=request.user)
+
+    user_votes = {}
+    user_post_id_list = list()
+    #todo: cache this query set, but again takes only 3ms!
     if request.user.is_authenticated():
-        for answer in answers:
-            vote = answer.get_user_vote(request.user)
-            if vote is not None and not answer.id in user_answer_votes:
-                user_answer_votes[answer.id] = int(vote)
-
-    view_dic = {"latest":"-added_at", "oldest":"added_at", "votes":"-score" }
-    orderby = view_dic[answer_sort_method]
-    if answers is not None:
-        answers = answers.order_by("-accepted", orderby)
-
-    filtered_answers = []
-    for answer in answers:
-        if answer.deleted == True:
-            if answer.author_id == request.user.id:
-                filtered_answers.append(answer)
-        else:
-            filtered_answers.append(answer)
+        user_votes = Vote.objects.filter(
+                            user=request.user,
+                            voted_post__id__in = post_to_author.keys()
+                        ).values_list('voted_post_id', 'vote')
+        user_votes = dict(user_votes)
+        #we can avoid making this query by iterating through
+        #already loaded posts
+        user_post_id_list = [
+            id for id in post_to_author if post_to_author[id] == request.user.id
+        ]
 
     #resolve page number and comment number for permalinks
     show_comment_position = None
     if show_comment:
-        show_page = show_comment.get_page_number(answers = filtered_answers)
+        show_page = show_comment.get_page_number(answer_posts=answers)
         show_comment_position = show_comment.get_order_number()
     elif show_answer:
-        show_page = show_post.get_page_number(answers = filtered_answers)
+        show_page = show_post.get_page_number(answer_posts=answers)
 
-    objects_list = Paginator(filtered_answers, const.ANSWERS_PAGE_SIZE)
+    objects_list = Paginator(answers, const.ANSWERS_PAGE_SIZE)
     if show_page > objects_list.num_pages:
-        return HttpResponseRedirect(question.get_absolute_url())
+        return HttpResponseRedirect(question_post.get_absolute_url())
     page_objects = objects_list.page(show_page)
 
     #count visits
+    #import ipdb; ipdb.set_trace()
     if functions.not_a_robot_request(request):
         #todo: split this out into a subroutine
         #todo: merge view counts per user and per session
@@ -505,35 +479,25 @@ def question(request, id):#refactor - long subroutine. display question body, an
         if 'question_view_times' not in request.session:
             request.session['question_view_times'] = {}
 
-        last_seen = request.session['question_view_times'].get(question.id, None)
-        updated_when, updated_who = question.get_last_update_info()
+        last_seen = request.session['question_view_times'].get(question_post.id, None)
 
-        if updated_who != request.user:
+        if thread.last_activity_by_id != request.user.id:
             if last_seen:
-                if last_seen < updated_when:
+                if last_seen < thread.last_activity_at:
                     update_view_count = True
             else:
                 update_view_count = True
 
-        request.session['question_view_times'][question.id] = \
+        request.session['question_view_times'][question_post.id] = \
                                                     datetime.datetime.now()
 
-        if update_view_count:
-            question.view_count += 1
-            question.save()
-
-        #2) question view count per user and clear response displays
-        if request.user.is_authenticated():
-            #get response notifications
-            request.user.visit_question(question)
-
-        #3) send award badges signal for any badges
-        #that are awarded for question views
-        award_badges_signal.send(None,
-                        event = 'view_question',
-                        actor = request.user,
-                        context_object = question,
-                    )
+        #2) run the slower jobs in a celery task
+        from askbot import tasks
+        tasks.record_question_visit.delay(
+            question_post = question_post,
+            user = request.user,
+            update_view_count = update_view_count
+        )
 
     paginator_data = {
         'is_paginated' : (objects_list.count > const.ANSWERS_PAGE_SIZE),
@@ -544,52 +508,82 @@ def question(request, id):#refactor - long subroutine. display question body, an
         'previous': page_objects.previous_page_number(),
         'next': page_objects.next_page_number(),
         'base_url' : request.path + '?sort=%s&amp;' % answer_sort_method,
-        'extend_url' : "#sort-top"
     }
-    paginator_context = extra_tags.cnprog_paginator(paginator_data)
+    paginator_context = functions.setup_paginator(paginator_data)
 
-    favorited = question.has_favorite_by_user(request.user)
-    user_question_vote = 0
+    #todo: maybe consolidate all activity in the thread
+    #for the user into just one query?
+    favorited = thread.has_favorite_by_user(request.user)
+
+    is_cacheable = True
+    if show_page != 1:
+        is_cacheable = False
+    elif show_comment_position > askbot_settings.MAX_COMMENTS_TO_SHOW:
+        is_cacheable = False
+
+    answer_form = AnswerForm(
+        initial = {
+            'wiki': question_post.wiki and askbot_settings.WIKI_ON,
+            'email_notify': thread.is_followed_by(request.user)
+        }
+    )
+
+    user_can_post_comment = (
+        request.user.is_authenticated() and request.user.can_post_comment()
+    )
+
+    user_already_gave_answer = False
+    previous_answer = None
     if request.user.is_authenticated():
-        votes = question.votes.select_related().filter(user=request.user)
-        if votes.count() > 0:
-            user_question_vote = int(votes[0])
-        else:
-            user_question_vote = 0
+        if askbot_settings.LIMIT_ONE_ANSWER_PER_USER:
+            for answer in answers:
+                if answer.author == request.user:
+                    user_already_gave_answer = True
+                    previous_answer = answer
+                    break
 
     data = {
+        'is_cacheable': False,#is_cacheable, #temporary, until invalidation fix
+        'long_time': const.LONG_TIME,#"forever" caching
         'page_class': 'question-page',
         'active_tab': 'questions',
-        'question' : question,
-        'user_question_vote' : user_question_vote,
-        'question_comment_count':question.comments.count(),
-        'answer' : AnswerForm(question,request.user),
+        'question' : question_post,
+        'thread': thread,
+        'answer' : answer_form,
         'answers' : page_objects.object_list,
-        'user_answer_votes': user_answer_votes,
-        'tags' : question.tags.all(),
+        'answer_count': len(answers),
+        'user_votes': user_votes,
+        'user_post_id_list': user_post_id_list,
+        'user_can_post_comment': user_can_post_comment,#in general
+        'user_already_gave_answer': user_already_gave_answer,
+        'previous_answer': previous_answer,
         'tab_id' : answer_sort_method,
         'favorited' : favorited,
-        'similar_questions' : question.get_similar_questions(),
+        'similar_threads' : thread.get_similar_threads(),
         'language_code': translation.get_language(),
         'paginator_context' : paginator_context,
         'show_post': show_post,
         'show_comment': show_comment,
-        'show_comment_position': show_comment_position
+        'show_comment_position': show_comment_position,
     }
+
     return render_into_skin('question.html', data, request)
 
-def revisions(request, id, object_name=None):
-    assert(object_name in ('Question', 'Answer'))
-    post = get_object_or_404(models.get_model(object_name), id=id)
-    revisions = list(post.revisions.all())
+def revisions(request, id, post_type = None):
+    assert post_type in ('question', 'answer')
+    post = get_object_or_404(models.Post, post_type=post_type, id=id)
+    revisions = list(models.PostRevision.objects.filter(post=post))
     revisions.reverse()
     for i, revision in enumerate(revisions):
-        revision.html = revision.as_html()
         if i == 0:
-            revision.diff = revisions[i].html
+            revision.diff = sanitize_html(revisions[i].html)
             revision.summary = _('initial version')
         else:
-            revision.diff = htmldiff(revisions[i-1].html, revision.html)
+            revision.diff = htmldiff(
+                sanitize_html(revisions[i-1].html),
+                sanitize_html(revision.html)
+            )
+
     data = {
         'page_class':'revisions-page',
         'active_tab':'questions',
@@ -598,6 +592,7 @@ def revisions(request, id, object_name=None):
     }
     return render_into_skin('revisions.html', data, request)
 
+@csrf.csrf_exempt
 @ajax_only
 @anonymous_forbidden
 @get_only
@@ -607,26 +602,9 @@ def get_comment(request):
     and request must be ajax
     """
     id = int(request.GET['id'])
-    comment = models.Comment.objects.get(id = id)
+    comment = models.Post.objects.get(post_type='comment', id=id)
     request.user.assert_can_edit_comment(comment)
-    return {'text': comment.comment}
-
-@ajax_only
-@get_only
-def get_question_body(request):
-    search_state = request.session.get('search_state', SearchState())
-    view_log = request.session['view_log']
-    (qs, meta_data, related_tags) = models.Question.objects.run_advanced_search(
-                                            request_user = request.user,
-                                            search_state = search_state)
-    paginator = Paginator(qs, search_state.page_size)
-    page = paginator.page(search_state.page)
-    questions_dict = {}
-    for question in page.object_list:
-        questions_dict['question-%s' % question.id] = question.summary
-
-    return {'questions-titles': questions_dict}
-    return {'questions-titles': questions_dict}
+    return {'text': comment.text}
 
 def widget_questions(request):
     """Returns the first x questions based on certain tags.
@@ -634,13 +612,13 @@ def widget_questions(request):
     # make sure this is a GET request with the correct parameters.
     if request.method != 'GET':
         raise Http404
-    questions = models.Question.objects.all()
+    threads = models.Thread.objects.all()
     tags_input = request.GET.get('tags','').strip()
     if len(tags_input) > 0:
         tags = [tag.strip() for tag in tags_input.split(',')]
-        questions = questions.filter(tags__name__in = tags)
+        threads = threads.filter(tags__name__in=tags)
     data = {
-        'questions': questions[:askbot_settings.QUESTIONS_WIDGET_MAX_QUESTIONS]
+        'threads': threads[:askbot_settings.QUESTIONS_WIDGET_MAX_QUESTIONS]
     }
     return render_into_skin('question_widget.html', data, request) 
     

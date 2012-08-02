@@ -1,4 +1,5 @@
 {% extends "user_profile/user.html" %}
+{% from "macros.html" import timeago %}
 <!-- user_reputation.html -->
 {% block profilesection %}
     {% trans %}karma{% endtrans %}
@@ -10,14 +11,14 @@
                 {% if view_user.id == user.id %}
                 <h2>{% trans %}Your karma change log.{% endtrans %}</h2>
                 {% else %}
-                <h2>{% trans user_name=view_user.username %}{{user_name}}'s karma change log{% endtrans %}</h2>
+                <h2>{% trans user_name=view_user.username|escape %}{{user_name}}'s karma change log{% endtrans %}</h2>
                 {% endif %}
                 {% for rep in reputation %}
                 <p>
                     <span class="karma-gained">{{ rep.positive }}</span>
                     <span class="karma-lost">{{ rep.negative }}</span>
                     {{ rep.get_explanation_snippet() }}
-                    <span class="small">({{rep.reputed_at|diff_date}})</span>
+                    <span class="small">({{ timeago(rep.reputed_at) }})</span>
                     <div class="clean"></div>                  
                 </p>
                 {% endfor %}

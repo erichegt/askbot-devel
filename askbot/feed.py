@@ -17,30 +17,41 @@ try:
 except ImportError:
     from django.contrib.syndication.views import Feed
 
+import itertools
+
 from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ObjectDoesNotExist
-from askbot.models import Question, Answer, Comment
+
+from askbot.models import Post
 from askbot.conf import settings as askbot_settings
-import itertools
 
 class RssIndividualQuestionFeed(Feed):
     """rss feed class for particular questions
     """
-    title = askbot_settings.APP_TITLE + _(' - ')+ _('Individual question feed')
-    link = askbot_settings.APP_URL
-    description = askbot_settings.APP_DESCRIPTION
-    copyright = askbot_settings.APP_COPYRIGHT
+
+    def title(self):
+        return askbot_settings.APP_TITLE + _(' - ') + \
+                _('Individual question feed')
+
+    def feed_copyright(self):
+        return askbot_settings.APP_COPYRIGHT
+
+    def description(self):
+        return askbot_settings.APP_DESCRIPTION
 
     def get_object(self, bits):
         if len(bits) != 1:
             raise ObjectDoesNotExist
-        return Question.objects.get(id__exact = bits[0])
+        return Post.objects.get_questions().get(id__exact = bits[0])
 
     def item_link(self, item):
         """get full url to the item
         """
-        return self.link + item.get_absolute_url()
+        return askbot_settings.APP_URL + item.get_absolute_url()
+
+    def link(self):
+        return askbot_settings.APP_URL
 
     def item_pubdate(self, item):
         """get date of creation for the item
@@ -53,25 +64,18 @@ class RssIndividualQuestionFeed(Feed):
         then for each answer - the answer itself, then
         answer comments
         """
-
         chain_elements = list()
         chain_elements.append([item,])
         chain_elements.append(
-            Comment.objects.filter(
-                object_id = item.id,
-                content_type = ContentType.objects.get_for_model(Question)
-            )
+            Post.objects.get_comments().filter(parent=item)
         )
 
-        answer_content_type = ContentType.objects.get_for_model(Answer)
-        answers = Answer.objects.filter(question = item.id)
+        answers = Post.objects.get_answers().filter(thread = item.thread)
+
         for answer in answers:
             chain_elements.append([answer,])
             chain_elements.append(
-                Comment.objects.filter(
-                    object_id = answer.id,
-                    content_type = answer_content_type
-                )
+                Post.objects.get_comments().filter(parent=answer)
             )
 
         return itertools.chain(*chain_elements)
@@ -85,32 +89,36 @@ class RssIndividualQuestionFeed(Feed):
         elif item.post_type == "answer":
             title = "Answer by %s for %s " % (item.author, self.title)
         elif item.post_type == "comment":
-            title = "Comment by %s for %s" % (item.user, self.title)
+            title = "Comment by %s for %s" % (item.author, self.title)
         return title
 
     def item_description(self, item):
         """returns the description for the item
         """
-        if item.post_type == "question":
-            return item.text
-        if item.post_type == "answer":
-            return item.text
-        elif item.post_type == "comment":
-            return item.comment
+        return item.text
+
 
 class RssLastestQuestionsFeed(Feed):
     """rss feed class for the latest questions
     """
-    title = askbot_settings.APP_TITLE + _(' - ')+ _('latest questions')
-    link = askbot_settings.APP_URL
-    description = askbot_settings.APP_DESCRIPTION
-    #ttl = 10
-    copyright = askbot_settings.APP_COPYRIGHT
+
+    def title(self):
+        return askbot_settings.APP_TITLE + _(' - ') + \
+                _('Individual question feed')
+
+    def feed_copyright(self):
+        return askbot_settings.APP_COPYRIGHT
+
+    def description(self):
+        return askbot_settings.APP_DESCRIPTION
 
     def item_link(self, item):
         """get full url to the item
         """
-        return self.link + item.get_absolute_url()
+        return askbot_settings.APP_URL + item.get_absolute_url()
+
+    def link(self):
+        return askbot_settings.APP_URL
 
     def item_author_name(self, item):
         """get name of author
@@ -120,7 +128,7 @@ class RssLastestQuestionsFeed(Feed):
     def item_author_link(self, item):
         """get url of the author's profile
         """
-        return item.author.get_profile_url()
+        return askbot_settings.APP_URL + item.author.get_profile_url()
 
     def item_pubdate(self, item):
         """get date of creation for the item
@@ -134,7 +142,7 @@ class RssLastestQuestionsFeed(Feed):
         return self.link + item.get_absolute_url(no_slug = True)
 
     def item_description(self, item):
-        """returns the desciption for the item
+        """returns the description for the item
         """
         return item.text
 
@@ -142,7 +150,7 @@ class RssLastestQuestionsFeed(Feed):
         """get questions for the feed
         """
         #initial filtering
-        qs = Question.objects.filter(deleted=False)
+        qs = Post.objects.get_questions().filter(deleted=False)
 
         #get search string and tags from GET
         query = self.request.GET.get("q", None)
@@ -157,11 +165,9 @@ class RssLastestQuestionsFeed(Feed):
             #if there are tags in GET, filter the
             #questions additionally
             for tag in tags:
-                qs = qs.filter(tags__name = tag)
+                qs = qs.filter(thread__tags__name = tag)
 
-        return qs.order_by('-last_activity_at')[:30]
-
-
+        return qs.order_by('-thread__last_activity_at')[:30]
 
 def main():
     """main function for use as a script

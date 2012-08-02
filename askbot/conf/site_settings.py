@@ -63,7 +63,6 @@ settings.register(
     livesettings.StringValue(
         QA_SITE_SETTINGS,
         'APP_URL',
-        default='http://askbot.org',
         description=_(
                 'Base URL for your Q&A forum, must start with '
                 'http or https'

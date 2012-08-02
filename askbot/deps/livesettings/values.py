@@ -4,7 +4,9 @@ http://code.google.com/p/django-values/
 """
 from decimal import Decimal
 from django import forms
+from django.conf import settings as django_settings
 from django.core.exceptions import ImproperlyConfigured
+from django.core.cache import cache
 from django.utils import simplejson
 from django.utils.datastructures import SortedDict
 from django.utils.encoding import smart_str
@@ -148,6 +150,7 @@ class Value(object):
             - `hidden` - If true, then render a hidden field.
             - `default` - If given, then this Value will return that default whenever it has no assocated `Setting`.
             - `update_callback` - if given, then this value will call the callback whenever updated
+            - `clear_cache` - if `True` - clear all the caches on updates
         """
         self.group = group
         self.key = key
@@ -158,6 +161,7 @@ class Value(object):
         self.hidden = kwargs.pop('hidden', False)
         self.update_callback = kwargs.pop('update_callback', None)
         self.requires = kwargs.pop('requires', None)
+        self.clear_cache = kwargs.pop('clear_cache', False)
         if self.requires:
             reqval = kwargs.pop('requiresvalue', key)
             if not is_list_or_tuple(reqval):
@@ -365,6 +369,9 @@ class Value(object):
                     s.save()
 
                 signals.configuration_value_changed.send(self, old_value=current_value, new_value=new_value, setting=self)
+                
+                if self.clear_cache:
+                    cache.clear()
 
                 return True
         else:
@@ -600,8 +607,14 @@ class ImageValue(StringValue):
             'allowed_file_extensions',
             ('jpg', 'gif', 'png')
         )
-        self.upload_directory = kwargs.pop('upload_directory')
-        self.upload_url = kwargs.pop('upload_url')
+        self.upload_directory = kwargs.pop(
+                                    'upload_directory',
+                                    django_settings.MEDIA_ROOT
+                                )
+        self.upload_url = kwargs.pop(
+                                    'upload_url',
+                                    django_settings.MEDIA_URL
+                                )
         self.url_resolver = kwargs.pop('url_resolver', None)
         super(ImageValue, self).__init__(*args, **kwargs)
 
@@ -632,13 +645,20 @@ class ImageValue(StringValue):
         """uploaded_file is an instance of
         django UploadedFile object
         """
+        #0) initialize file storage
+        file_storage_class = storage.get_storage_class()
+
+        storage_settings = {}
+        if django_settings.DEFAULT_FILE_STORAGE == \
+            'django.core.files.storage.FileSystemStorage':
+            storage_settings = {
+                'location': self.upload_directory,
+                'base_url': self.upload_url
+            }
+
+        file_storage = file_storage_class(**storage_settings)
+
         #1) come up with a file name
-
-        file_storage = storage.FileSystemStorage(
-                                    location = self.upload_directory,
-                                    base_url = self.upload_url
-                                )
-
         #todo: need better function here to calc name
         file_name = file_storage.get_available_name(uploaded_file.name)
         file_storage.save(file_name, uploaded_file)

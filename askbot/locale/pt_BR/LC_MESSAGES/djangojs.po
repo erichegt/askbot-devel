@@ -1,341 +1,409 @@
-# SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# Olivier Hallot, 2012.
 msgid ""
 msgstr ""
 "Project-Id-Version: 0.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-27 02:00-0600\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"POT-Creation-Date: 2012-04-18 18:53-0500\n"
+"PO-Revision-Date: 2012-02-08 10:19-0200\n"
+"Last-Translator: Olivier Hallot\n"
+"Language-Team: Brazilian Portuguese <kde-i18n-doc@kde.org>\n"
+"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1)\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Lokalize 1.2\n"
 
+# 100%
 #: skins/common/media/jquery-openid/jquery.openid.js:73
-#, c-format
+#, perl-format
 msgid "Are you sure you want to remove your %s login?"
-msgstr ""
+msgstr "Tem certeza que deseja remover seu %s login?"
 
+# 100%
 #: skins/common/media/jquery-openid/jquery.openid.js:90
 msgid "Please add one or more login methods."
-msgstr ""
+msgstr "Por favor adicione um ou mais métodos de login."
 
 #: skins/common/media/jquery-openid/jquery.openid.js:93
 msgid ""
 "You don't have a method to log in right now, please add one or more by "
 "clicking any of the icons below."
 msgstr ""
+"Você não tem um método de login, adicione um ou mais clicando em qualquer um "
+"dos ícones abaixo."
 
+# 100%
 #: skins/common/media/jquery-openid/jquery.openid.js:135
 msgid "passwords do not match"
-msgstr ""
+msgstr "as senhas não coincidem"
 
-#: skins/common/media/jquery-openid/jquery.openid.js:162
+# 100%
+#: skins/common/media/jquery-openid/jquery.openid.js:161
 msgid "Show/change current login methods"
-msgstr ""
+msgstr "Mostrar/alterar os métodos de login atual"
 
-#: skins/common/media/jquery-openid/jquery.openid.js:223
-#, c-format
+# 100%
+#: skins/common/media/jquery-openid/jquery.openid.js:226
+#, perl-format
 msgid "Please enter your %s, then proceed"
-msgstr ""
+msgstr "Por favor digite seu %s, então prossiga"
 
-#: skins/common/media/jquery-openid/jquery.openid.js:225
+# 100%
+#: skins/common/media/jquery-openid/jquery.openid.js:228
 msgid "Connect your %(provider_name)s account to %(site)s"
-msgstr ""
+msgstr "Conecte sua conta %(provider_name)s  ao  %(site)s"
 
-#: skins/common/media/jquery-openid/jquery.openid.js:319
-#, c-format
+# 100%
+#: skins/common/media/jquery-openid/jquery.openid.js:322
+#, perl-format
 msgid "Change your %s password"
-msgstr ""
+msgstr "Altere sua %s senha"
 
-#: skins/common/media/jquery-openid/jquery.openid.js:320
-msgid "Change password"
-msgstr ""
-
+# 100%
 #: skins/common/media/jquery-openid/jquery.openid.js:323
-#, c-format
+msgid "Change password"
+msgstr "Alterar senha"
+
+# 100%
+#: skins/common/media/jquery-openid/jquery.openid.js:326
+#, perl-format
 msgid "Create a password for %s"
-msgstr ""
+msgstr "Criar uma senha para %s"
 
-#: skins/common/media/jquery-openid/jquery.openid.js:324
+# 100%
+#: skins/common/media/jquery-openid/jquery.openid.js:327
 msgid "Create password"
-msgstr ""
+msgstr "Criar senha"
 
-#: skins/common/media/jquery-openid/jquery.openid.js:340
+# 100%
+#: skins/common/media/jquery-openid/jquery.openid.js:343
 msgid "Create a password-protected account"
-msgstr ""
+msgstr "Criar uma conta protegida por senha"
 
+# 100%
 #: skins/common/media/js/post.js:28
 msgid "loading..."
-msgstr ""
+msgstr "carregando..."
 
-#: skins/common/media/js/post.js:128 skins/common/media/js/post.js.c:859
-msgid "tags cannot be empty"
-msgstr ""
-
-#: skins/common/media/js/post.js:134
-msgid "content cannot be empty"
-msgstr ""
-
-#: skins/common/media/js/post.js:135
-#, c-format
-msgid "%s content minchars"
-msgstr ""
-
-#: skins/common/media/js/post.js:138
-msgid "please enter title"
-msgstr ""
-
-#: skins/common/media/js/post.js:139 skins/common/media/js/post.js.c:987
-#, c-format
-msgid "%s title minchars"
-msgstr ""
-
-#: skins/common/media/js/post.js:282
+# 100%
+#: skins/common/media/js/post.js:318
 msgid "insufficient privilege"
-msgstr ""
+msgstr "privilégio insuficiente"
 
-#: skins/common/media/js/post.js:283
+# 100%
+#: skins/common/media/js/post.js:319
 msgid "cannot pick own answer as best"
-msgstr ""
+msgstr "não é possível pegar a própria resposta como melhor"
 
-#: skins/common/media/js/post.js:288
+# 100%
+#: skins/common/media/js/post.js:324
 msgid "please login"
-msgstr ""
+msgstr "faça o login"
 
-#: skins/common/media/js/post.js:290
+# 100%
+#: skins/common/media/js/post.js:326
 msgid "anonymous users cannot follow questions"
-msgstr ""
+msgstr "usuários anônimos não podem seguir perguntas"
 
-#: skins/common/media/js/post.js:291
+# 100%
+#: skins/common/media/js/post.js:327
 msgid "anonymous users cannot subscribe to questions"
-msgstr ""
+msgstr "usuários anônimos não podem se inscrever para perguntas"
 
-#: skins/common/media/js/post.js:292
+# 100%
+#: skins/common/media/js/post.js:328
 msgid "anonymous users cannot vote"
-msgstr ""
+msgstr "usuários anônimos não podem votar"
 
-#: skins/common/media/js/post.js:294
+# 100%
+#: skins/common/media/js/post.js:330
 msgid "please confirm offensive"
-msgstr ""
+msgstr "Confirme o teor ofensivo"
 
-#: skins/common/media/js/post.js:295
+# 100%
+#: skins/common/media/js/post.js:331
+#, fuzzy
+msgid "please confirm removal of offensive flag"
+msgstr "Confirme o teor ofensivo"
+
+# 100%
+#: skins/common/media/js/post.js:332
 msgid "anonymous users cannot flag offensive posts"
-msgstr ""
+msgstr "usuários anônimos não podem sinalizar posts ofensivos"
 
-#: skins/common/media/js/post.js:296
+# 100%
+#: skins/common/media/js/post.js:333
 msgid "confirm delete"
-msgstr ""
+msgstr "confirme a exclusão"
 
-#: skins/common/media/js/post.js:297
+# 100%
+#: skins/common/media/js/post.js:334
 msgid "anonymous users cannot delete/undelete"
-msgstr ""
+msgstr "usuários anônimos não podem excluir/recuperar"
 
-#: skins/common/media/js/post.js:298
+# 100%
+#: skins/common/media/js/post.js:335
 msgid "post recovered"
-msgstr ""
+msgstr "post recuperado"
 
-#: skins/common/media/js/post.js:299
+# 100%
+#: skins/common/media/js/post.js:336
 msgid "post deleted"
-msgstr ""
+msgstr "post excluído"
 
-#: skins/common/media/js/post.js:539 skins/old/media/js/post.js:535
-msgid "Follow"
-msgstr ""
-
-#: skins/common/media/js/post.js:548 skins/common/media/js/post.js.c:557
-#: skins/old/media/js/post.js:544 skins/old/media/js/post.js.c:553
-#, c-format
-msgid "%s follower"
-msgid_plural "%s followers"
-msgstr[0] ""
-msgstr[1] ""
-
-#: skins/common/media/js/post.js:553 skins/old/media/js/post.js:549
-msgid "<div>Following</div><div class=\"unfollow\">Unfollow</div>"
-msgstr ""
-
-#: skins/common/media/js/post.js:615
-msgid "undelete"
-msgstr ""
-
-#: skins/common/media/js/post.js:620
-msgid "delete"
-msgstr ""
-
-#: skins/common/media/js/post.js:957
+# 100%
+#: skins/common/media/js/post.js:1206
 msgid "add comment"
-msgstr ""
+msgstr "adicionar comentário"
 
-#: skins/common/media/js/post.js:960
+# 100%
+#: skins/common/media/js/post.js:1209
 msgid "save comment"
-msgstr ""
+msgstr "salvar comentário"
 
-#: skins/common/media/js/post.js:990
-#, c-format
-msgid "enter %s more characters"
-msgstr ""
-
-#: skins/common/media/js/post.js:995
-#, c-format
-msgid "%s characters left"
-msgstr ""
-
-#: skins/common/media/js/post.js:1066
-msgid "cancel"
-msgstr ""
-
-#: skins/common/media/js/post.js:1109
-msgid "confirm abandon comment"
-msgstr ""
-
-#: skins/common/media/js/post.js:1183
-msgid "delete this comment"
-msgstr ""
-
-#: skins/common/media/js/post.js:1387
-msgid "confirm delete comment"
-msgstr ""
-
-#: skins/common/media/js/post.js:1628 skins/old/media/js/post.js:1621
+# 100%
+#: skins/common/media/js/post.js:1874
 msgid "Please enter question title (>10 characters)"
-msgstr ""
+msgstr "Digite o título da pergunta (>10 caracteres)"
 
+# 100%
 #: skins/common/media/js/tag_selector.js:15
-#: skins/old/media/js/tag_selector.js:15
 msgid "Tag \"<span></span>\" matches:"
-msgstr ""
+msgstr "Tags \"<span></span>\" correspondentes:"
 
+# 100%
 #: skins/common/media/js/tag_selector.js:84
-#: skins/old/media/js/tag_selector.js:84
-#, c-format
+#, perl-format
 msgid "and %s more, not shown..."
-msgstr ""
+msgstr "e %s a mais, ocultos..."
 
+# 100%
 #: skins/common/media/js/user.js:14
 msgid "Please select at least one item"
-msgstr ""
+msgstr "Selecione pelo menos um item"
 
+# 100%
 #: skins/common/media/js/user.js:58
 msgid "Delete this notification?"
 msgid_plural "Delete these notifications?"
+msgstr[0] "Excluir esta notificação?"
+msgstr[1] "Excluir estas notificações?"
+
+# 100%
+#: skins/common/media/js/user.js:65
+#, fuzzy
+msgid "Close this entry?"
+msgid_plural "Close these entries?"
+msgstr[0] "excluir este comentário"
+msgstr[1] "excluir este comentário"
+
+#: skins/common/media/js/user.js:72
+msgid "Remove all flags on this entry?"
+msgid_plural "Remove all flags on these entries?"
 msgstr[0] ""
 msgstr[1] ""
 
-#: skins/common/media/js/user.js:125 skins/old/media/js/user.js:129
+# 100%
+#: skins/common/media/js/user.js:79
+#, fuzzy
+msgid "Delete this entry?"
+msgid_plural "Delete these entries?"
+msgstr[0] "excluir este comentário"
+msgstr[1] "excluir este comentário"
+
+# 100%
+#: skins/common/media/js/user.js:159
 msgid "Please <a href=\"%(signin_url)s\">signin</a> to follow %(username)s"
-msgstr ""
+msgstr "Faça o <a href=\"%(signin_url)s\">login</a> para seguir %(username)s"
 
-#: skins/common/media/js/user.js:157 skins/old/media/js/user.js:161
-#, c-format
+# 100%
+#: skins/common/media/js/user.js:191
+#, perl-format
 msgid "unfollow %s"
-msgstr ""
+msgstr "deixar de seguir %s"
 
-#: skins/common/media/js/user.js:160 skins/old/media/js/user.js:164
-#, c-format
+# 100%
+#: skins/common/media/js/user.js:194
+#, perl-format
 msgid "following %s"
-msgstr ""
+msgstr "seguindo %s"
 
-#: skins/common/media/js/user.js:166 skins/old/media/js/user.js:170
-#, c-format
+# 100%
+#: skins/common/media/js/user.js:200
+#, perl-format
 msgid "follow %s"
-msgstr ""
+msgstr "seguir %s"
 
-#: skins/common/media/js/utils.js:43
+# 100%
+#: skins/common/media/js/utils.js:44
 msgid "click to close"
-msgstr ""
+msgstr "clique para fechar"
 
-#: skins/common/media/js/utils.js:214
-msgid "click to edit this comment"
-msgstr ""
-
-#: skins/common/media/js/utils.js:215
-msgid "edit"
-msgstr ""
-
-#: skins/common/media/js/utils.js:369
-#, c-format
-msgid "see questions tagged '%s'"
-msgstr ""
-
-#: skins/common/media/js/wmd/wmd.js:30
+# 100%
+#: skins/common/media/js/wmd/wmd.js:26
 msgid "bold"
-msgstr ""
+msgstr "negrito"
 
-#: skins/common/media/js/wmd/wmd.js:31
+# 100%
+#: skins/common/media/js/wmd/wmd.js:27
 msgid "italic"
-msgstr ""
+msgstr "itálico"
 
-#: skins/common/media/js/wmd/wmd.js:32
+# 100%
+#: skins/common/media/js/wmd/wmd.js:28
 msgid "link"
-msgstr ""
+msgstr "vincular"
 
-#: skins/common/media/js/wmd/wmd.js:33
+# 100%
+#: skins/common/media/js/wmd/wmd.js:29
 msgid "quote"
-msgstr ""
+msgstr "citar"
 
-#: skins/common/media/js/wmd/wmd.js:34
+# 100%
+#: skins/common/media/js/wmd/wmd.js:30
 msgid "preformatted text"
-msgstr ""
+msgstr "texto pré-formatado"
 
-#: skins/common/media/js/wmd/wmd.js:35
+# 100%
+#: skins/common/media/js/wmd/wmd.js:31
 msgid "image"
-msgstr ""
+msgstr "imagem"
 
-#: skins/common/media/js/wmd/wmd.js:36
+# 100%
+#: skins/common/media/js/wmd/wmd.js:32
 msgid "attachment"
-msgstr ""
+msgstr "anexo"
 
-#: skins/common/media/js/wmd/wmd.js:37
+# 100%
+#: skins/common/media/js/wmd/wmd.js:33
 msgid "numbered list"
-msgstr ""
+msgstr "lista numerada"
 
-#: skins/common/media/js/wmd/wmd.js:38
+# 100%
+#: skins/common/media/js/wmd/wmd.js:34
 msgid "bulleted list"
-msgstr ""
+msgstr "lista de marcadores"
 
-#: skins/common/media/js/wmd/wmd.js:39
+# 100%
+#: skins/common/media/js/wmd/wmd.js:35
 msgid "heading"
-msgstr ""
+msgstr "título"
 
-#: skins/common/media/js/wmd/wmd.js:40
+# 100%
+#: skins/common/media/js/wmd/wmd.js:36
 msgid "horizontal bar"
-msgstr ""
+msgstr "barra horizontal"
 
-#: skins/common/media/js/wmd/wmd.js:41
+# 100%
+#: skins/common/media/js/wmd/wmd.js:37
 msgid "undo"
-msgstr ""
+msgstr "desfazer"
 
-#: skins/common/media/js/wmd/wmd.js:42 skins/common/media/js/wmd/wmd.js:1116
+# 100%
+#: skins/common/media/js/wmd/wmd.js:38 skins/common/media/js/wmd/wmd.js:1053
 msgid "redo"
-msgstr ""
+msgstr "refazer"
 
-#: skins/common/media/js/wmd/wmd.js:53
+# 100%
+#: skins/common/media/js/wmd/wmd.js:47
 msgid "enter image url"
-msgstr ""
+msgstr "insira a url da  imagem"
 
-#: skins/common/media/js/wmd/wmd.js:54
+# 100%
+#: skins/common/media/js/wmd/wmd.js:48
 msgid "enter url"
-msgstr ""
+msgstr "entre com a url"
 
-#: skins/common/media/js/wmd/wmd.js:55
+# 100%
+#: skins/common/media/js/wmd/wmd.js:49
 msgid "upload file attachment"
-msgstr ""
+msgstr "gravar arquivo anexo"
 
-#: skins/common/media/js/wmd/wmd.js:1778
-msgid "image description"
-msgstr ""
+# 100%
+#~ msgid "tags cannot be empty"
+#~ msgstr "as tags não podem ser vazias"
 
-#: skins/common/media/js/wmd/wmd.js:1781
-msgid "file name"
-msgstr ""
+# 100%
+#~ msgid "content cannot be empty"
+#~ msgstr "o conteúdo não pode ser vazio"
 
-#: skins/common/media/js/wmd/wmd.js:1785
-msgid "link text"
-msgstr ""
+# 100%
+#~ msgid "%s content minchars"
+#~ msgstr "%s conteúdo minchars"
+
+# 100%
+#~ msgid "please enter title"
+#~ msgstr "Digite o título"
+
+# 100%
+#~ msgid "%s title minchars"
+#~ msgstr "%s título minchars"
+
+# 100%
+#~ msgid "Follow"
+#~ msgstr "Seguir"
+
+# 100%
+#~ msgid "%s follower"
+#~ msgid_plural "%s followers"
+#~ msgstr[0] "%s seguidor"
+#~ msgstr[1] "%s seguidores"
+
+# 100%
+#~ msgid "<div>Following</div><div class=\"unfollow\">Unfollow</div>"
+#~ msgstr "<div>Seguindo</div><div class=\"unfollow\">Deixar de seguir</div>"
+
+# 100%
+#~ msgid "undelete"
+#~ msgstr "recuperar"
+
+# 100%
+#~ msgid "delete"
+#~ msgstr "excluir"
+
+# 100%
+#~ msgid "enter %s more characters"
+#~ msgstr "digite mais %s caracteres"
+
+# 100%
+#~ msgid "%s characters left"
+#~ msgstr "%s caracteres sobrando"
+
+# 100%
+#~ msgid "cancel"
+#~ msgstr "cancelar"
+
+# 100%
+#~ msgid "confirm abandon comment"
+#~ msgstr "confirme abandonar comentário"
+
+# 100%
+#~ msgid "confirm delete comment"
+#~ msgstr "confirme excluir comentário"
+
+# 100%
+#~ msgid "click to edit this comment"
+#~ msgstr "clique para editar este comentário"
+
+# 100%
+#~ msgid "edit"
+#~ msgstr "editar"
+
+# 100%
+#~ msgid "see questions tagged '%s'"
+#~ msgstr "veja as perguntas marcadas com a tag '%s'"
+
+# 100%
+#~ msgid "image description"
+#~ msgstr "descrição da imagem"
+
+# 100%
+#~ msgid "file name"
+#~ msgstr "nome do arquivo"
+
+# 100%
+#~ msgid "link text"
+#~ msgstr "vincular texto"

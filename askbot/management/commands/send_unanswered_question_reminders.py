@@ -3,9 +3,9 @@ from askbot import models
 from askbot import const
 from askbot.conf import settings as askbot_settings
 from django.utils.translation import ungettext
-from askbot.utils import mail
+from askbot import mail
 from askbot.utils.classes import ReminderSchedule
-from askbot.models.question import get_tag_summary_from_questions
+from askbot.models.question import Thread
 
 DEBUG_THIS_COMMAND = False
 
@@ -14,6 +14,8 @@ class Command(NoArgsCommand):
     about unanswered questions to all users
     """
     def handle_noargs(self, **options):
+        if askbot_settings.ENABLE_EMAIL_ALERTS == False:
+            return
         if askbot_settings.ENABLE_UNANSWERED_REMINDERS == False:
             return
         #get questions without answers, excluding closed and deleted
@@ -24,15 +26,15 @@ class Command(NoArgsCommand):
             max_reminders = askbot_settings.MAX_UNANSWERED_REMINDERS
         )
 
-        questions = models.Question.objects.exclude(
-                                        closed = True
+        questions = models.Post.objects.get_questions().exclude(
+                                        thread__closed = True
                                     ).exclude(
                                         deleted = True
                                     ).added_between(
                                         start = schedule.start_cutoff_date,
                                         end = schedule.end_cutoff_date
                                     ).filter(
-                                        answer_count = 0
+                                        thread__answer_count = 0
                                     ).order_by('-added_at')
         #for all users, excluding blocked
         #for each user, select a tag filtered subset
@@ -40,6 +42,10 @@ class Command(NoArgsCommand):
         for user in models.User.objects.exclude(status = 'b'):
             user_questions = questions.exclude(author = user)
             user_questions = user.get_tag_filtered_questions(user_questions)
+
+            if askbot_settings.GROUPS_ENABLED:
+                user_groups = user.get_groups()
+                user_questions = user_questions.filter(groups__in = user_groups)
 
             final_question_list = user_questions.get_questions_needing_reminder(
                 user = user,
@@ -51,7 +57,9 @@ class Command(NoArgsCommand):
             if question_count == 0:
                 continue
 
-            tag_summary = get_tag_summary_from_questions(final_question_list)
+            threads = Thread.objects.filter(id__in=[qq.thread_id for qq in final_question_list])
+            tag_summary = Thread.objects.get_tag_summary_from_threads(threads)
+
             subject_line = ungettext(
                 '%(question_count)d unanswered question about %(topics)s',
                 '%(question_count)d unanswered questions about %(topics)s',
@@ -67,7 +75,7 @@ class Command(NoArgsCommand):
                             % (
                                 askbot_settings.APP_URL,
                                 question.get_absolute_url(),
-                                question.title
+                                question.thread.title
                             )
             body_text += '</ul>'
 

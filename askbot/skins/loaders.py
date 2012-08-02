@@ -129,4 +129,3 @@ def render_text_into_skin(text, data, request):
     skin = get_skin(request)
     template = skin.from_string(text)
     return template.render(context)
-

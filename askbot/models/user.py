@@ -1,14 +1,19 @@
 import datetime
 import logging
+import re
 from django.db import models
 from django.db.backends.dummy.base import IntegrityError
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.contrib.auth.models import User
+from django.core import exceptions
+from django.forms import EmailField, URLField
 from django.utils.translation import ugettext as _
 from django.utils.html import strip_tags
 from askbot import const
 from askbot.utils import functions
+from askbot.models.tag import Tag
+from askbot.forms import DomainNameField
 
 class ResponseAndMentionActivityManager(models.Manager):
     def get_query_set(self):
@@ -163,8 +168,10 @@ class Activity(models.Model):
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
     content_object = generic.GenericForeignKey('content_type', 'object_id')
+
     #todo: remove this denorm question field when Post model is set up
-    question = models.ForeignKey('Question', null=True)
+    question = models.ForeignKey('Post', null=True)
+
     is_auditted = models.BooleanField(default=False)
     #add summary field.
     summary = models.TextField(default='')
@@ -197,9 +204,9 @@ class Activity(models.Model):
         assert(user_count == 1)
         return user_qs[0]
 
-    def get_preview(self):
-        if  self.summary == '':
-            return strip_tags(self.content_object.html)[:300]
+    def get_snippet(self, max_length = 120):
+        if self.summary == '':
+            return self.content_object.get_snippet(max_length)
         else:
             return self.summary
 
@@ -289,6 +296,8 @@ class EmailFeedSetting(models.Model):
     class Meta:
         #added to make account merges work properly
         unique_together = ('subscriber', 'feed_type')
+        app_label = 'askbot'
+
 
     def __str__(self):
         if self.reported_at is None:
@@ -329,5 +338,90 @@ class EmailFeedSetting(models.Model):
         self.reported_at = datetime.datetime.now()
         self.save()
 
+
+class GroupMembership(models.Model):
+    """an explicit model to link users and the tags
+    that by being recorded with this relation automatically
+    become group tags
+    """
+    group = models.ForeignKey(Tag, related_name = 'user_memberships')
+    user = models.ForeignKey(User, related_name = 'group_memberships')
+
     class Meta:
         app_label = 'askbot'
+        unique_together = ('group', 'user')
+
+class GroupProfile(models.Model):
+    """stores group profile data"""
+    group_tag = models.OneToOneField(
+                            Tag,
+                            unique = True,
+                            related_name = 'group_profile'
+                        )
+    logo_url = models.URLField(null = True)
+    moderate_email = models.BooleanField(default = True)
+    is_open = models.BooleanField(default = False)
+    #preapproved email addresses and domain names to auto-join groups
+    #trick - the field is padded with space and all tokens are space separated
+    preapproved_emails = models.TextField(
+                            null = True, blank = True, default = ''
+                        )
+    #only domains - without the '@' or anything before them
+    preapproved_email_domains = models.TextField(
+                            null = True, blank = True, default = ''
+                        )
+
+    class Meta:
+        #added to make account merges work properly
+        app_label = 'askbot'
+
+    def can_accept_user(self, user):
+        """True if user is preapproved to join the group"""
+        if user.is_anonymous():
+            return False
+
+        if self.is_open:
+            return True
+
+        if user.is_administrator_or_moderator():
+            return True
+
+        #relying on a specific method of storage
+        if self.preapproved_emails:
+            email_match_re = re.compile(r'\s%s\s' % user.email)
+            if email_match_re.search(self.preapproved_emails):
+                return True
+
+        if self.preapproved_email_domains:
+            email_domain = user.email.split('@')[1]
+            domain_match_re = re.compile(r'\s%s\s' % email_domain)
+            return domain_match_re.search(self.preapproved_email_domains)
+
+        return False
+
+    def clean(self):
+        """called in `save()`
+        """
+        emails = functions.split_list(self.preapproved_emails)
+        email_field = EmailField()
+        try:
+            map(lambda v: email_field.clean(v), emails)
+        except exceptions.ValidationError:
+            raise exceptions.ValidationError(
+                _('Please give a list of valid email addresses.')
+            )
+        self.preapproved_emails = ' ' + '\n'.join(emails) + ' '
+
+        domains = functions.split_list(self.preapproved_email_domains)
+        domain_field = DomainNameField()
+        try:
+            map(lambda v: domain_field.clean(v), domains)
+        except exceptions.ValidationError:
+            raise exceptions.ValidationError(
+                _('Please give a list of valid email domain names.')
+            )
+        self.preapproved_email_domains = ' ' + '\n'.join(domains) + ' '
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        super(GroupProfile, self).save(*args, **kwargs)

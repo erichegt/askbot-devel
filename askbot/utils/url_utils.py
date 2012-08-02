@@ -1,5 +1,17 @@
+import urlparse
 from django.core.urlresolvers import reverse
 from django.conf import settings
+
+def strip_path(url):
+    """srips path, params and hash fragments of the url"""
+    purl = urlparse.urlparse(url)
+    return urlparse.urlunparse(
+        urlparse.ParseResult(
+            purl.scheme,
+            purl.netloc,
+            '', '', '', ''
+        )
+    )
 
 def get_login_url():
     """returns internal login url if
@@ -27,6 +39,6 @@ def get_logout_redirect_url():
     if 'askbot.deps.django_authopenid' in settings.INSTALLED_APPS:
         return reverse('logout')
     elif hasattr(settings, 'LOGOUT_REDIRECT_URL'):
-        return settigs.LOGOUT_REDIRECT_URL
+        return settings.LOGOUT_REDIRECT_URL
     else:
         return reverse('index')

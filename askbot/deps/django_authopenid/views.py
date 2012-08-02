@@ -48,6 +48,7 @@ from django.utils.safestring import mark_safe
 from django.core.mail import send_mail
 from recaptcha_works.decorators import fix_recaptcha_remote_ip
 from askbot.skins.loaders import render_into_skin, get_template
+from urlparse import urlparse
 
 from openid.consumer.consumer import Consumer, \
     SUCCESS, CANCEL, FAILURE, SETUP_NEEDED
@@ -77,29 +78,22 @@ from askbot.deps.django_authopenid.backends import AuthBackend
 import logging
 from askbot.utils.forms import get_next_url
 from askbot.utils.http import get_request_info
+from askbot.models.signals import user_logged_in, user_registered
 
 #todo: decouple from askbot
 def login(request,user):
     from django.contrib.auth import login as _login
-    from askbot.models import signals
 
-    #1) get old session key
+    # get old session key
     session_key = request.session.session_key
-    #2) get old search state
-    search_state = None
-    if 'search_state' in request.session:
-        search_state = request.session['search_state']
 
-    #3) login and get new session key
+    # login and get new session key
     _login(request,user)
-    #4) transfer search_state to new session if found
-    if search_state:
-        search_state.set_logged_in()
-        request.session['search_state'] = search_state
-    #5) send signal with old session key as argument
+
+    # send signal with old session key as argument
     logging.debug('logged in user %s with session key %s' % (user.username, session_key))
     #todo: move to auth app
-    signals.user_logged_in.send(
+    user_logged_in.send(
                         request = request,
                         user = user,
                         session_key=session_key,
@@ -109,9 +103,6 @@ def login(request,user):
 #todo: uncouple this from askbot
 def logout(request):
     from django.contrib.auth import logout as _logout#for login I've added wrapper below - called login
-    if 'search_state' in request.session:
-        request.session['search_state'].set_logged_out()
-        request.session.modified = True
     _logout(request)
 
 def logout_page(request):
@@ -319,30 +310,26 @@ def signin(request):
                 password_action = login_form.cleaned_data['password_action']
                 if askbot_settings.USE_LDAP_FOR_PASSWORD_LOGIN:
                     assert(password_action == 'login')
-                    ldap_provider_name = askbot_settings.LDAP_PROVIDER_NAME
                     username = login_form.cleaned_data['username']
-                    if util.ldap_check_password(
-                                username,
-                                login_form.cleaned_data['password']
-                            ):
-                        user = authenticate(
-                                        ldap_user_id = username,
-                                        provider_name = ldap_provider_name,
-                                        method = 'ldap'
-                                    )
-                        if user is not None:
-                            login(request, user)
-                            return HttpResponseRedirect(next_url)
-                        else:
-                            return finalize_generic_signin(
-                                    request = request,
-                                    user = user,
-                                    user_identifier = username,
-                                    login_provider_name = ldap_provider_name,
-                                    redirect_url = next_url
+                    password = login_form.cleaned_data['password']
+                    # will be None if authentication fails
+                    user = authenticate(
+                                    username=username,
+                                    password=password,
+                                    method = 'ldap'
                                 )
+                    if user is not None:
+                        login(request, user)
+                        return HttpResponseRedirect(next_url)
                     else:
-                        login_form.set_password_login_error() 
+                        return finalize_generic_signin(
+                                request = request,
+                                user = user,
+                                user_identifier = username,
+                                login_provider_name = provider_name,
+                                redirect_url = next_url
+                            )
+
                 else:
                     if password_action == 'login':
                         user = authenticate(
@@ -842,6 +829,7 @@ def register(request, login_provider_name=None, user_identifier=None):
             email = register_form.cleaned_data['email']
 
             user = User.objects.create_user(username, email)
+            user_registered.send(None, user = user)
             
             logging.debug('creating new openid user association for %s')
 
@@ -964,7 +952,9 @@ def signup_with_password(request):
             email = form.cleaned_data['email']
             provider_name = form.cleaned_data['login_provider']
             
-            User.objects.create_user(username, email, password)
+            new_user = User.objects.create_user(username, email, password)
+            user_registered.send(None, user = new_user)
+
             logging.debug('new user %s created' % username)
             if provider_name != 'local':
                 raise NotImplementedError('must run create external user code')
@@ -1094,8 +1084,10 @@ def _send_email_key(user):
     to user's email address
     """
     subject = _("Recover your %(site)s account") % {'site': askbot_settings.APP_SHORT_NAME}
+
+    url = urlparse(askbot_settings.APP_URL)
     data = {
-        'validation_link': askbot_settings.APP_URL + \
+        'validation_link': url.scheme + '://' + url.netloc + \
                             reverse(
                                     'user_account_recover',
                                     kwargs={'key':user.email_key}

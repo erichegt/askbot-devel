@@ -1,4 +1,5 @@
 import datetime
+from django.conf import settings as django_settings
 from django.test.client import Client
 from askbot.tests.utils import AskbotTestCase
 from askbot.conf import settings
@@ -67,7 +68,8 @@ class BadgeTests(AskbotTestCase):
         self.assert_have_badge(badge_key, recipient = self.u2, expected_count = 1)
         
         #post another question and check that there are no new badges
-        answer2 = self.post_answer(user = self.u2, question = question)
+        question2 = self.post_question(user = self.u1)
+        answer2 = self.post_answer(user = self.u2, question = question2)
         answer2.score = min_score - 1
         answer2.save()
         self.u1.upvote(answer2)
@@ -164,8 +166,8 @@ class BadgeTests(AskbotTestCase):
     def test_popular_question_badge(self):
         question = self.post_question(user = self.u1)
         min_views = settings.POPULAR_QUESTION_BADGE_MIN_VIEWS
-        question.view_count = min_views - 1 
-        question.save()
+        question.thread.view_count = min_views - 1
+        question.thread.save()
 
         #patch not_a_robot_request to return True
         from askbot.utils import functions
@@ -182,8 +184,8 @@ class BadgeTests(AskbotTestCase):
         self.assert_have_badge('popular-question', recipient = self.u1, expected_count = 1)
 
         question2 = self.post_question(user = self.u1)
-        question2.view_count = min_views - 1
-        question2.save()
+        question2.thread.view_count = min_views - 1
+        question2.thread.save()
         self.client.login(method='force', user_id = self.u2.id)
         self.client.get(question2.get_absolute_url())
         self.assert_have_badge('popular-question', recipient = self.u1, expected_count = 2)
@@ -268,7 +270,8 @@ class BadgeTests(AskbotTestCase):
         answer = self.post_answer(user = self.u2, question = question)
         self.u1.accept_best_answer(answer)
         self.assert_have_badge('scholar', recipient = self.u1)
-        answer2 = self.post_answer(user = self.u2, question = question)
+        question2 = self.post_question(user = self.u1)
+        answer2 = self.post_answer(user = self.u2, question = question2)
         self.u1.accept_best_answer(answer2)
         self.assert_have_badge(
             'scholar',
@@ -499,6 +502,6 @@ class BadgeTests(AskbotTestCase):
         self.u1.save()
         self.assert_have_badge('enthusiast', self.u1, 0)
         self.client.login(method = 'force', user_id = self.u1.id)
-        self.client.get('/')
+        self.client.get('/' + django_settings.ASKBOT_URL)
         self.assert_have_badge('enthusiast', self.u1, 1)
 
