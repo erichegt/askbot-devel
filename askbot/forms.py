@@ -3,6 +3,7 @@ used in AskBot"""
 import re
 from django import forms
 from askbot import const
+from django.forms.util import ErrorList
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext_lazy, string_concat
 from django.utils.text import get_text_list
@@ -733,7 +734,80 @@ class FormWithHideableFields(object):
             self.fields[name] = self.__hidden_fields.pop(name)
 
 
-class AskForm(forms.Form, FormWithHideableFields):
+class PostAsSomeoneForm(forms.Form):
+    post_author_username = forms.CharField(
+        initial=_('User name:'),
+        help_text=_(
+            'Enter name to post on behalf of someone else. '
+            'Can create new accounts.'
+        ),
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'tipped-input'})
+    )
+    post_author_email = forms.CharField(
+        initial=_('Email address:'),
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'tipped-input'})
+    )
+
+    def get_post_user(self, user):
+        """returns user on whose behalf the post or a revision
+        is being made
+        """
+        username = self.cleaned_data['post_author_username']
+        email= self.cleaned_data['post_author_email']
+        if user.is_administrator() and username and email:
+            post_user = user.get_or_create_fake_user(username, email)
+        else:
+            post_user = user
+        return post_user
+
+    def clean_post_author_username(self):
+        """if value is the same as initial, it is reset to
+        empty string
+        todo: maybe better to have field where initial value is invalid,
+        then we would not have to have two almost identical clean functions?
+        """
+        username = self.cleaned_data.get('post_author_username', '')
+        initial_username = unicode(self.fields['post_author_username'].initial)
+        if username == initial_username:
+            self.cleaned_data['post_author_username'] = ''
+        return self.cleaned_data['post_author_username']
+
+    def clean_post_author_email(self):
+        """if value is the same as initial, it is reset to
+        empty string"""
+        email = self.cleaned_data.get('post_author_email', '')
+        initial_email = unicode(self.fields['post_author_email'].initial)
+        if email == initial_email:
+            email = ''
+        if email != '':
+            email = forms.EmailField().clean(email)
+        self.cleaned_data['post_author_email'] = email
+        return email
+
+    def clean(self):
+        """requires email address if user name is given"""
+        username = self.cleaned_data.get('post_author_username', '')
+        email = self.cleaned_data.get('post_author_email', '')
+        if username == '' and email:
+            username_errors = self._errors.get(
+                                    'post_author_username',
+                                    ErrorList()
+                                )
+            username_errors.append(_('User name is required with the email'))
+            self._errors['post_author_username'] = username_errors
+            raise forms.ValidationError('missing user name')
+        elif email == '' and username:
+            email_errors = self._errors.get('post_author_email', ErrorList())
+            email_errors.append(_('Email is required if user name is added'))
+            self._errors['post_author_email'] = email_errors
+            raise forms.ValidationError('missing email')
+
+        return self.cleaned_data
+
+
+class AskForm(PostAsSomeoneForm, FormWithHideableFields):
     """the form used to askbot questions
     field ask_anonymously is shown to the user if the
     if ALLOW_ASK_ANONYMOUSLY live setting is True
@@ -756,14 +830,6 @@ class AskForm(forms.Form, FormWithHideableFields):
     openid = forms.CharField(
         required=False, max_length=255,
         widget=forms.TextInput(attrs={'size': 40, 'class': 'openid-input'})
-    )
-    user = forms.CharField(
-        required=False, max_length=255,
-        widget=forms.TextInput(attrs={'size': 35})
-    )
-    email = forms.CharField(
-        required=False, max_length=255,
-        widget=forms.TextInput(attrs={'size': 35})
     )
 
     def __init__(self, *args, **kwargs):
@@ -867,20 +933,12 @@ class AskByEmailForm(forms.Form):
         return self.cleaned_data['subject']
 
 
-class AnswerForm(forms.Form):
+class AnswerForm(PostAsSomeoneForm):
     text = AnswerEditorField()
     wiki = WikiField()
     openid = forms.CharField(
         required=False, max_length=255,
         widget=forms.TextInput(attrs={'size': 40, 'class': 'openid-input'})
-    )
-    user = forms.CharField(
-        required=False, max_length=255,
-        widget=forms.TextInput(attrs={'size': 35})
-    )
-    email = forms.CharField(
-        required=False, max_length=255,
-        widget=forms.TextInput(attrs={'size': 35})
     )
     email_notify = EmailNotifyField(initial=False)
 
@@ -952,7 +1010,7 @@ class RevisionForm(forms.Form):
         self.fields['revision'].initial = latest_revision.revision
 
 
-class EditQuestionForm(forms.Form, FormWithHideableFields):
+class EditQuestionForm(PostAsSomeoneForm, FormWithHideableFields):
     title = TitleField()
     text = QuestionEditorField()
     tags = TagNamesField()
@@ -1053,6 +1111,7 @@ class EditQuestionForm(forms.Form, FormWithHideableFields):
         field edit_anonymously. It relies on correct cleaning
         if the "reveal_identity" field
         """
+        super(EditQuestionForm, self).clean()
         reveal_identity = self.cleaned_data.get('reveal_identity', False)
         stay_anonymous = False
         if reveal_identity is False and self.can_stay_anonymous():
@@ -1061,7 +1120,7 @@ class EditQuestionForm(forms.Form, FormWithHideableFields):
         return self.cleaned_data
 
 
-class EditAnswerForm(forms.Form):
+class EditAnswerForm(PostAsSomeoneForm):
     text = AnswerEditorField()
     summary = SummaryField()
     wiki = WikiField()

@@ -79,6 +79,11 @@ urlpatterns = patterns('',
         name = 'api_get_questions'
     ),
     url(
+        r'^get-users-info/',
+        views.commands.get_users_info,
+        name='get_users_info'
+    ),
+    url(
         r'^%s%s$' % (_('questions/'), _('ask/')), 
         views.writers.ask, 
         name='ask'

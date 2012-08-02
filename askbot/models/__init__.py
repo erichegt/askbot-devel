@@ -83,6 +83,7 @@ User.add_to_class(
                         choices = const.USER_STATUS_CHOICES
                     )
         )
+User.add_to_class('is_fake', models.BooleanField(default=False))
 
 User.add_to_class('email_isvalid', models.BooleanField(default=False)) #@UndefinedVariable
 User.add_to_class('email_key', models.CharField(max_length=32, null=True))
@@ -342,6 +343,24 @@ def user_can_post_by_email(self):
     and user has sufficient reputatiton"""
     return askbot_settings.REPLY_BY_EMAIL and \
         self.reputation > askbot_settings.MIN_REP_TO_POST_BY_EMAIL
+
+def user_get_or_create_fake_user(self, username, email):
+    """
+    Get's or creates a user, most likely with the purpose
+    of posting under that account.
+    """
+    assert(self.is_administrator())
+
+    try:
+        user = User.objects.get(username=username)
+    except User.DoesNotExist:
+        user = User()
+        user.username = username
+        user.email = email
+        user.is_fake = True
+        user.set_unusable_password()
+        user.save()
+    return user
 
 def _assert_user_can(
                         user = None,
@@ -2172,14 +2191,14 @@ def user_get_badge_summary(self):
         bit = ungettext(
                 'one silver badge',
                 '%(count)d silver badges',
-                self.gold
+                self.silver
             ) % {'count': self.silver}
         badge_bits.append(bit)
-    if self.silver:
+    if self.bronze:
         bit = ungettext(
                 'one bronze badge',
                 '%(count)d bronze badges',
-                self.gold
+                self.bronze
             ) % {'count': self.bronze}
         badge_bits.append(bit)
 
@@ -2537,6 +2556,7 @@ User.add_to_class('get_absolute_url', user_get_absolute_url)
 User.add_to_class('get_avatar_url', user_get_avatar_url)
 User.add_to_class('get_default_avatar_url', user_get_default_avatar_url)
 User.add_to_class('get_gravatar_url', user_get_gravatar_url)
+User.add_to_class('get_or_create_fake_user', user_get_or_create_fake_user)
 User.add_to_class('get_marked_tags', user_get_marked_tags)
 User.add_to_class('get_marked_tag_names', user_get_marked_tag_names)
 User.add_to_class('strip_email_signature', user_strip_email_signature)
@@ -2844,7 +2864,7 @@ def send_instant_notifications_about_activity_in_post(
     newly mentioned users are carried through to reduce
     database hits
     """
-    if askbot_settings.ENABLE_CONTENT_MODERATION and post.approved == False:
+    if post.is_approved() is False:
         return
 
     if recipients is None:
@@ -3215,22 +3235,29 @@ def send_respondable_email_validation_message(
     )
 
 
-def send_welcome_email(user, **kwargs):
+def greet_new_user(user, **kwargs):
     """sends welcome email to the newly created user
 
     todo: second branch should send email with a simple
     clickable link.
     """
+    if askbot_settings.NEW_USER_GREETING:
+        user.message_set.create(message = askbot_settings.NEW_USER_GREETING)
+
     if askbot_settings.REPLY_BY_EMAIL:#with this on we also collect signature
-        data = {
-            'site_name': askbot_settings.APP_SHORT_NAME
-        }
-        send_respondable_email_validation_message(
-            user = user,
-            subject_line = _('Welcome to %(site_name)s') % data,
-            data = data,
-            template_name = 'email/welcome_lamson_on.html'
-        )
+        template_name = 'email/welcome_lamson_on.html'
+    else:
+        template_name = 'email/welcome_lamson_off.html'
+
+    data = {
+        'site_name': askbot_settings.APP_SHORT_NAME
+    }
+    send_respondable_email_validation_message(
+        user = user,
+        subject_line = _('Welcome to %(site_name)s') % data,
+        data = data,
+        template_name = template_name
+    )
 
 
 def complete_pending_tag_subscriptions(sender, request, *args, **kwargs):
@@ -3317,7 +3344,7 @@ signals.delete_question_or_answer.connect(record_delete_question, sender=Post)
 signals.flag_offensive.connect(record_flag_offensive, sender=Post)
 signals.remove_flag_offensive.connect(remove_flag_offensive, sender=Post)
 signals.tags_updated.connect(record_update_tags)
-signals.user_registered.connect(send_welcome_email)
+signals.user_registered.connect(greet_new_user)
 signals.user_updated.connect(record_user_full_updated, sender=User)
 signals.user_logged_in.connect(complete_pending_tag_subscriptions)#todo: add this to fake onlogin middleware
 signals.user_logged_in.connect(post_anonymous_askbot_content)
