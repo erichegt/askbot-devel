@@ -16,6 +16,15 @@ USER_SETTINGS = livesettings.ConfigurationGroup(
                 )
 
 settings.register(
+    livesettings.StringValue(
+        USER_SETTINGS,
+        'NEW_USER_GREETING',
+        default = '',
+        description = _('On-screen greeting shown to the new users')
+    )
+)
+
+settings.register(
     livesettings.BooleanValue(
         USER_SETTINGS,
         'EDITABLE_SCREEN_NAME',
