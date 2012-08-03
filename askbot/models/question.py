@@ -15,7 +15,10 @@ import askbot
 from askbot.conf import settings as askbot_settings
 from askbot import mail
 from askbot.mail import messages
-from askbot.models.tag import Tag, get_groups, get_tags_by_names
+from askbot.models.tag import Tag
+from askbot.models.tag import get_groups
+from askbot.models.tag import get_global_group
+from askbot.models.tag import get_tags_by_names
 from askbot.models.tag import filter_accepted_tags, filter_suggested_tags
 from askbot.models.tag import delete_tags, separate_unused_tags
 from askbot.models.base import DraftContent, BaseQuerySetManager
@@ -30,14 +33,13 @@ from askbot.skins.loaders import get_template #jinja2 template loading enviromen
 from askbot.search.state_manager import DummySearchState
 
 class ThreadQuerySet(models.query.QuerySet):
-    def exclude_group_private(self, user):
+    def get_visible(self, user):
         """filters out threads not belonging to the user groups"""
         if user.is_authenticated():
-            groups = user.get_foreign_groups()
+            groups = user.get_groups()
         else:
             groups = get_groups()
-        #todo: maybe use is_private field
-        return self.exclude(groups__in = groups)
+        return self.filter(groups__in = groups)
 
 class ThreadManager(BaseQuerySetManager):
 
@@ -143,6 +145,8 @@ class ThreadManager(BaseQuerySetManager):
 
         if is_private or group_id:#add groups to thread and question
             thread.make_private(author, group_id = group_id)
+        else:
+            thread.make_public()
 
         # INFO: Question has to be saved before update_tags() is called
         thread.update_tags(tagnames = tagnames, user = author, timestamp = added_at)
@@ -199,7 +203,7 @@ class ThreadManager(BaseQuerySetManager):
         #that are private in groups to which current user does not belong
         if askbot_settings.GROUPS_ENABLED:
             #get group names
-            qs = qs.exclude_group_private(user = request_user)
+            qs = qs.get_visible(user=request_user)
 
 
         #run text search while excluding any modifier in the search string
@@ -637,10 +641,12 @@ class Thread(models.Model):
         thread_posts = self.posts.all()
         if askbot_settings.GROUPS_ENABLED:
             if user is None or user.is_anonymous():
-                exclude_groups = get_groups()
+                groups = (get_global_group(),)
             else:
-                exclude_groups = user.get_foreign_groups()
-            thread_posts = thread_posts.exclude(groups__in = exclude_groups)
+                groups = user.get_groups()
+
+            thread_posts = thread_posts.filter(groups__in=groups)
+            thread_posts = thread_posts.distinct()#important for >1 group
 
         thread_posts = thread_posts.order_by(
                     {
@@ -785,26 +791,48 @@ class Thread(models.Model):
             return self.followed_by.filter(id = user.id).count() > 0
         return False
 
+    def add_to_groups(self, groups):
+        """adds thread to a list of groups
+        ``groups`` argument may be any iterable of groups
+        """
+        groups = list(groups)
+        self.groups.add(*groups)
+        self._question_post().add_to_groups(groups)
+
+    def remove_from_groups(self, groups):
+        self.groups.remove(*groups)
+        self._question_post().remove_from_groups(groups)
+
+    def make_public(self):
+        """adds the global group to the thread"""
+        groups = (get_global_group(), )
+        self.add_to_groups(groups)
+
     def make_private(self, user, group_id = None):
-        groups = list(user.get_groups())
-        group_found = False
+        """adds thread to all user's groups, excluding
+        the global, or to a group given by id.
+        The add by ID now only works if user belongs to that group
+        """
         if group_id:
-            for group in groups:
-                if group.id == group_id:
-                    groups = [group]
-                    break
-        if groups:
-            self.groups.add(*groups)
-            self._question_post().groups.add(*groups)
+            group = Tag.group_tags.get(id=group_id)
+            groups = [group]
         else:
-            message = _(
-                'Posted your question publicly because you '
-                'do not belong to the requested group'
-            )
-            user.message_set.create(message = message)
+            groups = user.get_groups(private=True)
+
+        if len(groups):
+            self.add_to_groups(groups)
+            self.remove_from_groups((get_global_group(),))
+        else:
+            message = 'Sharing did not work, because group is unknown'
+            user.message_set.create(message=message)
 
     def is_private(self):
-        return askbot_settings.GROUPS_ENABLED and self.groups.count() > 0
+        """true, if thread belongs to the global group"""
+        if askbot_settings.GROUPS_ENABLED:
+            group = get_global_group()
+            return self.groups.exclude(id=group.id).exists()
+        return False
+
 
     def remove_tags_by_names(self, tagnames):
         """removes tags from thread by names"""

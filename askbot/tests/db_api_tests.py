@@ -409,3 +409,37 @@ class TagAndGroupTests(AskbotTestCase):
         tag_one = models.Tag.objects.filter(name__iexact = 'one')
         self.assertEqual(tag_one.count(), 1)
         self.assertEqual(tag_one[0].name, 'one')
+
+    def test_posts_added_to_global_group(self):
+        q = self.post_question(user=self.u1)
+        group_name = askbot_settings.GLOBAL_GROUP_NAME
+        self.assertEqual(q.groups.filter(name=group_name).exists(), True)
+
+        a = self.post_answer(question=q, user=self.u1)
+        self.assertEqual(a.groups.filter(name=group_name).exists(), True)
+
+        c = self.post_comment(parent_post=a, user=self.u1)
+        self.assertEqual(c.groups.filter(name=group_name).exists(), True)
+
+    def test_posts_added_to_private_group(self):
+        group = models.Tag.group_tags.get_or_create(
+                                        group_name='private',
+                                        user=self.u1
+                                    )
+        self.u1.edit_group_membership(group=group, user=self.u1, action='add')
+
+        q = self.post_question(user=self.u1, is_private=True)
+        self.assertEqual(q.groups.count(), 1)
+        self.assertEqual(q.groups.filter(name='private').exists(), True)
+
+        a = self.post_answer(question=q, user=self.u1, is_private=True)
+        self.assertEqual(a.groups.count(), 1)
+        self.assertEqual(a.groups.filter(name='private').exists(), True)
+
+        qc = self.post_comment(parent_post=q, user=self.u1)#w/o private arg
+        self.assertEqual(qc.groups.count(), 1)
+        self.assertEqual(qc.groups.filter(name='private').exists(), True)
+
+        qa = self.post_comment(parent_post=a, user=self.u1)#w/o private arg
+        self.assertEqual(qa.groups.count(), 1)
+        self.assertEqual(qa.groups.filter(name='private').exists(), True)

@@ -1,4 +1,5 @@
 import re
+import logging
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
@@ -6,6 +7,20 @@ from askbot.models.base import BaseQuerySetManager
 from askbot import const
 from askbot.conf import settings as askbot_settings
 from askbot.utils import category_tree
+
+def get_global_group():
+    """Returns the global group,
+    if necessary, creates one
+    """
+    group_name = askbot_settings.GLOBAL_GROUP_NAME
+    try:
+        return Tag.group_tags.get(name=group_name)
+    except Tag.DoesNotExist:
+        from askbot.models import get_admin
+        return Tag.group_tags.get_or_create(
+                            group_name=group_name,
+                            user=get_admin()
+                        )
 
 def delete_tags(tags):
     """deletes tags in the list"""
@@ -256,8 +271,14 @@ class TagManager(BaseQuerySetManager):
 class GroupTagQuerySet(TagQuerySet):
     """Custom query set for the group"""
 
-    def get_for_user(self, user = None):
-        return self.filter(user_memberships__user = user)
+    def get_for_user(self, user=None, private=False):
+        if private:
+            global_group = get_global_group()
+            return self.filter(
+                        user_memberships__user=user
+                    ).exclude(id=global_group.id)
+        else:
+            return self.filter(user_memberships__user = user)
 
     def get_all(self):
         return self.annotate(

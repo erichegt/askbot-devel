@@ -20,6 +20,16 @@ settings.register(
 )
 
 settings.register(
+    livesettings.StringValue(
+        GROUP_SETTINGS,
+        'GLOBAL_GROUP_NAME',
+        default = _('everyone'),
+        description = _('Global user group name'),
+        help_text = _('All users belong to this group automatically')
+    )
+)
+
+settings.register(
     livesettings.BooleanValue(
         GROUP_SETTINGS,
         'GROUP_EMAIL_ADDRESSES_ENABLED',

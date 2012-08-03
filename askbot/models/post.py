@@ -27,6 +27,7 @@ from askbot import const
 from askbot.models.user import EmailFeedSetting
 from askbot.models.tag import Tag, MarkedTag
 from askbot.models.tag import get_groups, tags_match_some_wildcard
+from askbot.models.tag import get_global_group
 from askbot.conf import settings as askbot_settings
 from askbot import exceptions
 from askbot.utils import markup
@@ -487,11 +488,15 @@ class Post(models.Model):
         #because generic relation needs primary key of the related object
         super(self.__class__, self).save(**kwargs)
 
-        if author.can_make_group_private_posts():
-            if is_private or group_id:
-                self.make_private(author, group_id = group_id)
-            else:
-                self.make_public(author)
+    
+        if self.is_comment():
+            #copy groups from the parent post into the comment
+            groups = self.parent.groups.all()
+            self.add_to_groups(groups)
+        elif is_private or group_id:
+            self.make_private(author, group_id = group_id)
+        else:
+            self.make_public(author)
 
         if last_revision:
             diff = htmldiff(
@@ -538,29 +543,44 @@ class Post(models.Model):
     def is_reject_reason(self):
         return self.post_type == 'reject_reason'
 
+    def add_to_groups(self, groups):
+        self.groups.add(*groups)
+
+    def remove_from_groups(self, groups):
+        self.groups.remove(*groups)
+
     def make_private(self, user, group_id = None):
         """makes post private within user's groups"""
-        groups = user.get_groups()
-        if group_id:
-            for group in groups:
-                if group.id == group_id:
-                    groups = [group]
-                    break
-        if groups:
-            self.groups.add(*groups)
-            if self.is_question():
-                self.thread.groups.add(*groups)
+        if self.is_question():
+            self.thread.make_private(user, group_id=group_id)
+        else:
+            if group_id:
+                group = Tag.group_tags.get(id=group_id)
+                groups = [group]
+            else:
+                groups = user.get_groups(private=True)
+
+            if len(groups):
+                self.add_to_groups(groups)
+                self.remove_from_groups((get_global_group(),))
+            else:
+                message = 'Sharing did not work, because group is unknown'
+                user.message_set.create(message=message)
 
     def make_public(self, user):
         """removes the privacy mark from users groups"""
-        groups = user.get_groups()
-        self.groups.remove(*groups)
         if self.is_question():
-            self.thread.groups.remove(*groups)
+            self.thread.make_public()
+        else:
+            groups = (get_global_group(),)
+            self.add_to_groups(groups)
 
     def is_private(self):
-        """true, if post is private within any groups"""
-        return askbot_settings.GROUPS_ENABLED and self.groups.count() > 0
+        """true, if post belongs to the global group"""
+        if askbot_settings.GROUPS_ENABLED:
+            group = get_global_group()
+            return self.groups.exclude(id=group.id).exists()
+        return False
 
     def is_approved(self):
         """``False`` only when moderation is ``True`` and post

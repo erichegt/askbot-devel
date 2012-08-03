@@ -1140,8 +1140,6 @@ def get_users_info(request):
 def share_question_with_group(request):
     form = forms.ShareQuestionForm(request.POST)
     try:
-        import pdb
-        pdb.set_trace()
         if form.is_valid():
 
             thread_id = form.cleaned_data['thread_id']

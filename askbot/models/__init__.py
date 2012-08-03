@@ -59,6 +59,26 @@ def get_admins_and_moderators():
         models.Q(is_superuser=True) | models.Q(status='m')
     )
 
+def get_admin():
+    """returns admin with the lowest user ID
+    if there are no users at all - creates one
+    with name "admin" and unusable password
+    otherwise raises User.DoesNotExist
+    """
+    try:
+        return User.objects.filter(
+                        is_superuser=True
+                    ).order_by('id')[0]
+    except IndexError:
+        if User.objects.filter(username='_admin_').count() == 0:
+            admin = User.objects.create_user('_admin_', '')
+            admin.set_unusable_password()
+            admin.set_admin_status()
+            admin.save()
+            return admin
+        else:
+            raise User.DoesNotExist
+
 def get_users_by_text_query(search_query, users_query_set = None):
     """Runs text search in user names and profile.
     For postgres, search also runs against user group names.
@@ -1142,6 +1162,7 @@ def user_post_comment(
                     added_at = timestamp,
                     by_email = by_email
                 )
+
     parent_post.thread.invalidate_cached_data()
     award_badges_signal.send(
         None,
@@ -2167,10 +2188,10 @@ def get_profile_link(self):
 
     return mark_safe(profile_link)
 
-def user_get_groups(self):
+def user_get_groups(self, private=False):
     """returns a query set of groups to which user belongs"""
     #todo: maybe cache this query
-    return Tag.group_tags.get_for_user(self)
+    return Tag.group_tags.get_for_user(self, private=private)
 
 def user_get_foreign_groups(self):
     """returns a query set of groups to which user does not belong"""
@@ -3281,6 +3302,16 @@ def send_respondable_email_validation_message(
     )
 
 
+def add_user_to_global_group(user, **kwargs):
+    """auto-joins user to the global group"""
+    from askbot.models.tag import get_global_group
+    user.edit_group_membership(
+        group=get_global_group(),
+        user=user,
+        action='add'
+    )
+
+
 def greet_new_user(user, **kwargs):
     """sends welcome email to the newly created user
 
@@ -3391,6 +3422,7 @@ signals.flag_offensive.connect(record_flag_offensive, sender=Post)
 signals.remove_flag_offensive.connect(remove_flag_offensive, sender=Post)
 signals.tags_updated.connect(record_update_tags)
 signals.user_registered.connect(greet_new_user)
+signals.user_registered.connect(add_user_to_global_group)
 signals.user_updated.connect(record_user_full_updated, sender=User)
 signals.user_logged_in.connect(complete_pending_tag_subscriptions)#todo: add this to fake onlogin middleware
 signals.user_logged_in.connect(post_anonymous_askbot_content)
