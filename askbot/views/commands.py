@@ -1146,10 +1146,11 @@ def share_question_with_group(request):
             group_name = form.cleaned_data['group_name']
 
             thread = models.Thread.objects.get(id=thread_id)
-            group = models.Tag.group_tags.get(name=group_name)
-
-            thread.groups.add(group)
-            thread._question_post().groups.add(group)
+            if group_name == askbot_settings.GLOBAL_GROUP_NAME:
+                thread.make_public(recursive=True)
+            else:
+                group = models.Tag.group_tags.get(name=group_name)
+                thread.add_to_groups((group,), recursive=True)
 
             return HttpResponseRedirect(thread.get_absolute_url())
     except Exception:

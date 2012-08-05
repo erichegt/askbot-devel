@@ -24,6 +24,7 @@ from askbot.models.tag import delete_tags, separate_unused_tags
 from askbot.models.base import DraftContent, BaseQuerySetManager
 from askbot.models.tag import Tag, get_groups
 from askbot.models.post import Post, PostRevision
+from askbot.models.post import PostToGroup
 from askbot.models import signals
 from askbot import const
 from askbot.utils.lists import LazyList
@@ -38,8 +39,8 @@ class ThreadQuerySet(models.query.QuerySet):
         if user.is_authenticated():
             groups = user.get_groups()
         else:
-            groups = get_groups()
-        return self.filter(groups__in = groups)
+            groups = [get_global_group()]
+        return self.filter(groups__in=groups)
 
 class ThreadManager(BaseQuerySetManager):
 
@@ -134,17 +135,17 @@ class ThreadManager(BaseQuerySetManager):
         question.parse_and_save(author = author, is_private = is_private)
 
         revision = question.add_revision(
-            author = author,
-            is_anonymous = is_anonymous,
-            text = text,
-            comment = const.POST_STATUS['default_version'],
-            revised_at = added_at,
-            by_email = by_email,
-            email_address = email_address
+            author=author,
+            is_anonymous=is_anonymous,
+            text=text,
+            comment=const.POST_STATUS['default_version'],
+            revised_at=added_at,
+            by_email=by_email,
+            email_address=email_address
         )
 
         if is_private or group_id:#add groups to thread and question
-            thread.make_private(author, group_id = group_id)
+            thread.make_private(author, group_id=group_id)
         else:
             thread.make_public()
 
@@ -487,7 +488,7 @@ class Thread(models.Model):
         """returns answer count depending on who the user is.
         When user groups are enabled and some answers are hidden,
         the answer count to show must be reflected accordingly"""
-        if askbot_settings.GROUPS_ENABLED == False or user is None:
+        if askbot_settings.GROUPS_ENABLED == False:
             return self.answer_count
         else:
             return self.get_answers(user).count()
@@ -595,7 +596,8 @@ class Thread(models.Model):
                 return self.posts.get_answers(user = user)
             else:
                 return self.posts.get_answers(user = user).filter(
-                            models.Q(deleted = False) | models.Q(author = user) \
+                            models.Q(deleted = False) \
+                            | models.Q(author = user) \
                             | models.Q(deleted_by = user)
                         )
 
@@ -791,22 +793,45 @@ class Thread(models.Model):
             return self.followed_by.filter(id = user.id).count() > 0
         return False
 
-    def add_to_groups(self, groups):
+    def add_child_posts_to_groups(self, groups):
+        """adds questions and answers of the thread to 
+        given groups, comments are taken care of implicitly
+        by the underlying ``Post`` methods
+        """
+        post_types = ('question', 'answer')
+        posts = self.posts.filter(post_type__in=post_types)
+        for post in posts:
+            post.add_to_groups(groups)
+
+    def remove_child_posts_from_groups(self, groups):
+        """removes child posts from given groups"""
+        post_ids = self.posts.all().values_list('id', flat=True)
+        group_ids = [group.id for group in groups]
+        PostToGroup.objects.filter(
+                        post__id__in=post_ids,
+                        tag__id__in=group_ids
+                    ).delete()
+
+    def add_to_groups(self, groups, recursive=False):
         """adds thread to a list of groups
         ``groups`` argument may be any iterable of groups
         """
-        groups = list(groups)
         self.groups.add(*groups)
-        self._question_post().add_to_groups(groups)
+        if recursive == True:
+            #comments are taken care of automatically
+            self.add_child_posts_to_groups(groups)
 
-    def remove_from_groups(self, groups):
+    def remove_from_groups(self, groups, recursive=False):
         self.groups.remove(*groups)
-        self._question_post().remove_from_groups(groups)
+        if recursive == True:
+            self.remove_child_posts_from_groups(groups)
 
-    def make_public(self):
+    def make_public(self, recursive=False):
         """adds the global group to the thread"""
         groups = (get_global_group(), )
-        self.add_to_groups(groups)
+        self.add_to_groups(groups, recursive=recursive)
+        if recursive == False:
+            self._question_post().make_public()
 
     def make_private(self, user, group_id = None):
         """adds thread to all user's groups, excluding
@@ -816,13 +841,19 @@ class Thread(models.Model):
         if group_id:
             group = Tag.group_tags.get(id=group_id)
             groups = [group]
+            self.add_to_groups(groups)
+
+            global_group = get_global_group()
+            if group != global_group:
+                self.remove_from_groups((global_group,))
         else:
             groups = user.get_groups(private=True)
-
-        if len(groups):
             self.add_to_groups(groups)
             self.remove_from_groups((get_global_group(),))
-        else:
+
+        self._question_post().make_private(user, group_id)
+
+        if len(groups) == 0:
             message = 'Sharing did not work, because group is unknown'
             user.message_set.create(message=message)
 
@@ -830,7 +861,7 @@ class Thread(models.Model):
         """true, if thread belongs to the global group"""
         if askbot_settings.GROUPS_ENABLED:
             group = get_global_group()
-            return self.groups.exclude(id=group.id).exists()
+            return not self.groups.filter(id=group.id).exists()
         return False
 
 

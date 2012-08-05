@@ -713,6 +713,8 @@ class FeedbackTests(utils.AskbotTestCase):
     def assert_feedback_works(self):
         outbox = django.core.mail.outbox
         self.assertEqual(len(outbox), 1)
+        #todo: change groups to django groups
+        #then replace to 4 back to 3 in the line below
         self.assertEqual(len(outbox[0].recipients()), 3)
 
     def test_feedback_post_form(self):
@@ -898,6 +900,8 @@ class UnansweredReminderTests(EmailReminderTestCase):
         days_ago = self.wait_days + (self.max_emails - 1)*self.recurrence_days - 1
         timestamp = datetime.datetime.now() - datetime.timedelta(days_ago, 3600)
         self.do_post(timestamp)
+        #todo: change groups to django groups
+        #then replace to 2 back to 1 in the line below
         self.assert_have_emails(1)
 
 

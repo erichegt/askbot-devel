@@ -34,7 +34,9 @@ from askbot.models.tag import Tag, MarkedTag
 from askbot.models.tag import get_group_names, get_groups
 from askbot.models.user import EmailFeedSetting, ActivityAuditStatus, Activity
 from askbot.models.user import GroupMembership, GroupProfile
-from askbot.models.post import Post, PostRevision, PostFlagReason, AnonymousAnswer
+from askbot.models.post import Post, PostRevision
+from askbot.models.post import PostFlagReason, AnonymousAnswer
+from askbot.models.post import PostToGroup
 from askbot.models.post import DraftAnswer
 from askbot.models.reply_by_email import ReplyAddress
 from askbot.models import signals
@@ -2201,7 +2203,7 @@ def user_get_foreign_groups(self):
 
 def user_can_make_group_private_posts(self):
     """simplest implementation: user belongs to at least one group"""
-    return self.get_groups().count() > 0
+    return self.get_groups(private=True).count() > 0
 
 def user_get_groups_membership_info(self, groups):
     """returts a defaultdict with values that are
@@ -2596,6 +2598,12 @@ def user_edit_group_membership(self, user = None, group = None, action = None):
     else:
         raise ValueError('invalid action')
 
+def user_join_group(self, group):
+    self.edit_group_membership(group=group, user=self, action='add')
+
+def user_leave_group(self, group):
+    self.edit_group_membership(group=group, user=self, action='remove')
+
 def user_is_group_member(self, group = None):
     return self.group_memberships.filter(group = group).count() == 1
 
@@ -2675,6 +2683,8 @@ User.add_to_class('is_administrator', user_is_administrator)
 User.add_to_class('is_administrator_or_moderator', user_is_administrator_or_moderator)
 User.add_to_class('set_admin_status', user_set_admin_status)
 User.add_to_class('edit_group_membership', user_edit_group_membership)
+User.add_to_class('join_group', user_join_group)
+User.add_to_class('leave_group', user_leave_group)
 User.add_to_class('is_group_member', user_is_group_member)
 User.add_to_class('remove_admin_status', user_remove_admin_status)
 User.add_to_class('is_moderator', user_is_moderator)
@@ -3302,14 +3312,17 @@ def send_respondable_email_validation_message(
     )
 
 
-def add_user_to_global_group(user, **kwargs):
-    """auto-joins user to the global group"""
-    from askbot.models.tag import get_global_group
-    user.edit_group_membership(
-        group=get_global_group(),
-        user=user,
-        action='add'
-    )
+def add_user_to_global_group(sender, instance, created, **kwargs):
+    """auto-joins user to the global group
+    ``instance`` is an instance of ``User`` class
+    """
+    if created:
+        from askbot.models.tag import get_global_group
+        instance.edit_group_membership(
+            group=get_global_group(),
+            user=instance,
+            action='add'
+        )
 
 
 def greet_new_user(user, **kwargs):
@@ -3403,6 +3416,7 @@ def make_admin_if_first_user(instance, **kwargs):
 django_signals.pre_save.connect(make_admin_if_first_user, sender=User)
 django_signals.pre_save.connect(calculate_gravatar_hash, sender=User)
 django_signals.post_save.connect(add_missing_subscriptions, sender=User)
+django_signals.post_save.connect(add_user_to_global_group, sender=User)
 django_signals.post_save.connect(record_award_event, sender=Award)
 django_signals.post_save.connect(notify_award_message, sender=Award)
 django_signals.post_save.connect(record_answer_accepted, sender=Post)
@@ -3422,7 +3436,6 @@ signals.flag_offensive.connect(record_flag_offensive, sender=Post)
 signals.remove_flag_offensive.connect(remove_flag_offensive, sender=Post)
 signals.tags_updated.connect(record_update_tags)
 signals.user_registered.connect(greet_new_user)
-signals.user_registered.connect(add_user_to_global_group)
 signals.user_updated.connect(record_user_full_updated, sender=User)
 signals.user_logged_in.connect(complete_pending_tag_subscriptions)#todo: add this to fake onlogin middleware
 signals.user_logged_in.connect(post_anonymous_askbot_content)
@@ -3455,6 +3468,7 @@ __all__ = [
 
         'Post',
         'PostRevision',
+        'PostToGroup',
 
         'Tag',
         'Vote',

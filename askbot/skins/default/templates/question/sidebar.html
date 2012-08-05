@@ -55,6 +55,20 @@
             <input type="hidden" name="thread_id" value="{{ thread.id }}"/>
             <input type="submit" value="{% trans %}add{% endtrans %}"/>
         </form>
+        <p style="text-align: center">{% trans %}or{% endtrans %}</p>
+        <form action="{% url share_question_with_group %}" method="post">{% csrf_token %}
+            <input
+                type="hidden"
+                name="group_name"
+                value="{{ settings.GLOBAL_GROUP_NAME }}"
+            />
+            <input type="hidden" name="thread_id" value="{{ thread.id }}"/>
+            <input 
+                type="submit"
+                value="{% trans %}share with everyone{% endtrans %}"
+            />
+        </form>
+
     {% else %}
         <h2>{% trans %}Public thread{% endtrans %}</h2>
         <p>{% trans site_name=settings.APP_SHORT_NAME %}This thread is public, all members of {{ site_name }} can read this page.{% endtrans %}</p>

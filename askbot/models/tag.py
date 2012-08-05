@@ -12,6 +12,10 @@ def get_global_group():
     """Returns the global group,
     if necessary, creates one
     """
+    #todo: when groups are disconnected from tags,
+    #find comment as shown below in the test cases and
+    #revert the values
+    #todo: change groups to django groups
     group_name = askbot_settings.GLOBAL_GROUP_NAME
     try:
         return Tag.group_tags.get(name=group_name)

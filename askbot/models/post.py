@@ -38,6 +38,20 @@ from askbot.models.base import BaseQuerySetManager, DraftContent
 from askbot.utils.diff import textDiff as htmldiff
 from askbot.utils import mysql
 
+
+class PostToGroup(models.Model):
+    """the "trough" table for the
+    relation of groups to posts
+    """
+    post = models.ForeignKey('Post')
+    tag = models.ForeignKey('Tag')
+
+    class Meta:
+        unique_together = ('post', 'tag')
+        db_table = 'askbot_post_groups'
+        app_label = 'askbot'
+
+
 class PostQuerySet(models.query.QuerySet):
     """
     Custom query set subclass for :class:`~askbot.models.Post`
@@ -153,10 +167,10 @@ class PostManager(BaseQuerySetManager):
 
         if askbot_settings.GROUPS_ENABLED:
             if user is None or user.is_anonymous():
-                exclude_groups = get_groups()
+                groups = [get_global_group()]
             else:
-                exclude_groups = user.get_foreign_groups()
-            answers = answers.exclude(groups__in = exclude_groups)
+                groups = user.get_groups()
+            answers = answers.filter(groups__in = groups).distinct()
 
         return answers
 
@@ -307,7 +321,7 @@ class Post(models.Model):
 
     parent = models.ForeignKey('Post', blank=True, null=True, related_name='comments') # Answer or Question for Comment
     thread = models.ForeignKey('Thread', blank=True, null=True, default = None, related_name='posts')
-    groups = models.ManyToManyField('Tag', related_name = 'group_posts')#used for group-private posts
+    groups = models.ManyToManyField('Tag', through='PostToGroup', related_name = 'group_posts')#used for group-private posts
 
     author = models.ForeignKey(User, related_name='posts')
     added_at = models.DateTimeField(default=datetime.datetime.now)
@@ -496,7 +510,7 @@ class Post(models.Model):
         elif is_private or group_id:
             self.make_private(author, group_id = group_id)
         else:
-            self.make_public(author)
+            self.make_public()
 
         if last_revision:
             diff = htmldiff(
@@ -544,42 +558,56 @@ class Post(models.Model):
         return self.post_type == 'reject_reason'
 
     def add_to_groups(self, groups):
-        self.groups.add(*groups)
+        #todo: use bulk-creation
+        for group in groups:
+            PostToGroup.objects.get_or_create(post=self, tag=group)
+        if self.is_answer() or self.is_question():
+            comments = self.comments.all()
+            for group in groups:
+                for comment in comments:
+                    PostToGroup.objects.get_or_create(post=comment, tag=group)
+            
 
     def remove_from_groups(self, groups):
-        self.groups.remove(*groups)
+        PostToGroup.objects.filter(post=self, tag__in=groups).delete()
+        if self.is_answer() or self.is_question():
+            comment_ids = self.comments.all().values_list('id', flat=True)
+            PostToGroup.objects.filter(
+                        post__id__in=comment_ids,
+                        tag__in=groups
+                    ).delete()
 
     def make_private(self, user, group_id = None):
-        """makes post private within user's groups"""
-        if self.is_question():
-            self.thread.make_private(user, group_id=group_id)
-        else:
-            if group_id:
-                group = Tag.group_tags.get(id=group_id)
-                groups = [group]
-            else:
-                groups = user.get_groups(private=True)
-
-            if len(groups):
-                self.add_to_groups(groups)
-                self.remove_from_groups((get_global_group(),))
-            else:
-                message = 'Sharing did not work, because group is unknown'
-                user.message_set.create(message=message)
-
-    def make_public(self, user):
-        """removes the privacy mark from users groups"""
-        if self.is_question():
-            self.thread.make_public()
-        else:
-            groups = (get_global_group(),)
+        """makes post private within user's groups
+        todo: this is a copy-paste in thread and post
+        """
+        if group_id:
+            group = Tag.group_tags.get(id=group_id)
+            groups = [group]
             self.add_to_groups(groups)
+
+            global_group = get_global_group()
+            if group != global_group:
+                self.remove_from_groups((global_group,))
+        else:
+            groups = user.get_groups(private=True)
+            self.add_to_groups(groups)
+            self.remove_from_groups((get_global_group(),))
+
+        if len(groups) == 0:
+            message = 'Sharing did not work, because group is unknown'
+            user.message_set.create(message=message)
+
+    def make_public(self):
+        """removes the privacy mark from users groups"""
+        groups = (get_global_group(),)
+        self.add_to_groups(groups)
 
     def is_private(self):
         """true, if post belongs to the global group"""
         if askbot_settings.GROUPS_ENABLED:
             group = get_global_group()
-            return self.groups.exclude(id=group.id).exists()
+            return not self.groups.filter(id=group.id).exists()
         return False
 
     def is_approved(self):
@@ -1390,7 +1418,8 @@ class Post(models.Model):
         is hidden due to group memberships"""
         assert(self.is_comment() == False)
         post_groups = self.groups.all()
-        if post_groups.count() == 0:
+        global_group_name = askbot_settings.GLOBAL_GROUP_NAME
+        if post_groups.filter(name=global_group_name).count() == 1:
             return
 
         if self.is_question():#todo maybe merge the "hidden" exceptions
@@ -1450,7 +1479,6 @@ class Post(models.Model):
             else:
                 return const.TYPE_ACTIVITY_UPDATE_REJECT_REASON, self
 
-
         raise NotImplementedError
 
     def get_tag_names(self):
@@ -1458,13 +1486,14 @@ class Post(models.Model):
 
     def __apply_edit(
                     self,
-                    edited_at = None,
-                    edited_by = None,
-                    text = None,
-                    comment = None,
-                    wiki = False,
-                    edit_anonymously = False,
-                    by_email = False
+                    edited_at=None,
+                    edited_by=None,
+                    text=None,
+                    comment=None,
+                    wiki=False,
+                    edit_anonymously=False,
+                    is_private=False,
+                    by_email=False
                 ):
         if text is None:
             text = self.get_latest_revision().text
@@ -1492,7 +1521,7 @@ class Post(models.Model):
             by_email = by_email
         )
 
-        self.parse_and_save(author = edited_by)
+        self.parse_and_save(author=edited_by, is_private=is_private)
 
     def _answer__apply_edit(
                         self,
@@ -1505,20 +1534,21 @@ class Post(models.Model):
                         by_email = False
                     ):
 
-        #it is important to do this before __apply_edit b/c of signals!!!
+        ##it is important to do this before __apply_edit b/c of signals!!!
         if self.is_private() != is_private:
             if is_private:
                 self.make_private(self.author)
             else:
-                self.make_public(self.author)
+                self.make_public()
 
         self.__apply_edit(
-            edited_at = edited_at,
-            edited_by = edited_by,
-            text = text,
-            comment = comment,
-            wiki = wiki,
-            by_email = by_email
+            edited_at=edited_at,
+            edited_by=edited_by,
+            text=text,
+            comment=comment,
+            wiki=wiki,
+            by_email=by_email,
+            is_private=is_private
         )
 
         if edited_at is None:
@@ -1553,20 +1583,22 @@ class Post(models.Model):
         self.thread.tagnames = tags
         self.thread.save()
 
+        ##it is important to do this before __apply_edit b/c of signals!!!
         if self.is_private() != is_private:
             if is_private:
                 self.make_private(self.author)
             else:
-                self.make_public(self.author)
+                self.make_public()
 
         self.__apply_edit(
-            edited_at = edited_at,
-            edited_by = edited_by,
-            text = text,
-            comment = comment,
-            wiki = wiki,
-            edit_anonymously = edit_anonymously,
-            by_email = by_email
+            edited_at=edited_at,
+            edited_by=edited_by,
+            text=text,
+            comment=comment,
+            wiki=wiki,
+            edit_anonymously=edit_anonymously,
+            is_private=is_private,
+            by_email=by_email
         )
 
         self.thread.set_last_activity(last_activity_at=edited_at, last_activity_by=edited_by)
