@@ -13,7 +13,10 @@
         {{ post_form.text }}{# this element is resizable and will be wrapped by js #}
     </div>
 {% else %}
-    <div class="wmd-container"><textarea name="text"></textarea></div>
+    <div class="wmd-container">
+        {{ post_form.media }}
+        {{ post_form.text }}
+    </div>
     <script type="text/javascript">
         {% if post_html %}
             askbot['data']['editorContent'] = '{{ post_html|escapejs }}';

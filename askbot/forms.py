@@ -13,6 +13,7 @@ from askbot.mail import extract_first_email_address
 from recaptcha_works.fields import RecaptchaField
 from askbot.conf import settings as askbot_settings
 from askbot.conf import get_tag_display_filter_strategy_choices
+from tinymce.widgets import TinyMCE
 import logging
 
 def cleanup_dict(dictionary, key, empty_value):
@@ -207,7 +208,11 @@ class EditorField(forms.CharField):
     def __init__(self, *args, **kwargs):
         super(EditorField, self).__init__(*args, **kwargs)
         self.required = True
-        self.widget = forms.Textarea(attrs={'id':'editor'})
+        widget_attrs = {'id': 'editor'}
+        if askbot_settings.EDITOR_TYPE == 'markdown':
+            self.widget = forms.Textarea(attrs=widget_attrs)
+        elif askbot_settings.EDITOR_TYPE == 'tinymce':
+            self.widget = TinyMCE(attrs=widget_attrs)
         self.label  = _('content')
         self.help_text = u''
         self.initial = ''
@@ -684,9 +689,8 @@ class AskForm(PostPrivatelyForm):
     in the cleaned data, and will evaluate to False if the
     settings forbids anonymous asking
     """
-    title  = TitleField()
-    text   = QuestionEditorField()
-    tags   = TagNamesField()
+    title = TitleField()
+    tags = TagNamesField()
     wiki = WikiField()
     ask_anonymously = forms.BooleanField(
         label = _('ask anonymously'),
@@ -703,6 +707,8 @@ class AskForm(PostPrivatelyForm):
 
     def __init__(self, *args, **kwargs):
         super(AskForm, self).__init__(*args, **kwargs)
+        #it's important that this field is set up dynamically
+        self.fields['text'] = QuestionEditorField()
         #hide ask_anonymously field
         if askbot_settings.ALLOW_ASK_ANONYMOUSLY == False:
             self.hide_field('ask_anonymously')
@@ -798,7 +804,6 @@ class AskByEmailForm(forms.Form):
         return self.cleaned_data['subject']
 
 class AnswerForm(PostPrivatelyForm):
-    text   = AnswerEditorField()
     wiki   = WikiField()
     openid = forms.CharField(required=False, max_length=255, widget=forms.TextInput(attrs={'size' : 40, 'class':'openid-input'}))
     user   = forms.CharField(required=False, max_length=255, widget=forms.TextInput(attrs={'size' : 35}))
@@ -807,6 +812,8 @@ class AnswerForm(PostPrivatelyForm):
     def __init__(self, *args, **kwargs):
         super(AnswerForm, self).__init__(*args, **kwargs)
         self.fields['email_notify'].widget.attrs['id'] = 'question-subscribe-updates'
+        #it is important to add this field dynamically
+        self.fields['text'] = AnswerEditorField()
 
 class VoteForm(forms.Form):
     """form used in ajax vote view (only comment_upvote so far)
@@ -854,9 +861,8 @@ class RevisionForm(forms.Form):
         self.fields['revision'].initial = latest_revision.revision
 
 class EditQuestionForm(PostPrivatelyForm):
-    title  = TitleField()
-    text   = QuestionEditorField()
-    tags   = TagNamesField()
+    title = TitleField()
+    tags = TagNamesField()
     summary = SummaryField()
     wiki = WikiField()
     reveal_identity = forms.BooleanField(
@@ -876,6 +882,8 @@ class EditQuestionForm(PostPrivatelyForm):
         self.user = kwargs['user']#preserve for superclass
         revision = kwargs.pop('revision')
         super(EditQuestionForm, self).__init__(*args, **kwargs)
+        #it is important to add this field dynamically
+        self.fields['text'] = QuestionEditorField()
         self.fields['title'].initial = revision.title
         self.fields['text'].initial = revision.text
         self.fields['tags'].initial = revision.tagnames
@@ -971,13 +979,14 @@ class EditQuestionForm(PostPrivatelyForm):
         return self.cleaned_data
 
 class EditAnswerForm(PostPrivatelyForm):
-    text = AnswerEditorField()
     summary = SummaryField()
     wiki = WikiField()
 
     def __init__(self, answer, revision, *args, **kwargs):
         self.answer = answer
         super(EditAnswerForm, self).__init__(*args, **kwargs)
+        #it is important to add this field dynamically
+        self.fields['text'] = AnswerEditorField()
         self.fields['text'].initial = revision.text
         self.fields['wiki'].initial = answer.wiki
 

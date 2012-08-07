@@ -35,6 +35,7 @@ REQUIREMENTS = {
     'pystache': 'pystache==0.3.1',
     'lamson': 'Lamson',
     'pytz': 'pytz',
+    'tinymce': 'django-tinymce',
 }
 
 #necessary for interoperability of django and coffin
