@@ -24,7 +24,7 @@
         askbot['data']['viewUserName'] = '{{ view_user.username|escape }}';
         askbot['data']['viewUserId'] = {{view_user.id}};
         askbot['urls']['edit_group_membership'] = '{% url edit_group_membership %}';
-        askbot['urls']['get_groups_list'] = '{% url get_groups_list %}';
+        askbot['urls']['getGroupsList'] = '{% url get_groups_list %}';
     </script>
     {% if request.user|can_moderate_user(view_user) %}
         <script type='text/javascript' src='{{"/js/jquery.form.js"|media}}'></script>

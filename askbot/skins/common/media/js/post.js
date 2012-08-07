@@ -3840,6 +3840,20 @@ $(document).ready(function() {
         var tip = new TippedInput();
         tip.decorate(proxyUserEmailInput);
     }
+    //if groups are enabled - activate share functions
+    var groupsInput = $('.share-with-group');
+    if (groupsInput.length === 1) {
+        var groupsAc = new AutoCompleter({
+            url: askbot['urls']['getGroupsList'],
+            preloadData: true,
+            minChars: 1,
+            useCache: true,
+            matchInside: true,
+            maxCacheLength: 100,
+            delay: 10
+        });
+        fakeUserAc.decorate(proxyUserNameInput);
+    }
 });
 
 
