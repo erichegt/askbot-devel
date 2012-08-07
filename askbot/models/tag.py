@@ -23,7 +23,8 @@ def get_global_group():
         from askbot.models import get_admin
         return Tag.group_tags.get_or_create(
                             group_name=group_name,
-                            user=get_admin()
+                            user=get_admin(),
+                            is_open=False
                         )
 
 def delete_tags(tags):
@@ -307,7 +308,7 @@ class GroupTagManager(BaseQuerySetManager):
     def get_query_set(self):
         return GroupTagQuerySet(self.model)
 
-    def get_or_create(self, group_name = None, user = None):
+    def get_or_create(self, group_name = None, user = None, is_open=True):
         """creates a group tag or finds one, if exists"""
         #todo: here we might fill out the group profile
 
@@ -321,7 +322,7 @@ class GroupTagManager(BaseQuerySetManager):
             tag = self.model(name = group_name, created_by = user)
             tag.save()
             from askbot.models.user import GroupProfile
-            group_profile = GroupProfile(group_tag = tag)
+            group_profile = GroupProfile(group_tag = tag, is_open=is_open)
             group_profile.save()
         return tag
 

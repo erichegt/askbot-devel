@@ -232,7 +232,7 @@ poor design of the data or methods on data objects #}
 {%- endmacro -%}
 
 {%- macro group_join_button(group_id = None, can_join = False, is_member = False) -%}
-    {% if can_join or is_member %}
+    {% if can_join %}
         <button 
             class="group-join-btn follow-toggle {% if is_member %}on on-state{% endif %}"
             data-group-id="{{group_id}}"

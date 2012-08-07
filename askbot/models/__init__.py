@@ -31,7 +31,9 @@ from askbot.models.question import QuestionView, AnonymousQuestion
 from askbot.models.question import DraftQuestion
 from askbot.models.question import FavoriteQuestion
 from askbot.models.tag import Tag, MarkedTag
-from askbot.models.tag import get_group_names, get_groups
+from askbot.models.tag import get_global_group
+from askbot.models.tag import get_group_names
+from askbot.models.tag import get_groups
 from askbot.models.user import EmailFeedSetting, ActivityAuditStatus, Activity
 from askbot.models.user import GroupMembership, GroupProfile
 from askbot.models.post import Post, PostRevision

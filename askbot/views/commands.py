@@ -24,6 +24,7 @@ from askbot import models
 from askbot import forms
 from askbot.conf import should_show_sort_by_relevance
 from askbot.conf import settings as askbot_settings
+from askbot.models.tag import get_global_group
 from askbot.utils import category_tree
 from askbot.utils import decorators
 from askbot.utils import url_utils
@@ -614,8 +615,11 @@ def add_tag_category(request):
 def get_groups_list(request):
     """returns names of group tags
     for the autocomplete function"""
+    global_group = get_global_group()
     group_names = models.Tag.group_tags.get_all().filter(
                                     deleted = False
+                                ).exclude(
+                                    name=global_group.name
                                 ).values_list(
                                     'name', flat = True
                                 )
