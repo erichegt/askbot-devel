@@ -56,6 +56,9 @@
                 if (data['userIsAdminOrMod']){
                     return;//all functions on
                 }
+                if (data['user_posts'] === undefined) {
+                    return;
+                }
                 if (post_id in data['user_posts']){
                     //todo: remove edit button from older comments
                     return;//same here
@@ -91,7 +94,7 @@
                 {% if user_can_post_comment %}
                     can_add = true;
                 {% else %}
-                    if (post_id in data['user_posts']){
+                    if (data['user_posts'] && post_id in data['user_posts']){
                         can_add = true;
                     }
                 {% endif %}
@@ -173,6 +176,9 @@
 {% endblock %}
 {% block endjs %}
     {% include "question/javascript.html" %}
+    {% if settings.TAG_SOURCE == 'category-tree' %}
+        {% include "meta/category_tree_js.html" %}
+    {% endif %}
     {#
     <script type="text/javascript">
         var messages = askbot['messages'];

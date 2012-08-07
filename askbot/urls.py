@@ -79,6 +79,21 @@ urlpatterns = patterns('',
         name = 'api_get_questions'
     ),
     url(
+        r'^save-draft-question/',
+        views.commands.save_draft_question,
+        name = 'save_draft_question'
+    ),
+    url(
+        r'^save-draft-answer/',
+        views.commands.save_draft_answer,
+        name = 'save_draft_answer'
+    ),
+    url(
+        r'^share-question-with-group/',
+        views.commands.share_question_with_group,
+        name = 'share_question_with_group'
+    ),
+    url(
         r'^get-users-info/',
         views.commands.get_users_info,
         name='get_users_info'
@@ -164,6 +179,16 @@ urlpatterns = patterns('',
         views.readers.tags, 
         name='tags'
     ),
+    url(
+        r'^%s$' % _('suggested-tags/'),
+        views.meta.list_suggested_tags,
+        name = 'list_suggested_tags'
+    ),
+    url(#ajax only
+        r'^%s$' % 'moderate-suggested-tag',
+        views.commands.moderate_suggested_tag,
+        name = 'moderate_suggested_tag'
+    ),
     #todo: collapse these three urls and use an extra json data var
     url(#ajax only
         r'^%s%s$' % ('mark-tag/', 'interesting/'),
@@ -213,6 +238,21 @@ urlpatterns = patterns('',
         r'^save-tag-wiki-text/',
         views.commands.save_tag_wiki_text,
         name = 'save_tag_wiki_text'
+    ),
+    url(#ajax only
+        r'^add-tag-category/',
+        views.commands.add_tag_category,
+        name = 'add_tag_category'
+    ),
+    url(#ajax only
+        r'^rename-tag/',
+        views.commands.rename_tag,
+        name = 'rename_tag'
+    ),
+    url(#
+        r'^delete-tag/',
+        views.commands.delete_tag,
+        name = 'delete_tag'
     ),
     url(#ajax only
         r'^save-group-logo-url/',
@@ -299,6 +339,11 @@ urlpatterns = patterns('',
         r'^%s(?P<id>\d+)//*' % _('badges/'),
         views.meta.badge,
         name='badge'
+    ),
+    url(
+        r'get-html-template/',
+        views.commands.get_html_template,
+        name='get_html_template'
     ),
     url(#ajax only
         r'^%s%s$' % (_('messages/'), _('markread/')),

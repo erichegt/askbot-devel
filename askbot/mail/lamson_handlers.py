@@ -195,6 +195,7 @@ def ASK(message, host = None, addr = None):
             from_address, subject, body_text, stored_files
         )
     else:
+        #this is the Ask the group branch
         if askbot_settings.GROUP_EMAIL_ADDRESSES_ENABLED == False:
             return
         try:

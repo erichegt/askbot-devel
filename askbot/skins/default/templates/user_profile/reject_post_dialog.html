@@ -44,6 +44,7 @@
             <ul class="select-box">
                 {% for reason in post_reject_reasons %}
                 <li 
+                    class="select-box-item"
                     data-original-title="{{reason.details.text|escape}}"
                     data-item-id="{{reason.id}}"
                 >{{reason.title|escape}}</li>

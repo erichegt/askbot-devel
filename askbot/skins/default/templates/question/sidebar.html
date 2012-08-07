@@ -42,6 +42,39 @@
     </div> 
 </div>
 
+<div class="clearfix"></div>
+<div class="box sharing-widget">
+    {% if thread.is_private() %}
+        <h2>{% trans %}Share{% endtrans %}</h2>
+        <p>{% trans %}Share with groups{% endtrans %}</p>
+        {% for group in thread.groups.all() %}
+            <p>{{ group.name }}</p>
+        {% endfor %}
+        <form action="{% url share_question_with_group %}" method="post">{% csrf_token %}
+            <input type="text" name="group_name" />
+            <input type="hidden" name="thread_id" value="{{ thread.id }}"/>
+            <input type="submit" value="{% trans %}add{% endtrans %}"/>
+        </form>
+        <p style="text-align: center">{% trans %}or{% endtrans %}</p>
+        <form action="{% url share_question_with_group %}" method="post">{% csrf_token %}
+            <input
+                type="hidden"
+                name="group_name"
+                value="{{ settings.GLOBAL_GROUP_NAME }}"
+            />
+            <input type="hidden" name="thread_id" value="{{ thread.id }}"/>
+            <input 
+                type="submit"
+                value="{% trans %}share with everyone{% endtrans %}"
+            />
+        </form>
+
+    {% else %}
+        <h2>{% trans %}Public thread{% endtrans %}</h2>
+        <p>{% trans site_name=settings.APP_SHORT_NAME %}This thread is public, all members of {{ site_name }} can read this page.{% endtrans %}</p>
+    {% endif %}
+</div>
+
 {% if settings.SIDEBAR_QUESTION_SHOW_META %}
 <div class="box statsWidget">
     <div class="clearfix"></div>

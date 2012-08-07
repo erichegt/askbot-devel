@@ -108,17 +108,34 @@ var setCheckBoxesIn = function(selector, value){
     return $(selector + '> input[type=checkbox]').attr('checked', value);
 };
 
+/*
+ * Old style notify handler
+ */
 var notify = function() {
     var visible = false;
     return {
-        show: function(html) {
+        show: function(html, autohide) {
             if (html) {
                 $("body").addClass('user-messages');
-                $(".notify span").html(html);        
+                var par = $('<p class="notification"></p>');
+                par.html(html);
+                $(".notify").prepend(par);
             }          
             $(".notify").fadeIn("slow");
             visible = true;
+            if (autohide) {
+                setTimeout(
+                    function() { 
+                        notify.close(false);
+                        notify.clear();
+                    },
+                    3000
+                );
+            }
         },       
+        clear: function() {
+            $('.notify').empty();
+        },
         close: function(doPostback) {
             if (doPostback) {
                $.post(
@@ -132,7 +149,7 @@ var notify = function() {
         },     
         isVisible: function() { return visible; }     
     };
-} ();
+}();
 
 /* **************************************************** */
 // Search query-string manipulation utils
@@ -268,6 +285,31 @@ WrappedElement.prototype.makeElement = function(html_tag){
 WrappedElement.prototype.dispose = function(){
     this._element.remove();
     this._in_document = false;
+};
+
+/**
+ * @constructor
+ * Widget is a Wrapped element with state
+ */
+var Widget = function() {
+    WrappedElement.call(this);
+    this._state = undefined;
+};
+inherits(Widget, WrappedElement);
+
+Widget.prototype.setState = function(state) {
+    this._state = state;
+};
+
+Widget.prototype.getState = function() {
+    return this._state;
+};
+
+Widget.prototype.makeButton = function(label, handler) {
+    var button = this.makeElement('button');
+    button.html(label);
+    setupButtonEventHandlers(button, handler);
+    return button;
 };
 
 /**
@@ -415,6 +457,33 @@ AlertBox.prototype.createDom = function(){
     }
 
     this._element.alert();//bootstrap.js alert
+};
+
+/**
+ * @constructor
+ * just a span with content
+ * useful for subclassing
+ */
+var SimpleContent = function(){
+    WrappedElement.call(this);
+    this._content = '';
+};
+inherits(SimpleContent, WrappedElement);
+
+SimpleContent.prototype.setContent = function(text) {
+    this._content = text;
+    if (this._element) {
+        this._element.html(text);
+    }
+};
+
+SimpleContent.prototype.getContent = function() {
+    return this._content;
+};
+
+SimpleContent.prototype.createDom = function() {
+    this._element = this.makeElement('span');
+    this._element.html(this._content);
 };
 
 var SimpleControl = function(){
@@ -813,7 +882,7 @@ TwoStateToggle.prototype.decorate = function(element){
         } else {
             me.setState('on-prompt');
         }
-        element.css('background-color', 'red');
+        //element.css('background-color', 'red');
         return false;
     });
     element.mouseout(function(){
@@ -823,85 +892,304 @@ TwoStateToggle.prototype.decorate = function(element){
         } else {
             me.setState('off-state');
         }
-        element.css('background-color', 'white');
+        //element.css('background-color', 'white');
         return false;
     });
 
     setupButtonEventHandlers(element, this.getHandler());
 };
 
+var BoxItemContent = function() {
+    SimpleContent.call(this);
+};
+inherits(BoxItemContent, SimpleContent);
+
+/**
+ * @override to allow for more complex content
+ */
+BoxItemContent.prototype.setName = function(name) {
+    BoxItemContent.superClass_.setContent.call(this, name);
+};
+BoxItemContent.prototype.getName = function() {
+    return BoxItemContent.superClass_.getContent.call(this);
+};
+
+/**
+ * @constructor
+ * an item used for the select box described below
+ */
+var SelectBoxItem = function() {
+    Widget.call(this);
+    this._id = null;
+    this._name = null;
+    this._description = null;
+    this._content_class = BoxItemContent;//default expects a single text node
+    //content element - instance of this._content_class
+    this._content = undefined;
+    this._selector = undefined;//the selector object
+};
+inherits(SelectBoxItem, Widget);
+
+SelectBoxItem.prototype.setId = function(id) {
+    this._id = id;
+    if (this._element) {
+        this._element.data('itemId', id);
+    }
+};
+
+SelectBoxItem.prototype.getId = function() {
+    return this._id;
+};
+
+SelectBoxItem.prototype.setName = function(name) {
+    this._name = name;
+    if (this._content) {
+        this._content.setName(name);
+    }
+};
+
+SelectBoxItem.prototype.setDescription = function(description) {
+    this._description = description;
+    if (this._element) {
+        this._element.data('originalTitle');
+    }
+};
+
+SelectBoxItem.prototype.getData = function () {
+    //todo: stuck using old key names, change after merge
+    //with the user-groups branch
+    return {
+        id: this._id,
+        title: this._name,
+        details: this._description
+    };
+};
+
+SelectBoxItem.prototype.setSelector = function(sel) {
+    this._selector = sel;
+};
+
+SelectBoxItem.prototype.getSelector = function(sel) {
+    return this._selector;
+};
+
+SelectBoxItem.prototype.getContent = function() {
+    return this._content;
+};
+
+SelectBoxItem.prototype.isSelected = function() {
+    return this._element.hasClass('selected');
+};
+
+SelectBoxItem.prototype.setSelected = function(is_selected) {
+    if (is_selected) {
+        this._element.addClass('selected');
+    } else {
+        this._element.removeClass('selected');
+    }
+}
+
+SelectBoxItem.prototype.detach = function() {
+    this._element.detach();
+};
+
+SelectBoxItem.prototype.createDom = function() {
+    var elem = this.makeElement('li');
+    this._element = elem;
+    elem.data('itemId', this._id);
+    elem.data('itemOriginalTitle', this._description);
+    var content = new this._content_class();
+    content.setName(this._name);
+    elem.append(content.getElement());
+    this._content = content;
+}
+/**
+ * this method sets css class to the item's DOM element
+ */
+SelectBoxItem.prototype.addCssClass = function(css_class) {
+    this._element.addClass(css_class);
+};
+
+SelectBoxItem.prototype.decorate = function(element) {
+    this._element = element;
+    //set id and description
+    this._id = element.data('itemId');
+    this._description = element.data('originalTitle');
+
+    //work on setting name
+    var content_source = element.contents().detach();
+    var content = new this._content_class();
+    //assume that we want first node only
+    content.setContent(content_source[0]);
+    this._content = content;
+    this._name = content.getName();//allows to abstract from structure
+
+    this._element.append(content.getElement());
+};
+
 /**
  * A list of items from where one can be selected
  */
 var SelectBox = function(){
-    WrappedElement.call(this);
+    Widget.call(this);
     this._items = [];
+    this._select_handler = function(){};//empty default
+    this._is_editable = false;
+    this._item_class = SelectBoxItem;
 };
-inherits(SelectBox, WrappedElement);
+inherits(SelectBox, Widget);
 
-SelectBox.prototype.removeItem = function(id){
-    var item = this.getItem(id);
-    item.fadeOut();
-    item.remove();
+SelectBox.prototype.setEditable = function(is_editable) {
+    this._is_editable = is_editable;
+};
+
+SelectBox.prototype.isEditable = function() {
+    return this._is_editable;
+};
+
+SelectBox.prototype.detachAllItems = function() {
+    var items = this._items;
+    $.each(items, function(idx, item){
+        item.detach();
+    });
+    this._items = [];
 };
 
 SelectBox.prototype.getItem = function(id){
-    return $(this._element.find('li[data-item-id="' + id + '"]'));
+    var items = this._items;
+    for (var i = 0; i < items.length; i++) {
+        if (items[i].getId() === id) {
+            return items[i];
+        }
+    }
+    return undefined;
 };
 
-SelectBox.prototype.addItem = function(id, title, details){
-    /*this._items.push({
-        id: id,
-        title: title,
-        details: details
-    });*/
-    if (this._element){
-        var li = this.getItem(id);
-        var new_li = false;
-        if (li.length !== 1){
-            li = this.makeElement('li');
-            new_li = true;
-        }
-        li.attr('data-item-id', id)
-            .attr('data-original-title', details)
-            .html(title);
-        if (new_li){
-            this._element.append(li);
-        }
-        this.selectItem($(li));
-        var me = this;
-        setupButtonEventHandlers(
-            $(li),
-            function(){
-                me.selectItem($(li));
-            }
-        );
+SelectBox.prototype.getItemByIndex = function(idx) {
+    return this._items[idx];
+};
+
+//why do we have these two almost identical methods?
+SelectBox.prototype.removeItem = function(id){
+    var item = this.getItem(id);
+    item.getElement().fadeOut();
+    item.dispose();
+    var idx = $.inArray(item, this._items);
+    if (idx !== -1) {
+        this._items.splice(idx, 1);
+    }
+};
+SelectBox.prototype.deleteItem = function(id) {
+    var item = this.getItem(id);
+    if (item === undefined) {
+        return;
+    }
+    item.dispose();
+    var idx = $.inArray(item, this._items);
+    if (idx !== -1) {
+        this._items.splice(idx, 1);
     }
 };
 
-SelectBox.prototype.getSelectedItemData = function(){
-    var item = $(this._element.find('li.selected')[0]);
-    return {
-        id: item.attr('data-item-id'),
-        title: item.html(),
-        details: item.attr('data-original-title')
-    };
+SelectBox.prototype.createItem = function() {
+    return new this._item_class();
+};
+
+SelectBox.prototype.getItemIndex = function(item) {
+    var idx = $.inArray(item, this._items);
+    if (idx === -1) {
+        throw "index error";
+    }
+    return idx;
+};
+
+SelectBox.prototype.addItemObject = function(item) {
+    this._items.push(item);
+    this._element.append(item.getElement());
+    this.selectItem(item);
+    item.setSelector(this);
+    //set event handler
+    var me = this;
+    setupButtonEventHandlers(
+        item.getElement(),
+        me.getSelectHandler(item)
+    );
+};
+
+/** @todo: rename to setItem?? have a problem when id's are all say 0 */
+SelectBox.prototype.addItem = function(id, name, description){
+
+    if (this.hasElement() === false) {
+        return;
+    }
+    //delete old item
+    this.deleteItem(id);
+    //create new item
+    var item = this.createItem();
+    item.setId(id);
+    item.setName(name);
+    item.setDescription(description);
+    //add item to the SelectBox
+    this.addItemObject(item);
+
+    return item;
+};
+
+SelectBox.prototype.getSelectedItem = function() {
+    for (var i = 0; i < this._items.length; i++) {
+        var item = this._items[i];
+        if (item.isSelected()) {
+            return item;
+        }
+    }
+    return undefined;
+};
+
+SelectBox.prototype.getSelectedItemData = function() {
+    var item = this.getSelectedItem();
+    if (item) {
+        return item.getData() || undefined;
+    } else {
+        return undefined;
+    }
 };
 
 SelectBox.prototype.selectItem = function(item){
-    this._element.find('li').removeClass('selected');
-    item.addClass('selected');
+    this.clearSelection();
+    item.setSelected(true);
+};
+
+SelectBox.prototype.clearSelection = function(){
+    $.each(this._items, function(idx, item) {
+        item.setSelected(false);
+    });
+};
+
+SelectBox.prototype.setSelectHandler = function(handler) {
+    this._select_handler = handler;
+};
+
+SelectBox.prototype.getSelectHandler = function(item) {
+    var me = this;
+    var handler = this._select_handler;
+    return function(){
+        me.selectItem(item);
+        handler(item.getData());
+    };
 };
 
 SelectBox.prototype.decorate = function(element){
     this._element = element;
     var me = this;
-    this._element.find('li').each(function(itx, item){
+    var box_items = this._items;
+    var item_elements = this._element.find('.select-box-item');
+    item_elements.each(function(idx, item_element){
+        var item = me.createItem();
+        item.decorate($(item_element));
+        box_items.push(item);
         setupButtonEventHandlers(
-            $(item),
-            function(){
-                me.selectItem($(item));
-            }
+            item.getElement(),
+            me.getSelectHandler(item)
         );
     });
 };
@@ -1040,6 +1328,7 @@ Tag.prototype.createDom = function(){
     }
     this._inner_element.attr('title', this._title);
     this._inner_element.html(this.getDisplayTagName());
+    this._inner_element.data('tagName', this.getName());
 
     this._element.append(this._inner_element);
 
@@ -1062,7 +1351,7 @@ Tag.prototype.createDom = function(){
 //Search Engine Keyword Highlight with Javascript
 //http://scott.yang.id.au/code/se-hilite/
 Hilite={elementid:"content",exact:true,max_nodes:1000,onload:true,style_name:"hilite",style_name_suffix:true,debug_referrer:""};Hilite.search_engines=[["local","q"],["cnprog\\.","q"],["google\\.","q"],["search\\.yahoo\\.","p"],["search\\.msn\\.","q"],["search\\.live\\.","query"],["search\\.aol\\.","userQuery"],["ask\\.com","q"],["altavista\\.","q"],["feedster\\.","q"],["search\\.lycos\\.","q"],["alltheweb\\.","q"],["technorati\\.com/search/([^\\?/]+)",1],["dogpile\\.com/info\\.dogpl/search/web/([^\\?/]+)",1,true]];Hilite.decodeReferrer=function(d){var g=null;var e=new RegExp("");for(var c=0;c<Hilite.search_engines.length;c++){var f=Hilite.search_engines[c];e.compile("^http://(www\\.)?"+f[0],"i");var b=d.match(e);if(b){var a;if(isNaN(f[1])){a=Hilite.decodeReferrerQS(d,f[1])}else{a=b[f[1]+1]}if(a){a=decodeURIComponent(a);if(f.length>2&&f[2]){a=decodeURIComponent(a)}a=a.replace(/\'|"/g,"");a=a.split(/[\s,\+\.]+/);return a}break}}return null};Hilite.decodeReferrerQS=function(f,d){var b=f.indexOf("?");var c;if(b>=0){var a=new String(f.substring(b+1));b=0;c=0;while((b>=0)&&((c=a.indexOf("=",b))>=0)){var e,g;e=a.substring(b,c);b=a.indexOf("&",c)+1;if(e==d){if(b<=0){return a.substring(c+1)}else{return a.substring(c+1,b-1)}}else{if(b<=0){return null}}}}return null};Hilite.hiliteElement=function(f,e){if(!e||f.childNodes.length==0){return}var c=new Array();for(var b=0;b<e.length;b++){e[b]=e[b].toLowerCase();if(Hilite.exact){c.push("\\b"+e[b]+"\\b")}else{c.push(e[b])}}c=new RegExp(c.join("|"),"i");var a={};for(var b=0;b<e.length;b++){if(Hilite.style_name_suffix){a[e[b]]=Hilite.style_name+(b+1)}else{a[e[b]]=Hilite.style_name}}var d=function(m){var j=c.exec(m.data);if(j){var n=j[0];var i="";var h=m.splitText(j.index);var g=h.splitText(n.length);var l=m.ownerDocument.createElement("SPAN");m.parentNode.replaceChild(l,h);l.className=a[n.toLowerCase()];l.appendChild(h);return l}else{return m}};Hilite.walkElements(f.childNodes[0],1,d)};Hilite.hilite=function(){var a=Hilite.debug_referrer?Hilite.debug_referrer:document.referrer;var b=null;a=Hilite.decodeReferrer(a);if(a&&((Hilite.elementid&&(b=document.getElementById(Hilite.elementid)))||(b=document.body))){Hilite.hiliteElement(b,a)}};Hilite.walkElements=function(d,f,e){var a=/^(script|style|textarea)/i;var c=0;while(d&&f>0){c++;if(c>=Hilite.max_nodes){var b=function(){Hilite.walkElements(d,f,e)};setTimeout(b,50);return}if(d.nodeType==1){if(!a.test(d.tagName)&&d.childNodes.length>0){d=d.childNodes[0];f++;continue}}else{if(d.nodeType==3){d=e(d)}}if(d.nextSibling){d=d.nextSibling}else{while(f>0){d=d.parentNode;f--;if(d.nextSibling){d=d.nextSibling;break}}}}};if(Hilite.onload){if(window.attachEvent){window.attachEvent("onload",Hilite.hilite)}else{if(window.addEventListener){window.addEventListener("load",Hilite.hilite,false)}else{var __onload=window.onload;window.onload=function(){Hilite.hilite();__onload()}}}};
-/* json2.js by D. Crockford */
+
 if(!this.JSON){this.JSON={}}(function(){function f(n){return n<10?"0"+n:n}if(typeof Date.prototype.toJSON!=="function"){Date.prototype.toJSON=function(key){return isFinite(this.valueOf())?this.getUTCFullYear()+"-"+f(this.getUTCMonth()+1)+"-"+f(this.getUTCDate())+"T"+f(this.getUTCHours())+":"+f(this.getUTCMinutes())+":"+f(this.getUTCSeconds())+"Z":null};String.prototype.toJSON=Number.prototype.toJSON=Boolean.prototype.toJSON=function(key){return this.valueOf()}}var cx=/[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,escapable=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,gap,indent,meta={"\b":"\\b","\t":"\\t","\n":"\\n","\f":"\\f","\r":"\\r",'"':'\\"',"\\":"\\\\"},rep;function quote(string){escapable.lastIndex=0;return escapable.test(string)?'"'+string.replace(escapable,function(a){var c=meta[a];return typeof c==="string"?c:"\\u"+("0000"+a.charCodeAt(0).toString(16)).slice(-4)})+'"':'"'+string+'"'}function str(key,holder){var i,k,v,length,mind=gap,partial,value=holder[key];if(value&&typeof value==="object"&&typeof value.toJSON==="function"){value=value.toJSON(key)}if(typeof rep==="function"){value=rep.call(holder,key,value)}switch(typeof value){case"string":return quote(value);case"number":return isFinite(value)?String(value):"null";case"boolean":case"null":return String(value);case"object":if(!value){return"null"}gap+=indent;partial=[];if(Object.prototype.toString.apply(value)==="[object Array]"){length=value.length;for(i=0;i<length;i+=1){partial[i]=str(i,value)||"null"}v=partial.length===0?"[]":gap?"[\n"+gap+partial.join(",\n"+gap)+"\n"+mind+"]":"["+partial.join(",")+"]";gap=mind;return v}if(rep&&typeof rep==="object"){length=rep.length;for(i=0;i<length;i+=1){k=rep[i];if(typeof k==="string"){v=str(k,value);if(v){partial.push(quote(k)+(gap?": ":":")+v)}}}}else{for(k in value){if(Object.hasOwnProperty.call(value,k)){v=str(k,value);if(v){partial.push(quote(k)+(gap?": ":":")+v)}}}}v=partial.length===0?"{}":gap?"{\n"+gap+partial.join(",\n"+gap)+"\n"+mind+"}":"{"+partial.join(",")+"}";gap=mind;return v}}if(typeof JSON.stringify!=="function"){JSON.stringify=function(value,replacer,space){var i;gap="";indent="";if(typeof space==="number"){for(i=0;i<space;i+=1){indent+=" "}}else{if(typeof space==="string"){indent=space}}rep=replacer;if(replacer&&typeof replacer!=="function"&&(typeof replacer!=="object"||typeof replacer.length!=="number")){throw new Error("JSON.stringify")}return str("",{"":value})}}if(typeof JSON.parse!=="function"){JSON.parse=function(text,reviver){var j;function walk(holder,key){var k,v,value=holder[key];if(value&&typeof value==="object"){for(k in value){if(Object.hasOwnProperty.call(value,k)){v=walk(value,k);if(v!==undefined){value[k]=v}else{delete value[k]}}}}return reviver.call(holder,key,value)}text=String(text);cx.lastIndex=0;if(cx.test(text)){text=text.replace(cx,function(a){return"\\u"+("0000"+a.charCodeAt(0).toString(16)).slice(-4)})}if(/^[\],:{}\s]*$/.test(text.replace(/\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g,"@").replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g,"]").replace(/(?:^|:|,)(?:\s*\[)+/g,""))){j=eval("("+text+")");return typeof reviver==="function"?walk({"":j},""):j}throw new SyntaxError("JSON.parse")}}}());
 //jquery fieldselection
 (function(){var a={getSelection:function(){var b=this.jquery?this[0]:this;return(("selectionStart" in b&&function(){var c=b.selectionEnd-b.selectionStart;return{start:b.selectionStart,end:b.selectionEnd,length:c,text:b.value.substr(b.selectionStart,c)}})||(document.selection&&function(){b.focus();var d=document.selection.createRange();if(d==null){return{start:0,end:b.value.length,length:0}}var c=b.createTextRange();var e=c.duplicate();c.moveToBookmark(d.getBookmark());e.setEndPoint("EndToStart",c);return{start:e.text.length,end:e.text.length+d.text.length,length:d.text.length,text:d.text}})||function(){return{start:0,end:b.value.length,length:0}})()},replaceSelection:function(){var b=this.jquery?this[0]:this;var c=arguments[0]||"";return(("selectionStart" in b&&function(){b.value=b.value.substr(0,b.selectionStart)+c+b.value.substr(b.selectionEnd,b.value.length);return this})||(document.selection&&function(){b.focus();document.selection.createRange().text=c;return this})||function(){b.value+=c;return this})()}};jQuery.each(a,function(b){jQuery.fn[b]=this})})();

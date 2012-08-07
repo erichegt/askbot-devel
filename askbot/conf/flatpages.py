@@ -51,3 +51,14 @@ settings.register(
         )
     )
 )
+
+#todo: merge this with mandatory tags
+settings.register(#this field is not editable manually
+    LongStringValue(
+        FLATPAGES,
+        'CATEGORY_TREE',
+        description = 'Category tree',#no need to translate
+        default = '',#empty array of arrays in json
+        #hidden = True
+    )
+)

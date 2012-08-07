@@ -7,11 +7,13 @@ from django.core import exceptions
 from django.core.urlresolvers import reverse
 from django.test.client import Client
 from django.conf import settings
+from django.contrib.auth.models import AnonymousUser
 from django import forms
 from askbot.tests.utils import AskbotTestCase
 from askbot import models
 from askbot import const
 from askbot.conf import settings as askbot_settings
+from askbot.models.tag import get_global_group
 import datetime
 
 class DBApiTests(AskbotTestCase):
@@ -402,6 +404,32 @@ class CommentTests(AskbotTestCase):
 class TagAndGroupTests(AskbotTestCase):
     def setUp(self):
         self.u1 = self.create_user('u1')
+        askbot_settings.update('GROUPS_ENABLED', True)
+
+    def tearDown(self):
+        askbot_settings.update('GROUPS_ENABLED', False)
+
+    def assertObjectGroupsEqual(self, obj, expected_groups):
+        self.assertEqual(set(obj.groups.all()), set(expected_groups))
+
+    def post_question_answer_and_comments(self, is_private=False):
+        question = self.post_question(user=self.u1, is_private=is_private)
+        answer = self.post_answer(
+            user=self.u1, question=question, is_private=is_private
+        )
+        question_comment = self.post_comment(
+            user=self.u1, parent_post=question
+        )
+        answer_comment = self.post_comment(
+            user=self.u1, parent_post=answer
+        )
+        return {
+            'thread': question.thread,
+            'question': question,
+            'answer': answer,
+            'question_comment': question_comment,
+            'answer_comment': answer_comment
+        }
         
     def test_group_cannot_create_case_variant_tag(self):
         self.post_question(user = self.u1, tags = 'one two three')
@@ -409,3 +437,145 @@ class TagAndGroupTests(AskbotTestCase):
         tag_one = models.Tag.objects.filter(name__iexact = 'one')
         self.assertEqual(tag_one.count(), 1)
         self.assertEqual(tag_one[0].name, 'one')
+
+    def test_posts_added_to_global_group(self):
+        q = self.post_question(user=self.u1)
+        group_name = askbot_settings.GLOBAL_GROUP_NAME
+        self.assertEqual(q.groups.filter(name=group_name).exists(), True)
+
+        a = self.post_answer(question=q, user=self.u1)
+        self.assertEqual(a.groups.filter(name=group_name).exists(), True)
+
+        c = self.post_comment(parent_post=a, user=self.u1)
+        self.assertEqual(c.groups.filter(name=group_name).exists(), True)
+
+    def test_posts_added_to_private_group(self):
+        group = self.create_group(group_name='private', user=self.u1)
+        self.u1.join_group(group)
+
+        q = self.post_question(user=self.u1, is_private=True)
+        self.assertEqual(q.groups.count(), 1)
+        self.assertEqual(q.groups.filter(name='private').exists(), True)
+
+        a = self.post_answer(question=q, user=self.u1, is_private=True)
+        self.assertEqual(a.groups.count(), 1)
+        self.assertEqual(a.groups.filter(name='private').exists(), True)
+
+        qc = self.post_comment(parent_post=q, user=self.u1)#w/o private arg
+        self.assertEqual(qc.groups.count(), 1)
+        self.assertEqual(qc.groups.filter(name='private').exists(), True)
+
+        qa = self.post_comment(parent_post=a, user=self.u1)#w/o private arg
+        self.assertEqual(qa.groups.count(), 1)
+        self.assertEqual(qa.groups.filter(name='private').exists(), True)
+
+    def test_global_group_name_setting_changes_group_name(self):
+        askbot_settings.update('GLOBAL_GROUP_NAME', 'all-people')
+        group = get_global_group()
+        self.assertEqual(group.name, 'all-people')
+
+    def test_ask_global_group_by_id_works(self):
+        group = get_global_group()
+        q = self.post_question(user=self.u1, group_id=group.id)
+        self.assertEqual(q.groups.count(), 1)
+        self.assertEqual(q.groups.filter(name=group.name).exists(), True)
+
+    def test_making_public_question_private_works(self):
+        question = self.post_question(user=self.u1)
+        comment = self.post_comment(parent_post=question, user=self.u1)
+        group = self.create_group(group_name='private', user=self.u1)
+        self.u1.join_group(group)
+        self.edit_question(question=question, user=self.u1, is_private=True)
+        self.assertEqual(question.groups.count(), 1)
+        self.assertEqual(question.groups.filter(id=group.id).count(), 1)
+        #comment inherits sharing scope
+        self.assertEqual(comment.groups.count(), 1)
+        self.assertEqual(comment.groups.filter(id=group.id).count(), 1)
+
+    def test_making_public_answer_private_works(self):
+        question = self.post_question(user=self.u1)
+        answer = self.post_answer(question=question, user=self.u1)
+        comment = self.post_comment(parent_post=answer, user=self.u1)
+        group = self.create_group(group_name='private', user=self.u1)
+        self.u1.join_group(group)
+        self.edit_answer(user=self.u1, answer=answer, is_private=True)
+        self.assertEqual(answer.groups.count(), 1)
+        self.assertEqual(answer.groups.filter(id=group.id).count(), 1)
+        #comment inherits the sharing scope
+        self.assertEqual(comment.groups.count(), 1)
+        self.assertEqual(comment.groups.filter(id=group.id).count(), 1)
+
+    def test_public_question_private_answer_works(self):
+        question = self.post_question(self.u1)
+
+        u2 = self.create_user('u2')
+        group = self.create_group(group_name='private', user=u2)
+        u2.join_group(group)
+
+        answer = self.post_answer(question=question, user=u2, is_private=True)
+
+        threads = models.Thread.objects
+        #u2 will see question and answer
+        self.assertEqual(answer.thread.get_answer_count(user=u2), 1)
+        self.assertEqual(threads.get_visible(u2).count(), 1)
+        #u1 will see only question
+        self.assertEqual(answer.thread.get_answer_count(user=self.u1), 0)
+        self.assertEqual(threads.get_visible(self.u1).count(), 1)
+        #anonymous will see question
+        self.assertEqual(answer.thread.get_answer_count(), 0)
+        anon = AnonymousUser()
+        self.assertEqual(threads.get_visible(anon).count(), 1)
+
+    def test_thread_answer_count_for_multiple_groups(self):
+        question = self.post_question(self.u1)
+        group = self.create_group(group_name='private', user=self.u1)
+        self.u1.join_group(group)
+        answer = self.post_answer(question=question, user=self.u1)
+        answer.add_to_groups((group,))
+        self.assertEqual(answer.groups.count(), 2)
+        self.assertEqual(answer.thread.posts.get_answers(self.u1).count(), 1)
+
+    def test_thread_make_public_recursive(self):
+        private_group = self.create_group(group_name='private', user=self.u1)
+        self.u1.join_group(private_group)
+        data = self.post_question_answer_and_comments(is_private=True)
+
+        groups = [private_group]
+        self.assertObjectGroupsEqual(data['thread'], groups)
+        self.assertObjectGroupsEqual(data['question'], groups)
+        self.assertObjectGroupsEqual(data['question_comment'], groups)
+        self.assertObjectGroupsEqual(data['answer'], groups)
+        self.assertObjectGroupsEqual(data['answer_comment'], groups)
+        
+        data['thread'].make_public(recursive=True)
+
+        global_group = get_global_group()
+        groups = [global_group, private_group]
+        self.assertObjectGroupsEqual(data['thread'], groups)
+        self.assertObjectGroupsEqual(data['question'], groups)
+        self.assertObjectGroupsEqual(data['question_comment'], groups)
+        self.assertObjectGroupsEqual(data['answer'], groups)
+        self.assertObjectGroupsEqual(data['answer_comment'], groups)
+
+    def test_thread_add_to_groups_recursive(self):
+        data = self.post_question_answer_and_comments()
+
+        private_group = self.create_group(group_name='private', user=self.u1)
+        thread = data['thread']
+        thread.add_to_groups([private_group], recursive=True)
+
+        global_group = get_global_group()
+        groups = [global_group, private_group]
+        self.assertObjectGroupsEqual(thread, groups)
+        self.assertObjectGroupsEqual(data['question'], groups)
+        self.assertObjectGroupsEqual(data['question_comment'], groups)
+        self.assertObjectGroupsEqual(data['answer'], groups)
+        self.assertObjectGroupsEqual(data['answer_comment'], groups)
+
+    def test_private_thread_is_invisible_to_anonymous_user(self):
+        group = self.create_group(group_name='private', user=self.u1)
+        self.u1.join_group(group)
+        self.post_question(user=self.u1, is_private=True)
+
+        visible_threads = models.Thread.objects.get_visible(AnonymousUser())
+        self.assertEqual(visible_threads.count(), 0)

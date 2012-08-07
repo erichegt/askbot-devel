@@ -92,7 +92,6 @@ class AskbotTestCase(TestCase):
                 )
 
         setattr(self, username, user_object)
-
         return user_object
 
     def assertRaisesRegexp(self, *args, **kwargs):
@@ -118,6 +117,8 @@ class AskbotTestCase(TestCase):
                     by_email = False,
                     wiki = False,
                     is_anonymous = False,
+                    is_private = False,
+                    group_id = None,
                     follow = False,
                     timestamp = None,
                 ):
@@ -133,19 +134,74 @@ class AskbotTestCase(TestCase):
             user = self.user
 
         question = user.post_question(
-                            title = title,
-                            body_text = body_text,
-                            tags = tags,
-                            by_email = by_email,
-                            wiki = wiki,
-                            is_anonymous = is_anonymous,
-                            timestamp = timestamp
+                            title=title,
+                            body_text=body_text,
+                            tags=tags,
+                            by_email=by_email,
+                            wiki=wiki,
+                            is_anonymous=is_anonymous,
+                            is_private=is_private,
+                            group_id=group_id,
+                            timestamp=timestamp
                         )
 
         if follow:
             user.follow_question(question)
 
         return question
+
+    def edit_question(self,
+                user=None,
+                question=None,
+                title='edited title',
+                body_text='edited body text',
+                revision_comment='edited the question',
+                tags='one two three four',
+                wiki=False,
+                edit_anonymously=False,
+                is_private=False,
+                timestamp=None,
+                force=False,#if True - bypass the assert
+                by_email=False
+            ):
+        """helper editing the question,
+        a bunch of fields are pre-filled for the ease of use
+        """
+        user.edit_question(
+            question=question,
+            title=title,
+            body_text=body_text,
+            revision_comment=revision_comment,
+            tags=tags,
+            wiki=wiki,
+            edit_anonymously=edit_anonymously,
+            is_private=is_private,
+            timestamp=timestamp,
+            force=False,#if True - bypass the assert
+            by_email=False
+        )
+
+    def edit_answer(self,
+            user=None,
+            answer=None,
+            body_text='edited answer body',
+            revision_comment='editing answer',
+            wiki=False,
+            is_private=False,
+            timestamp=None,
+            force=False,#if True - bypass the assert
+            by_email=False
+        ):
+        user.edit_answer(
+            answer=answer,
+            body_text=body_text,
+            revision_comment=revision_comment,
+            wiki=wiki,
+            is_private=is_private,
+            timestamp=timestamp,
+            force=force,
+            by_email=by_email
+        )
 
     def reload_object(self, obj):
         """reloads model object from the database
@@ -160,6 +216,7 @@ class AskbotTestCase(TestCase):
                     by_email = False,
                     follow = False,
                     wiki = False,
+                    is_private = False,
                     timestamp = None
                 ):
 
@@ -171,6 +228,7 @@ class AskbotTestCase(TestCase):
                         by_email = by_email,
                         follow = follow,
                         wiki = wiki,
+                        is_private = is_private,
                         timestamp = timestamp
                     )
 
@@ -185,6 +243,12 @@ class AskbotTestCase(TestCase):
         tag = models.Tag(created_by = user, name = tag_name)
         tag.save()
         return tag
+
+    def create_group(self, group_name=None, user=None):
+        return models.Tag.group_tags.get_or_create(
+                                        group_name='private',
+                                        user=self.u1
+                                    )
 
     def post_comment(
                 self,

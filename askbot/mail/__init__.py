@@ -122,7 +122,9 @@ def send_mail(
 def mail_moderators(
             subject_line = '',
             body_text = '',
-            raise_on_failure = False):
+            raise_on_failure = False,
+            headers = None
+        ):
     """sends email to forum moderators and admins
     """
     from django.db.models import Q
@@ -139,7 +141,15 @@ def mail_moderators(
         from_email = django_settings.DEFAULT_FROM_EMAIL
 
     try:
-        mail.send_mail(subject_line, body_text, from_email, recipient_list)
+        msg = mail.EmailMessage(
+                        subject_line, 
+                        body_text, 
+                        from_email,
+                        recipient_list,
+                        headers = headers or {}
+                    )
+        msg.content_subtype = 'html'
+        msg.send()
     except smtplib.SMTPException, error:
         logging.critical(unicode(error))
         if raise_on_failure == True:
@@ -334,14 +344,21 @@ def process_emailed_question(
         form = AskByEmailForm(data)
         if form.is_valid():
             email_address = form.cleaned_data['email']
-            user = User.objects.get(
-                        email__iexact = email_address
-                    )
+            user = User.objects.get(email__iexact = email_address)
 
-            if user.can_post_by_email() == False:
+            if user.can_post_by_email() is False:
                 raise PermissionDenied(messages.insufficient_reputation(user))
 
-            if user.email_isvalid == False:
+            body_text = form.cleaned_data['body_text']
+            stripped_body_text = user.strip_email_signature(body_text)
+            signature_not_detected = (
+                stripped_body_text == body_text and user.email_signature
+            )
+
+            #ask for signature response if user's email has not been
+            #validated yet or if email signature could not be found
+            if user.email_isvalid is False or signature_not_detected:
+
                 reply_to = ReplyAddress.objects.create_new(
                     user = user,
                     reply_action = 'validate_email'
@@ -351,16 +368,11 @@ def process_emailed_question(
 
             tagnames = form.cleaned_data['tagnames']
             title = form.cleaned_data['title']
-            body_text = form.cleaned_data['body_text']
 
             #defect - here we might get "too many tags" issue
             if tags:
                 tagnames += ' ' + ' '.join(tags)
 
-            stripped_body_text = user.strip_email_signature(body_text)
-            if stripped_body_text == body_text and user.email_signature:
-                #todo: send an email asking to update the signature
-                raise ValueError('email signature changed')
 
             user.post_question(
                 title = title,

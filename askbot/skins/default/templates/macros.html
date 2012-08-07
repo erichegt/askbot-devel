@@ -23,7 +23,7 @@
     {% if inbox_section == 'flags' %}
          <a class="re_expand" href="{{ response.response_url }}">
               <!--div class="re_snippet">{{ response.response_snippet|escape }}</div-->
-              <div class="re_content">{{ response.response_content|escape }}</div>
+              <div class="re_content">{{ response.response_content }}</div>
          </a>
     {% endif %}
 </div>
@@ -313,7 +313,7 @@ poor design of the data or methods on data objects #}
     {% endfor %}
 {%- endmacro -%}
 
-{%- macro question_summary(thread, question, extra_class=None, search_state=None) -%}
+{%- macro question_summary(thread, question, extra_class=None, search_state=None, visitor = None) -%}
 {%include "widgets/question_summary.html" %}
 {%- endmacro -%}
 
@@ -478,8 +478,12 @@ for the purposes of the AJAX comment editor #}
 {%- macro edit_post(
                 post_form,
                 post_type = None,
+                post_html = None,
                 mandatory_tags = None,
                 edit_title = False,
+                use_category_selector = False,
+                tag_names = None,
+                editor_type = None,
                 user = None
             )
 -%}

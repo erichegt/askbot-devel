@@ -26,12 +26,18 @@ from askbot.const.message_keys import get_i18n_message
 from askbot.conf import settings as askbot_settings
 from askbot.models.question import Thread
 from askbot.skins import utils as skin_utils
+from askbot.mail import messages
 from askbot.models.question import QuestionView, AnonymousQuestion
+from askbot.models.question import DraftQuestion
 from askbot.models.question import FavoriteQuestion
 from askbot.models.tag import Tag, MarkedTag
+from askbot.models.tag import get_group_names, get_groups
 from askbot.models.user import EmailFeedSetting, ActivityAuditStatus, Activity
 from askbot.models.user import GroupMembership, GroupProfile
-from askbot.models.post import Post, PostRevision, PostFlagReason, AnonymousAnswer
+from askbot.models.post import Post, PostRevision
+from askbot.models.post import PostFlagReason, AnonymousAnswer
+from askbot.models.post import PostToGroup
+from askbot.models.post import DraftAnswer
 from askbot.models.reply_by_email import ReplyAddress
 from askbot.models import signals
 from askbot.models.badges import award_badges_signal, get_badge, BadgeData
@@ -55,16 +61,38 @@ def get_admins_and_moderators():
         models.Q(is_superuser=True) | models.Q(status='m')
     )
 
-def get_users_by_text_query(search_query):
+def get_admin():
+    """returns admin with the lowest user ID
+    if there are no users at all - creates one
+    with name "admin" and unusable password
+    otherwise raises User.DoesNotExist
+    """
+    try:
+        return User.objects.filter(
+                        is_superuser=True
+                    ).order_by('id')[0]
+    except IndexError:
+        if User.objects.filter(username='_admin_').count() == 0:
+            admin = User.objects.create_user('_admin_', '')
+            admin.set_unusable_password()
+            admin.set_admin_status()
+            admin.save()
+            return admin
+        else:
+            raise User.DoesNotExist
+
+def get_users_by_text_query(search_query, users_query_set = None):
     """Runs text search in user names and profile.
     For postgres, search also runs against user group names.
     """
     import askbot
+    if users_query_set is None:
+        users_query_set = User.objects.all()
     if 'postgresql_psycopg2' in askbot.get_database_engine_name():
         from askbot.search import postgresql
-        return postgresql.run_full_text_search(User.objects.all(), search_query)
+        return postgresql.run_full_text_search(users_query_set, search_query)
     else:
-        return User.objects.filter(
+        return users_query_set.filter(
             models.Q(username__icontains=search_query) |
             models.Q(about__icontains=search_query)
         )
@@ -332,6 +360,13 @@ def user_has_interesting_wildcard_tags(self):
         askbot_settings.USE_WILDCARD_TAGS \
         and self.interesting_tags != ''
     )
+
+def user_can_create_tags(self):
+    """true if user can create tags"""
+    if askbot_settings.ENABLE_TAG_MODERATION:
+        return self.is_administrator_or_moderator()
+    else:
+        return True
 
 def user_can_have_strong_url(self):
     """True if user's homepage url can be
@@ -1129,6 +1164,7 @@ def user_post_comment(
                     added_at = timestamp,
                     by_email = by_email
                 )
+
     parent_post.thread.invalidate_cached_data()
     award_badges_signal.send(
         None,
@@ -1478,6 +1514,8 @@ def user_post_question(
                     tags = None,
                     wiki = False,
                     is_anonymous = False,
+                    is_private = False,
+                    group_id = None,
                     timestamp = None,
                     by_email = False,
                     email_address = None
@@ -1507,6 +1545,8 @@ def user_post_question(
                                     added_at = timestamp,
                                     wiki = wiki,
                                     is_anonymous = is_anonymous,
+                                    is_private = is_private,
+                                    group_id = group_id,
                                     by_email = by_email,
                                     email_address = email_address
                                 )
@@ -1544,7 +1584,8 @@ def user_edit_post(self,
                 body_text = None,
                 revision_comment = None,
                 timestamp = None,
-                by_email = False
+                by_email = False,
+                is_private = False
             ):
     """a simple method that edits post body
     todo: unify it in the style of just a generic post
@@ -1571,7 +1612,8 @@ def user_edit_post(self,
             body_text = body_text,
             timestamp = timestamp,
             revision_comment = revision_comment,
-            by_email = by_email
+            by_email = by_email,
+            is_private = is_private
         )
     elif post.post_type == 'tag_wiki':
         post.apply_edit(
@@ -1596,6 +1638,7 @@ def user_edit_question(
                 tags = None,
                 wiki = False,
                 edit_anonymously = False,
+                is_private = False,
                 timestamp = None,
                 force = False,#if True - bypass the assert
                 by_email = False
@@ -1613,6 +1656,7 @@ def user_edit_question(
         tags = tags,
         wiki = wiki,
         edit_anonymously = edit_anonymously,
+        is_private = is_private,
         by_email = by_email
     )
 
@@ -1632,6 +1676,7 @@ def user_edit_answer(
                     body_text = None,
                     revision_comment = None,
                     wiki = False,
+                    is_private = False,
                     timestamp = None,
                     force = False,#if True - bypass the assert
                     by_email = False
@@ -1644,8 +1689,10 @@ def user_edit_answer(
         text = body_text,
         comment = revision_comment,
         wiki = wiki,
+        is_private = is_private,
         by_email = by_email
     )
+
     answer.thread.invalidate_cached_data()
     award_badges_signal.send(None,
         event = 'edit_answer',
@@ -1702,6 +1749,7 @@ def user_post_answer(
                     body_text = None,
                     follow = False,
                     wiki = False,
+                    is_private = False,
                     timestamp = None,
                     by_email = False
                 ):
@@ -1767,8 +1815,10 @@ def user_post_answer(
         added_at = timestamp,
         email_notify = follow,
         wiki = wiki,
+        is_private = is_private,
         by_email = by_email
     )
+
     answer_post.thread.invalidate_cached_data()
     award_badges_signal.send(None,
         event = 'post_answer',
@@ -2139,6 +2189,21 @@ def get_profile_link(self):
         % (self.get_profile_url(), escape(self.username))
 
     return mark_safe(profile_link)
+
+def user_get_groups(self, private=False):
+    """returns a query set of groups to which user belongs"""
+    #todo: maybe cache this query
+    return Tag.group_tags.get_for_user(self, private=private)
+
+def user_get_foreign_groups(self):
+    """returns a query set of groups to which user does not belong"""
+    #todo: maybe cache this query
+    user_group_ids = self.get_groups().values_list('id', flat = True)
+    return get_groups().exclude(id__in = user_group_ids)
+
+def user_can_make_group_private_posts(self):
+    """simplest implementation: user belongs to at least one group"""
+    return self.get_groups(private=True).count() > 0
 
 def user_get_groups_membership_info(self, groups):
     """returts a defaultdict with values that are
@@ -2533,6 +2598,12 @@ def user_edit_group_membership(self, user = None, group = None, action = None):
     else:
         raise ValueError('invalid action')
 
+def user_join_group(self, group):
+    self.edit_group_membership(group=group, user=self, action='add')
+
+def user_leave_group(self, group):
+    self.edit_group_membership(group=group, user=self, action='remove')
+
 def user_is_group_member(self, group = None):
     return self.group_memberships.filter(group = group).count() == 1
 
@@ -2559,6 +2630,8 @@ User.add_to_class('get_gravatar_url', user_get_gravatar_url)
 User.add_to_class('get_or_create_fake_user', user_get_or_create_fake_user)
 User.add_to_class('get_marked_tags', user_get_marked_tags)
 User.add_to_class('get_marked_tag_names', user_get_marked_tag_names)
+User.add_to_class('get_groups', user_get_groups)
+User.add_to_class('get_foreign_groups', user_get_foreign_groups)
 User.add_to_class('strip_email_signature', user_strip_email_signature)
 User.add_to_class('get_groups_membership_info', user_get_groups_membership_info)
 User.add_to_class('get_anonymous_name', user_get_anonymous_name)
@@ -2601,13 +2674,17 @@ User.add_to_class('unfollow_question', user_unfollow_question)
 User.add_to_class('is_following_question', user_is_following_question)
 User.add_to_class('mark_tags', user_mark_tags)
 User.add_to_class('update_response_counts', user_update_response_counts)
+User.add_to_class('can_create_tags', user_can_create_tags)
 User.add_to_class('can_have_strong_url', user_can_have_strong_url)
 User.add_to_class('can_post_by_email', user_can_post_by_email)
 User.add_to_class('can_post_comment', user_can_post_comment)
+User.add_to_class('can_make_group_private_posts', user_can_make_group_private_posts)
 User.add_to_class('is_administrator', user_is_administrator)
 User.add_to_class('is_administrator_or_moderator', user_is_administrator_or_moderator)
 User.add_to_class('set_admin_status', user_set_admin_status)
 User.add_to_class('edit_group_membership', user_edit_group_membership)
+User.add_to_class('join_group', user_join_group)
+User.add_to_class('leave_group', user_leave_group)
 User.add_to_class('is_group_member', user_is_group_member)
 User.add_to_class('remove_admin_status', user_remove_admin_status)
 User.add_to_class('is_moderator', user_is_moderator)
@@ -3235,6 +3312,19 @@ def send_respondable_email_validation_message(
     )
 
 
+def add_user_to_global_group(sender, instance, created, **kwargs):
+    """auto-joins user to the global group
+    ``instance`` is an instance of ``User`` class
+    """
+    if created:
+        from askbot.models.tag import get_global_group
+        instance.edit_group_membership(
+            group=get_global_group(),
+            user=instance,
+            action='add'
+        )
+
+
 def greet_new_user(user, **kwargs):
     """sends welcome email to the newly created user
 
@@ -3326,6 +3416,7 @@ def make_admin_if_first_user(instance, **kwargs):
 django_signals.pre_save.connect(make_admin_if_first_user, sender=User)
 django_signals.pre_save.connect(calculate_gravatar_hash, sender=User)
 django_signals.post_save.connect(add_missing_subscriptions, sender=User)
+django_signals.post_save.connect(add_user_to_global_group, sender=User)
 django_signals.post_save.connect(record_award_event, sender=Award)
 django_signals.post_save.connect(notify_award_message, sender=Award)
 django_signals.post_save.connect(record_answer_accepted, sender=Post)
@@ -3370,11 +3461,14 @@ __all__ = [
         'QuestionView',
         'FavoriteQuestion',
         'AnonymousQuestion',
+        'DraftQuestion',
 
         'AnonymousAnswer',
+        'DraftAnswer',
 
         'Post',
         'PostRevision',
+        'PostToGroup',
 
         'Tag',
         'Vote',
@@ -3396,5 +3490,7 @@ __all__ = [
         'ReplyAddress',
 
         'get_model',
-        'get_admins_and_moderators'
+        'get_admins_and_moderators',
+        'get_group_names',
+        'get_grous'
 ]

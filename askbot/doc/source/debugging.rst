@@ -7,6 +7,41 @@ Debugging Askbot (and other Django applications)
 This document describes techniques that can be used to debug Askbot and other Django projects
 If you discover new debugging techniques, please add here.
 
+.. _runserver:
+Use development server for debugging
+------------------------------------
+
+Django comes with a handy development webserver that can be started with the command::
+
+    python manage.py runserver
+
+With the combination of runserver,
+the :ref:`python debugger <pdb>`,
+and even inserted "print" statements directly in the code
+it is possible to "look into" the program as it runs.
+
+Inspect the log file
+--------------------
+
+By default askbot will log errors into file `log/askbot.log` within the
+project directory. See what's inside that file.
+
+Note that in the production setups there are many log files - for the
+production webserver, database, etc.
+
+.. _pdb:
+Use Python debugger
+-------------------
+
+In the problematic portion of the code, insert lines::
+
+    import pdb
+    pdb.set_trace()
+
+Then fire up the :ref:`runserver <runserver>` and step through the program.
+When you see prompt starting with `(pdb)`
+type `help` and see what options there are.
+
 Use logging in code
 ---------------------
 

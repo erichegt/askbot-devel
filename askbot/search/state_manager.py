@@ -117,6 +117,10 @@ class SearchState(object):
         else:
             self.sort = sort
 
+        #patch for empty stripped query, relevance sorting is useless then
+        if self.stripped_query in (None, '') and sort == 'relevance-desc':
+            self.sort = const.DEFAULT_POST_SORT_METHOD
+
         self.tags = []
         if tags:
             for t in tags.split(const.TAG_SEP):
