@@ -888,6 +888,24 @@ ASK_BY_EMAIL_SUBJECT_HELP = _(
     '[tag1, tag2, tag3,...] question title'
 )
 
+class AskWidgetForm(forms.Form, FormWithHideableFields):
+    '''Simple form with just the title to ask a question'''
+
+    title = TitleField()
+    ask_anonymously = forms.BooleanField(
+        label=_('ask anonymously'),
+        help_text=_(
+            'Check if you do not want to reveal your name '
+            'when asking this question'
+        ),
+        required=False,
+    )
+
+    def __init__(self, *args, **kwargs):
+        super(AskWidgetForm, self).__init__(*args, **kwargs)
+        #hide ask_anonymously field
+        if askbot_settings.ALLOW_ASK_ANONYMOUSLY is False:
+            self.hide_field('ask_anonymously')
 
 class AskByEmailForm(forms.Form):
     """:class:`~askbot.forms.AskByEmailForm`
