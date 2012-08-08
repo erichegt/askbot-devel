@@ -1,10 +1,11 @@
 from datetime import datetime
 
-from django.views.decorators import csrf
-from django.shortcuts import redirect
-from django.utils import simplejson
-from django.contrib.auth.models import User
 from django.core import exceptions
+from django.utils import simplejson
+from django.shortcuts import redirect
+from django.views.decorators import csrf
+from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 
 from django.contrib.auth.decorators import login_required
 
@@ -41,9 +42,8 @@ def ask_widget(request):
                 return redirect('ask_by_widget_complete')
             else:
                 request.session['widget_question'] = data_dict
-                return redirect('widget_signin')
-                #return redirect('user_signin',
-                #        **{'template_name': 'authopenid/widget_signin.html'})
+                next_url = '%s?next=%s' % (reverse('widget_signin'), reverse('ask_by_widget'))
+                return redirect(next_url)
     else:
         if 'widget_question' in request.session and \
                 request.GET.get('action', 'post-after-login'):
@@ -55,9 +55,8 @@ def ask_widget(request):
                 return redirect('ask_by_widget_complete')
             else:
                 #FIXME: this redirect is temporal need to create the correct view
-                return redirect('widget_signin')
-                #return redirect('user_signin',
-                #        **{'template_name': 'authopenid/widget_signin.html'})
+                next_url = '%s?next=%s' % (reverse('widget_signin'), reverse('ask_by_widget'))
+                return redirect(next_url)
 
         form = forms.AskWidgetForm()
     data = {'form': form}
