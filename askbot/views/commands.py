@@ -1126,12 +1126,16 @@ def get_users_info(request):
     """retuns list of user names and email addresses
     of "fake" users - so that admins can post on their
     behalf"""
-    user_info_list = models.User.objects.filter(
-                        is_fake=True
-                    ).values_list(
-                        'username',
-                        'email'
-                    )
+    #user_info_list = models.User.objects.filter(
+    #                    is_fake=True
+    #                ).values_list(
+    #                    'username',
+    #                    'email'
+    #                )
+    user_info_list = models.User.objects.values_list(
+                                                'username',
+                                                'email'
+                                            )
 
     result_list = list()
     for user_info in user_info_list:
@@ -1149,7 +1153,7 @@ def share_question_with_group(request):
         if form.is_valid():
 
             thread_id = form.cleaned_data['thread_id']
-            group_name = form.cleaned_data['group_name']
+            group_name = form.cleaned_data['recipient_name']
 
             thread = models.Thread.objects.get(id=thread_id)
             if group_name == askbot_settings.GLOBAL_GROUP_NAME:
@@ -1157,6 +1161,26 @@ def share_question_with_group(request):
             else:
                 group = models.Tag.group_tags.get(name=group_name)
                 thread.add_to_groups((group,), recursive=True)
+
+            return HttpResponseRedirect(thread.get_absolute_url())
+    except Exception:
+        error_message = _('Sorry, looks like sharing request was invalid')
+        request.user.message_set.create(message=error_message)
+        return HttpResponseRedirect(thread.get_absolute_url())
+
+@csrf.csrf_protect
+def share_question_with_user(request):
+    form = forms.ShareQuestionForm(request.POST)
+    try:
+        if form.is_valid():
+
+            thread_id = form.cleaned_data['thread_id']
+            username = form.cleaned_data['recipient_name']
+
+            thread = models.Thread.objects.get(id=thread_id)
+            user = models.User.objects.get(username=username)
+            group = user.get_personal_group()
+            thread.add_to_groups([group], recursive=True)
 
             return HttpResponseRedirect(thread.get_absolute_url())
     except Exception:

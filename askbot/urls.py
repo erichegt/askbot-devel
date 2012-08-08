@@ -91,7 +91,12 @@ urlpatterns = patterns('',
     url(
         r'^share-question-with-group/',
         views.commands.share_question_with_group,
-        name = 'share_question_with_group'
+        name='share_question_with_group'
+    ),
+    url(
+        r'^share-question-with-user/',
+        views.commands.share_question_with_user,
+        name='share_question_with_user'
     ),
     url(
         r'^get-users-info/',

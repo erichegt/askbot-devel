@@ -52,16 +52,31 @@
 <div class="box sharing-widget">
     {% if thread.is_private() %}
         <h2>{% trans %}Share{% endtrans %}</h2>
-        {% if thread.groups.count() %}
-            <label for="group_name">{% trans %}Shared with groups{% endtrans %}</label>
-        {% else %}
-            <label for="group_name">{% trans %}Share with group{% endtrans %}</label>
-        {% endif %}
+        <label for="share_user_name">{% trans %}Share with users{% endtrans %}</label>
+        <p>{% trans %}Yourself{% endtrans %}</p>
         {% for group in thread.groups.all() %}
-            <p>{{ macros.user_group(group) }}</p>
+            {% if group.name.startswith('_internal_') %}
+                <p>{{ group.created_by.get_profile_link() }}<p>
+            {% endif %}
+        {% endfor %}
+        <form action="{% url share_question_with_user %}" method="post">{% csrf_token %}
+            <input id="share_user_name" type="text" class="groups-input" name="recipient_name" />
+            <input type="hidden" name="thread_id" value="{{ thread.id }}"/>
+            <input type="submit" class="add-groups" value="{% trans %}add{% endtrans %}"/>
+        </form>
+        {#% if thread.groups.count() %}
+            <label for="group_name">{% trans %}Shared with groups:{% endtrans %}</label>
+        {% else %}
+            <label for="group_name">{% trans %}Share with a group{% endtrans %}</label>
+        {% endif %#}
+        <label for="share_group_name">{% trans %}Share with groups{% endtrans %}</label>
+        {% for group in thread.groups.all() %}
+            {% if not group.name.startswith('_internal_') %}{# todo: fix this hack #}
+                <p>{{ macros.user_group(group) }}</p>
+            {% endif %}
         {% endfor %}
         <form action="{% url share_question_with_group %}" method="post">{% csrf_token %}
-            <input type="text" class="groups-input" name="group_name" />
+            <input id="share_group_name" type="text" class="groups-input" name="recipient_name" />
             <input type="hidden" name="thread_id" value="{{ thread.id }}"/>
             <input type="submit" class="add-groups" value="{% trans %}add{% endtrans %}"/>
         </form>
