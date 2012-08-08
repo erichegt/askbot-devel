@@ -34,6 +34,7 @@ from askbot.models.tag import Tag, MarkedTag
 from askbot.models.tag import get_global_group
 from askbot.models.tag import get_group_names
 from askbot.models.tag import get_groups
+from askbot.models.tag import format_personal_group_name
 from askbot.models.user import EmailFeedSetting, ActivityAuditStatus, Activity
 from askbot.models.user import GroupMembership, GroupProfile
 from askbot.models.post import Post, PostRevision
@@ -1166,6 +1167,7 @@ def user_post_comment(
                     added_at = timestamp,
                     by_email = by_email
                 )
+    comment.add_to_groups([self.get_personal_group()])
 
     parent_post.thread.invalidate_cached_data()
     award_badges_signal.send(
@@ -1820,6 +1822,7 @@ def user_post_answer(
         is_private = is_private,
         by_email = by_email
     )
+    answer_post.add_to_groups([self.get_personal_group()])
 
     answer_post.thread.invalidate_cached_data()
     award_badges_signal.send(None,
@@ -2196,6 +2199,10 @@ def user_get_groups(self, private=False):
     """returns a query set of groups to which user belongs"""
     #todo: maybe cache this query
     return Tag.group_tags.get_for_user(self, private=private)
+
+def user_get_personal_group(self):
+    group_name = format_personal_group_name(self)
+    return Tag.group_tags.get(name=group_name)
 
 def user_get_foreign_groups(self):
     """returns a query set of groups to which user does not belong"""
@@ -2634,6 +2641,7 @@ User.add_to_class('get_marked_tags', user_get_marked_tags)
 User.add_to_class('get_marked_tag_names', user_get_marked_tag_names)
 User.add_to_class('get_groups', user_get_groups)
 User.add_to_class('get_foreign_groups', user_get_foreign_groups)
+User.add_to_class('get_personal_group', user_get_personal_group)
 User.add_to_class('strip_email_signature', user_strip_email_signature)
 User.add_to_class('get_groups_membership_info', user_get_groups_membership_info)
 User.add_to_class('get_anonymous_name', user_get_anonymous_name)
@@ -3327,6 +3335,24 @@ def add_user_to_global_group(sender, instance, created, **kwargs):
         )
 
 
+def add_user_to_personal_group(sender, instance, created, **kwargs):
+    """auto-joins user to his/her personal group
+    ``instance`` is an instance of ``User`` class
+    """
+    if created:
+        #todo: groups will indeed need to be separated from tags
+        #so that we can use less complicated naming scheme
+        #in theore here we may have two users that will have
+        #identical group names!!!
+        group_name = format_personal_group_name(instance)
+        group = Tag.group_tags.get_or_create(
+                    group_name=group_name, user=instance
+                )
+        instance.edit_group_membership(
+                    group=group, user=instance, action='add'
+                )
+
+
 def greet_new_user(user, **kwargs):
     """sends welcome email to the newly created user
 
@@ -3419,6 +3445,7 @@ django_signals.pre_save.connect(make_admin_if_first_user, sender=User)
 django_signals.pre_save.connect(calculate_gravatar_hash, sender=User)
 django_signals.post_save.connect(add_missing_subscriptions, sender=User)
 django_signals.post_save.connect(add_user_to_global_group, sender=User)
+django_signals.post_save.connect(add_user_to_personal_group, sender=User)
 django_signals.post_save.connect(record_award_event, sender=Award)
 django_signals.post_save.connect(notify_award_message, sender=Award)
 django_signals.post_save.connect(record_answer_accepted, sender=Post)
@@ -3494,5 +3521,5 @@ __all__ = [
         'get_model',
         'get_admins_and_moderators',
         'get_group_names',
-        'get_grous'
+        'get_groups'
 ]

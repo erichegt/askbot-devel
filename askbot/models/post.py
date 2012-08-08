@@ -502,7 +502,6 @@ class Post(models.Model):
         #because generic relation needs primary key of the related object
         super(self.__class__, self).save(**kwargs)
 
-    
         if self.is_comment():
             #copy groups from the parent post into the comment
             groups = self.parent.groups.all()

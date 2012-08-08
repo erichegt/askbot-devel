@@ -3847,7 +3847,7 @@ $(document).ready(function() {
             url: askbot['urls']['getGroupsList'],
             preloadData: true,
             minChars: 1,
-            useCache: true,
+            useCache: false,
             matchInside: true,
             maxCacheLength: 100,
             delay: 10

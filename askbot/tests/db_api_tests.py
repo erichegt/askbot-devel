@@ -454,19 +454,19 @@ class TagAndGroupTests(AskbotTestCase):
         self.u1.join_group(group)
 
         q = self.post_question(user=self.u1, is_private=True)
-        self.assertEqual(q.groups.count(), 1)
+        self.assertEqual(q.groups.count(), 2)
         self.assertEqual(q.groups.filter(name='private').exists(), True)
 
         a = self.post_answer(question=q, user=self.u1, is_private=True)
-        self.assertEqual(a.groups.count(), 1)
+        self.assertEqual(a.groups.count(), 2)
         self.assertEqual(a.groups.filter(name='private').exists(), True)
 
         qc = self.post_comment(parent_post=q, user=self.u1)#w/o private arg
-        self.assertEqual(qc.groups.count(), 1)
+        self.assertEqual(qc.groups.count(), 2)
         self.assertEqual(qc.groups.filter(name='private').exists(), True)
 
         qa = self.post_comment(parent_post=a, user=self.u1)#w/o private arg
-        self.assertEqual(qa.groups.count(), 1)
+        self.assertEqual(qa.groups.count(), 2)
         self.assertEqual(qa.groups.filter(name='private').exists(), True)
 
     def test_global_group_name_setting_changes_group_name(self):
@@ -477,7 +477,7 @@ class TagAndGroupTests(AskbotTestCase):
     def test_ask_global_group_by_id_works(self):
         group = get_global_group()
         q = self.post_question(user=self.u1, group_id=group.id)
-        self.assertEqual(q.groups.count(), 1)
+        self.assertEqual(q.groups.count(), 2)
         self.assertEqual(q.groups.filter(name=group.name).exists(), True)
 
     def test_making_public_question_private_works(self):
@@ -486,10 +486,10 @@ class TagAndGroupTests(AskbotTestCase):
         group = self.create_group(group_name='private', user=self.u1)
         self.u1.join_group(group)
         self.edit_question(question=question, user=self.u1, is_private=True)
-        self.assertEqual(question.groups.count(), 1)
+        self.assertEqual(question.groups.count(), 2)
         self.assertEqual(question.groups.filter(id=group.id).count(), 1)
         #comment inherits sharing scope
-        self.assertEqual(comment.groups.count(), 1)
+        self.assertEqual(comment.groups.count(), 2)
         self.assertEqual(comment.groups.filter(id=group.id).count(), 1)
 
     def test_making_public_answer_private_works(self):
@@ -499,10 +499,10 @@ class TagAndGroupTests(AskbotTestCase):
         group = self.create_group(group_name='private', user=self.u1)
         self.u1.join_group(group)
         self.edit_answer(user=self.u1, answer=answer, is_private=True)
-        self.assertEqual(answer.groups.count(), 1)
+        self.assertEqual(answer.groups.count(), 2)
         self.assertEqual(answer.groups.filter(id=group.id).count(), 1)
         #comment inherits the sharing scope
-        self.assertEqual(comment.groups.count(), 1)
+        self.assertEqual(comment.groups.count(), 2)
         self.assertEqual(comment.groups.filter(id=group.id).count(), 1)
 
     def test_public_question_private_answer_works(self):
@@ -532,7 +532,7 @@ class TagAndGroupTests(AskbotTestCase):
         self.u1.join_group(group)
         answer = self.post_answer(question=question, user=self.u1)
         answer.add_to_groups((group,))
-        self.assertEqual(answer.groups.count(), 2)
+        self.assertEqual(answer.groups.count(), 3)
         self.assertEqual(answer.thread.posts.get_answers(self.u1).count(), 1)
 
     def test_thread_make_public_recursive(self):
@@ -540,7 +540,7 @@ class TagAndGroupTests(AskbotTestCase):
         self.u1.join_group(private_group)
         data = self.post_question_answer_and_comments(is_private=True)
 
-        groups = [private_group]
+        groups = [private_group, self.u1.get_personal_group()]
         self.assertObjectGroupsEqual(data['thread'], groups)
         self.assertObjectGroupsEqual(data['question'], groups)
         self.assertObjectGroupsEqual(data['question_comment'], groups)
@@ -550,7 +550,7 @@ class TagAndGroupTests(AskbotTestCase):
         data['thread'].make_public(recursive=True)
 
         global_group = get_global_group()
-        groups = [global_group, private_group]
+        groups = [global_group, private_group, self.u1.get_personal_group()]
         self.assertObjectGroupsEqual(data['thread'], groups)
         self.assertObjectGroupsEqual(data['question'], groups)
         self.assertObjectGroupsEqual(data['question_comment'], groups)
@@ -565,7 +565,7 @@ class TagAndGroupTests(AskbotTestCase):
         thread.add_to_groups([private_group], recursive=True)
 
         global_group = get_global_group()
-        groups = [global_group, private_group]
+        groups = [global_group, private_group, self.u1.get_personal_group()]
         self.assertObjectGroupsEqual(thread, groups)
         self.assertObjectGroupsEqual(data['question'], groups)
         self.assertObjectGroupsEqual(data['question_comment'], groups)
