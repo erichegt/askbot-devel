@@ -41,10 +41,11 @@ def ask_widget(request):
                 return redirect('ask_by_widget_complete')
             else:
                 request.session['widget_question'] = data_dict
-                #return redirect('widgets_login')
-                return redirect('user_signin')
+                return redirect('widget_signin')
+                #return redirect('user_signin',
+                #        **{'template_name': 'authopenid/widget_signin.html'})
     else:
-        if 'widget_question' in request.session or \
+        if 'widget_question' in request.session and \
                 request.GET.get('action', 'post-after-login'):
             if request.user.is_authenticated():
                 data_dict = request.session['widget_question']
@@ -54,8 +55,9 @@ def ask_widget(request):
                 return redirect('ask_by_widget_complete')
             else:
                 #FIXME: this redirect is temporal need to create the correct view
-                #return redirect('widgets_login')
-                return redirect('user_signin')
+                return redirect('widget_signin')
+                #return redirect('user_signin',
+                #        **{'template_name': 'authopenid/widget_signin.html'})
 
         form = forms.AskWidgetForm()
     data = {'form': form}

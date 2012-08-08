@@ -50,3 +50,12 @@ class WidgetViewsTests(AskbotTestCase):
         self.assertFalse('widget_question' in self.client.session)
         self.assertEquals(response.status_code, 302)
         #verify posting question
+
+class WidgetLoginViewTest(AskbotTestCase):
+
+    def test_correct_template_loading(self):
+        client = Client()
+        response = client.get(reverse('widget_signin'))
+        template_name = 'authopenid/widget_signin.html'
+        templates = [template.name for template in response.templates]
+        self.assertTrue(template_name in templates)
