@@ -30,12 +30,7 @@
 <script type="text/javascript">
     // define reputation needs for comments
     var repNeededForComments = 50;
-    $().ready(function(){
-        {% if request.user.is_authenticated() %}
-          if ($('#question-subscribe-updates')[0].checked){
-             $('#question-subscribe-sidebar').attr({'checked': 'checked'});
-          }
-        {%endif%}
+    $(document).ready(function(){
         $("#nav_questions").attr('className',"on");
         var answer_sort_tab = "{{ tab_id }}";
         $("#" + answer_sort_tab).attr('className',"on");
