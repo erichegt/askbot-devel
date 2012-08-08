@@ -31,9 +31,9 @@ APP_PATH = os.path.dirname(__file__)
 urlpatterns = patterns('',
     url(r'^$', views.readers.index, name='index'),
     url(
-        r'^sitemap.xml$', 
-        'django.contrib.sitemaps.views.sitemap', 
-        {'sitemaps': sitemaps}, 
+        r'^sitemap.xml$',
+        'django.contrib.sitemaps.views.sitemap',
+        {'sitemaps': sitemaps},
         name='sitemap'
     ),
     #no translation for this url!!
@@ -43,13 +43,13 @@ urlpatterns = patterns('',
     url(r'^%s$' % _('privacy/'), views.meta.privacy, name='privacy'),
     url(r'^%s$' % _('help/'), views.meta.help, name='help'),
     url(
-        r'^%s(?P<id>\d+)/%s$' % (_('answers/'), _('edit/')), 
-        views.writers.edit_answer, 
+        r'^%s(?P<id>\d+)/%s$' % (_('answers/'), _('edit/')),
+        views.writers.edit_answer,
         name='edit_answer'
     ),
     url(
-        r'^%s(?P<id>\d+)/%s$' % (_('answers/'), _('revisions/')), 
-        views.readers.revisions, 
+        r'^%s(?P<id>\d+)/%s$' % (_('answers/'), _('revisions/')),
+        views.readers.revisions,
         kwargs = {'post_type': 'answer'},
         name='answer_revisions'
     ),
@@ -67,12 +67,12 @@ urlpatterns = patterns('',
             r'(%s)?' % r'/page:(?P<page>\d+)' +
         r'/$'),
 
-        views.readers.questions, 
+        views.readers.questions,
         name='questions'
     ),
 
     # END main page urls
-    
+
     url(
         r'^api/get_questions/',
         views.commands.api_get_questions,
@@ -99,49 +99,49 @@ urlpatterns = patterns('',
         name='get_users_info'
     ),
     url(
-        r'^%s%s$' % (_('questions/'), _('ask/')), 
-        views.writers.ask, 
+        r'^%s%s$' % (_('questions/'), _('ask/')),
+        views.writers.ask,
         name='ask'
     ),
     url(
-        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('edit/')), 
-        views.writers.edit_question, 
+        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('edit/')),
+        views.writers.edit_question,
         name='edit_question'
     ),
     url(#this url is both regular and ajax
-        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('retag/')), 
-        views.writers.retag_question, 
+        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('retag/')),
+        views.writers.retag_question,
         name='retag_question'
     ),
     url(
-        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('close/')), 
-        views.commands.close, 
+        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('close/')),
+        views.commands.close,
         name='close'
     ),
     url(
-        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('reopen/')), 
-        views.commands.reopen, 
+        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('reopen/')),
+        views.commands.reopen,
         name='reopen'
     ),
     url(
-        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('answer/')), 
-        views.writers.answer, 
+        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('answer/')),
+        views.writers.answer,
         name='answer'
     ),
     url(#ajax only
-        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('vote/')), 
-        views.commands.vote, 
+        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('vote/')),
+        views.commands.vote,
         name='vote'
     ),
     url(
-        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('revisions/')), 
-        views.readers.revisions, 
+        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('revisions/')),
+        views.readers.revisions,
         kwargs = {'post_type': 'question'},
         name='question_revisions'
     ),
     url(
         r'^%s%s$' % (_('widgets/'), _('questions/')),
-        views.readers.widget_questions, 
+        views.readers.widget_questions,
         name='widget_questions'
     ),
     url(#ajax only
@@ -156,7 +156,7 @@ urlpatterns = patterns('',
     ),
     url(#ajax only
         r'^post_comments/$',
-        views.writers.post_comments, 
+        views.writers.post_comments,
         name='post_comments'
     ),
     url(#ajax only
@@ -166,17 +166,17 @@ urlpatterns = patterns('',
     ),
     url(#ajax only
         r'^comment/delete/$',
-        views.writers.delete_comment, 
+        views.writers.delete_comment,
         name='delete_comment'
     ),
     url(#ajax only
         r'^comment/get_text/$',
-        views.readers.get_comment, 
+        views.readers.get_comment,
         name='get_comment'
     ),
     url(
-        r'^%s$' % _('tags/'), 
-        views.readers.tags, 
+        r'^%s$' % _('tags/'),
+        views.readers.tags,
         name='tags'
     ),
     url(
@@ -291,12 +291,12 @@ urlpatterns = patterns('',
     ),
     url(
         r'^%s$' % _('users/'),
-        views.users.show_users, 
+        views.users.show_users,
         name='users'
     ),
     url(
         r'^%s%s(?P<group_id>\d+)/(?P<group_slug>.*)/$' % (_('users/'), _('by-group/')),
-        views.users.show_users, 
+        views.users.show_users,
         kwargs = {'by_group': True},
         name = 'users_by_group'
     ),
@@ -375,8 +375,19 @@ urlpatterns = patterns('',
         views.commands.join_or_leave_group,
         name = 'join_or_leave_group'
     ),
+    #widgets url!
     url(
-        r'^feeds/(?P<url>.*)/$', 
+        r'^widgets/ask/$',
+        views.widgets.ask_widget,
+        name = 'ask_by_widget'
+    ),
+    url(
+        r'^widgets/ask/complete/$',
+        views.widgets.ask_widget_complete,
+        name = 'ask_by_widget_complete'
+    ),
+    url(
+        r'^feeds/(?P<url>.*)/$',
         'django.contrib.syndication.views.feed',
         {'feed_dict': feeds},
         name='feeds'
@@ -386,7 +397,7 @@ urlpatterns = patterns('',
     url(r'^%s$' % _('feedback/'), views.meta.feedback, name='feedback'),
     #url(r'^feeds/rss/$', RssLastestQuestionsFeed, name="latest_questions_feed"),
     url(
-        r'^doc/(?P<path>.*)$', 
+        r'^doc/(?P<path>.*)$',
         'django.views.static.serve',
         {'document_root': os.path.join(APP_PATH,'doc','build','html').replace('\\','/')},
         name='askbot_docs',
@@ -421,14 +432,14 @@ urlpatterns = patterns('',
 #therefore the stackexchange urls feature won't work
 if getattr(settings, 'ASKBOT_USE_STACKEXCHANGE_URLS', False):
     urlpatterns += (url(
-        r'^%s(?P<id>\d+)/' % _('questions/'), 
-        views.readers.question, 
+        r'^%s(?P<id>\d+)/' % _('questions/'),
+        views.readers.question,
         name='question'
     ),)
 else:
     urlpatterns += (url(
-        r'^%s(?P<id>\d+)/' % _('question/'), 
-        views.readers.question, 
+        r'^%s(?P<id>\d+)/' % _('question/'),
+        views.readers.question,
         name='question'
     ),)
 
