@@ -1,4 +1,4 @@
-{% from "macros.html" import timeago %}
+{% import "macros.html" as macros %}
 {% if settings.SIDEBAR_QUESTION_HEADER %}
 <div class="box">
     {{ settings.SIDEBAR_QUESTION_HEADER }}
@@ -46,14 +46,18 @@
 <div class="box sharing-widget">
     {% if thread.is_private() %}
         <h2>{% trans %}Share{% endtrans %}</h2>
-        <p>{% trans %}Share with groups{% endtrans %}</p>
+        {% if thread.groups.count() %}
+            <label for="group_name">{% trans %}Shared with groups{% endtrans %}</label>
+        {% else %}
+            <label for="group_name">{% trans %}Share with group{% endtrans %}</label>
+        {% endif %}
         {% for group in thread.groups.all() %}
-            <p>{{ group.name }}</p>
+            <p>{{ macros.user_group(group) }}</p>
         {% endfor %}
         <form action="{% url share_question_with_group %}" method="post">{% csrf_token %}
-            <input type="text" name="group_name" />
+            <input type="text" class="groups-input" name="group_name" />
             <input type="hidden" name="thread_id" value="{{ thread.id }}"/>
-            <input type="submit" value="{% trans %}add{% endtrans %}"/>
+            <input type="submit" class="add-groups" value="{% trans %}add{% endtrans %}"/>
         </form>
         <p style="text-align: center">{% trans %}or{% endtrans %}</p>
         <form action="{% url share_question_with_group %}" method="post">{% csrf_token %}
@@ -65,6 +69,7 @@
             <input type="hidden" name="thread_id" value="{{ thread.id }}"/>
             <input 
                 type="submit"
+                class="add-groups add-everyone-group"
                 value="{% trans %}share with everyone{% endtrans %}"
             />
         </form>
@@ -80,7 +85,7 @@
     <div class="clearfix"></div>
     <h2>{% trans %}Stats{% endtrans %}</h2>
     <p>
-        {% trans %}Asked{% endtrans %}: <strong>{{ timeago(question.added_at) }}</strong>
+        {% trans %}Asked{% endtrans %}: <strong>{{ macros.timeago(question.added_at) }}</strong>
     </p>
     <p> 
         {% trans %}Seen{% endtrans %}: <strong>{{ thread.view_count|intcomma }} {% trans %}times{% endtrans %}</strong>

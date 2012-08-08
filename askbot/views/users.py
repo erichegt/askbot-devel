@@ -37,6 +37,7 @@ from askbot.conf import settings as askbot_settings
 from askbot import models
 from askbot import exceptions
 from askbot.models.badges import award_badges_signal
+from askbot.models.tag import get_global_group
 from askbot.skins.loaders import render_into_skin
 from askbot.templatetags import extra_tags
 from askbot.search.state_manager import SearchState
@@ -56,7 +57,7 @@ def owner_or_moderator_required(f):
         return f(request, profile_owner, context)
     return wrapped_func
 
-def show_users(request, by_group = False, group_id = None, group_slug = None):
+def show_users(request, by_group=False, group_id=None, group_slug=None):
     """Users view, including listing of users by group"""
     users = models.User.objects.exclude(status = 'b')
     group = None
@@ -442,6 +443,8 @@ def user_stats(request, user, context):
     badges.sort(key=operator.itemgetter(1), reverse=True)
 
     user_groups = models.Tag.group_tags.get_for_user(user = user)
+    global_group = get_global_group()
+    user_groups = user_groups.exclude(name=global_group.name)
 
     if request.user == user:
         groups_membership_info = user.get_groups_membership_info(user_groups)
