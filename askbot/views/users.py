@@ -443,6 +443,7 @@ def user_stats(request, user, context):
     badges.sort(key=operator.itemgetter(1), reverse=True)
 
     user_groups = models.Tag.group_tags.get_for_user(user = user)
+    user_groups = user_groups.exclude(name__startswith='_internal_')
     global_group = get_global_group()
     user_groups = user_groups.exclude(name=global_group.name)
 
@@ -995,6 +996,8 @@ def groups(request, id = None, slug = None):
         groups = models.Tag.group_tags.get_for_user(
                                         user = request.user
                                     )
+
+    groups = groups.exclude(name__startswith='_internal_')
 
     groups = groups.select_related('group_profile')
 

@@ -40,7 +40,7 @@ class ThreadQuerySet(models.query.QuerySet):
             groups = user.get_groups()
         else:
             groups = [get_global_group()]
-        return self.filter(groups__in=groups)
+        return self.filter(groups__in=groups).distinct()
 
 class ThreadManager(BaseQuerySetManager):
 
@@ -143,6 +143,10 @@ class ThreadManager(BaseQuerySetManager):
             by_email=by_email,
             email_address=email_address
         )
+
+        author_group = author.get_personal_group()
+        thread.add_to_groups([author_group])
+        question.add_to_groups([author_group])
 
         if is_private or group_id:#add groups to thread and question
             thread.make_private(author, group_id=group_id)

@@ -620,6 +620,8 @@ def get_groups_list(request):
                                     deleted = False
                                 ).exclude(
                                     name=global_group.name
+                                ).exclude(
+                                    name__startswith='_internal_'
                                 ).values_list(
                                     'name', flat = True
                                 )

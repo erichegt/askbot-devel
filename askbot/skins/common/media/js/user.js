@@ -934,7 +934,7 @@ GroupAdderWidget.prototype.decorate = function(element){
         url: askbot['urls']['getGroupsList'],
         preloadData: true,
         minChars: 1,
-        useCache: true,
+        useCache: false,
         matchInside: false,
         maxCacheLength: 100,
         delay: 10

@@ -60,6 +60,11 @@ def filter_accepted_tags(tags):
 def filter_suggested_tags(tags):
     return filter_tags_by_status(tags, status = Tag.STATUS_SUGGESTED)
 
+def format_personal_group_name(user):
+    #todo: after migration of groups away from tags,
+    #this function will be moved somewhere else
+    return '_internal_%s_%d' % (user.username, user.id)
+
 def is_preapproved_tag_name(tag_name):
     """true if tag name is in the category tree
     or any other container of preapproved tags"""

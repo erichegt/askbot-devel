@@ -16,3 +16,4 @@ from askbot.tests.post_model_tests import *
 from askbot.tests.thread_model_tests import *
 from askbot.tests.reply_by_email_tests import *
 from askbot.tests.category_tree_tests import CategoryTreeTests
+from askbot.tests.user_model_tests import UserModelTests
