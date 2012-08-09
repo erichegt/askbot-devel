@@ -206,11 +206,11 @@ def record_post_update(
                                     exclude_list = [updated_by, ]
                                 )
     #todo: fix this temporary spam protection plug
-    if created:
-        if not (updated_by.is_administrator() or updated_by.is_moderator()):
-            if updated_by.reputation < 15:
-                notification_subscribers = \
-                    [u for u in notification_subscribers if u.is_administrator()]
+    #if created:
+    #    if not (updated_by.is_administrator() or updated_by.is_moderator()):
+    #        if updated_by.reputation < 15:
+    #            notification_subscribers = \
+    #                [u for u in notification_subscribers if u.is_administrator()]
     send_instant_notifications_about_activity_in_post(
                             update_activity = update_activity,
                             post = post,
