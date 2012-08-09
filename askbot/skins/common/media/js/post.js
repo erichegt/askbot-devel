@@ -3841,7 +3841,7 @@ $(document).ready(function() {
         tip.decorate(proxyUserEmailInput);
     }
     //if groups are enabled - activate share functions
-    var groupsInput = $('.share-with-group');
+    var groupsInput = $('#share_group_name');
     if (groupsInput.length === 1) {
         var groupsAc = new AutoCompleter({
             url: askbot['urls']['getGroupsList'],
@@ -3852,7 +3852,20 @@ $(document).ready(function() {
             maxCacheLength: 100,
             delay: 10
         });
-        fakeUserAc.decorate(proxyUserNameInput);
+        groupsAc.decorate(groupsInput);
+    }
+    var usersInput = $('#share_user_name');
+    if (usersInput.length === 1) {
+        var usersAc = new AutoCompleter({
+            url: '/get-users-info/',
+            preloadData: true,
+            minChars: 1,
+            useCache: false,
+            matchInside: true,
+            maxCacheLength: 100,
+            delay: 10
+        });
+        usersAc.decorate(usersInput);
     }
 });
 

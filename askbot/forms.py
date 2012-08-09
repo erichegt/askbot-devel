@@ -1536,4 +1536,4 @@ class ModerateTagForm(forms.Form):
 
 class ShareQuestionForm(forms.Form):
     thread_id = forms.IntegerField()
-    group_name = forms.CharField()
+    recipient_name = forms.CharField()
