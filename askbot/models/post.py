@@ -25,6 +25,7 @@ import askbot
 from askbot.utils.slug import slugify
 from askbot import const
 from askbot.models.user import EmailFeedSetting
+from askbot.models.user import GroupMembership
 from askbot.models.tag import Tag, MarkedTag
 from askbot.models.tag import get_groups, tags_match_some_wildcard
 from askbot.models.tag import get_global_group
@@ -650,15 +651,6 @@ class Post(models.Model):
 
         raise NotImplementedError
 
-    def get_authorized_group_ids(self):
-        """returns values list query set for the group id's of the post"""
-        if self.is_comment():
-            return self.parent.get_authorized_group_ids()
-        elif self.is_answer() or self.is_question():
-            return self.groups.values_list('id', flat = True)
-        else:
-            raise NotImplementedError()
-
     def delete(self, **kwargs):
         """deletes comment and concomitant response activity
         records, as well as mention records, while preserving
@@ -726,21 +718,29 @@ class Post(models.Model):
         if askbot_settings.GROUPS_ENABLED == False:
             return candidates
         else:
-            #here we filter candidates against the post authorized groups
-            authorized_group_ids = list(self.get_authorized_group_ids())
-
-            if len(authorized_group_ids) == 0:#if there are no groups - all ok
+            if len(candidates) == 0:
                 return candidates
+            #get post groups
+            groups = list(self.groups.all())
 
-            #and filter the users by those groups
-            filtered_candidates = list()
+            if len(groups) == 0:
+                logging.critical('post %d is groupless' % self.id)
+                return list()
+
+            #load group memberships for the candidates
+            memberships = GroupMembership.objects.filter(
+                                            user__in=candidates,
+                                            group__in=groups
+                                        )
+            user_ids = set(memberships.values_list('user__id', flat=True))
+
+            #scan through the user ids and see which are group members
+            filtered_candidates = set()
             for candidate in candidates:
-                c_groups = candidate.get_groups()
-                if c_groups.filter(id__in = authorized_group_ids).count():
-                    filtered_candidates.append(candidate)
+                if candidate.id in user_ids:
+                    filtered_candidates.add(candidate)
 
             return filtered_candidates
-            
 
     def format_for_email(
         self, quote_level = 0, is_leaf_post = False, format = None
