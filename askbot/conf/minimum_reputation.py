@@ -181,12 +181,24 @@ settings.register(
     )
 )
 
-
 settings.register(
     livesettings.IntegerValue(
         MIN_REP,
         'MIN_REP_TO_POST_BY_EMAIL',
         default=100,
         description=_('Post answers and comments by email')
+    )
+)
+
+settings.register(
+    livesettings.IntegerValue(
+        MIN_REP,
+        'MIN_REP_TO_TRIGGER_EMAIL',
+        default=15,
+        description=_('Trigger email notifications'),
+        help_text=_(
+            'Reduces spam as notifications wont\'t be sent '
+            'to regular users for posts of low karma users'
+        )
     )
 )

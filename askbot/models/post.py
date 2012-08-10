@@ -24,6 +24,7 @@ import askbot
 
 from askbot.utils.slug import slugify
 from askbot import const
+from askbot.models.user import Activity
 from askbot.models.user import EmailFeedSetting
 from askbot.models.user import GroupMembership
 from askbot.models.tag import Tag, MarkedTag
@@ -577,6 +578,77 @@ class Post(models.Model):
                         tag__in=groups
                     ).delete()
 
+
+    def issue_update_notifications(
+                                self,
+                                updated_by=None,
+                                notify_sets=None,
+                                timestamp=None,
+                                created=False,
+                                diff=None
+                            ):
+        """Called when a post is updated. Arguments:
+
+        * ``notify_sets`` - result of ``Post.get_notify_sets()`` method
+        * ``created`` - a boolean. True when ``post`` has just been created
+        * remaining arguments are self - explanatory
+
+        The method does two things:
+
+        * records "red envelope" recipients of the post
+        * sends email alerts to all subscribers to the post
+        """
+        #todo: take into account created == True case
+        (activity_type, update_object) = self.get_updated_activity_data(created)
+
+        if self.is_comment():
+            #it's just a comment!
+            summary = self.text
+        else:
+            #summary = post.get_latest_revision().summary
+            summary = diff
+
+        update_activity = Activity(
+                        user = updated_by,
+                        active_at = timestamp,
+                        content_object = self,
+                        activity_type = activity_type,
+                        question = self.get_origin_post(),
+                        summary = summary
+                    )
+        update_activity.save()
+
+        update_activity.add_recipients(notify_sets['for_inbox'])
+
+        #create new mentions (barring the double-adds)
+        for u in notify_sets['for_mentions'] - notify_sets['for_inbox']:
+            Activity.objects.create_new_mention(
+                                    mentioned_whom = u,
+                                    mentioned_in = self,
+                                    mentioned_by = updated_by,
+                                    mentioned_at = timestamp
+                                )
+
+        for user in (notify_sets['for_inbox'] | notify_sets['for_mentions']):
+            user.update_response_counts()
+
+        #shortcircuit if the email alerts are disabled
+        if askbot_settings.ENABLE_EMAIL_ALERTS == False:
+            return
+        #todo: fix this temporary spam protection plug
+        if created and askbot_settings.MIN_REP_TO_TRIGGER_EMAIL:
+            if not (updated_by.is_administrator() or updated_by.is_moderator()):
+                if updated_by.reputation < askbot_settings.MIN_REP_TO_TRIGGER_EMAIL:
+                    notify_sets['for_email'] = \
+                        [u for u in notify_sets['for_email'] if u.is_administrator()]
+
+        from askbot.models import send_instant_notifications_about_activity_in_post
+        send_instant_notifications_about_activity_in_post(
+                                update_activity=update_activity,
+                                post=self,
+                                recipients=notify_sets['for_email'],
+                            )
+ 
     def make_private(self, user, group_id = None):
         """makes post private within user's groups
         todo: this is a copy-paste in thread and post
@@ -1166,6 +1238,34 @@ class Post(models.Model):
         #    for subscriber in subscribers:
         return self.filter_authorized_users(subscribers)
 
+    def get_notify_sets(self, mentioned_users=None, exclude_list=None):
+        """returns three lists in a dictionary with keys:
+        * 'for_inbox' - users for which to add inbox items
+        * 'for_mentions' - for whom mentions are added
+        * 'for_email' - to whom email notifications should be sent
+        """
+        result = dict()
+        result['for_mentions'] = set(mentioned_users) - set(exclude_list)
+        #what users are included depends on the post type
+        #for example for question - all Q&A contributors
+        #are included, for comments only authors of comments and parent 
+        #post are included
+        result['for_inbox'] = self.get_response_receivers(exclude_list=exclude_list)
+
+        if askbot_settings.ENABLE_EMAIL_ALERTS == False:
+            result['for_email'] = set()
+        else:
+            #todo: weird thing is that only comments need the recipients
+            #todo: debug these calls and then uncomment in the repo
+            #argument to this call
+            result['for_email'] = self.get_instant_notification_subscribers(
+                                            potential_subscribers=result['for_inbox'],
+                                            mentioned_users=result['for_mentions'],
+                                            exclude_list=exclude_list
+                                        )
+        return result
+
+
     def get_latest_revision(self):
         return self.revisions.order_by('-revised_at')[0]
 
@@ -1708,9 +1808,7 @@ class Post(models.Model):
         for answer in question.thread.posts.get_answers().all():
             recipients.update(answer.get_author_list())
 
-        recipients -= set(exclude_list)
-
-        return list(recipients)
+        return recipients - set(exclude_list)
 
     def _question__get_response_receivers(self, exclude_list = None):
         """returns list of users who might be interested
@@ -1731,8 +1829,7 @@ class Post(models.Model):
         for a in self.thread.posts.get_answers().all():
             recipients.update(a.get_author_list())
 
-        recipients -= set(exclude_list)
-        return recipients
+        return recipients - set(exclude_list)
 
     def _comment__get_response_receivers(self, exclude_list = None):
         """Response receivers are commenters of the
@@ -1746,9 +1843,7 @@ class Post(models.Model):
                     include_comments = True,
                 )
         )
-        users -= set(exclude_list)
-        return list(users)
-
+        return users - set(exclude_list)
 
     def get_response_receivers(self, exclude_list = None):
         """returns a list of response receiving users
@@ -1761,7 +1856,7 @@ class Post(models.Model):
         elif self.is_comment():
             receivers = self._comment__get_response_receivers(exclude_list)
         elif self.is_tag_wiki() or self.is_reject_reason():
-            return list()#todo: who should get these?
+            return set()#todo: who should get these?
         else:
             raise NotImplementedError
 
