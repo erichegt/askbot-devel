@@ -583,30 +583,29 @@ class Post(models.Model):
                                 self,
                                 updated_by=None,
                                 notify_sets=None,
+                                activity_type=None,
                                 timestamp=None,
-                                created=False,
                                 diff=None
                             ):
         """Called when a post is updated. Arguments:
 
         * ``notify_sets`` - result of ``Post.get_notify_sets()`` method
-        * ``created`` - a boolean. True when ``post`` has just been created
-        * remaining arguments are self - explanatory
 
         The method does two things:
 
         * records "red envelope" recipients of the post
         * sends email alerts to all subscribers to the post
         """
-        #todo: take into account created == True case
-        (activity_type, update_object) = self.get_updated_activity_data(created)
-
+        assert(activity_type is not None)
         if self.is_comment():
             #it's just a comment!
             summary = self.text
         else:
             #summary = post.get_latest_revision().summary
-            summary = diff
+            if diff:
+                summary = diff
+            else:
+                summary = self.text
 
         update_activity = Activity(
                         user = updated_by,
@@ -636,7 +635,7 @@ class Post(models.Model):
         if askbot_settings.ENABLE_EMAIL_ALERTS == False:
             return
         #todo: fix this temporary spam protection plug
-        if created and askbot_settings.MIN_REP_TO_TRIGGER_EMAIL:
+        if askbot_settings.MIN_REP_TO_TRIGGER_EMAIL:
             if not (updated_by.is_administrator() or updated_by.is_moderator()):
                 if updated_by.reputation < askbot_settings.MIN_REP_TO_TRIGGER_EMAIL:
                     notify_sets['for_email'] = \
@@ -1136,10 +1135,7 @@ class Post(models.Model):
             #print 'answer subscribers: ', answer_subscribers
 
         #print 'exclude_list is ', exclude_list
-        subscriber_set -= set(exclude_list)
-
-        #print 'final subscriber set is ', subscriber_set
-        return list(subscriber_set)
+        return subscriber_set - set(exclude_list)
 
     def _comment__get_instant_notification_subscribers(
                                     self,
@@ -1205,13 +1201,7 @@ class Post(models.Model):
 
         subscriber_set.update(global_subscribers)
 
-        #print 'exclude list is: ', exclude_list
-        if exclude_list:
-            subscriber_set -= set(exclude_list)
-
-        #print 'final list of subscribers:', subscriber_set
-
-        return list(subscriber_set)
+        return subscriber_set - set(exclude_list)
 
     def get_instant_notification_subscribers(
         self, potential_subscribers = None,
@@ -1230,7 +1220,7 @@ class Post(models.Model):
                 exclude_list=exclude_list
             )
         elif self.is_tag_wiki() or self.is_reject_reason():
-            return list()
+            return set()
         else:
             raise NotImplementedError
 

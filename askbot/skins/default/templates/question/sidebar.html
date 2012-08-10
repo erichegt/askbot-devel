@@ -84,7 +84,7 @@
         <form action="{% url share_question_with_group %}" method="post">{% csrf_token %}
             <input
                 type="hidden"
-                name="group_name"
+                name="recipient_name"
                 value="{{ settings.GLOBAL_GROUP_NAME }}"
             />
             <input type="hidden" name="thread_id" value="{{ thread.id }}"/>

@@ -1156,11 +1156,39 @@ def share_question_with_group(request):
             group_name = form.cleaned_data['recipient_name']
 
             thread = models.Thread.objects.get(id=thread_id)
+            question_post = thread._question_post()
+
+            #get notif set before
+            sets1 = question_post.get_notify_sets(
+                                    mentioned_users=list(),
+                                    exclude_list=[request.user,]
+                                )
+
+            #share the post
             if group_name == askbot_settings.GLOBAL_GROUP_NAME:
                 thread.make_public(recursive=True)
             else:
                 group = models.Tag.group_tags.get(name=group_name)
                 thread.add_to_groups((group,), recursive=True)
+
+            #get notif sets after
+            sets2 = question_post.get_notify_sets(
+                                    mentioned_users=list(),
+                                    exclude_list=[request.user,]
+                                )
+
+            notify_sets = {
+                'for_mentions': sets2['for_mentions'] - sets1['for_mentions'],
+                'for_email': sets2['for_email'] - sets1['for_email'],
+                'for_inbox': sets2['for_inbox'] - sets1['for_inbox']
+            }
+
+            question_post.issue_update_notifications(
+                updated_by=request.user,
+                notify_sets=notify_sets,
+                activity_type=const.TYPE_ACTIVITY_POST_SHARED,
+                timestamp=datetime.datetime.now()
+            )
 
             return HttpResponseRedirect(thread.get_absolute_url())
     except Exception:
@@ -1181,6 +1209,19 @@ def share_question_with_user(request):
             user = models.User.objects.get(username=username)
             group = user.get_personal_group()
             thread.add_to_groups([group], recursive=True)
+            #notify the person
+            #todo: see if user could already see the post - b/f the sharing
+            notify_sets = {
+                'for_inbox': set([user]),
+                'for_mentions': set([user]),
+                'for_email': set([user])
+            }
+            thread._question_post().issue_update_notifications(
+                updated_by=request.user,
+                notify_sets=notify_sets,
+                activity_type=const.TYPE_ACTIVITY_POST_SHARED,
+                timestamp=datetime.datetime.now()
+            )
 
             return HttpResponseRedirect(thread.get_absolute_url())
     except Exception:

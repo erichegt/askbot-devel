@@ -560,9 +560,9 @@ class Thread(models.Model):
         else:
             return self.title
 
-    def format_for_email(self):
+    def format_for_email(self, user=None):
         """experimental function: output entire thread for email"""
-        question, answers, junk = self.get_cached_post_data()
+        question, answers, junk = self.get_cached_post_data(user=user)
         output = question.format_for_email_as_subthread()
         if answers:
             answer_heading = ungettext(
