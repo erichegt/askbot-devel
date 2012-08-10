@@ -2807,6 +2807,8 @@ def format_instant_notification_email(
         assert(isinstance(post, Post) and post.is_question())
     elif update_type == 'new_question':
         assert(isinstance(post, Post) and post.is_question())
+    elif update_type == 'post_shared':
+        pass
     else:
         raise ValueError('unexpected update_type %s' % update_type)
 
@@ -2831,9 +2833,11 @@ def format_instant_notification_email(
 
     content_preview += '<p>======= Full thread summary =======</p>'
 
-    content_preview += post.thread.format_for_email()
+    content_preview += post.thread.format_for_email(user=to_user)
 
-    if post.is_comment():
+    if update_type == 'post_shared':
+        user_action = _('%(user)s shared a %(post_link)s.')
+    elif post.is_comment():
         if update_type.endswith('update'):
             user_action = _('%(user)s edited a %(post_link)s.')
         else:
