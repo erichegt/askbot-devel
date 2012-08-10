@@ -28,12 +28,19 @@ from askbot.models.question import Thread
 from askbot.skins import utils as skin_utils
 from askbot.mail import messages
 from askbot.models.question import QuestionView, AnonymousQuestion
+from askbot.models.question import DraftQuestion
 from askbot.models.question import FavoriteQuestion
 from askbot.models.tag import Tag, MarkedTag
-from askbot.models.tag import get_group_names, get_groups
+from askbot.models.tag import get_global_group
+from askbot.models.tag import get_group_names
+from askbot.models.tag import get_groups
+from askbot.models.tag import format_personal_group_name
 from askbot.models.user import EmailFeedSetting, ActivityAuditStatus, Activity
 from askbot.models.user import GroupMembership, GroupProfile
-from askbot.models.post import Post, PostRevision, PostFlagReason, AnonymousAnswer
+from askbot.models.post import Post, PostRevision
+from askbot.models.post import PostFlagReason, AnonymousAnswer
+from askbot.models.post import PostToGroup
+from askbot.models.post import DraftAnswer
 from askbot.models.reply_by_email import ReplyAddress
 from askbot.models import signals
 from askbot.models.badges import award_badges_signal, get_badge, BadgeData
@@ -56,6 +63,26 @@ def get_admins_and_moderators():
     return User.objects.filter(
         models.Q(is_superuser=True) | models.Q(status='m')
     )
+
+def get_admin():
+    """returns admin with the lowest user ID
+    if there are no users at all - creates one
+    with name "admin" and unusable password
+    otherwise raises User.DoesNotExist
+    """
+    try:
+        return User.objects.filter(
+                        is_superuser=True
+                    ).order_by('id')[0]
+    except IndexError:
+        if User.objects.filter(username='_admin_').count() == 0:
+            admin = User.objects.create_user('_admin_', '')
+            admin.set_unusable_password()
+            admin.set_admin_status()
+            admin.save()
+            return admin
+        else:
+            raise User.DoesNotExist
 
 def get_users_by_text_query(search_query, users_query_set = None):
     """Runs text search in user names and profile.
@@ -87,6 +114,7 @@ User.add_to_class(
                         choices = const.USER_STATUS_CHOICES
                     )
         )
+User.add_to_class('is_fake', models.BooleanField(default=False))
 
 User.add_to_class('email_isvalid', models.BooleanField(default=False)) #@UndefinedVariable
 User.add_to_class('email_key', models.CharField(max_length=32, null=True))
@@ -354,6 +382,24 @@ def user_can_post_by_email(self):
     return askbot_settings.REPLY_BY_EMAIL and \
         self.reputation > askbot_settings.MIN_REP_TO_POST_BY_EMAIL
 
+def user_get_or_create_fake_user(self, username, email):
+    """
+    Get's or creates a user, most likely with the purpose
+    of posting under that account.
+    """
+    assert(self.is_administrator())
+
+    try:
+        user = User.objects.get(username=username)
+    except User.DoesNotExist:
+        user = User()
+        user.username = username
+        user.email = email
+        user.is_fake = True
+        user.set_unusable_password()
+        user.save()
+    return user
+
 def _assert_user_can(
                         user = None,
                         post = None, #related post (may be parent)
@@ -562,9 +608,16 @@ def user_assert_can_post_question(self):
     )
 
 
-def user_assert_can_post_answer(self):
+def user_assert_can_post_answer(self, thread = None):
     """same as user_can_post_question
     """
+    limit_answers = askbot_settings.LIMIT_ONE_ANSWER_PER_USER
+    if limit_answers and thread.has_answer_by_user(self):
+        message = _(
+            'Sorry, you already gave an answer, please edit it instead.'
+        )
+        raise askbot_exceptions.AnswerAlreadyGiven(message)
+
     self.assert_can_post_question()
 
 
@@ -848,7 +901,9 @@ def user_assert_can_close_question(self, question = None):
 def user_assert_can_reopen_question(self, question = None):
     assert(question.post_type == 'question')
 
+    #for some reason rep to reopen own questions != rep to close own q's
     owner_min_rep_setting =  askbot_settings.MIN_REP_TO_REOPEN_OWN_QUESTIONS
+    min_rep_setting = askbot_settings.MIN_REP_TO_CLOSE_OTHERS_QUESTIONS
 
     general_error_message = _(
                         'Sorry, only administrators, moderators '
@@ -861,15 +916,27 @@ def user_assert_can_reopen_question(self, question = None):
                         'a minimum reputation of %(min_rep)s is required'
                     ) % {'min_rep': owner_min_rep_setting}
 
+    blocked_error_message = _(
+            'Sorry, you cannot reopen questions '
+            'because your account is blocked'
+        )
+
+    suspended_error_message = _(
+            'Sorry, you cannot reopen questions '
+            'because your account is suspended'
+        )
+
     _assert_user_can(
         user = self,
         post = question,
-        admin_or_moderator_required = True,
         owner_can = True,
         suspended_owner_cannot = True,
         owner_min_rep_setting = owner_min_rep_setting,
+        min_rep_setting = min_rep_setting,
         owner_low_rep_error_message = owner_low_rep_error_message,
-        general_error_message = general_error_message
+        general_error_message = general_error_message,
+        blocked_error_message = blocked_error_message,
+        suspended_error_message = suspended_error_message
     )
 
 
@@ -1100,6 +1167,8 @@ def user_post_comment(
                     added_at = timestamp,
                     by_email = by_email
                 )
+    comment.add_to_groups([self.get_personal_group()])
+
     parent_post.thread.invalidate_cached_data()
     award_badges_signal.send(
         None,
@@ -1450,6 +1519,7 @@ def user_post_question(
                     wiki = False,
                     is_anonymous = False,
                     is_private = False,
+                    group_id = None,
                     timestamp = None,
                     by_email = False,
                     email_address = None
@@ -1480,6 +1550,7 @@ def user_post_question(
                                     wiki = wiki,
                                     is_anonymous = is_anonymous,
                                     is_private = is_private,
+                                    group_id = group_id,
                                     by_email = by_email,
                                     email_address = email_address
                                 )
@@ -1725,7 +1796,7 @@ def user_post_answer(
             assert(error_message is not None)
             raise django_exceptions.PermissionDenied(error_message)
 
-    self.assert_can_post_answer()
+    self.assert_can_post_answer(thread = question.thread)
 
     if getattr(question, 'post_type', '') != 'question':
         raise TypeError('question argument must be provided')
@@ -1751,6 +1822,7 @@ def user_post_answer(
         is_private = is_private,
         by_email = by_email
     )
+    answer_post.add_to_groups([self.get_personal_group()])
 
     answer_post.thread.invalidate_cached_data()
     award_badges_signal.send(None,
@@ -2123,10 +2195,14 @@ def get_profile_link(self):
 
     return mark_safe(profile_link)
 
-def user_get_groups(self):
+def user_get_groups(self, private=False):
     """returns a query set of groups to which user belongs"""
     #todo: maybe cache this query
-    return Tag.group_tags.get_for_user(self)
+    return Tag.group_tags.get_for_user(self, private=private)
+
+def user_get_personal_group(self):
+    group_name = format_personal_group_name(self)
+    return Tag.group_tags.get(name=group_name)
 
 def user_get_foreign_groups(self):
     """returns a query set of groups to which user does not belong"""
@@ -2136,7 +2212,7 @@ def user_get_foreign_groups(self):
 
 def user_can_make_group_private_posts(self):
     """simplest implementation: user belongs to at least one group"""
-    return self.get_groups().count() > 0
+    return self.get_groups(private=True).count() > 0
 
 def user_get_groups_membership_info(self, groups):
     """returts a defaultdict with values that are
@@ -2189,14 +2265,14 @@ def user_get_badge_summary(self):
         bit = ungettext(
                 'one silver badge',
                 '%(count)d silver badges',
-                self.gold
+                self.silver
             ) % {'count': self.silver}
         badge_bits.append(bit)
-    if self.silver:
+    if self.bronze:
         bit = ungettext(
                 'one bronze badge',
                 '%(count)d bronze badges',
-                self.gold
+                self.bronze
             ) % {'count': self.bronze}
         badge_bits.append(bit)
 
@@ -2531,6 +2607,12 @@ def user_edit_group_membership(self, user = None, group = None, action = None):
     else:
         raise ValueError('invalid action')
 
+def user_join_group(self, group):
+    self.edit_group_membership(group=group, user=self, action='add')
+
+def user_leave_group(self, group):
+    self.edit_group_membership(group=group, user=self, action='remove')
+
 def user_is_group_member(self, group = None):
     return self.group_memberships.filter(group = group).count() == 1
 
@@ -2554,10 +2636,12 @@ User.add_to_class('get_absolute_url', user_get_absolute_url)
 User.add_to_class('get_avatar_url', user_get_avatar_url)
 User.add_to_class('get_default_avatar_url', user_get_default_avatar_url)
 User.add_to_class('get_gravatar_url', user_get_gravatar_url)
+User.add_to_class('get_or_create_fake_user', user_get_or_create_fake_user)
 User.add_to_class('get_marked_tags', user_get_marked_tags)
 User.add_to_class('get_marked_tag_names', user_get_marked_tag_names)
 User.add_to_class('get_groups', user_get_groups)
 User.add_to_class('get_foreign_groups', user_get_foreign_groups)
+User.add_to_class('get_personal_group', user_get_personal_group)
 User.add_to_class('strip_email_signature', user_strip_email_signature)
 User.add_to_class('get_groups_membership_info', user_get_groups_membership_info)
 User.add_to_class('get_anonymous_name', user_get_anonymous_name)
@@ -2609,6 +2693,8 @@ User.add_to_class('is_administrator', user_is_administrator)
 User.add_to_class('is_administrator_or_moderator', user_is_administrator_or_moderator)
 User.add_to_class('set_admin_status', user_set_admin_status)
 User.add_to_class('edit_group_membership', user_edit_group_membership)
+User.add_to_class('join_group', user_join_group)
+User.add_to_class('leave_group', user_leave_group)
 User.add_to_class('is_group_member', user_is_group_member)
 User.add_to_class('remove_admin_status', user_remove_admin_status)
 User.add_to_class('is_moderator', user_is_moderator)
@@ -2720,6 +2806,8 @@ def format_instant_notification_email(
         assert(isinstance(post, Post) and post.is_question())
     elif update_type == 'new_question':
         assert(isinstance(post, Post) and post.is_question())
+    elif update_type == 'post_shared':
+        pass
     else:
         raise ValueError('unexpected update_type %s' % update_type)
 
@@ -2744,9 +2832,11 @@ def format_instant_notification_email(
 
     content_preview += '<p>======= Full thread summary =======</p>'
 
-    content_preview += post.thread.format_for_email()
+    content_preview += post.thread.format_for_email(user=to_user)
 
-    if post.is_comment():
+    if update_type == 'post_shared':
+        user_action = _('%(user)s shared a %(post_link)s.')
+    elif post.is_comment():
         if update_type.endswith('update'):
             user_action = _('%(user)s edited a %(post_link)s.')
         else:
@@ -2865,7 +2955,7 @@ def send_instant_notifications_about_activity_in_post(
     newly mentioned users are carried through to reduce
     database hits
     """
-    if askbot_settings.ENABLE_CONTENT_MODERATION and post.approved == False:
+    if post.is_approved() is False:
         return
 
     if recipients is None:
@@ -2888,6 +2978,10 @@ def send_instant_notifications_about_activity_in_post(
                         )
     #send email for all recipients
     for user in recipients:
+
+        if user.is_blocked():
+            continue
+
         reply_address, alt_reply_address = get_reply_to_addresses(user, post)
 
         subject_line, body_text = format_instant_notification_email(
@@ -3232,6 +3326,37 @@ def send_respondable_email_validation_message(
     )
 
 
+def add_user_to_global_group(sender, instance, created, **kwargs):
+    """auto-joins user to the global group
+    ``instance`` is an instance of ``User`` class
+    """
+    if created:
+        from askbot.models.tag import get_global_group
+        instance.edit_group_membership(
+            group=get_global_group(),
+            user=instance,
+            action='add'
+        )
+
+
+def add_user_to_personal_group(sender, instance, created, **kwargs):
+    """auto-joins user to his/her personal group
+    ``instance`` is an instance of ``User`` class
+    """
+    if created:
+        #todo: groups will indeed need to be separated from tags
+        #so that we can use less complicated naming scheme
+        #in theore here we may have two users that will have
+        #identical group names!!!
+        group_name = format_personal_group_name(instance)
+        group = Tag.group_tags.get_or_create(
+                    group_name=group_name, user=instance
+                )
+        instance.edit_group_membership(
+                    group=group, user=instance, action='add'
+                )
+
+
 def greet_new_user(user, **kwargs):
     """sends welcome email to the newly created user
 
@@ -3255,7 +3380,6 @@ def greet_new_user(user, **kwargs):
         data = data,
         template_name = template_name
     )
-
 
 
 def complete_pending_tag_subscriptions(sender, request, *args, **kwargs):
@@ -3324,6 +3448,8 @@ def make_admin_if_first_user(instance, **kwargs):
 django_signals.pre_save.connect(make_admin_if_first_user, sender=User)
 django_signals.pre_save.connect(calculate_gravatar_hash, sender=User)
 django_signals.post_save.connect(add_missing_subscriptions, sender=User)
+django_signals.post_save.connect(add_user_to_global_group, sender=User)
+django_signals.post_save.connect(add_user_to_personal_group, sender=User)
 django_signals.post_save.connect(record_award_event, sender=Award)
 django_signals.post_save.connect(notify_award_message, sender=Award)
 django_signals.post_save.connect(record_answer_accepted, sender=Post)
@@ -3368,11 +3494,14 @@ __all__ = [
         'QuestionView',
         'FavoriteQuestion',
         'AnonymousQuestion',
+        'DraftQuestion',
 
         'AnonymousAnswer',
+        'DraftAnswer',
 
         'Post',
         'PostRevision',
+        'PostToGroup',
 
         'Tag',
         'Vote',
@@ -3396,5 +3525,5 @@ __all__ = [
         'get_model',
         'get_admins_and_moderators',
         'get_group_names',
-        'get_grous'
+        'get_groups'
 ]

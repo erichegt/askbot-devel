@@ -137,6 +137,17 @@ settings.register(
 settings.register(
     livesettings.BooleanValue(
         FORUM_DATA_RULES,
+        'LIMIT_ONE_ANSWER_PER_USER',
+        default = True,
+        description = _(
+            'Limit one answer per question per user'
+        )
+    )
+)
+
+settings.register(
+    livesettings.BooleanValue(
+        FORUM_DATA_RULES,
         'TAGS_ARE_REQUIRED',
         description = _('Are tags required?'),
         default = False,

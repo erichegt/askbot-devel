@@ -1,49 +1,44 @@
-{% if not thread.closed %}
-    <script type='text/javascript' src='{{"/js/editor.js"|media}}'></script>
-    <script type='text/javascript'>
-        {% if settings.ENABLE_MATHJAX or settings.MARKUP_CODE_FRIENDLY %}
-        var codeFriendlyMarkdown = true;
-        {% else %}
-        var codeFriendlyMarkdown = false;
-        {% endif %}
-        var maxCommentLength = {{settings.MAX_COMMENT_LENGTH}};
-        askbot['urls']['postComments'] = '{% url post_comments %}';
-        askbot['urls']['editComment'] = '{% url edit_comment %}';
-        askbot['urls']['deleteComment'] = '{% url delete_comment %}';
-        askbot['urls']['getComment'] = '{% url get_comment %}';
-        askbot['urls']['question_url_template'] = scriptUrl + '{{ 'question/'|transurl }}{{ "{{QuestionID}}/{{questionSlug}}" }}';{# yes it needs to be that whacky #}
-        askbot['urls']['vote_url_template'] = scriptUrl + '{{ 'questions/'|transurl }}{{ "{{QuestionID}}/" }}{{ 'vote/'|transurl }}';
-        askbot['urls']['user_signin'] = '{{ settings.LOGIN_URL }}';
-        askbot['urls']['swap_question_with_answer'] = '{% url swap_question_with_answer %}';
-        askbot['urls']['upvote_comment'] = '{% url upvote_comment %}';
-        askbot['urls']['delete_post'] = '{% url delete_post %}';
-        askbot['urls']['get_html_template'] = '{% url get_html_template %}';
-        askbot['messages']['addComment'] = '{% trans %}post a comment{% endtrans %}';
-        {% if settings.SAVE_COMMENT_ON_ENTER %}
-            askbot['settings']['saveCommentOnEnter'] = true;
-        {% else %}
-            askbot['settings']['saveCommentOnEnter'] = false;
-        {% endif %}
-        askbot['settings']['tagSource'] = '{{ settings.TAG_SOURCE }}';
-    </script>
-    {% if settings.EDITOR_TYPE == 'markdown' %}
-        <script type='text/javascript' src='{{"/js/wmd/showdown.js"|media}}'></script>
-        <script type='text/javascript' src='{{"/js/wmd/wmd.js"|media}}'></script>
+<script type='text/javascript' src='{{"/js/editor.js"|media}}'></script>
+<script type='text/javascript'>
+    {% if settings.ENABLE_MATHJAX or settings.MARKUP_CODE_FRIENDLY %}
+    var codeFriendlyMarkdown = true;
     {% else %}
-        {% include "meta/tinymce.html" %}
+    var codeFriendlyMarkdown = false;
     {% endif %}
+    var maxCommentLength = {{settings.MAX_COMMENT_LENGTH}};
+    askbot['urls']['postComments'] = '{% url post_comments %}';
+    askbot['urls']['editComment'] = '{% url edit_comment %}';
+    askbot['urls']['deleteComment'] = '{% url delete_comment %}';
+    askbot['urls']['getComment'] = '{% url get_comment %}';
+    askbot['urls']['saveDraftAnswer'] = '{% url save_draft_answer %}';
+    askbot['urls']['question_url_template'] = scriptUrl + '{{ 'question/'|transurl }}{{ "{{QuestionID}}/{{questionSlug}}" }}';{# yes it needs to be that whacky #}
+    askbot['urls']['vote_url_template'] = scriptUrl + '{{ 'questions/'|transurl }}{{ "{{QuestionID}}/" }}{{ 'vote/'|transurl }}';
+    askbot['urls']['user_signin'] = '{{ settings.LOGIN_URL }}';
+    askbot['urls']['swap_question_with_answer'] = '{% url swap_question_with_answer %}';
+    askbot['urls']['upvote_comment'] = '{% url upvote_comment %}';
+    askbot['urls']['delete_post'] = '{% url delete_post %}';
+    askbot['urls']['get_html_template'] = '{% url get_html_template %}';
+    askbot['urls']['getGroupsList'] = '{% url get_groups_list %}';
+    askbot['messages']['addComment'] = '{% trans %}post a comment{% endtrans %}';
+    {% if settings.SAVE_COMMENT_ON_ENTER %}
+        askbot['settings']['saveCommentOnEnter'] = true;
+    {% else %}
+        askbot['settings']['saveCommentOnEnter'] = false;
+    {% endif %}
+    askbot['settings']['tagSource'] = '{{ settings.TAG_SOURCE }}';
+</script>
+{% if settings.EDITOR_TYPE == 'markdown' %}
+    <script type='text/javascript' src='{{"/js/wmd/showdown.js"|media}}'></script>
+    <script type='text/javascript' src='{{"/js/wmd/wmd.js"|media}}'></script>
+{% else %}
+    {% include "meta/tinymce.html" %}
 {% endif %}
 <script type='text/javascript' src='{{"/js/jquery.validate.min.js"|media}}'></script>
 <script type='text/javascript' src='{{"/js/post.js"|media}}'></script>
 <script type="text/javascript">
     // define reputation needs for comments
     var repNeededForComments = 50;
-    $().ready(function(){
-        {% if request.user.is_authenticated() %}
-          if ($('#question-subscribe-updates')[0].checked){
-             $('#question-subscribe-sidebar').attr({'checked': 'checked'});
-          }
-        {%endif%}
+    $(document).ready(function(){
         $("#nav_questions").attr('className',"on");
         var answer_sort_tab = "{{ tab_id }}";
         $("#" + answer_sort_tab).attr('className',"on");
@@ -65,6 +60,12 @@
                 $("#fmanswer_button").hide();
             });
         {%endif%}
+
+        if (askbot['data']['userIsAuthenticated']) {
+            var draftHandler = new DraftAnswer();
+            draftHandler.setThreadId({{ thread.id }});
+            draftHandler.decorate($(document));
+        }
     });
 
     $(window).bind('hashchange', animate_hashes);

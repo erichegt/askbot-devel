@@ -25,6 +25,7 @@
 {% endif %}
 <div class="form-item">
     <label for="editor" class="form-error">{{ post_form.text.errors }}</label>
+    <p class="editor-status action-status"><span></span></p>
 </div>
 {# need label element for resizable input, b/c form validation won't find span #}
 {% if post_type == 'question' %}
@@ -72,6 +73,7 @@
         <div class="form-error" >{{ post_form.summary.errors }}</div>
     </div>
 {% endif %}
+
 {% if editor_type == 'markdown' %}
     <div class="preview-toggle">
         <span 
@@ -82,4 +84,32 @@
         </span>
     </div>
     <div id="previewer" class="wmd-preview"></div>
+{% endif %}
+
+{% if user and user.is_authenticated() and user.is_administrator() %}
+    {# admin can post answers or questions on behalf of anyone. #}
+    <table class="proxy-user-info">
+        <tbody>
+            <tr><td colspan="2">
+                <label>
+                    {% trans %}To post on behalf of someone else, enter user name <strong>and</strong> email below.{% endtrans %}
+                </label>
+            </td></tr>
+            <tr>
+                <td>
+                    <div class="form-item">
+                        {{ post_form.post_author_username }}
+                    </div>
+                    <div class="form-item">
+                        {{ post_form.post_author_email }}
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <span class="form-error">{{ post_form.post_author_username.errors }}</span>
+                    <span class="form-error">{{ post_form.post_author_email.errors }}</span>
+                </td>
+        </tbody>
+    </table>
 {% endif %}

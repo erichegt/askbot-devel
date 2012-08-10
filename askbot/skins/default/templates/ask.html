@@ -37,6 +37,7 @@
     {% endif %}
     <script type='text/javascript'>
         askbot['urls']['api_get_questions'] = '{% url api_get_questions %}';
+        askbot['urls']['saveDraftQuestion'] = '{% url save_draft_question %}';
         {% if settings.ENABLE_MATHJAX or settings.MARKUP_CODE_FRIENDLY %}
             var codeFriendlyMarkdown = true;
         {% else %}
@@ -67,6 +68,17 @@
 
             setupFormValidation($("#fmask"), CPValidator.getQuestionFormRules(), CPValidator.getQuestionFormMessages());
             lanai.highlightSyntax();
+
+            if (askbot['data']['userIsAuthenticated']) {
+                var draftHandler = new DraftQuestion();
+                draftHandler.decorate($(document));
+                window.onbeforeunload = function() {
+                    var saveHandler = draftHandler.getSaveHandler();
+                    saveHandler(true);
+                    //var msg = gettext("%s, we've saved your draft, but...");
+                    //return interpolate(msg, [askbot['data']['userName']]);
+                };
+            }
         });
     </script>
 {% endblock %}

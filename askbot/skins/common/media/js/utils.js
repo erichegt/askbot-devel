@@ -1,6 +1,10 @@
 //var $, scriptUrl, askbotSkin
+/**
+ * attention - this function needs to be retired
+ * as it cannot accurately give url to the media file
+ */
 var mediaUrl = function(resource){
-    return askbot['settings']['static_url'] + askbotSkin + '/' + resource;
+    return askbot['settings']['static_url'] + 'default' + '/' + resource;
 };
 
 var cleanUrl = function(url){
@@ -110,7 +114,7 @@ var setCheckBoxesIn = function(selector, value){
 var notify = function() {
     var visible = false;
     return {
-        show: function(html) {
+        show: function(html, autohide) {
             if (html) {
                 $("body").addClass('user-messages');
                 var par = $('<p class="notification"></p>');
@@ -119,7 +123,19 @@ var notify = function() {
             }          
             $(".notify").fadeIn("slow");
             visible = true;
+            if (autohide) {
+                setTimeout(
+                    function() { 
+                        notify.close(false);
+                        notify.clear();
+                    },
+                    3000
+                );
+            }
         },       
+        clear: function() {
+            $('.notify').empty();
+        },
         close: function(doPostback) {
             if (doPostback) {
                $.post(
@@ -362,6 +378,7 @@ TippedInput.prototype.decorate = function(element){
 
     var instruction_text = this.getVal();
     this._instruction = instruction_text;
+    this.reset();
     var me = this;
     $(element).focus(function(){
         if (me.isBlank()){

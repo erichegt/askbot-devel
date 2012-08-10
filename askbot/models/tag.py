@@ -1,4 +1,5 @@
 import re
+import logging
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
@@ -6,6 +7,25 @@ from askbot.models.base import BaseQuerySetManager
 from askbot import const
 from askbot.conf import settings as askbot_settings
 from askbot.utils import category_tree
+
+def get_global_group():
+    """Returns the global group,
+    if necessary, creates one
+    """
+    #todo: when groups are disconnected from tags,
+    #find comment as shown below in the test cases and
+    #revert the values
+    #todo: change groups to django groups
+    group_name = askbot_settings.GLOBAL_GROUP_NAME
+    try:
+        return Tag.group_tags.get(name=group_name)
+    except Tag.DoesNotExist:
+        from askbot.models import get_admin
+        return Tag.group_tags.get_or_create(
+                            group_name=group_name,
+                            user=get_admin(),
+                            is_open=False
+                        )
 
 def delete_tags(tags):
     """deletes tags in the list"""
@@ -39,6 +59,11 @@ def filter_accepted_tags(tags):
 
 def filter_suggested_tags(tags):
     return filter_tags_by_status(tags, status = Tag.STATUS_SUGGESTED)
+
+def format_personal_group_name(user):
+    #todo: after migration of groups away from tags,
+    #this function will be moved somewhere else
+    return '_internal_%s_%d' % (user.username, user.id)
 
 def is_preapproved_tag_name(tag_name):
     """true if tag name is in the category tree
@@ -256,8 +281,14 @@ class TagManager(BaseQuerySetManager):
 class GroupTagQuerySet(TagQuerySet):
     """Custom query set for the group"""
 
-    def get_for_user(self, user = None):
-        return self.filter(user_memberships__user = user)
+    def get_for_user(self, user=None, private=False):
+        if private:
+            global_group = get_global_group()
+            return self.filter(
+                        user_memberships__user=user
+                    ).exclude(id=global_group.id)
+        else:
+            return self.filter(user_memberships__user = user)
 
     def get_all(self):
         return self.annotate(
@@ -282,7 +313,7 @@ class GroupTagManager(BaseQuerySetManager):
     def get_query_set(self):
         return GroupTagQuerySet(self.model)
 
-    def get_or_create(self, group_name = None, user = None):
+    def get_or_create(self, group_name = None, user = None, is_open=True):
         """creates a group tag or finds one, if exists"""
         #todo: here we might fill out the group profile
 
@@ -296,7 +327,7 @@ class GroupTagManager(BaseQuerySetManager):
             tag = self.model(name = group_name, created_by = user)
             tag.save()
             from askbot.models.user import GroupProfile
-            group_profile = GroupProfile(group_tag = tag)
+            group_profile = GroupProfile(group_tag = tag, is_open=is_open)
             group_profile.save()
         return tag
 

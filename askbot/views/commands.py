@@ -24,6 +24,7 @@ from askbot import models
 from askbot import forms
 from askbot.conf import should_show_sort_by_relevance
 from askbot.conf import settings as askbot_settings
+from askbot.models.tag import get_global_group
 from askbot.utils import category_tree
 from askbot.utils import decorators
 from askbot.utils import url_utils
@@ -614,8 +615,13 @@ def add_tag_category(request):
 def get_groups_list(request):
     """returns names of group tags
     for the autocomplete function"""
+    global_group = get_global_group()
     group_names = models.Tag.group_tags.get_all().filter(
                                     deleted = False
+                                ).exclude(
+                                    name=global_group.name
+                                ).exclude(
+                                    name__startswith='_internal_'
                                 ).values_list(
                                     'name', flat = True
                                 )
@@ -1056,3 +1062,169 @@ def moderate_suggested_tag(request):
                 tag.delete()
     else:
         raise Exception(forms.format_form_errors(form))
+
+
+@csrf.csrf_exempt
+@decorators.ajax_only
+@decorators.post_only
+def save_draft_question(request):
+    """saves draft questions"""
+    #todo: allow drafts for anonymous users
+    if request.user.is_anonymous():
+        return
+
+    form = forms.DraftQuestionForm(request.POST)
+    if form.is_valid():
+        title = form.cleaned_data.get('title', '')
+        text = form.cleaned_data.get('text', '')
+        tagnames = form.cleaned_data.get('tagnames', '')
+        if title or text or tagnames:
+            try:
+                draft = models.DraftQuestion.objects.get(author=request.user)
+            except models.DraftQuestion.DoesNotExist:
+                draft = models.DraftQuestion()
+
+            draft.title = title
+            draft.text = text
+            draft.tagnames = tagnames
+            draft.author = request.user
+            draft.save()
+
+
+@csrf.csrf_exempt
+@decorators.ajax_only
+@decorators.post_only
+def save_draft_answer(request):
+    """saves draft answers"""
+    #todo: allow drafts for anonymous users
+    if request.user.is_anonymous():
+        return
+
+    form = forms.DraftAnswerForm(request.POST)
+    if form.is_valid():
+        thread_id = form.cleaned_data['thread_id']
+        try:
+            thread = models.Thread.objects.get(id=thread_id)
+        except models.Thread.DoesNotExist:
+            return
+        try:
+            draft = models.DraftAnswer.objects.get(
+                                            thread=thread,
+                                            author=request.user
+                                    )
+        except models.DraftAnswer.DoesNotExist:
+            draft = models.DraftAnswer()
+
+        draft.author = request.user
+        draft.thread = thread
+        draft.text = form.cleaned_data.get('text', '')
+        draft.save()
+
+@decorators.get_only
+@decorators.admins_only
+def get_users_info(request):
+    """retuns list of user names and email addresses
+    of "fake" users - so that admins can post on their
+    behalf"""
+    #user_info_list = models.User.objects.filter(
+    #                    is_fake=True
+    #                ).values_list(
+    #                    'username',
+    #                    'email'
+    #                )
+    user_info_list = models.User.objects.values_list(
+                                                'username',
+                                                'email'
+                                            )
+
+    result_list = list()
+    for user_info in user_info_list:
+        username = user_info[0]
+        email = user_info[1]
+        result_list.append('%s|%s' % (username, email))
+
+    output = '\n'.join(result_list)
+    return HttpResponse(output, mimetype = 'text/plain')
+
+@csrf.csrf_protect
+def share_question_with_group(request):
+    form = forms.ShareQuestionForm(request.POST)
+    try:
+        if form.is_valid():
+
+            thread_id = form.cleaned_data['thread_id']
+            group_name = form.cleaned_data['recipient_name']
+
+            thread = models.Thread.objects.get(id=thread_id)
+            question_post = thread._question_post()
+
+            #get notif set before
+            sets1 = question_post.get_notify_sets(
+                                    mentioned_users=list(),
+                                    exclude_list=[request.user,]
+                                )
+
+            #share the post
+            if group_name == askbot_settings.GLOBAL_GROUP_NAME:
+                thread.make_public(recursive=True)
+            else:
+                group = models.Tag.group_tags.get(name=group_name)
+                thread.add_to_groups((group,), recursive=True)
+
+            #get notif sets after
+            sets2 = question_post.get_notify_sets(
+                                    mentioned_users=list(),
+                                    exclude_list=[request.user,]
+                                )
+
+            notify_sets = {
+                'for_mentions': sets2['for_mentions'] - sets1['for_mentions'],
+                'for_email': sets2['for_email'] - sets1['for_email'],
+                'for_inbox': sets2['for_inbox'] - sets1['for_inbox']
+            }
+
+            question_post.issue_update_notifications(
+                updated_by=request.user,
+                notify_sets=notify_sets,
+                activity_type=const.TYPE_ACTIVITY_POST_SHARED,
+                timestamp=datetime.datetime.now()
+            )
+
+            return HttpResponseRedirect(thread.get_absolute_url())
+    except Exception:
+        error_message = _('Sorry, looks like sharing request was invalid')
+        request.user.message_set.create(message=error_message)
+        return HttpResponseRedirect(thread.get_absolute_url())
+
+@csrf.csrf_protect
+def share_question_with_user(request):
+    form = forms.ShareQuestionForm(request.POST)
+    try:
+        if form.is_valid():
+
+            thread_id = form.cleaned_data['thread_id']
+            username = form.cleaned_data['recipient_name']
+
+            thread = models.Thread.objects.get(id=thread_id)
+            user = models.User.objects.get(username=username)
+            group = user.get_personal_group()
+            thread.add_to_groups([group], recursive=True)
+            #notify the person
+            #todo: see if user could already see the post - b/f the sharing
+            notify_sets = {
+                'for_inbox': set([user]),
+                'for_mentions': set([user]),
+                'for_email': set([user])
+            }
+            thread._question_post().issue_update_notifications(
+                updated_by=request.user,
+                notify_sets=notify_sets,
+                activity_type=const.TYPE_ACTIVITY_POST_SHARED,
+                timestamp=datetime.datetime.now()
+            )
+
+            return HttpResponseRedirect(thread.get_absolute_url())
+    except Exception:
+        error_message = _('Sorry, looks like sharing request was invalid')
+        request.user.message_set.create(message=error_message)
+        return HttpResponseRedirect(thread.get_absolute_url())

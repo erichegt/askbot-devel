@@ -206,6 +206,148 @@ var CPValidator = function(){
 
 /**
  * @constructor
+ */
+var DraftPost = function() {
+    WrappedElement.call(this);
+};
+inherits(DraftPost, WrappedElement);
+
+/**
+ * @return {string}
+ */
+DraftPost.prototype.getUrl = function() {
+    throw 'Not Implemented';
+};
+
+/**
+ * @return {boolean}
+ */
+DraftPost.prototype.shouldSave = function() {
+    throw 'Not Implemented';
+};
+
+/**
+ * @return {object} data dict
+ */
+DraftPost.prototype.getData = function() {
+    throw 'Not Implemented';
+};
+
+DraftPost.prototype.backupData = function() {
+    this._old_data = this.getData();
+};
+
+DraftPost.prototype.showNotification = function() {
+    var note = $('.editor-status span');
+    note.hide();
+    note.html(gettext('draft saved...'));
+    note.fadeIn().delay(3000).fadeOut();
+};
+
+DraftPost.prototype.getSaveHandler = function() {
+    var me = this;
+    return function(save_synchronously) {
+        if (me.shouldSave()) {
+            $.ajax({
+                type: 'POST',
+                cache: false,
+                dataType: 'json',
+                async: save_synchronously ? false : true,
+                url: me.getUrl(),
+                data: me.getData(),
+                success: function(data) {
+                    if (data['success'] && !save_synchronously) {
+                        me.showNotification();
+                    }
+                    me.backupData();
+                }
+            });
+        }
+    };
+};
+
+DraftPost.prototype.decorate = function(element) {
+    this._element = element;
+    this.assignContentElements();
+    this.backupData();
+    setInterval(this.getSaveHandler(), 5000);//auto-save twice a minute
+    var me = this;
+    window.onbeforeunload = function() {
+        var saveHandler = me.getSaveHandler();
+        saveHandler(true);
+        //var msg = gettext("%s, we've saved your draft, but...");
+        //return interpolate(msg, [askbot['data']['userName']]);
+    };
+};
+
+
+/**
+ * @contstructor
+ */
+var DraftQuestion = function() {
+    DraftPost.call(this);
+};
+inherits(DraftQuestion, DraftPost);
+
+DraftQuestion.prototype.getUrl = function() {
+    return askbot['urls']['saveDraftQuestion'];
+};
+
+DraftQuestion.prototype.shouldSave = function() {
+    var newd = this.getData();
+    var oldd = this._old_data;
+    return (
+        newd['title'] !== oldd['title'] ||
+        newd['text'] !== oldd['text'] ||
+        newd['tagnames'] !== oldd['tagnames']
+    );
+};
+
+DraftQuestion.prototype.getData = function() {
+    return {
+        'title': this._title_element.val(),
+        'text': this._text_element.val(),
+        'tagnames': this._tagnames_element.val()
+    };
+};
+
+DraftQuestion.prototype.assignContentElements = function() {
+    this._title_element = $('#id_title');
+    this._text_element = $('#editor');
+    this._tagnames_element = $('#id_tags');
+};
+
+var DraftAnswer = function() {
+    DraftPost.call(this);
+};
+inherits(DraftAnswer, DraftPost);
+
+DraftAnswer.prototype.setThreadId = function(id) {
+    this._threadId = id;
+};
+
+DraftAnswer.prototype.getUrl = function() {
+    return askbot['urls']['saveDraftAnswer'];
+};
+
+DraftAnswer.prototype.shouldSave = function() {
+    return this.getData()['text'] !== this._old_data['text'];
+};
+
+DraftAnswer.prototype.getData = function() {
+    return {
+        'text': this._textElement.val(),
+        'thread_id': this._threadId
+    };
+};
+
+DraftAnswer.prototype.assignContentElements = function() {
+    this._textElement = $('#editor');
+};
+
+
+/**
+ * @constructor
  * @extends {SimpleControl}
  * @param {Comment} comment to upvote
  */
@@ -3676,6 +3818,60 @@ $(document).ready(function() {
         questionRetagger.init();
     }
     socialSharing.init();
+
+    var proxyUserNameInput = $('#id_post_author_username');
+    var proxyUserEmailInput = $('#id_post_author_email');
+    if (proxyUserNameInput.length === 1) {
+        var tip = new TippedInput();
+        tip.decorate(proxyUserNameInput);
+
+        var userSelectHandler = function(data) {
+            proxyUserEmailInput.val(data['data'][0]);
+        };
+
+        var fakeUserAc = new AutoCompleter({
+            url: '/get-users-info/',//askbot['urls']['get_users_info'],
+            preloadData: true,
+            minChars: 1,
+            useCache: true,
+            matchInside: true,
+            maxCacheLength: 100,
+            delay: 10,
+            onItemSelect: userSelectHandler
+        });
+        fakeUserAc.decorate(proxyUserNameInput);
+    }
+    if (proxyUserEmailInput.length === 1) {
+        var tip = new TippedInput();
+        tip.decorate(proxyUserEmailInput);
+    }
+    //if groups are enabled - activate share functions
+    var groupsInput = $('#share_group_name');
+    if (groupsInput.length === 1) {
+        var groupsAc = new AutoCompleter({
+            url: askbot['urls']['getGroupsList'],
+            preloadData: true,
+            minChars: 1,
+            useCache: false,
+            matchInside: true,
+            maxCacheLength: 100,
+            delay: 10
+        });
+        groupsAc.decorate(groupsInput);
+    }
+    var usersInput = $('#share_user_name');
+    if (usersInput.length === 1) {
+        var usersAc = new AutoCompleter({
+            url: '/get-users-info/',
+            preloadData: true,
+            minChars: 1,
+            useCache: false,
+            matchInside: true,
+            maxCacheLength: 100,
+            delay: 10
+        });
+        usersAc.decorate(usersInput);
+    }
 });
 
 

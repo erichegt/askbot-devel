@@ -1,4 +1,4 @@
-{% from "macros.html" import timeago %}
+{% import "macros.html" as macros %}
 {% if settings.SIDEBAR_QUESTION_HEADER %}
 <div class="box">
     {{ settings.SIDEBAR_QUESTION_HEADER }}
@@ -27,7 +27,13 @@
     </div>
     <div class="notify-sidebar">
         {%if request.user.is_authenticated() %}
-        <input type="checkbox" id="question-subscribe-sidebar"/>
+        <input 
+            type="checkbox"
+            id="question-subscribe-sidebar"
+            {% if thread.is_followed_by(request.user) %}
+                checked="checked"
+            {% endif %}
+        />
         <label for="question-subscribe-sidebar">{% trans %}email the updates{% endtrans %}</label>
         {%else%}
         <input type="checkbox" id="question-subscribe-sidebar"/>
@@ -42,12 +48,65 @@
     </div> 
 </div>
 
+<div class="clearfix"></div>
+<div class="box sharing-widget">
+    {% if thread.is_private() %}
+        <h2>{% trans %}Share{% endtrans %}</h2>
+        <label for="share_user_name">{% trans %}Share with users{% endtrans %}</label>
+        <p>{% trans %}Yourself{% endtrans %}</p>
+        {% for group in thread.groups.all() %}
+            {% if group.name.startswith('_internal_') %}
+                <p>{{ group.created_by.get_profile_link() }}<p>
+            {% endif %}
+        {% endfor %}
+        <form action="{% url share_question_with_user %}" method="post">{% csrf_token %}
+            <input id="share_user_name" type="text" class="groups-input" name="recipient_name" />
+            <input type="hidden" name="thread_id" value="{{ thread.id }}"/>
+            <input type="submit" class="add-groups" value="{% trans %}add{% endtrans %}"/>
+        </form>
+        {#% if thread.groups.count() %}
+            <label for="group_name">{% trans %}Shared with groups:{% endtrans %}</label>
+        {% else %}
+            <label for="group_name">{% trans %}Share with a group{% endtrans %}</label>
+        {% endif %#}
+        <label for="share_group_name">{% trans %}Share with groups{% endtrans %}</label>
+        {% for group in thread.groups.all() %}
+            {% if not group.name.startswith('_internal_') %}{# todo: fix this hack #}
+                <p>{{ macros.user_group(group) }}</p>
+            {% endif %}
+        {% endfor %}
+        <form action="{% url share_question_with_group %}" method="post">{% csrf_token %}
+            <input id="share_group_name" type="text" class="groups-input" name="recipient_name" />
+            <input type="hidden" name="thread_id" value="{{ thread.id }}"/>
+            <input type="submit" class="add-groups" value="{% trans %}add{% endtrans %}"/>
+        </form>
+        <p style="text-align: center">{% trans %}or{% endtrans %}</p>
+        <form action="{% url share_question_with_group %}" method="post">{% csrf_token %}
+            <input
+                type="hidden"
+                name="recipient_name"
+                value="{{ settings.GLOBAL_GROUP_NAME }}"
+            />
+            <input type="hidden" name="thread_id" value="{{ thread.id }}"/>
+            <input 
+                type="submit"
+                class="add-groups add-everyone-group"
+                value="{% trans %}share with everyone{% endtrans %}"
+            />
+        </form>
+
+    {% else %}
+        <h2>{% trans %}Public thread{% endtrans %}</h2>
+        <p>{% trans site_name=settings.APP_SHORT_NAME %}This thread is public, all members of {{ site_name }} can read this page.{% endtrans %}</p>
+    {% endif %}
+</div>
+
 {% if settings.SIDEBAR_QUESTION_SHOW_META %}
 <div class="box statsWidget">
     <div class="clearfix"></div>
     <h2>{% trans %}Stats{% endtrans %}</h2>
     <p>
-        {% trans %}Asked{% endtrans %}: <strong>{{ timeago(question.added_at) }}</strong>
+        {% trans %}Asked{% endtrans %}: <strong>{{ macros.timeago(question.added_at) }}</strong>
     </p>
     <p> 
         {% trans %}Seen{% endtrans %}: <strong>{{ thread.view_count|intcomma }} {% trans %}times{% endtrans %}</strong>

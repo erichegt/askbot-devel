@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 # Copyright (c) 2007, 2008, Benoît Chesneau
 # Copyright (c) 2007 Simon Willison, original work on django-openid
-# 
+#
 # All rights reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
 # met:
-# 
+#
 #      * Redistributions of source code must retain the above copyright
 #      * notice, this list of conditions and the following disclaimer.
 #      * Redistributions in binary form must reproduce the above copyright
@@ -17,7 +17,7 @@
 #      * of its contributors may be used to endorse or promote products
 #      * derived from this software without specific prior written
 #      * permission.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
 # IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
 # THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
@@ -136,7 +136,7 @@ def ask_openid(
         ):
     """ basic function to ask openid and return response """
     on_failure = on_failure or signin_failure
-    
+
     trust_root = getattr(
         django_settings, 'OPENID_TRUST_ROOT', get_url_host(request) + '/'
     )
@@ -166,9 +166,9 @@ def complete(request, on_success=None, on_failure=None, return_to=None):
     """ complete openid signin """
     assert(on_success is not None)
     assert(on_failure is not None)
-    
+
     logging.debug('in askbot.deps.django_authopenid.complete')
-    
+
     consumer = Consumer(request.session, util.DjangoOpenIDStore())
     # make sure params are encoded in utf8
     params = dict((k,smart_unicode(v)) for k, v in request.GET.items())
@@ -178,7 +178,7 @@ def complete(request, on_success=None, on_failure=None, return_to=None):
         logging.debug(u'returned openid parameters were: %s' % unicode(params))
     except Exception, e:
         logging.critical(u'fix logging statement above ' + unicode(e))
-    
+
     if openid_response.status == SUCCESS:
         logging.debug('openid response status is SUCCESS')
         return on_success(
@@ -271,13 +271,13 @@ def complete_oauth_signin(request):
 
 #@not_authenticated
 @csrf.csrf_protect
-def signin(request):
+def signin(request, template_name='authopenid/signin.html'):
     """
-    signin page. It manages the legacy authentification (user/password) 
+    signin page. It manages the legacy authentification (user/password)
     and openid authentification
-    
+
     url: /signin/
-    
+
     template : authopenid/signin.htm
     """
     logging.debug('in signin view')
@@ -407,11 +407,11 @@ def signin(request):
                 sreg_req = sreg.SRegRequest(optional=['nickname', 'email'])
                 redirect_to = "%s%s?%s" % (
                         get_url_host(request),
-                        reverse('user_complete_signin'), 
+                        reverse('user_complete_signin'),
                         urllib.urlencode({'next':next_url})
                 )
                 return ask_openid(
-                            request, 
+                            request,
                             login_form.cleaned_data['openid_url'],
                             redirect_to,
                             on_failure=signin_failure,
@@ -482,7 +482,7 @@ def signin(request):
                     user = authenticate(
                             method = 'wordpress_site',
                             wordpress_url = wp.url,
-                            wp_user_id = wp_user.user_id 
+                            wp_user_id = wp_user.user_id
                            )
                     return finalize_generic_signin(
                                     request = request,
@@ -511,8 +511,9 @@ def signin(request):
     return show_signin_view(
                         request,
                         login_form = login_form,
-                        view_subtype = view_subtype
-                    )
+                        view_subtype = view_subtype,
+                        template_name=template_name
+                        )
 
 @csrf.csrf_protect
 def show_signin_view(
@@ -521,7 +522,8 @@ def show_signin_view(
                 account_recovery_form = None,
                 account_recovery_message = None,
                 sticky = False,
-                view_subtype = 'default'
+                view_subtype = 'default',
+                template_name='authopenid/signin.html'
             ):
     """url-less utility function that populates
     context of template 'authopenid/signin.html'
@@ -529,12 +531,12 @@ def show_signin_view(
     """
 
     allowed_subtypes = (
-                    'default', 'add_openid', 
+                    'default', 'add_openid',
                     'email_sent', 'change_openid',
                     'bad_key'
                 )
 
-    assert(view_subtype in allowed_subtypes) 
+    assert(view_subtype in allowed_subtypes)
 
     if sticky:
         next_url = reverse('user_signin')
@@ -648,7 +650,7 @@ def show_signin_view(
         data['existing_login_methods'] = existing_login_methods
         active_provider_names = [
                         item.provider_name for item in existing_login_methods
-                    ] 
+                    ]
 
     util.set_login_provider_tooltips(
                         major_login_providers,
@@ -662,7 +664,7 @@ def show_signin_view(
     data['major_login_providers'] = major_login_providers.values()
     data['minor_login_providers'] = minor_login_providers.values()
 
-    return render_into_skin('authopenid/signin.html', data, request)
+    return render_into_skin(template_name, data, request)
 
 @login_required
 def delete_login_method(request):
@@ -694,8 +696,8 @@ def complete_signin(request):
     """ in case of complete signin with openid """
     logging.debug('')#blank log just for the trace
     return complete(
-                request, 
-                on_success = signin_success, 
+                request,
+                on_success = signin_success,
                 on_failure = signin_failure,
                 return_to = get_url_host(request) + reverse('user_complete_signin')
             )
@@ -737,7 +739,7 @@ def signin_success(request, identity_url, openid_response):
                     )
 
 def finalize_generic_signin(
-                    request = None, 
+                    request = None,
                     user = None,
                     login_provider_name = None,
                     user_identifier = None,
@@ -950,7 +952,7 @@ def register(request, login_provider_name=None, user_identifier=None):
         #check if we need to post a question that was added anonymously
         #this needs to be a function call becase this is also done
         #if user just logged in and did not need to create the new account
-        
+
         if user != None:
             if askbot_settings.EMAIL_VALIDATION == True:
                 logging.debug('sending email validation')
@@ -964,7 +966,7 @@ def register(request, login_provider_name=None, user_identifier=None):
             else:
                 logging.debug('have really strange error')
                 raise Exception('openid login failed')#should not ever get here
-    
+
     providers = {
             'yahoo':'<font color="purple">Yahoo!</font>',
             'flickr':'<font color="#0063dc">flick</font><font color="#ff0084">r</font>&trade;',
@@ -977,7 +979,7 @@ def register(request, login_provider_name=None, user_identifier=None):
         logging.error('openid provider named "%s" has no pretty customized logo' % login_provider_name)
     else:
         provider_logo = providers[login_provider_name]
-    
+
     logging.debug('printing authopenid/complete.html output')
     data = {
         'openid_register_form': register_form,
@@ -1006,7 +1008,7 @@ def signup_with_password(request):
     """Create a password-protected account
     template: authopenid/signup_with_password.html
     """
-    
+
     logging.debug(get_request_info(request))
     next = get_next_url(request)
     login_form = forms.LoginForm(initial = {'next': next})
@@ -1022,7 +1024,7 @@ def signup_with_password(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         email_feeds_form = askbot_forms.SimpleEmailSubscribeForm(request.POST)
-        
+
         #validation outside if to remember form values
         logging.debug('validating classic register form')
         form1_is_valid = form.is_valid()
@@ -1042,7 +1044,7 @@ def signup_with_password(request):
             password = form.cleaned_data['password1']
             email = form.cleaned_data['email']
             provider_name = form.cleaned_data['login_provider']
-            
+
             new_user = User.objects.create_user(username, email, password)
             user_registered.send(None, user = new_user)
 
@@ -1061,13 +1063,13 @@ def signup_with_password(request):
             logging.debug('new user logged in')
             email_feeds_form.save(user)
             logging.debug('email feeds form saved')
-            
+
             # send email
             #subject = _("Welcome email subject line")
             #message_template = get_emplate(
             #        'authopenid/confirm_email.txt'
             #)
-            #message_context = Context({ 
+            #message_context = Context({
             #    'signup_url': askbot_settings.APP_URL + reverse('user_signin'),
             #    'username': username,
             #    'password': password,
@@ -1096,7 +1098,7 @@ def signup_with_password(request):
     minor_login_providers = util.get_enabled_minor_login_providers()
 
     context_data = {
-                'form': form, 
+                'form': form,
                 'page_class': 'openid-signin',
                 'email_feeds_form': email_feeds_form,
                 'major_login_providers': major_login_providers.values(),
@@ -1140,7 +1142,7 @@ XRDF_TEMPLATE = """<?xml version='1.0' encoding='UTF-8'?>
    </Service>
  </XRD>
 </xrds:XRDS>"""
-    
+
 def xrdf(request):
     url_host = get_url_host(request)
     return_to = "%s%s" % (url_host, reverse('user_complete_signin'))
@@ -1191,7 +1193,7 @@ def _send_email_key(user):
 def send_new_email_key(user,nomessage=False):
     import random
     random.seed()
-    user.email_key = '%032x' % random.getrandbits(128) 
+    user.email_key = '%032x' % random.getrandbits(128)
     user.save()
     _send_email_key(user)
     if nomessage==False:
@@ -1207,14 +1209,14 @@ def send_email_key(request):
     email sending is called internally
 
     raises 404 if email validation is off
-    if current email is valid shows 'key_not_sent' view of 
+    if current email is valid shows 'key_not_sent' view of
     authopenid/changeemail.html template
     """
     if askbot_settings.EMAIL_VALIDATION == True:
         if request.user.email_isvalid:
             data = {
-                'email': request.user.email, 
-                'action_type': 'key_not_sent', 
+                'email': request.user.email,
+                'action_type': 'key_not_sent',
                 'change_link': reverse('user_changeemail')
             }
             return render_into_skin(
@@ -1278,7 +1280,7 @@ def account_recover(request, key = None):
                             )
         else:
             return show_signin_view(request, view_subtype = 'bad_key')
-   
+
 
 #internal server view used as return value by other views
 def validation_email_sent(request):

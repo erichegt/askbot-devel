@@ -6,23 +6,6 @@
     >{% if icon == False %}{% if site_label %}{{ site_label }}{% else %}{{ site }}{% endif %}{% endif %}</a>
 {%- endmacro -%}
 
-{%- macro follow_toggle(follow, name, alias, id) -%}
-    {# follow - boolean; name - object type name; alias - e.g. users name; id - object id #}
-    <div 
-        class="follow-toggle follow-user-toggle" 
-        id="follow-{{ name|escape }}-{{ id }}"
-    >
-        {% if follow %}
-        <div class="follow">{% trans %}follow {{alias}}{% endtrans %}</div>
-        {% else %}
-        <div class="unfollow">
-          <div class="unfollow-red">{% trans %}unfollow {{alias}}{% endtrans %}</div>
-          <div class="unfollow-green">{% trans %}following {{alias}}{% endtrans %}</div>
-        </div>
-        {% endif %}
-    </div>
-{%- endmacro -%}
-
 {%- macro inbox_post_snippet(response, inbox_section) -%}
 <div id="re_{{response.id}}" class="re{% if response.is_new %} new highlight{% else %} seen{% endif %}">
     <input type="checkbox" />
@@ -40,7 +23,7 @@
     {% if inbox_section == 'flags' %}
          <a class="re_expand" href="{{ response.response_url }}">
               <!--div class="re_snippet">{{ response.response_snippet|escape }}</div-->
-              <div class="re_content">{{ response.response_content|escape }}</div>
+              <div class="re_content">{{ response.response_content }}</div>
          </a>
     {% endif %}
 </div>
@@ -249,7 +232,7 @@ poor design of the data or methods on data objects #}
 {%- endmacro -%}
 
 {%- macro group_join_button(group_id = None, can_join = False, is_member = False) -%}
-    {% if can_join or is_member %}
+    {% if can_join %}
         <button 
             class="group-join-btn follow-toggle {% if is_member %}on on-state{% endif %}"
             data-group-id="{{group_id}}"
@@ -500,7 +483,8 @@ for the purposes of the AJAX comment editor #}
                 edit_title = False,
                 use_category_selector = False,
                 tag_names = None,
-                editor_type = None
+                editor_type = None,
+                user = None
             )
 -%}
 {%include "widgets/edit_post.html" %}
@@ -534,8 +518,8 @@ answer {% if answer.accepted() %}accepted-answer{% endif %} {% if answer.author_
 {%- macro follow_toggle(follow, name, alias, id) -%}
     {# follow - boolean; name - object type name; alias - e.g. users name; id - object id #}
     <div 
-        class="follow-toggle" 
-        id="follow-{{ name }}-{{ id }}"
+        class="follow-toggle follow-user-toggle" 
+        id="follow-{{ name|escape }}-{{ id }}"
     >
         {% if follow %}
         <div class="follow">{% trans %}follow {{alias}}{% endtrans %}</div>

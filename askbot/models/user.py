@@ -11,6 +11,7 @@ from django.forms import EmailField, URLField
 from django.utils.translation import ugettext as _
 from django.utils.html import strip_tags
 from askbot import const
+from askbot.conf import settings as askbot_settings
 from askbot.utils import functions
 from askbot.models.tag import Tag
 from askbot.forms import DomainNameField
@@ -378,6 +379,10 @@ class GroupProfile(models.Model):
     def can_accept_user(self, user):
         """True if user is preapproved to join the group"""
         if user.is_anonymous():
+            return False
+
+        #a special case - automatic global group cannot be joined or left
+        if self.group_tag.name == askbot_settings.GLOBAL_GROUP_NAME:
             return False
 
         if self.is_open:

@@ -3,11 +3,14 @@ Changes in Askbot
 
 Development version
 -------------------
-* Updated LDAP configuration: allow protocol change, master login and
   adding "extra options" to the ldap session (Evgeny)
 * Tag moderation (Evgeny)
 * Editable optional three level category selector for the tags (Evgeny)
 * Tag editor adding tags as they are typed (Evgeny)
+* Added optional support for unicode slugs (Evgeny)
+* Optionally allow limiting one answer per question per person (Evgeny)
+* Added management command `build_livesettings_cache` (Adolfo)
+* Administrators can post under fictional user accounts without logging out (jtrain, Evgeny)
 * Welcome email for the case when replying by email is enabled (Evgeny)
 * Detection of email signature based on the response to the welcome email (Evgeny)
 * Hide "website" and "about" section of the blocked user profiles

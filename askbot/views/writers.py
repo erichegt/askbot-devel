@@ -15,6 +15,7 @@ import time
 import urlparse
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseForbidden, Http404
 from django.utils import simplejson
 from django.utils.html import strip_tags, escape
@@ -24,6 +25,7 @@ from django.core import exceptions
 from django.conf import settings
 from django.views.decorators import csrf
 
+from askbot import exceptions as askbot_exceptions
 from askbot import forms
 from askbot import models
 from askbot.conf import settings as askbot_settings
@@ -217,17 +219,25 @@ def ask(request):#view used to ask a new question
             text = form.cleaned_data['text']
             ask_anonymously = form.cleaned_data['ask_anonymously']
             post_privately = form.cleaned_data['post_privately']
+            group_id = form.cleaned_data.get('group_id', None)
 
             if request.user.is_authenticated():
+                drafts = models.DraftQuestion.objects.filter(
+                                                author=request.user
+                                            )
+                drafts.delete()
+                
+                user = form.get_post_user(request.user)
                 try:
-                    question = request.user.post_question(
+                    question = user.post_question(
                         title = title,
                         body_text = text,
                         tags = tagnames,
                         wiki = wiki,
                         is_anonymous = ask_anonymously,
                         is_private = post_privately,
-                        timestamp = timestamp
+                        timestamp = timestamp,
+                        group_id = group_id
                     )
                     return HttpResponseRedirect(question.get_absolute_url())
                 except exceptions.PermissionDenied, e:
@@ -254,15 +264,32 @@ def ask(request):#view used to ask a new question
     if request.method == 'GET':
         form = forms.AskForm()
 
+    draft_title = ''
+    draft_text = ''
+    draft_tagnames = ''
+    if request.user.is_authenticated():
+        drafts = models.DraftQuestion.objects.filter(author=request.user)
+        if len(drafts) > 0:
+            draft = drafts[0]
+            draft_title = draft.title
+            draft_text = draft.text
+            draft_tagnames = draft.tagnames
+
     form.initial = {
-        'title': request.REQUEST.get('title', ''),
-        'text': request.REQUEST.get('text', ''),
-        'tags': request.REQUEST.get('tags', ''),
+        'title': request.REQUEST.get('title', draft_title),
+        'text': request.REQUEST.get('text', draft_text),
+        'tags': request.REQUEST.get('tags', draft_tagnames),
         'wiki': request.REQUEST.get('wiki', False),
         'ask_anonymously': request.REQUEST.get('ask_anonymousy', False),
         'post_privately': request.REQUEST.get('post_privately', False)
     }
-        
+    if 'group_id' in request.REQUEST:
+        try:
+            group_id = int(request.GET.get('group_id', None))
+            form.initial['group_id'] = group_id
+        except Exception:
+            pass
+
     data = {
         'active_tab': 'ask',
         'page_class': 'ask-page',
@@ -386,7 +413,9 @@ def edit_question(request, id):
                         is_wiki = form.cleaned_data.get('wiki', question.wiki)
                         post_privately = form.cleaned_data['post_privately']
 
-                        request.user.edit_question(
+                        user = form.get_post_user(request.user)
+
+                        user.edit_question(
                             question = question,
                             title = form.cleaned_data['title'],
                             body_text = form.cleaned_data['text'],
@@ -462,7 +491,8 @@ def edit_answer(request, id):
 
                 if form.is_valid():
                     if form.has_changed():
-                        request.user.edit_answer(
+                        user = form.get_post_user(request.user)
+                        user.edit_answer(
                                 answer = answer,
                                 body_text = form.cleaned_data['text'],
                                 revision_comment = form.cleaned_data['summary'],
@@ -510,10 +540,18 @@ def answer(request, id):#process a new answer
             update_time = datetime.datetime.now()
 
             if request.user.is_authenticated():
+                drafts = models.DraftAnswer.objects.filter(
+                                                author=request.user,
+                                                thread=question.thread
+                                            )
+                drafts.delete()
                 try:
                     follow = form.cleaned_data['email_notify']
                     is_private = form.cleaned_data['post_privately']
-                    answer = request.user.post_answer(
+
+                    user = form.get_post_user(request.user)
+
+                    answer = user.post_answer(
                                         question = question,
                                         body_text = text,
                                         follow = follow,
@@ -521,6 +559,10 @@ def answer(request, id):#process a new answer
                                         is_private = is_private,
                                         timestamp = update_time,
                                     )
+                    return HttpResponseRedirect(answer.get_absolute_url())
+                except askbot_exceptions.AnswerAlreadyGiven, e:
+                    request.user.message_set.create(message = unicode(e))
+                    answer = question.thread.get_answers_by_user(request.user)[0]
                     return HttpResponseRedirect(answer.get_absolute_url())
                 except exceptions.PermissionDenied, e:
                     request.user.message_set.create(message = unicode(e))
