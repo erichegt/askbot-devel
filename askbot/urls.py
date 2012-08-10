@@ -382,7 +382,7 @@ urlpatterns = patterns('',
     ),
     #widgets url!
     url(
-        r'^widgets/ask/$',
+        r'^widgets/ask/(?P<widget_id>\d+)/$',
         views.widgets.ask_widget,
         name = 'ask_by_widget'
     ),
@@ -390,6 +390,16 @@ urlpatterns = patterns('',
         r'^widgets/ask/complete/$',
         views.widgets.ask_widget_complete,
         name = 'ask_by_widget_complete'
+    ),
+    url(
+        r'^widgets/ask/create/$',
+        views.widgets.create_ask_widget,
+        name = 'create_ask_widget'
+    ),
+    url(
+        r'^widgets/ask/$',
+        views.widgets.list_ask_widget,
+        name = 'list_ask_widgets'
     ),
     url(
         r'^feeds/(?P<url>.*)/$',
