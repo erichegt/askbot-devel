@@ -38,6 +38,7 @@ from askbot import models
 from askbot import exceptions
 from askbot.models.badges import award_badges_signal
 from askbot.models.tag import get_global_group
+from askbot.models.tag import get_groups
 from askbot.skins.loaders import render_into_skin
 from askbot.templatetags import extra_tags
 from askbot.search.state_manager import SearchState
@@ -154,6 +155,16 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
         'base_url' : base_url
     }
     paginator_context = functions.setup_paginator(paginator_data) #
+
+    if askbot_settings.GROUPS_ENABLED:
+        #todo: cleanup this branched code after groups are migrated to auth_group
+        user_groups = get_groups().exclude(name__startswith='_internal_')
+        if len(user_groups) <= 1:
+            assert(user_groups[0].name == askbot_settings.GLOBAL_GROUP_NAME)
+            user_groups = None
+    else:
+        user_groups = None
+
     data = {
         'active_tab': 'users',
         'page_class': 'users-page',
@@ -164,7 +175,8 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
         'paginator_context' : paginator_context,
         'group_email_moderation_enabled': group_email_moderation_enabled,
         'user_can_join_group': user_can_join_group,
-        'user_is_group_member': user_is_group_member
+        'user_is_group_member': user_is_group_member,
+        'user_groups': user_groups
     }
     return render_into_skin('users.html', data, request)
 

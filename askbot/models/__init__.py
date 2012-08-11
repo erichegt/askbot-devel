@@ -2210,6 +2210,18 @@ def user_get_foreign_groups(self):
     user_group_ids = self.get_groups().values_list('id', flat = True)
     return get_groups().exclude(id__in = user_group_ids)
 
+def user_get_primary_group(self):
+    """a temporary function - returns ether None or
+    first non-personal non-everyone group
+    works only for one real private group per-person
+    """
+    groups = self.get_groups(private=True)
+    for group in groups:
+        if group.name.startswith('_internal_'):
+            continue
+        return group
+    return None
+
 def user_can_make_group_private_posts(self):
     """simplest implementation: user belongs to at least one group"""
     return self.get_groups(private=True).count() > 0
@@ -2642,6 +2654,7 @@ User.add_to_class('get_marked_tag_names', user_get_marked_tag_names)
 User.add_to_class('get_groups', user_get_groups)
 User.add_to_class('get_foreign_groups', user_get_foreign_groups)
 User.add_to_class('get_personal_group', user_get_personal_group)
+User.add_to_class('get_primary_group', user_get_primary_group)
 User.add_to_class('strip_email_signature', user_strip_email_signature)
 User.add_to_class('get_groups_membership_info', user_get_groups_membership_info)
 User.add_to_class('get_anonymous_name', user_get_anonymous_name)

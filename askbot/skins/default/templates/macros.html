@@ -57,6 +57,7 @@
         {{ user_score_and_badge_summary(user, karma_mode = karma_mode, badges_mode = badges_mode) }}<br/>
         {{ user_website_link(user) }}
     {% endif %}
+    {{ user_primary_group(user) }}
 {%- endmacro -%}
 
 {%- macro post_last_updater_and_creator_info(
@@ -210,25 +211,32 @@ poor design of the data or methods on data objects #}
     <td>
         <a class="group-name"
             href="{% url users_by_group group.id, group.name|replace('-', ' ')|slugify %}"
-        >{{ group.name|escape }}</a>
+        >{{ group.name|replace('-', ' ')|escape }}</a><br/>
+        <span class="group-description">
+        {% if group.tag_wiki %}
+            {{ group.tag_wiki.summary }}
+        {% endif %}
+        </span>
+        {% if membership_info %}
+            <br/>
+            {{ group_join_button(
+                    group_id = group.id,
+                    can_join = membership_info['can_join'],
+                    is_member = membership_info['is_member']
+                )
+            }}
+        {% endif %}
     </td>
-    <td>
-    <span class="group-description">
-    {% if group.tag_wiki %}
-        {{ group.tag_wiki.summary }}
+{%- endmacro -%}
+
+{%- macro user_primary_group(user) -%}
+    {% set group=user.get_primary_group() %}
+    {% if group %}
+        <span class="primary-group-name"><a
+            class="primary-group-name"
+            href="{% url users_by_group group.id, group.name|replace('-', ' ')|slugify %}"
+        >{{ group.name|replace('-', ' ')|escape }}</a></span>
     {% endif %}
-    </span>
-    </td>
-    <td>
-    {% if membership_info %}
-        {{ group_join_button(
-                group_id = group.id,
-                can_join = membership_info['can_join'],
-                is_member = membership_info['is_member']
-            )
-        }}
-    {% endif %}
-    </td>
 {%- endmacro -%}
 
 {%- macro group_join_button(group_id = None, can_join = False, is_member = False) -%}

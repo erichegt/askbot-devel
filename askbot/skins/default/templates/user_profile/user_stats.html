@@ -7,23 +7,6 @@
 {% endblock %}
 {% block usercontent %}
     {% include "user_profile/user_info.html" %}
-    {% if settings.GROUPS_ENABLED %}
-    <div id="user-groups">
-        <h2>{% trans 
-                username = view_user.username|escape
-            %}{{username}}'s groups{% endtrans %}
-        </h2>
-        <table id="groups-list">
-            {% for group in user_groups %}
-            <tr>
-                {{ macros.user_group(group, groups_membership_info[group.id]) }}
-            </tr>
-            {% endfor %}
-        </table>
-        <div class="clearfix"></div>
-        <a id="add-group">{% trans %}add group{% endtrans %}</a>
-    </div>
-    {% endif %}
     <a name="questions"></a>
     {% spaceless %}
         <h2>{% trans counter=question_count %}<span class="count">{{counter}}</span> Question{% pluralize %}<span class="count">{{counter}}</span> Questions{% endtrans %}</h2>
