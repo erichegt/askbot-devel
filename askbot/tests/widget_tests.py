@@ -53,6 +53,13 @@ class WidgetViewsTests(AskbotTestCase):
         self.assertEquals(response.status_code, 302)
         #verify posting question
 
+    def test_render_widget_view(self):
+        response = self.client.get(reverse('render_ask_widget', args=(self.widget.id, )))
+        self.assertEquals(200, response.status_code)
+        mimetype = 'text/javascript'
+        self.assertTrue(mimetype in response['Content-Type'])
+
+
 class WidgetLoginViewTest(AskbotTestCase):
 
     def test_correct_template_loading(self):

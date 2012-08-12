@@ -2,6 +2,7 @@ from datetime import datetime
 
 from django.core import exceptions
 from django.utils import simplejson
+from django.template import Context
 from django.http import HttpResponse
 from django.views.decorators import csrf
 from django.contrib.auth.models import User
@@ -104,5 +105,8 @@ def create_ask_widget(request):
 #TODO: Add cache
 def render_ask_widget_js(request, widget_id):
     widget = get_object_or_404(models.AskWidget)
-    content =  get_template('widgets/askbot_widget.js')
+    content_tpl =  get_template('widgets/askbot_widget.js', request)
+    context_dict = {'widget': widget, 'host': request.get_host()}
+    content =  content_tpl.render(Context(context_dict))
+    print content
     return HttpResponse(content, mimetype='text/javascript')

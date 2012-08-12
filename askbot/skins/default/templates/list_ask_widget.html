@@ -1,0 +1,15 @@
+{% extends "one_column_body.html" %}
+<!-- create_ask_widget.html -->
+{% block title %}Create a Widget{% endblock %}
+{% block content %}
+<h1>Your current widgets</h1>
+
+{%for widget in widgets%}
+<p>Widget: {{widget.title}}(http://{{settings.APP_URL}}{% url render_ask_widget widget.id%})<p>
+{%endfor%}
+
+
+{% endblock %}
+{% block endjs %}
+{% endblock %}
+
