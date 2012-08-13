@@ -3,6 +3,8 @@ Changes in Askbot
 
 Development version
 -------------------
+* Added optional restriction to have confirmed email address to join forum (Evgeny)
+* Added optional list of allowed email addresses and email domain name for the new users (Evgeny)
 * Added optional support for unicode slugs (Evgeny)
 * Optionally allow limiting one answer per question per person (Evgeny)
 * Added management command `build_livesettings_cache` (Adolfo)

@@ -7,6 +7,7 @@ from django.utils.translation import ugettext as _
 from django.utils.safestring import mark_safe
 from askbot.conf import settings as askbot_settings
 from askbot.utils.slug import slugify
+from askbot.utils.functions import split_list
 from askbot import const
 import logging
 import urllib
@@ -131,25 +132,63 @@ class UserNameField(StrippedNonEmptyCharField):
             logging.debug('error - user with this name already exists')
             raise forms.ValidationError(self.error_messages['multiple-taken'])
 
+
+def email_is_allowed(
+    email, allowed_emails='', allowed_email_domains=''
+):
+    """True, if email address is pre-approved or matches a allowed
+    domain"""
+    if allowed_emails:
+        email_list = split_list(allowed_emails)
+        allowed_emails = ' ' + ' '.join(email_list) + ' '
+        email_match_re = re.compile(r'\s%s\s' % email)
+        if email_match_re.search(allowed_emails):
+            return True
+
+    if allowed_email_domains:
+        email_domain = email.split('@')[1]
+        domain_list = split_list(allowed_email_domains)
+        domain_match_re = re.compile(r'\s%s\s' % email_domain)
+        allowed_email_domains = ' ' + ' '.join(domain_list) + ' '
+        return domain_match_re.search(allowed_email_domains)
+
+    return False
+
 class UserEmailField(forms.EmailField):
     def __init__(self,skip_clean=False,**kw):
         self.skip_clean = skip_clean
-        super(UserEmailField,self).__init__(widget=forms.TextInput(attrs=dict(login_form_widget_attrs,
-            maxlength=200)), label=mark_safe(_('Your email <i>(never shared)</i>')),
-            error_messages={'required':_('email address is required'),
-                            'invalid':_('please enter a valid email address'),
-                            'taken':_('this email is already used by someone else, please choose another'),
-                            },
+        super(UserEmailField,self).__init__(
+            widget=forms.TextInput(
+                    attrs=dict(login_form_widget_attrs, maxlength=200)
+                ),
+            label=mark_safe(_('Your email <i>(never shared)</i>')),
+            error_messages={
+                'required':_('email address is required'),
+                'invalid':_('please enter a valid email address'),
+                'taken':_('this email is already used by someone else, please choose another'),
+                'unauthorized':_('this email address is not authorized')
+            },
             **kw
-            )
+        )
 
-    def clean(self,email):
+    def clean(self, email):
         """ validate if email exist in database
         from legacy register
         return: raise error if it exist """
         email = super(UserEmailField,self).clean(email.strip())
         if self.skip_clean:
             return email
+        
+        allowed_domains = askbot_settings.ALLOWED_EMAIL_DOMAINS.strip()
+        allowed_emails = askbot_settings.ALLOWED_EMAILS.strip()
+
+        if allowed_emails or allowed_domains:
+            if not email_is_allowed(
+                    email,
+                    allowed_emails=allowed_emails,
+                    allowed_email_domains=allowed_domains
+                ):
+                raise forms.ValidationError(self.error_messages['unauthorized'])
         if askbot_settings.EMAIL_UNIQUE == True:
             try:
                 user = User.objects.get(email = email)

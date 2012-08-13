@@ -14,6 +14,7 @@ from askbot import const
 from askbot.utils import functions
 from askbot.models.tag import Tag
 from askbot.forms import DomainNameField
+from askbot.utils.forms import email_is_allowed
 
 class ResponseAndMentionActivityManager(models.Manager):
     def get_query_set(self):
@@ -387,15 +388,11 @@ class GroupProfile(models.Model):
             return True
 
         #relying on a specific method of storage
-        if self.preapproved_emails:
-            email_match_re = re.compile(r'\s%s\s' % user.email)
-            if email_match_re.search(self.preapproved_emails):
-                return True
-
-        if self.preapproved_email_domains:
-            email_domain = user.email.split('@')[1]
-            domain_match_re = re.compile(r'\s%s\s' % email_domain)
-            return domain_match_re.search(self.preapproved_email_domains)
+        return email_is_allowed(
+            user.email,
+            allowed_emails=self.preapproved_emails,
+            allowed_email_domains=self.preapproved_email_domains
+        )
 
         return False
 

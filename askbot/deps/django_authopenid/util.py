@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 import cgi
 import urllib
+import urllib2
 import functools
 import re
+import random
 from openid.store.interface import OpenIDStore
 from openid.association import Association as OIDAssociation
 from openid.extensions import sreg
@@ -412,6 +414,7 @@ def get_enabled_major_login_providers():
         token = oauth.Token(data['oauth_token'], data['oauth_token_secret'])
         client = oauth.Client(consumer, token=token)
         url = 'https://identi.ca/api/account/verify_credentials.json'
+        content = urllib2.urlopen(url).read()
         json = simplejson.loads(content)
         return json['id']
     if askbot_settings.IDENTICA_KEY and askbot_settings.IDENTICA_SECRET:
@@ -848,3 +851,7 @@ def ldap_check_password(username, password):
     except ldap.LDAPError, e:
         logging.critical(unicode(e))
         return False
+
+def generate_random_key():
+    random.seed()
+    return '%032x' % random.getrandbits(128) 
