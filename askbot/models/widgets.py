@@ -14,7 +14,7 @@ class AskWidget(models.Model):
     title = models.CharField(max_length=100)
     group = models.ForeignKey(Tag, null=True, blank=True,
                               related_name='groups')
-    default_group = models.ForeignKey(Tag, null=True, blank=True)
+    default_group = models.ForeignKey(Tag, label=_('tag'), null=True, blank=True)
 
     inner_style = models.TextField(default=DEFAULT_INNER_STYLE, blank=True)
     outer_style= models.TextField(default=DEFAULT_OUTER_STYLE, blank=True)
