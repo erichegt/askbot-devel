@@ -13,6 +13,7 @@ from django.views import static
 from django.views.decorators import csrf
 from django.db.models import Max, Count
 from askbot.forms import FeedbackForm
+from askbot.utils.url_utils import get_login_url
 from askbot.utils.forms import get_next_url
 from askbot.mail import mail_moderators
 from askbot.models import BadgeData, Award, User
@@ -81,9 +82,19 @@ def faq(request):
 def feedback(request):
     data = {'page_class': 'meta'}
     form = None
+
+    if askbot_settings.ALLOW_ANONYMOUS_FEEDBACK is False:
+        if request.user.is_anonymous():
+            message = _('Please sign in or register to send your feedback')
+            request.user.message_set.create(message=message)
+            redirect_url = get_login_url() + '?next=' + request.path
+            return HttpResponseRedirect(redirect_url)
+
     if request.method == "POST":
-        form = FeedbackForm(is_auth = request.user.is_authenticated(),
-                            data = request.POST)
+        form = FeedbackForm(
+            is_auth=request.user.is_authenticated(),
+            data=request.POST
+        )
         if form.is_valid():
             if not request.user.is_authenticated():
                 data['email'] = form.cleaned_data.get('email',None)

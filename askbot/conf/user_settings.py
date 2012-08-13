@@ -16,11 +16,20 @@ USER_SETTINGS = livesettings.ConfigurationGroup(
                 )
 
 settings.register(
-    livesettings.StringValue(
+    livesettings.LongStringValue(
         USER_SETTINGS,
         'NEW_USER_GREETING',
-        default = '',
-        description = _('On-screen greeting shown to the new users')
+        default='',
+        description=_('On-screen greeting shown to the new users')
+    )
+)
+
+settings.register(
+    livesettings.BooleanValue(
+        USER_SETTINGS,
+        'ALLOW_ANONYMOUS_FEEDBACK',
+        default=True,
+        description=_('Allow anonymous users send feedback')
     )
 )
 

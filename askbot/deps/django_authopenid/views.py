@@ -906,7 +906,8 @@ def register(request, login_provider_name=None, user_identifier=None):
                 email = request.session['email']
                 send_email_key(email, key, handler_url_name='verify_email_and_register')
                 request.session['validation_code'] = key
-                return HttpResponseRedirect(reverse('verify_email_and_register'))
+                redirect_url = reverse('verify_email_and_register') + '?next=' + next_url
+                return HttpResponseRedirect(redirect_url)
     
     providers = {
             'yahoo':'<font color="purple">Yahoo!</font>',
@@ -983,7 +984,7 @@ def verify_email_and_register(request):
 
             login(request, user)
             cleanup_post_register_session(request)
-            return HttpResponseRedirect(reverse('index'))
+            return HttpResponseRedirect(get_next_url(request))
         except Exception, e:
             message = _(
                 'Sorry, registration failed. '
@@ -1005,8 +1006,7 @@ def signup_with_password(request):
     """
     
     logging.debug(get_request_info(request))
-    next = get_next_url(request)
-    login_form = forms.LoginForm(initial = {'next': next})
+    login_form = forms.LoginForm(initial = {'next': get_next_url(request)})
     #this is safe because second decorator cleans this field
     provider_name = request.REQUEST['login_provider']
 
@@ -1049,7 +1049,7 @@ def signup_with_password(request):
                 )
                 login(request, user)
                 cleanup_post_register_session(request)
-                return HttpResponseRedirect(next)
+                return HttpResponseRedirect(get_next_url(request))
             else:
                 request.session['username'] = username
                 request.session['email'] = email
@@ -1060,7 +1060,9 @@ def signup_with_password(request):
                 email = request.session['email']
                 send_email_key(email, key, handler_url_name='verify_email_and_register')
                 request.session['validation_code'] = key
-                return HttpResponseRedirect(reverse('verify_email_and_register'))
+                redirect_url = reverse('verify_email_and_register') + \
+                                '?next=' + get_next_url(request)
+                return HttpResponseRedirect(redirect_url)
 
         else:
             #todo: this can be solved with a decorator, maybe
