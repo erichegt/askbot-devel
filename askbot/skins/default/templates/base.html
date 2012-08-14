@@ -1,7 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <!-- template base.html -->
 <html xmlns="http://www.w3.org/1999/xhtml">
-    {% spaceless %}
     <head>
         <title>{% block title %}{% endblock %} - {{ settings.APP_TITLE|escape }}</title>
         {% include "meta/html_head_meta.html" %}
@@ -15,7 +14,6 @@
             {{ settings.CUSTOM_HTML_HEAD }}
         {% endif %}
     </head>
-    {% endspaceless %}
     <body class="{% block body_class %}{% endblock %}{% if user_messages %} user-messages{% endif %}{% if page_class %} {{page_class}}{% endif %}{% if request.user.is_anonymous() %} anon{% endif %} lang-{{settings.LANGUAGE_CODE}}">
         {% include "widgets/system_messages.html" %}
         {% include "debug_header.html" %}
