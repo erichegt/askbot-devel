@@ -27,7 +27,12 @@ urlpatterns = patterns('askbot.deps.django_authopenid.views',
     #but the setting is disabled right now
     #url(r'^%s%s$' % (_('email/'), _('sendkey/')), 'send_email_key', name='send_email_key'),
     #url(r'^%s%s(?P<id>\d+)/(?P<key>[\dabcdef]{32})/$' % (_('email/'), _('verify/')), 'verifyemail', name='user_verifyemail'),
-    url(r'^%s(?P<key>[\dabcdef]{32})?$' % _('recover/'), 'account_recover', name='user_account_recover'),
+    url(r'^%s$' % _('recover/'), 'account_recover', name='user_account_recover'),
+    url(
+        r'^%s$' % _('verify-email/'),
+        'verify_email_and_register',
+        name='verify_email_and_register'
+    ),
     url(
         r'^delete_login_method/$',#this method is ajax only
         'delete_login_method',

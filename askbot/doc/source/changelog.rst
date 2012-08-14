@@ -3,7 +3,10 @@ Changes in Askbot
 
 Development version
 -------------------
-* Added optional support for unicode slugs (Evgeny)
+* Option to disable feedback form for the anonymos users (Evgeny)
+* Optional restriction to have confirmed email address to join forum (Evgeny)
+* Optional list of allowed email addresses and email domain name for the new users (Evgeny)
+* Optional support for unicode slugs (Evgeny)
 * Optionally allow limiting one answer per question per person (Evgeny)
 * Added management command `build_livesettings_cache` (Adolfo)
 * Administrators can post under fictional user accounts without logging out (jtrain, Evgeny)
