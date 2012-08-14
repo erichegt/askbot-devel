@@ -325,7 +325,8 @@ def process_parts(parts, reply_code = None):
 
 
 def process_emailed_question(
-    from_address, subject, body_text, stored_files, tags = None
+    from_address, subject, body_text, stored_files,
+    tags=None, group_id=None
 ):
     """posts question received by email or bounces the message"""
     #a bunch of imports here, to avoid potential circular import issues
@@ -375,11 +376,12 @@ def process_emailed_question(
 
 
             user.post_question(
-                title = title,
-                tags = tagnames.strip(),
-                body_text = stripped_body_text,
-                by_email = True,
-                email_address = from_address
+                title=title,
+                tags=tagnames.strip(),
+                body_text=stripped_body_text,
+                by_email=True,
+                email_address=from_address,
+                group_id=group_id
             )
         else:
             raise ValidationError()
