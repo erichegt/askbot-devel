@@ -205,7 +205,7 @@ def ASK(message, host = None, addr = None):
             )
             mail.process_emailed_question(
                 from_address, subject, body_text, stored_files,
-                tags = [group_tag.name, ]
+                group_id = group_tag.id
             )
         except Tag.DoesNotExist:
             #do nothing because this handler will match all emails
