@@ -1,31 +1,60 @@
 var AskbotAskWidget = {
   element_id: "AskbotAskWidget",
   widgetToggle: function() {
-    element = document.getElementById(this.element_id);
+    element = document.getElementById(AskbotAskWidget.element_id);
     element.style.visibility = (element.style.visibility == "visible") ? "hidden" : "visible";
   },
   toHtml: function() {
-    //document.write('<link rel="stylesheet" href="http://{{host}}{{STATIC_URL}}askbot-modal.css"/>');   
-    document.write(this.createButton());
-    document.write('<link rel="stylesheet" href="http://{{host}}/static/default/media/style/askbot-modal.css"/>');   
-    {%if widget.outer_style %}
-    document.write('<style>{{widget.outer_style}}</style>');   
-    {%endif%}
+    var html = AskbotAskWidget.createButton();
+    var link = document.createElement('link');
+    link.setAttribute("rel", "stylesheet");
+    link.setAttribute("href", 'http://{{host}}/static/default/media/style/askbot-modal.css');
+
     //creating the div
-    document.write("<div id='" + this.element_id + "'>");
-    document.write("<a href='#' id='AskbotModalCLose' onClick='AskbotAskWidget.widgetToggle();'>Close</a>");
-    document.write("<div>");
-    document.write("<iframe src='http://{{host}}{% url ask_by_widget widget.id %}' />");
-    document.write("</div>");
-    document.write("</div>");
+    var motherDiv = document.createElement('div');
+    motherDiv.setAttribute("id", AskbotAskWidget.element_id);
+
+    {%if widget.outer_style %}
+    outerStyle = document.createElement('style');
+    outerStyle.innerText = "{{widget.outer_style}}";
+    motherDiv.appendChild(outerStyle);
+    {%endif%}
+
+    var closeButton = document.createElement('a');
+    closeButton.setAttribute('href', '#');
+    closeButton.setAttribute('id', 'AskbotModalClose');
+    closeButton.setAttribute('onClick', 'AskbotAskWidget.widgetToggle();');
+    closeButton.innerText = 'Close';
+
+    motherDiv.appendChild(closeButton);
+
+    var iframe = document.createElement('iframe');
+    iframe.setAttribute('src', 'http://{{host}}{% url ask_by_widget widget.id %}');
+
+    motherDiv.appendChild(iframe);
+
+    var body = document.getElementsByTagName('body')[0];
+    if (body){
+      body.insertBefore(motherDiv, body.firstChild);
+      body.insertBefore(AskbotAskWidget.createButton(), body.firstChild);
+      body.insertBefore(link, body.firstChild);
+    }
   },
   createButton: function() {
     var label="{{widget.title}}"; //TODO: add to the model
-    var button = '<div id="AskbotAskButton"><a href="#" onClick="AskbotAskWidget.widgetToggle();">' + label + '</a></div>';
-    //document.write(button);
-    return button;
+    var buttonDiv = document.createElement('div');
+    buttonDiv.setAttribute('id', "AskbotAskButton");
+
+    var closeButton = document.createElement('a');
+    closeButton.setAttribute('href', '#');
+    closeButton.setAttribute('onClick', 'AskbotAskWidget.widgetToggle();');
+    closeButton.innerText = label;
+
+    buttonDiv.appendChild(closeButton);
+    
+    return buttonDiv;
   }
 };
 
-AskbotAskWidget.toHtml();
 
+window.onload = AskbotAskWidget.toHtml;
