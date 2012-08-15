@@ -52,6 +52,7 @@
             {% endif %}
             {% if thread.last_activity_by.get_primary_group() %}-{% endif %}
             {{ user_primary_group(thread.last_activity_by) }}
+        </div>
     </div>
     <h2><a title="{{question.summary|escape}}" href="{{ question.get_absolute_url(thread=thread) }}">{{thread.get_title(question)|escape}}</a></h2>
     {{ tag_list_widget(thread.get_tag_names(), search_state=search_state) }}
