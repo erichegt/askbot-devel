@@ -24,7 +24,7 @@
     askbot['settings']['editorType'] = '{{ settings.EDITOR_TYPE }}';
     {% if settings.ALLOWED_UPLOAD_FILE_TYPES %}
         askbot['settings']['allowedUploadFileTypes'] = [
-            "{{ settings.ALLOWED_UPLOAD_FILE_TYPES|join('", "') }}"
+            "{{ settings.ALLOWED_UPLOAD_FILE_TYPES|join('", "')|replace('.','') }}"
         ];
     {% else %}
         askbot['settings']['allowedUploadFileTypes'] = [];

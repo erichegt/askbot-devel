@@ -839,7 +839,8 @@ FileUploadDialog.prototype.createDom = function() {
     label.attr('for', this._input_id);
 
     var types = askbot['settings']['allowedUploadFileTypes'];
-    label.html(gettext('Allowed file types are:') + ' ' + types);
+    types = types.join(', ');
+    label.html(gettext('Allowed file types are:') + ' ' + types + '.');
     form.append(label);
     form.append($('<br/>'));
 
