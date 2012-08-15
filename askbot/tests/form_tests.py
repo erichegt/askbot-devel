@@ -374,11 +374,12 @@ class AskWidgetFormTests(AskbotTestCase):
         self.bad_data = {'title': ''}
 
     def test_valid_input(self):
-        form_object = self.form(self.good_data)
+        form_object = self.form(include_text=False, data=self.good_data)
+        print form_object.errors
         self.assertTrue(form_object.is_valid())
-        form_object = self.form(self.good_data_anon)
+        form_object = self.form(include_text=False, data=self.good_data_anon)
         self.assertTrue(form_object.is_valid())
 
     def test_invalid_input(self):
-        form_object = self.form(self.bad_data)
+        form_object = self.form(False, data=self.bad_data)
         self.assertFalse(form_object.is_valid())

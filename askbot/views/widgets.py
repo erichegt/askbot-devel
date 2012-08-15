@@ -20,7 +20,7 @@ from askbot import forms
 def ask_widget(request, widget_id):
 
     def post_question(data, request):
-        thread = models.Thread.objects.create_new(**data_dict)
+        thread = models.Thread.objects.create_new(**data)
         question = thread._question_post()
         request.session['widget_question_url'] = question.get_absolute_url()
         return question
@@ -28,15 +28,20 @@ def ask_widget(request, widget_id):
     widget = get_object_or_404(models.AskWidget, id=widget_id)
 
     if request.method == "POST":
-        form = forms.AskWidgetForm(request.POST)
+        form = forms.AskWidgetForm(include_text=widget.include_text_field,
+                data=request.POST)
         if form.is_valid():
             ask_anonymously = form.cleaned_data['ask_anonymously']
             title = form.cleaned_data['title']
+            if widget.include_text_field:
+                text = form.cleaned_data['text']
+            else:
+                text = ' '
             data_dict = {
                          'title': title,
                          'added_at': datetime.now(),
                          'wiki': False,
-                         'text': ' ',
+                         'text': text,
                          'tagnames': '',
                          'is_anonymous': ask_anonymously
                         }
@@ -63,7 +68,7 @@ def ask_widget(request, widget_id):
                 next_url = '%s?next=%s' % (reverse('widget_signin'), reverse('ask_by_widget'))
                 return redirect(next_url)
 
-        form = forms.AskWidgetForm()
+        form = forms.AskWidgetForm(include_text=widget.include_text_field)
     data = {'form': form, 'widget': widget}
     return render_into_skin('ask_by_widget.html', data, request)
 
@@ -100,7 +105,23 @@ def create_ask_widget(request):
         form = models.widgets.CreateAskWidgetForm()
 
     data = {'form': form}
-    return render_into_skin('create_ask_widget.html', data, request)
+    return render_into_skin('ask_widget_form.html', data, request)
+
+@decorators.admins_only
+def edit_ask_widget(request, widget_id):
+    widget = get_object_or_404(models.AskWidget, pk=widget_id)
+    if request.method=='POST':
+        form = models.widgets.CreateAskWidgetForm(request.POST,
+                instance=widget)
+        if form.is_valid():
+            form.save()
+            return redirect('list_ask_widgets')
+    else:
+        form = models.widgets.CreateAskWidgetForm(instance=widget)
+
+    data = {'form': form}
+    return render_into_skin('ask_widget_form.html', data, request)
+
 
 #TODO: Add cache
 def render_ask_widget_js(request, widget_id):

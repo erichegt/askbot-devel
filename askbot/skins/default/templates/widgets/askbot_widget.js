@@ -8,7 +8,7 @@ var AskbotAskWidget = {
     var html = AskbotAskWidget.createButton();
     var link = document.createElement('link');
     link.setAttribute("rel", "stylesheet");
-    link.setAttribute("href", 'http://{{host}}/static/default/media/style/askbot-modal.css');
+    link.setAttribute("href", 'http://{{host}}{{"/style/askbot-modal.css"|media}}');
 
     //creating the div
     var motherDiv = document.createElement('div');

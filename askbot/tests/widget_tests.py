@@ -77,6 +77,7 @@ class WidgetCreatorViewsTests(AskbotTestCase):
         self.user.set_password('testpass')
         self.user.set_admin_status()
         self.user.save()
+        self.widget = models.AskWidget.objects.create(title='foo widget')
 
     def test_list_ask_widget_view(self):
         self.client.login(username='user1', password='testpass')
@@ -94,4 +95,18 @@ class WidgetCreatorViewsTests(AskbotTestCase):
         self.client.login(username='user1', password='testpass')
         post_data = {'title': 'Test widget'}
         response = self.client.post(reverse('create_ask_widget'), post_data)
+        self.assertEquals(response.status_code, 302)
+
+    def test_edit_ask_widget_get(self):
+        self.client.login(username='user1', password='testpass')
+        response = self.client.get(reverse('edit_ask_widget',
+            args=(self.widget.id, )))
+        self.assertEquals(response.status_code, 200)
+        self.assertTrue('form' in response.context)
+
+    def test_edit_ask_widget_post(self):
+        self.client.login(username='user1', password='testpass')
+        post_data = {'title': 'Test lalalla'}
+        response = self.client.post(reverse('edit_ask_widget',
+            args=(self.widget.id, )), post_data)
         self.assertEquals(response.status_code, 302)

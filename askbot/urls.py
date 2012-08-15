@@ -402,6 +402,11 @@ urlpatterns = patterns('',
         name = 'create_ask_widget'
     ),
     url(
+        r'^widgets/ask/edit/(?P<widget_id>\d+)/$',
+        views.widgets.edit_ask_widget,
+        name = 'edit_ask_widget'
+    ),
+    url(
         r'^widgets/ask/$',
         views.widgets.list_ask_widget,
         name = 'list_ask_widgets'

@@ -16,15 +16,13 @@ class AskWidget(models.Model):
                               related_name='groups')
     default_group = models.ForeignKey(Tag, null=True, blank=True)
 
+    include_text_field = models.BooleanField(default=False, blank=True)
+
     inner_style = models.TextField(default=DEFAULT_INNER_STYLE, blank=True)
     outer_style= models.TextField(default=DEFAULT_OUTER_STYLE, blank=True)
 
     class Meta:
         app_label = 'askbot'
-
-
-    def embed_code(self):
-        pass
 
     def __unicode__(self):
         return "Widget: %s" % self.title
