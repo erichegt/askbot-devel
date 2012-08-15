@@ -127,6 +127,15 @@ def edit_ask_widget(request, widget_id):
     data = {'form': form}
     return render_into_skin('ask_widget_form.html', data, request)
 
+@decorators.admins_only
+def delete_ask_widget(request, widget_id):
+    widget = get_object_or_404(models.AskWidget, pk=widget_id)
+    if request.method=="POST":
+        widget.delete()
+        return redirect('list_ask_widgets')
+    else:
+        return render_into_skin('delete_ask_widget.html',
+                {'widget': widget}, request)
 
 #TODO: Add cache
 def render_ask_widget_js(request, widget_id):

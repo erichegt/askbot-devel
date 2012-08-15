@@ -413,6 +413,12 @@ urlpatterns = patterns('',
         name = 'edit_ask_widget'
     ),
     url(
+        r'^widgets/ask/delete/(?P<widget_id>\d+)/$',
+        views.widgets.delete_ask_widget,
+        name = 'delete_ask_widget'
+    ),
+
+    url(
         r'^widgets/ask/$',
         views.widgets.list_ask_widget,
         name = 'list_ask_widgets'
