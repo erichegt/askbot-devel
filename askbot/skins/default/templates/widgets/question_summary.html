@@ -50,7 +50,7 @@
                 <a href="{% url user_profile thread.last_activity_by.id, thread.last_activity_by.username|slugify %}">{{thread.last_activity_by.username|escape}}</a> {{ user_country_flag(thread.last_activity_by) }}
                 {#{user_score_and_badge_summary(thread.last_activity_by)}#}
             {% endif %}
-            {{ user_primary_group(thread.last_activity_by) }}
+            - {{ user_primary_group(thread.last_activity_by) }}
         </div>
     </div>
     <h2><a title="{{question.summary|escape}}" href="{{ question.get_absolute_url(thread=thread) }}">{{thread.get_title(question)|escape}}</a></h2>
