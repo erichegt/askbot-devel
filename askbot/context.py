@@ -24,6 +24,8 @@ def application_settings(request):
         return {}
     my_settings = askbot_settings.as_dict()
     my_settings['LANGUAGE_CODE'] = getattr(request, 'LANGUAGE_CODE', settings.LANGUAGE_CODE)
+    my_settings['ALLOWED_UPLOAD_FILE_TYPES'] = \
+            settings.ASKBOT_ALLOWED_UPLOAD_FILE_TYPES
     my_settings['ASKBOT_URL'] = settings.ASKBOT_URL
     my_settings['STATIC_URL'] = settings.STATIC_URL
     my_settings['ASKBOT_CSS_DEVEL'] = getattr(

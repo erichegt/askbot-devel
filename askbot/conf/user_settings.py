@@ -55,6 +55,15 @@ settings.register(
 settings.register(
     livesettings.BooleanValue(
         USER_SETTINGS,
+        'ALLOW_EMAIL_ADDRESS_IN_USERNAME',
+        default=True,
+        description=_('Allow email address in user name')
+    )
+)
+
+settings.register(
+    livesettings.BooleanValue(
+        USER_SETTINGS,
         'ALLOW_ACCOUNT_RECOVERY_BY_EMAIL',
         default = True,
         description = _('Allow account recovery by email')

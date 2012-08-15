@@ -829,10 +829,19 @@ FileUploadDialog.prototype.createDom = function() {
     var url_input_element = url_input.getElement();
     url_input_element.css({
         'width': '200px',
+        'display': 'none'
     });
     form.append(url_input_element);
-    form.append($('<br/>'));
+    //form.append($('<br/>'));
     this._url_input = url_input;
+
+    var label = this.makeElement('label');
+    label.attr('for', this._input_id);
+
+    var types = askbot['settings']['allowedUploadFileTypes'];
+    label.html(gettext('Allowed file types are:') + ' ' + types);
+    form.append(label);
+    form.append($('<br/>'));
 
     /* //Description input box
     var descr_input = new TippedInput();

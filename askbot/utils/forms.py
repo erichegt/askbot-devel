@@ -73,6 +73,7 @@ class UserNameField(StrippedNonEmptyCharField):
             'multiple-taken': _('sorry, we have a serious error - user name is taken by several users'),
             'invalid': _('user name can only consist of letters, empty space and underscore'),
             'meaningless': _('please use at least some alphabetic characters in the user name'),
+            'noemail': _('symbol "@" is not allowed')
         }
         if 'error_messages' in kw:
             error_messages.update(kw['error_messages'])
@@ -103,7 +104,16 @@ class UserNameField(StrippedNonEmptyCharField):
         except forms.ValidationError:
             raise forms.ValidationError(self.error_messages['required'])
 
-        username_regex = re.compile(const.USERNAME_REGEX_STRING, re.UNICODE)
+        username_re_string = const.USERNAME_REGEX_STRING
+        #attention: here we check @ symbol in two places: input and the regex
+        if askbot_settings.ALLOW_EMAIL_ADDRESS_IN_USERNAME is False:
+            if '@' in username:
+                raise forms.ValidationError(self.error_messages['noemail'])
+
+            username_re_string = username_re_string.replace('@', '')
+
+        username_regex = re.compile(username_re_string, re.UNICODE)
+
         if self.required and not username_regex.search(username):
             raise forms.ValidationError(self.error_messages['invalid'])
         if username in self.RESERVED_NAMES:
