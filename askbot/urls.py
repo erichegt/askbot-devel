@@ -382,6 +382,12 @@ urlpatterns = patterns('',
     ),
     #widgets url!
     url(
+        r'^widgets/$',
+        views.widgets.widgets,
+        name = 'widgets'
+    ),
+
+    url(
         r'^widgets/ask/(?P<widget_id>\d+)/$',
         views.widgets.ask_widget,
         name = 'ask_by_widget'

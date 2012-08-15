@@ -1,0 +1,13 @@
+{% extends "one_column_body.html" %}
+<!-- template badges.html -->
+{% block title %}{% spaceless %}{% trans %}Widgets{% endtrans %}{% endspaceless %}{% endblock %}
+{% block content %}
+<h1 class="section-title">{% trans %}Widgets{% endtrans %}</h1>
+<p>
+{% trans %}You can create widgets to embed into your site, here a list of widgets that you can create.{% endtrans %}<br/>
+</p>
+<div id="widgetlist">
+  <p><a href="{%url create_ask_widget %}">Ask Question Widget </a><a href="{%url list_ask_widgets %}">(view lists)</a></p>
+</div>
+{% endblock %}
+<!-- end template badges.html -->

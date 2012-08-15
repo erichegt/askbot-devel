@@ -16,6 +16,11 @@ from askbot.utils import decorators
 from askbot import models
 from askbot import forms
 
+
+@decorators.admins_only
+def widgets(request):
+    return render_into_skin('widgets.html', {}, request)
+
 @csrf.csrf_protect
 def ask_widget(request, widget_id):
 
