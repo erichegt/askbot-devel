@@ -721,7 +721,9 @@ var Vote = function(){
             url: askbot['urls']['vote_url_template'].replace('{{QuestionID}}', questionId),
             data: { "type": voteType, "postId": postId },
             error: handleFail,
-            success: function(data){callback(object, voteType, data);}
+            success: function(data) {
+                    callback(object, voteType, data);
+                }
             });
     };
 
@@ -742,8 +744,8 @@ var Vote = function(){
             $("#"+commentLinkIdPrefix+postId).removeClass("comment-link-accepted");
         }
         else if(data.success == "1"){
-            var answers = ('div[id^="'+answerContainerIdPrefix +"']");
-            $(answers).removeClass("accepted-answer");
+            var answers = ('div[id^="'+answerContainerIdPrefix +'"]');
+            $(answers).removeClass('accepted-answer');
             var commentLinks = ('div[id^="'+answerContainerIdPrefix +'"] div[id^="'+ commentLinkIdPrefix +'"]');
             $(commentLinks).removeClass("comment-link-accepted");
 
