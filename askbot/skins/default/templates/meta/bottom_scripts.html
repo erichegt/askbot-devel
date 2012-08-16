@@ -42,6 +42,7 @@
     </script>
 {% endif %}
 <script type="text/javascript">
+    /*<![CDATA[*/
     $(document).ready(function(){
         {% if active_tab == 'questions' %}
             if (Modernizr.history) {
@@ -80,6 +81,7 @@
     notify.show();
 {% endif %}
     $('abbr.timeago').timeago();
+    /*]]>*/
 </script>
 {% if settings.USE_CUSTOM_JS %}
 <script 
