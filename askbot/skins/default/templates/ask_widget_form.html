@@ -1,21 +1,20 @@
 {% extends "one_column_body.html" %}
 <!-- create_ask_widget.html -->
-{% block title %}Create a Widget{% endblock %}
+{% block title %}{% trans %}Create an Ask a Question widget{% endtrans %}{% endblock %}
 {% block content %}
-<h1> Create a askbot ask widget.</h1>
-
-{%if form.non_field_errors()%}
-  {{form.non_field_errors()}}
-{%endif%}
-  
-<form action="." method="POST">
-{%for field in form%}
-  <div class='field'>
-    {{field.errors}}
-    {{field.label_tag()}}: {{field}}
-  </div>
-{%endfor%}
-  <p><input type='submit' value='Save Widget' /></p>
+<h1 class="section-title">{% trans %}Create an ask a questions widget{% endtrans %}</h1>
+{#% if form.non_field_errors() %}
+  {{ form.non_field_errors() }}
+{% endif %#}
+<form method="post">
+    <table>
+        {{ form.as_table() }}
+        <tr>
+            <td colspan="2" style="text-align: center">
+                <input type="submit" class="submit" value={% trans %}Save{% endtrans %} />
+            </td>
+        </tr>
+    </table>
 </form>
 
 {% endblock %}

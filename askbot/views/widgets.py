@@ -19,7 +19,11 @@ from askbot import forms
 
 @decorators.admins_only
 def widgets(request):
-    return render_into_skin('widgets.html', {}, request)
+    data = {
+        'ask_widgets': models.AskWidget.objects.all(),
+        'page_class': 'widgets'
+    }
+    return render_into_skin('widgets.html', data, request)
 
 @csrf.csrf_protect
 def ask_widget(request, widget_id):
@@ -43,13 +47,13 @@ def ask_widget(request, widget_id):
             else:
                 text = ' '
             data_dict = {
-                         'title': title,
-                         'added_at': datetime.now(),
-                         'wiki': False,
-                         'text': text,
-                         'tagnames': '',
-                         'is_anonymous': ask_anonymously
-                        }
+                'title': title,
+                'added_at': datetime.now(),
+                'wiki': False,
+                'text': text,
+                'tagnames': '',
+                'is_anonymous': ask_anonymously
+            }
             if request.user.is_authenticated():
                 data_dict['author'] = request.user
                 question = post_question(data_dict, request)
@@ -74,6 +78,7 @@ def ask_widget(request, widget_id):
                 return redirect(next_url)
 
         form = forms.AskWidgetForm(include_text=widget.include_text_field)
+
     data = {'form': form, 'widget': widget}
     return render_into_skin('ask_by_widget.html', data, request)
 
