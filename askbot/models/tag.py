@@ -190,6 +190,14 @@ class TagManager(BaseQuerySetManager):
     def get_query_set(self):
         return TagQuerySet(self.model)
 
+    def get_content_tags(self):
+        """temporary function that filters out the group tags"""
+        return self.annotate(
+            member_count = models.Count('user_memberships')
+        ).filter(
+            member_count = 0
+        )
+
     def create(self, name = None, created_by = None, **kwargs):
         """Creates a new tag"""
         if created_by.can_create_tags() or is_preapproved_tag_name(name):
