@@ -339,6 +339,7 @@ def signin(request, template_name='authopenid/signin.html'):
                                 #continue with proper registration
                                 ldap_username = user_info['ldap_username']
                                 request.session['email'] = user_info['email']
+                                request.session['ldap_user_info'] = user_info
                                 if askbot_settings.AUTOFILL_USER_DATA:
                                     request.session['username'] = ldap_username
                                     request.session['first_name'] = \
@@ -913,24 +914,29 @@ def register(request, login_provider_name=None, user_identifier=None):
             username = register_form.cleaned_data['username']
             email = register_form.cleaned_data['email']
 
-            user = User()
-            user.username = username
-            user.email = email
-            #todo - maybe hide these names per some option
-            #user.first_name = request.session.get('first_name', '')
-            #user.last_name = request.session.get('last_name', '')
-            user.save()
+            if 'ldap_user_info' in request.session:
+                user_info = request.session['ldap_user_info']
+                user = ldap_create_user(user_info).user
+                del request.session['ldap_user_info']
+            else:
+                user = User()
+                user.username = username
+                user.email = email
+                #todo - maybe hide these names per some option
+                #user.first_name = request.session.get('first_name', '')
+                #user.last_name = request.session.get('last_name', '')
+                user.save()
 
-            user_registered.send(None, user = user)
+                user_registered.send(None, user = user)
 
-            logging.debug('creating new openid user association for %s')
+                logging.debug('creating new openid user association for %s')
 
-            UserAssociation(
-                openid_url = user_identifier,
-                user = user,
-                provider_name = login_provider_name,
-                last_used_timestamp = datetime.datetime.now()
-            ).save()
+                UserAssociation(
+                    openid_url = user_identifier,
+                    user = user,
+                    provider_name = login_provider_name,
+                    last_used_timestamp = datetime.datetime.now()
+                ).save()
 
             del request.session['user_identifier']
             del request.session['login_provider_name']
