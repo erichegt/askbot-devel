@@ -141,6 +141,11 @@ There are three more optional parameters that must go to the ``settings.py`` fil
   The function should take two parameters (in the following order): user_info, login_form.
   user_info - is the same dictionary
   that is returned by the `ldap_authenticate` function.
+* ``LDAP_CREATE_USER_FUNCTION`` - python dotted path to function that will create
+  the ldap user, should actually return a user association object, like
+  ``askbot.deps.django_authopenid.ldap_auth.ldap_create_user_default``.
+  Function takes return value of the ldap authenticate function as a sole parameter.
+
 
 Use these when you have the "directory master passsword" - 
 for a specific user who can access the rest of the directory,
