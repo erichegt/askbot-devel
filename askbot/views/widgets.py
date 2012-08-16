@@ -46,12 +46,25 @@ def ask_widget(request, widget_id):
                 text = form.cleaned_data['text']
             else:
                 text = ' '
+
+
+            if widget.group:
+                group_id = widget.group.id
+            else:
+                group_id = None
+
+            if widget.tag:
+                tagnames = widget.tag.name
+            else:
+                tagnames = ''
+
             data_dict = {
                 'title': title,
                 'added_at': datetime.now(),
                 'wiki': False,
                 'text': text,
-                'tagnames': '',
+                'tagnames': tagnames,
+                'group_id': group_id,
                 'is_anonymous': ask_anonymously
             }
             if request.user.is_authenticated():
