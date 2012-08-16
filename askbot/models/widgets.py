@@ -40,8 +40,10 @@ class CreateAskWidgetForm(forms.ModelForm):
                         initial=DEFAULT_OUTER_STYLE
                     )
     #these don't work for some reason
-    #group = forms.ModelChoiceField(query_set=get_groups())
-    #tag = forms.ModelChoiceField(query_set=Tag.objects.get_content_tags())
+    group = forms.ModelChoiceField(queryset=get_groups(),
+            required=False)
+    tag = forms.ModelChoiceField(queryset=Tag.objects.get_content_tags(),
+            required=False)
 
     class Meta:
         model = AskWidget

@@ -6,7 +6,7 @@
 
 {%for widget in widgets%}
   <p>Widget: {{widget.title}} | <a href="{% url edit_ask_widget widget.id %}">Edit</a> | <a href="{% url delete_ask_widget widget.id %}">Delete</a> </p>
-  <p>Code: &lt;script type="text/javascript" src=http://{{request.get_host()}}{% url render_ask_widget widget.id%} &gt;&lt;script&gt;
+  <p>Code: &lt;script type="text/javascript" src="http://{{request.get_host()}}{% url render_ask_widget widget.id%}" &gt;&lt;/script&gt;
 {%endfor%}
 
 

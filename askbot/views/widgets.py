@@ -144,9 +144,22 @@ def delete_ask_widget(request, widget_id):
 
 #TODO: Add cache
 def render_ask_widget_js(request, widget_id):
-    widget = get_object_or_404(models.AskWidget)
+    widget = get_object_or_404(models.AskWidget, pk=widget_id)
+    variable_name = "AskbotAskWidget%d" % widget.id
     content_tpl =  get_template('widgets/askbot_widget.js', request)
-    context_dict = {'widget': widget, 'host': request.get_host()}
+    context_dict = {'widget': widget,
+                    'host': request.get_host(),
+                    'variable_name': variable_name}
     content =  content_tpl.render(Context(context_dict))
-    print content
     return HttpResponse(content, mimetype='text/javascript')
+
+#TODO: Add cache
+def render_ask_widget_css(request, widget_id):
+    widget = get_object_or_404(models.AskWidget, pk=widget_id)
+    variable_name = "AskbotAskWidget%d" % widget.id
+    content_tpl =  get_template('widgets/askbot_widget.css', request)
+    context_dict = {'widget': widget,
+                    'host': request.get_host(),
+                    'variable_name': variable_name}
+    content =  content_tpl.render(Context(context_dict))
+    return HttpResponse(content, mimetype='text/css')

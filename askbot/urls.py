@@ -398,6 +398,12 @@ urlpatterns = patterns('',
         name = 'render_ask_widget'
     ),
     url(
+        r'^widgets/ask/(?P<widget_id>\d+).css$',
+        views.widgets.render_ask_widget_css,
+        name = 'render_ask_widget_css'
+    ),
+
+    url(
         r'^widgets/ask/complete/$',
         views.widgets.ask_widget_complete,
         name = 'ask_by_widget_complete'

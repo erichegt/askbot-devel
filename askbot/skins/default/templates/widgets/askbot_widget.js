@@ -1,18 +1,20 @@
-var AskbotAskWidget = {
-  element_id: "AskbotAskWidget",
+var {{variable_name}} = {
+  element_id: "{{variable_name}}",
   widgetToggle: function() {
-    element = document.getElementById(AskbotAskWidget.element_id);
+    element = document.getElementById({{variable_name}}.element_id);
     element.style.visibility = (element.style.visibility == "visible") ? "hidden" : "visible";
   },
   toHtml: function() {
-    var html = AskbotAskWidget.createButton();
+    var html = {{variable_name}}.createButton();
     var link = document.createElement('link');
     link.setAttribute("rel", "stylesheet");
-    link.setAttribute("href", 'http://{{host}}{{"/style/askbot-modal.css"|media}}');
+    //link.setAttribute("href", 'http://{{host}}{{"/style/askbot-modal.css"|media}}');
+    link.setAttribute("href", 'http://{{host}}{%url render_ask_widget_css widget.id%}');
 
     //creating the div
     var motherDiv = document.createElement('div');
-    motherDiv.setAttribute("id", AskbotAskWidget.element_id);
+    motherDiv.setAttribute("id", {{variable_name}}.element_id);
+    console.log(motherDiv);
 
     var containerDiv = document.createElement('div');
     motherDiv.appendChild(containerDiv);
@@ -26,7 +28,7 @@ var AskbotAskWidget = {
     var closeButton = document.createElement('a');
     closeButton.setAttribute('href', '#');
     closeButton.setAttribute('id', 'AskbotModalClose');
-    closeButton.setAttribute('onClick', 'AskbotAskWidget.widgetToggle();');
+    closeButton.setAttribute('onClick', '{{variable_name}}.widgetToggle();');
     closeButton.innerText = 'Close';
 
     containerDiv.appendChild(closeButton);
@@ -38,6 +40,7 @@ var AskbotAskWidget = {
 
     var body = document.getElementsByTagName('body')[0];
     if (body){
+      console.log(body.firstChild);
       body.insertBefore(motherDiv, body.firstChild);
       body.insertBefore(link, body.firstChild);
     }
@@ -48,7 +51,7 @@ var AskbotAskWidget = {
     buttonDiv.setAttribute('id', "AskbotAskButton");
 
     var closeButton = document.createElement('button');
-    closeButton.setAttribute('onClick', 'AskbotAskWidget.widgetToggle();');
+    closeButton.setAttribute('onClick', '{{variable_name}}.widgetToggle();');
     closeButton.innerText = label;
 
     buttonDiv.appendChild(closeButton);
@@ -57,6 +60,14 @@ var AskbotAskWidget = {
   }
 };
 
+previous_function = window.onload;
+var onload_functions = function(){
+  if (previous_function){
+    previous_function();
+  }
+  {{variable_name}}.toHtml();
+}
 
-window.onload = AskbotAskWidget.toHtml;
-document.write(AskbotAskWidget.createButton().outerHTML);
+console.log(onload_functions);
+window.onload = onload_functions();
+document.write({{variable_name}}.createButton().outerHTML);
