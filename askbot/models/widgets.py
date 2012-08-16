@@ -39,8 +39,8 @@ class CreateAskWidgetForm(forms.ModelForm):
                         required=False,
                         initial=DEFAULT_OUTER_STYLE
                     )
-    #these don't work for some reason
-    group = forms.ModelChoiceField(queryset=get_groups(),
+
+    group = forms.ModelChoiceField(queryset=get_groups().exclude(name__startswith='_internal'),
             required=False)
     tag = forms.ModelChoiceField(queryset=Tag.objects.get_content_tags(),
             required=False)
