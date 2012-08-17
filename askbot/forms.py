@@ -351,7 +351,8 @@ class TagNamesField(forms.CharField):
 
     def __init__(self, *args, **kwargs):
         super(TagNamesField, self).__init__(*args, **kwargs)
-        self.required = askbot_settings.TAGS_ARE_REQUIRED
+        self.required = kwargs.get('required',
+                askbot_settings.TAGS_ARE_REQUIRED)
         self.widget = forms.TextInput(
             attrs={'size': 50, 'autocomplete': 'off'}
         )

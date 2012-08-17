@@ -45,7 +45,7 @@ from askbot.models.reply_by_email import ReplyAddress
 from askbot.models import signals
 from askbot.models.badges import award_badges_signal, get_badge, BadgeData
 from askbot.models.repute import Award, Repute, Vote
-from askbot.models.widgets import AskWidget
+from askbot.models.widgets import AskWidget, QuestionWidget
 from askbot import auth
 from askbot.utils.decorators import auto_now_timestamp
 from askbot.utils.slug import slugify

@@ -22,7 +22,7 @@ def widgets(request):
         'ask_widgets': models.AskWidget.objects.all(),
         'page_class': 'widgets'
     }
-    return render_into_skin('widgets.html', data, request)
+    return render_into_skin('embed/widgets.html', data, request)
 
 @csrf.csrf_protect
 def ask_widget(request, widget_id):
@@ -92,7 +92,7 @@ def ask_widget(request, widget_id):
         form = forms.AskWidgetForm(include_text=widget.include_text_field)
 
     data = {'form': form, 'widget': widget}
-    return render_into_skin('ask_by_widget.html', data, request)
+    return render_into_skin('embed/ask_by_widget.html', data, request)
 
 @login_required
 def ask_widget_complete(request):
@@ -107,14 +107,14 @@ def ask_widget_complete(request):
         del request.session['widget_css']
 
     data = {'question_url': question_url, 'custom_css': custom_css}
-    return render_into_skin('ask_widget_complete.html', data, request)
+    return render_into_skin('embed/ask_widget_complete.html', data, request)
 
 
 @decorators.admins_only
 def list_ask_widget(request):
     widgets = models.AskWidget.objects.all()
     data = {'widgets': widgets}
-    return render_into_skin('list_ask_widget.html', data, request)
+    return render_into_skin('embed/list_ask_widget.html', data, request)
 
 @decorators.admins_only
 def create_ask_widget(request):
@@ -127,7 +127,7 @@ def create_ask_widget(request):
         form = models.widgets.CreateAskWidgetForm()
 
     data = {'form': form}
-    return render_into_skin('ask_widget_form.html', data, request)
+    return render_into_skin('embed/ask_widget_form.html', data, request)
 
 @decorators.admins_only
 def edit_ask_widget(request, widget_id):
@@ -142,7 +142,7 @@ def edit_ask_widget(request, widget_id):
         form = models.widgets.CreateAskWidgetForm(instance=widget)
 
     data = {'form': form}
-    return render_into_skin('ask_widget_form.html', data, request)
+    return render_into_skin('embed/ask_widget_form.html', data, request)
 
 @decorators.admins_only
 def delete_ask_widget(request, widget_id):
@@ -151,14 +151,14 @@ def delete_ask_widget(request, widget_id):
         widget.delete()
         return redirect('list_ask_widgets')
     else:
-        return render_into_skin('delete_ask_widget.html',
+        return render_into_skin('embed/delete_ask_widget.html',
                 {'widget': widget}, request)
 
 #TODO: Add cache
 def render_ask_widget_js(request, widget_id):
     widget = get_object_or_404(models.AskWidget, pk=widget_id)
     variable_name = "AskbotAskWidget%d" % widget.id
-    content_tpl =  get_template('widgets/askbot_widget.js', request)
+    content_tpl =  get_template('embed/askbot_widget.js', request)
     context_dict = {'widget': widget,
                     'host': request.get_host(),
                     'variable_name': variable_name}
@@ -169,7 +169,7 @@ def render_ask_widget_js(request, widget_id):
 def render_ask_widget_css(request, widget_id):
     widget = get_object_or_404(models.AskWidget, pk=widget_id)
     variable_name = "AskbotAskWidget%d" % widget.id
-    content_tpl =  get_template('widgets/askbot_widget.css', request)
+    content_tpl =  get_template('embed/askbot_widget.css', request)
     context_dict = {'widget': widget,
                     'host': request.get_host(),
                     'variable_name': variable_name}
@@ -183,12 +183,58 @@ def widget_questions(request):
     # make sure this is a GET request with the correct parameters.
     if request.method != 'GET':
         raise Http404
-    threads = models.Thread.objects.all()
+
     tags_input = request.GET.get('tags','').strip()
     if len(tags_input) > 0:
         tags = [tag.strip() for tag in tags_input.split(',')]
-        threads = threads.filter(tags__name__in=tags)
-    data = {
-        'threads': threads[:askbot_settings.QUESTIONS_WIDGET_MAX_QUESTIONS]
-    }
-    return render_into_skin('question_widget.html', data, request)
+        threads = models.Thread.objects.filter(tags__name__in=tags)[:askbot_settings.QUESTIONS_WIDGET_MAX_QUESTIONS]
+
+    else:
+        threads = models.Thread.objects.all()[:askbot_settings.QUESTIONS_WIDGET_MAX_QUESTIONS]
+
+    data = { 'threads': threads }
+    return render_into_skin('embed/question_widget.html', data, request)
+
+@decorators.admins_only
+def list_question_widget(request):
+    widgets = models.QuestionWidget.objects.all()
+    data = {'widgets': widgets}
+    return render_into_skin('embed/list_question_widget.html', data, request)
+
+@decorators.admins_only
+def create_question_widget(request):
+    if request.method == 'POST':
+        form = models.widgets.CreateQuestionWidgetForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('list_question_widgets')
+    else:
+        form = models.widgets.CreateQuestionWidgetForm()
+
+    data = {'form': form}
+    return render_into_skin('embed/question_widget_form.html', data, request)
+
+@decorators.admins_only
+def edit_question_widget(request, widget_id):
+    widget = get_object_or_404(models.QuestionWidget, pk=widget_id)
+    if request.method == 'POST':
+        form = models.widgets.CreateQuestionWidgetForm(request.POST,
+                instance=widget)
+        if form.is_valid():
+            form.save()
+            return redirect('list_question_widgets')
+    else:
+        form = models.widgets.CreateAskWidgetForm(instance=widget)
+
+    data = {'form': form}
+    return render_into_skin('embed/question_widget_form.html', data, request)
+
+@decorators.admins_only
+def delete_question_widget(request, widget_id):
+    widget = get_object_or_404(models.QuestionWidget, pk=widget_id)
+    if request.method == "POST":
+        widget.delete()
+        return redirect('list_question_widgets')
+    else:
+        return render_into_skin('embed/delete_question_widget.html',
+                {'widget': widget}, request)

@@ -424,10 +424,30 @@ urlpatterns = patterns('',
         views.widgets.list_ask_widget,
         name = 'list_ask_widgets'
     ),
+    #url(
+    #    r'^%s%s$' % (_('widgets/'), _('questions/')),
+    #    views.widgets.widget_questions,
+    #    name='widget_questions'
+    #),
     url(
-        r'^%s%s$' % (_('widgets/'), _('questions/')),
-        views.widgets.widget_questions,
-        name='widget_questions'
+        r'^widgets/questions/(?P<widget_id>\d+)/$',
+        views.widgets.question_widget,
+        name = 'question_widget'
+    ),
+    url(
+        r'^widgets/question/create/$',
+        views.widgets.create_question_widget,
+        name = 'create_question_widget'
+    ),
+    url(
+        r'^widgets/question/edit/(?P<widget_id>\d+)/$',
+        views.widgets.edit_question_widget,
+        name = 'edit_question_widget'
+    ),
+    url(
+        r'^widgets/question/delete/(?P<widget_id>\d+)/$',
+        views.widgets.delete_question_widget,
+        name = 'delete_question_widget'
     ),
     url(
         r'^feeds/(?P<url>.*)/$',
