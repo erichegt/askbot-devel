@@ -407,6 +407,12 @@ urlpatterns = patterns('',
         name = 'render_ask_widget'
     ),
     url(
+        r'^widgets/ask/(?P<widget_id>\d+).css$',
+        views.widgets.render_ask_widget_css,
+        name = 'render_ask_widget_css'
+    ),
+
+    url(
         r'^widgets/ask/complete/$',
         views.widgets.ask_widget_complete,
         name = 'ask_by_widget_complete'
@@ -421,6 +427,12 @@ urlpatterns = patterns('',
         views.widgets.edit_ask_widget,
         name = 'edit_ask_widget'
     ),
+    url(
+        r'^widgets/ask/delete/(?P<widget_id>\d+)/$',
+        views.widgets.delete_ask_widget,
+        name = 'delete_ask_widget'
+    ),
+
     url(
         r'^widgets/ask/$',
         views.widgets.list_ask_widget,

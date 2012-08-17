@@ -13,7 +13,7 @@ class Migration(SchemaMigration):
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('title', self.gf('django.db.models.fields.CharField')(max_length=100)),
             ('group', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='groups', null=True, to=orm['askbot.Tag'])),
-            ('default_group', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['askbot.Tag'], null=True, blank=True)),
+            ('tag', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['askbot.Tag'], null=True, blank=True)),
             ('include_text_field', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True)),
             ('inner_style', self.gf('django.db.models.fields.TextField')(default='')),
             ('outer_style', self.gf('django.db.models.fields.TextField')(default='')),

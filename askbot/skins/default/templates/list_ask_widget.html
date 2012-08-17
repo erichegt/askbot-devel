@@ -4,11 +4,20 @@
 {% block content %}
 <h1>Ask Question widget list</h1>
 
-{%for widget in widgets%}
-  <p>Widget: {{widget.title}} (<a href="{% url edit_ask_widget widget.id %}">Edit</a>)</p>
-  <p>Code: &lt;script type="text/javascript" src=http://{{request.get_host()}}{% url render_ask_widget widget.id%} &gt;&lt;script&gt;
-{%endfor%}
-
+<table border="0">
+  <tr>
+    <th>Widget Title </th>
+    <th>Code</th>
+    <th>Actions</th>
+  </tr>
+  {%for widget in widgets%}
+    <tr>
+      <td>{{widget.title}}</td>
+      <td> &lt;script type="text/javascript" src="http://{{request.get_host()}}{% url render_ask_widget widget.id%}" &gt;&lt;/script&gt;</td> 
+      <td><a href="{% url edit_ask_widget widget.id %}">Edit</a> | <a href="{% url delete_ask_widget widget.id %}">Delete</a></td>
+    </tr>
+  {%endfor%}
+</table>
 
 {% endblock %}
 {% block endjs %}

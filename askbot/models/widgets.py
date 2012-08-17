@@ -4,6 +4,8 @@ from django.utils.translation import ugettext as _
 from askbot.conf import settings as askbot_settings
 from askbot.models import Tag
 from askbot.models.tag import get_groups
+from askbot.forms import FormWithHideableFields
+from askbot.conf import settings as askbot_settings
 from django import forms
 
 DEFAULT_INNER_STYLE = ''
@@ -28,7 +30,7 @@ class AskWidget(models.Model):
     def __unicode__(self):
         return "Widget: %s" % self.title
 
-class CreateAskWidgetForm(forms.ModelForm):
+class CreateAskWidgetForm(forms.ModelForm, FormWithHideableFields):
     inner_style = forms.CharField(
                         widget=forms.Textarea,
                         required=False,
@@ -39,9 +41,16 @@ class CreateAskWidgetForm(forms.ModelForm):
                         required=False,
                         initial=DEFAULT_OUTER_STYLE
                     )
-    #these don't work for some reason
-    #group = forms.ModelChoiceField(query_set=get_groups())
-    #tag = forms.ModelChoiceField(query_set=Tag.objects.get_content_tags())
+
+    group = forms.ModelChoiceField(queryset=get_groups().exclude(name__startswith='_internal'),
+            required=False)
+    tag = forms.ModelChoiceField(queryset=Tag.objects.get_content_tags(),
+            required=False)
+
+    def __init__(self, *args, **kwargs):
+        super(CreateAskWidgetForm, self).__init__(*args, **kwargs)
+        if not askbot_settings.GROUPS_ENABLED:
+            self.hide_field('group')
 
     class Meta:
         model = AskWidget

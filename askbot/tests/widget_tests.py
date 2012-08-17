@@ -110,3 +110,16 @@ class WidgetCreatorViewsTests(AskbotTestCase):
         response = self.client.post(reverse('edit_ask_widget',
             args=(self.widget.id, )), post_data)
         self.assertEquals(response.status_code, 302)
+
+    def test_delete_ask_widget_get(self):
+        self.client.login(username='user1', password='testpass')
+        response = self.client.get(reverse('delete_ask_widget',
+            args=(self.widget.id, )))
+        self.assertEquals(response.status_code, 200)
+        self.assertTrue('widget' in response.context)
+
+    def test_delete_ask_widget_post(self):
+        self.client.login(username='user1', password='testpass')
+        response = self.client.post(reverse('delete_ask_widget',
+            args=(self.widget.id, )))
+        self.assertEquals(response.status_code, 302)

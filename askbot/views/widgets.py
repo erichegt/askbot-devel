@@ -46,12 +46,25 @@ def ask_widget(request, widget_id):
                 text = form.cleaned_data['text']
             else:
                 text = ' '
+
+
+            if widget.group:
+                group_id = widget.group.id
+            else:
+                group_id = None
+
+            if widget.tag:
+                tagnames = widget.tag.name
+            else:
+                tagnames = ''
+
             data_dict = {
                 'title': title,
                 'added_at': datetime.now(),
                 'wiki': False,
                 'text': text,
-                'tagnames': '',
+                'tagnames': tagnames,
+                'group_id': group_id,
                 'is_anonymous': ask_anonymously
             }
             if request.user.is_authenticated():
@@ -132,12 +145,34 @@ def edit_ask_widget(request, widget_id):
     data = {'form': form}
     return render_into_skin('ask_widget_form.html', data, request)
 
+@decorators.admins_only
+def delete_ask_widget(request, widget_id):
+    widget = get_object_or_404(models.AskWidget, pk=widget_id)
+    if request.method=="POST":
+        widget.delete()
+        return redirect('list_ask_widgets')
+    else:
+        return render_into_skin('delete_ask_widget.html',
+                {'widget': widget}, request)
 
 #TODO: Add cache
 def render_ask_widget_js(request, widget_id):
-    widget = get_object_or_404(models.AskWidget)
+    widget = get_object_or_404(models.AskWidget, pk=widget_id)
+    variable_name = "AskbotAskWidget%d" % widget.id
     content_tpl =  get_template('widgets/askbot_widget.js', request)
-    context_dict = {'widget': widget, 'host': request.get_host()}
+    context_dict = {'widget': widget,
+                    'host': request.get_host(),
+                    'variable_name': variable_name}
     content =  content_tpl.render(Context(context_dict))
-    print content
     return HttpResponse(content, mimetype='text/javascript')
+
+#TODO: Add cache
+def render_ask_widget_css(request, widget_id):
+    widget = get_object_or_404(models.AskWidget, pk=widget_id)
+    variable_name = "AskbotAskWidget%d" % widget.id
+    content_tpl =  get_template('widgets/askbot_widget.css', request)
+    context_dict = {'widget': widget,
+                    'host': request.get_host(),
+                    'variable_name': variable_name}
+    content =  content_tpl.render(Context(context_dict))
+    return HttpResponse(content, mimetype='text/css')
