@@ -1,17 +1,16 @@
 from datetime import datetime
 
 from django.core import exceptions
-from django.utils import simplejson
 from django.template import Context
 from django.http import HttpResponse
 from django.views.decorators import csrf
-from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect, get_object_or_404
 
 from django.contrib.auth.decorators import login_required
 
 from askbot.skins.loaders import render_into_skin, get_template
+from askbot.conf import settings as askbot_settings
 from askbot.utils import decorators
 from askbot import models
 from askbot import forms
@@ -119,7 +118,7 @@ def list_ask_widget(request):
 
 @decorators.admins_only
 def create_ask_widget(request):
-    if request.method=='POST':
+    if request.method == 'POST':
         form = models.widgets.CreateAskWidgetForm(request.POST)
         if form.is_valid():
             form.save()
@@ -133,7 +132,7 @@ def create_ask_widget(request):
 @decorators.admins_only
 def edit_ask_widget(request, widget_id):
     widget = get_object_or_404(models.AskWidget, pk=widget_id)
-    if request.method=='POST':
+    if request.method == 'POST':
         form = models.widgets.CreateAskWidgetForm(request.POST,
                 instance=widget)
         if form.is_valid():
@@ -148,7 +147,7 @@ def edit_ask_widget(request, widget_id):
 @decorators.admins_only
 def delete_ask_widget(request, widget_id):
     widget = get_object_or_404(models.AskWidget, pk=widget_id)
-    if request.method=="POST":
+    if request.method == "POST":
         widget.delete()
         return redirect('list_ask_widgets')
     else:
@@ -176,3 +175,20 @@ def render_ask_widget_css(request, widget_id):
                     'variable_name': variable_name}
     content =  content_tpl.render(Context(context_dict))
     return HttpResponse(content, mimetype='text/css')
+
+#search widget
+def widget_questions(request):
+    """Returns the first x questions based on certain tags.
+    @returns template with those questions listed."""
+    # make sure this is a GET request with the correct parameters.
+    if request.method != 'GET':
+        raise Http404
+    threads = models.Thread.objects.all()
+    tags_input = request.GET.get('tags','').strip()
+    if len(tags_input) > 0:
+        tags = [tag.strip() for tag in tags_input.split(',')]
+        threads = threads.filter(tags__name__in=tags)
+    data = {
+        'threads': threads[:askbot_settings.QUESTIONS_WIDGET_MAX_QUESTIONS]
+    }
+    return render_into_skin('question_widget.html', data, request)

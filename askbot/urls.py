@@ -144,11 +144,6 @@ urlpatterns = patterns('',
         kwargs = {'post_type': 'question'},
         name='question_revisions'
     ),
-    url(
-        r'^%s%s$' % (_('widgets/'), _('questions/')),
-        views.readers.widget_questions,
-        name='widget_questions'
-    ),
     url(#ajax only
         r'^comment/upvote/$',
         views.commands.upvote_comment,
@@ -428,6 +423,11 @@ urlpatterns = patterns('',
         r'^widgets/ask/$',
         views.widgets.list_ask_widget,
         name = 'list_ask_widgets'
+    ),
+    url(
+        r'^%s%s$' % (_('widgets/'), _('questions/')),
+        views.widgets.widget_questions,
+        name='widget_questions'
     ),
     url(
         r'^feeds/(?P<url>.*)/$',
