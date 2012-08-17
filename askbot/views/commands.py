@@ -476,6 +476,16 @@ def get_tags_by_wildcard(request):
     return HttpResponse(re_data, mimetype = 'application/json')
 
 @decorators.ajax_only
+@decorators.get_only
+def get_thread_shared_users(request):
+    pass
+
+@decorators.ajax_only
+@decorators.get_only
+def get_thread_shared_groups(request):
+    pass
+
+@decorators.ajax_only
 def get_html_template(request):
     """returns rendered template"""
     template_name = request.REQUEST.get('template_name', None)
