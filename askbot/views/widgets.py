@@ -2,7 +2,7 @@ from datetime import datetime
 
 from django.core import exceptions
 from django.template import Context
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.views.decorators import csrf
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect, get_object_or_404
@@ -15,11 +15,35 @@ from askbot.utils import decorators
 from askbot import models
 from askbot import forms
 
+WIDGETS_MODELS = {
+                  'ask': models.AskWidget,
+                  'question': models.QuestionWidget
+                 }
+
+WIDGETS_FORMS = {
+                'ask': models.widgets.CreateAskWidgetForm,
+                'question': models.widgets.CreateQuestionWidgetForm,
+               }
+
+def _get_model(key):
+    '''like get_object_or_404 but for our models'''
+    try:
+        return WIDGETS_MODELS[key]
+    except KeyError:
+        raise Http404
+
+def _get_form(key):
+    '''like get_object_or_404 but for our forms'''
+    try:
+        return WIDGETS_FORMS[key]
+    except KeyError:
+        raise Http404
 
 @decorators.admins_only
 def widgets(request):
     data = {
-        'ask_widgets': models.AskWidget.objects.all(),
+        'ask_widgets': models.AskWidget.objects.all().count(),
+        'question_widgets': models.QuestionWidget.objects.all().count(),
         'page_class': 'widgets'
     }
     return render_into_skin('embed/widgets.html', data, request)
@@ -111,48 +135,59 @@ def ask_widget_complete(request):
 
 
 @decorators.admins_only
-def list_ask_widget(request):
-    widgets = models.AskWidget.objects.all()
-    data = {'widgets': widgets}
-    return render_into_skin('embed/list_ask_widget.html', data, request)
+def list_widgets(request, model):
+    model_class = _get_model(model)
+    widgets = model_class.objects.all()
+    data = {
+            'widgets': widgets,
+            'widget_name': model
+           }
+    return render_into_skin('embed/list_widgets.html', data, request)
 
 @decorators.admins_only
-def create_ask_widget(request):
+def create_widget(request, model):
+    form_class = _get_form(model)
     if request.method == 'POST':
-        form = models.widgets.CreateAskWidgetForm(request.POST)
+        form = form_class(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('list_ask_widgets')
+            return redirect('list_widgets', model=model)
     else:
-        form = models.widgets.CreateAskWidgetForm()
+        form = form_class()
 
-    data = {'form': form}
-    return render_into_skin('embed/ask_widget_form.html', data, request)
+    data = {'form': form,
+            'widget_name': model}
+
+    return render_into_skin('embed/widget_form.html', data, request)
 
 @decorators.admins_only
-def edit_ask_widget(request, widget_id):
-    widget = get_object_or_404(models.AskWidget, pk=widget_id)
+def edit_widget(request, model, widget_id):
+    model_class = _get_model(model)
+    form_class = _get_form(model)
+    widget = get_object_or_404(model_class, pk=widget_id)
     if request.method == 'POST':
-        form = models.widgets.CreateAskWidgetForm(request.POST,
+        form = form_class(request.POST,
                 instance=widget)
         if form.is_valid():
             form.save()
-            return redirect('list_ask_widgets')
+            return redirect('list_widgets', model=model)
     else:
-        form = models.widgets.CreateAskWidgetForm(instance=widget)
+        form = form_class(instance=widget)
 
-    data = {'form': form}
-    return render_into_skin('embed/ask_widget_form.html', data, request)
+    data = {'form': form,
+            'widget_name': model}
+    return render_into_skin('embed/widget_form.html', data, request)
 
 @decorators.admins_only
-def delete_ask_widget(request, widget_id):
-    widget = get_object_or_404(models.AskWidget, pk=widget_id)
+def delete_widget(request, model, widget_id):
+    model_class = _get_model(model)
+    widget = get_object_or_404(model_class, pk=widget_id)
     if request.method == "POST":
         widget.delete()
-        return redirect('list_ask_widgets')
+        return redirect('list_widgets', model=model)
     else:
-        return render_into_skin('embed/delete_ask_widget.html',
-                {'widget': widget}, request)
+        return render_into_skin('embed/delete_widget.html',
+                {'widget': widget, 'widget_name': model}, request)
 
 #TODO: Add cache
 def render_ask_widget_js(request, widget_id):
@@ -177,10 +212,12 @@ def render_ask_widget_css(request, widget_id):
     return HttpResponse(content, mimetype='text/css')
 
 #search widget
-def widget_questions(request):
+def question_widget(request, widget_id):
     """Returns the first x questions based on certain tags.
     @returns template with those questions listed."""
     # make sure this is a GET request with the correct parameters.
+    widget = get_object_or_404(models.QuestionWidget, pk=widget_id)
+
     if request.method != 'GET':
         raise Http404
 
@@ -194,47 +231,3 @@ def widget_questions(request):
 
     data = { 'threads': threads }
     return render_into_skin('embed/question_widget.html', data, request)
-
-@decorators.admins_only
-def list_question_widget(request):
-    widgets = models.QuestionWidget.objects.all()
-    data = {'widgets': widgets}
-    return render_into_skin('embed/list_question_widget.html', data, request)
-
-@decorators.admins_only
-def create_question_widget(request):
-    if request.method == 'POST':
-        form = models.widgets.CreateQuestionWidgetForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('list_question_widgets')
-    else:
-        form = models.widgets.CreateQuestionWidgetForm()
-
-    data = {'form': form}
-    return render_into_skin('embed/question_widget_form.html', data, request)
-
-@decorators.admins_only
-def edit_question_widget(request, widget_id):
-    widget = get_object_or_404(models.QuestionWidget, pk=widget_id)
-    if request.method == 'POST':
-        form = models.widgets.CreateQuestionWidgetForm(request.POST,
-                instance=widget)
-        if form.is_valid():
-            form.save()
-            return redirect('list_question_widgets')
-    else:
-        form = models.widgets.CreateAskWidgetForm(instance=widget)
-
-    data = {'form': form}
-    return render_into_skin('embed/question_widget_form.html', data, request)
-
-@decorators.admins_only
-def delete_question_widget(request, widget_id):
-    widget = get_object_or_404(models.QuestionWidget, pk=widget_id)
-    if request.method == "POST":
-        widget.delete()
-        return redirect('list_question_widgets')
-    else:
-        return render_into_skin('embed/delete_question_widget.html',
-                {'widget': widget}, request)

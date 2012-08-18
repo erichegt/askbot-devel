@@ -70,6 +70,8 @@ class CreateAskWidgetForm(forms.ModelForm, FormWithHideableFields):
 
 class CreateQuestionWidgetForm(forms.ModelForm, FormWithHideableFields):
     tagnames = TagNamesField()
+    group = forms.ModelChoiceField(queryset=get_groups().exclude(name__startswith='_internal'),
+            required=False)
 
     #def __init__(self, *args, **kwargs):
     #    super(CreateQuestionWidgetForm, self).__init__(*args, **kwargs)

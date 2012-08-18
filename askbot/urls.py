@@ -377,78 +377,63 @@ urlpatterns = patterns('',
     ),
     #widgets url!
     url(
-        r'^widgets/$',
+        r'^%s$' % (_('widgets/')),
         views.widgets.widgets,
         name = 'widgets'
     ),
 
     url(
-        r'^widgets/ask/(?P<widget_id>\d+)/$',
+        r'^%s%s(?P<widget_id>\d+)/$' % (_('widgets/'), _('ask/')),
         views.widgets.ask_widget,
         name = 'ask_by_widget'
     ),
     url(
-        r'^widgets/ask/(?P<widget_id>\d+).js$',
+        r'^%s%s(?P<widget_id>\d+).js$' % (_('widgets/'), _('ask/')),
         views.widgets.render_ask_widget_js,
         name = 'render_ask_widget'
     ),
     url(
-        r'^widgets/ask/(?P<widget_id>\d+).css$',
+        r'^%s%s(?P<widget_id>\d+).css$' % (_('widgets/'), _('ask/')),
         views.widgets.render_ask_widget_css,
         name = 'render_ask_widget_css'
     ),
 
     url(
-        r'^widgets/ask/complete/$',
+        r'^%s%s%s$' % (_('widgets/'), _('ask/'), _('complete/')),
         views.widgets.ask_widget_complete,
         name = 'ask_by_widget_complete'
     ),
     url(
-        r'^widgets/ask/create/$',
-        views.widgets.create_ask_widget,
-        name = 'create_ask_widget'
+        r'^%s(?P<model>\w+)/%s$' % (_('widgets/'), _('create/')),
+        views.widgets.create_widget,
+        name = 'create_widget'
     ),
     url(
-        r'^widgets/ask/edit/(?P<widget_id>\d+)/$',
-        views.widgets.edit_ask_widget,
-        name = 'edit_ask_widget'
+        r'^%s(?P<model>\w+)/%s(?P<widget_id>\d+)/$' % (_('widgets/'), _('edit/')),
+        views.widgets.edit_widget,
+        name = 'edit_widget'
     ),
     url(
-        r'^widgets/ask/delete/(?P<widget_id>\d+)/$',
-        views.widgets.delete_ask_widget,
-        name = 'delete_ask_widget'
+        r'^%s(?P<model>\w+)/%s(?P<widget_id>\d+)/$' % (_('widgets/'), _('delete/')),
+        views.widgets.delete_widget,
+        name = 'delete_widget'
     ),
 
     url(
-        r'^widgets/ask/$',
-        views.widgets.list_ask_widget,
-        name = 'list_ask_widgets'
+        r'^%s(?P<model>\w+)/$' % (_('widgets/')),
+        views.widgets.list_widgets,
+        name = 'list_widgets'
     ),
     #url(
     #    r'^%s%s$' % (_('widgets/'), _('questions/')),
     #    views.widgets.widget_questions,
     #    name='widget_questions'
     #),
-    url(
-        r'^widgets/questions/(?P<widget_id>\d+)/$',
-        views.widgets.question_widget,
-        name = 'question_widget'
-    ),
-    url(
-        r'^widgets/question/create/$',
-        views.widgets.create_question_widget,
-        name = 'create_question_widget'
-    ),
-    url(
-        r'^widgets/question/edit/(?P<widget_id>\d+)/$',
-        views.widgets.edit_question_widget,
-        name = 'edit_question_widget'
-    ),
-    url(
-        r'^widgets/question/delete/(?P<widget_id>\d+)/$',
-        views.widgets.delete_question_widget,
-        name = 'delete_question_widget'
-    ),
+    #url(
+    #    r'^widgets/questions/(?P<widget_id>\d+)/$',
+    #    views.widgets.question_widget,
+    #    name = 'question_widget'
+    #),
     url(
         r'^feeds/(?P<url>.*)/$',
         'django.contrib.syndication.views.feed',

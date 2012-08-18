@@ -14,10 +14,19 @@
     <tbody>
         <tr>
             <td>{% trans %}Ask a question{% endtrans %}</td>
-            <td><a href="{% url create_ask_widget %}">{% trans %}create{% endtrans %}</a></td>
+            <td><a href="{% url create_widget 'ask' %}">{% trans %}create{% endtrans %}</a></td>
             <td>
-                {% if ask_widgets.count() > 0 %}
-                    <a href="{% url list_ask_widgets %}">{% trans %}view list{% endtrans %}</a>
+                {% if ask_widgets > 0 %}
+                    <a href="{% url list_widgets 'ask' %}">{% trans %}view list{% endtrans %}</a>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td>{% trans %}List of questions{% endtrans %}</td>
+            <td><a href="{% url create_widget 'question' %}">{% trans %}create{% endtrans %}</a></td>
+            <td>
+                {% if question_widgets > 0 %}
+                    <a href="{% url list_widgets 'question' %}">{% trans %}view list{% endtrans %}</a>
                 {% endif %}
             </td>
         </tr>
