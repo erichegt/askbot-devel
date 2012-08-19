@@ -80,15 +80,73 @@ from askbot.utils.forms import get_next_url
 from askbot.utils.http import get_request_info
 from askbot.models.signals import user_logged_in, user_registered
 
+def create_authenticated_user_account(
+    username=None, email=None, password=None,
+    user_identifier=None, login_provider_name=None, subscribe=False
+):
+    """creates a user account, user association with
+    the login method and the the default email subscriptions
+    """
+
+    user = User.objects.create_user(username, email)
+    user_registered.send(None, user=user)
+
+    logging.debug('creating new openid user association for %s')
+
+    if password:
+        user.set_password(password)
+        user.save()
+    else:
+        UserAssociation(
+            openid_url = user_identifier,
+            user = user,
+            provider_name = login_provider_name,
+            last_used_timestamp = datetime.datetime.now()
+        ).save()
+
+    subscribe_form = askbot_forms.SimpleEmailSubscribeForm(
+                                        {'subscribe': subscribe}
+                                    )
+    subscribe_form.full_clean()
+    logging.debug('saving email feed settings')
+    subscribe_form.save(user)
+
+    logging.debug('logging the user in')
+    user = authenticate(method='force', user_id=user.id)
+    if user is None:
+        error_message = 'please make sure that ' + \
+                        'askbot.deps.django_authopenid.backends.AuthBackend' + \
+                        'is in your settings.AUTHENTICATION_BACKENDS'
+        raise Exception(error_message)
+
+    return user
+
+
+def cleanup_post_register_session(request):
+    """delete keys from session after registration is complete"""
+    keys = (
+        'user_identifier',
+        'login_provider_name',
+        'username',
+        'email',
+        'subscribe',
+        'password',
+        'validation_code'
+    )
+    for key in keys:
+        if key in request.session:
+            del request.session[key]
+
+
 #todo: decouple from askbot
-def login(request,user):
+def login(request, user):
     from django.contrib.auth import login as _login
 
     # get old session key
     session_key = request.session.session_key
 
     # login and get new session key
-    _login(request,user)
+    _login(request, user)
 
     # send signal with old session key as argument
     logging.debug('logged in user %s with session key %s' % (user.username, session_key))
@@ -778,7 +836,6 @@ def register(request, login_provider_name=None, user_identifier=None):
     next_url = get_next_url(request)
 
     user = None
-    is_redirect = False
     username = request.session.get('username', '')
     email = request.session.get('email', '')
     logging.debug('request method is %s' % request.method)
@@ -820,10 +877,12 @@ def register(request, login_provider_name=None, user_identifier=None):
             logging.debug('SimpleEmailSubscribeForm is INVALID')
         else:
             logging.debug('OpenidRegisterForm and SimpleEmailSubscribeForm are valid')
-            is_redirect = True
+
             username = register_form.cleaned_data['username']
             email = register_form.cleaned_data['email']
+            subscribe = email_feeds_form.cleaned_data['subscribe']
 
+<<<<<<< HEAD
             user = User.objects.create_user(username, email)
             user_registered.send(None, user = user)
 
@@ -871,6 +930,31 @@ def register(request, login_provider_name=None, user_identifier=None):
                 logging.debug('have really strange error')
                 raise Exception('openid login failed')#should not ever get here
 
+=======
+            if askbot_settings.REQUIRE_VALID_EMAIL_FOR == 'nothing':
+
+                user = create_authenticated_user_account(
+                            username=username,
+                            email=email,
+                            user_identifier=user_identifier,
+                            login_provider_name=login_provider_name,
+                            subscribe=subscribe
+                        )
+                login(request, user)
+                cleanup_post_register_session(request)
+                return HttpResponseRedirect(next_url)
+            else:
+                request.session['username'] = username
+                request.session['email'] = email
+                request.session['subscribe'] = subscribe
+                key = util.generate_random_key()
+                email = request.session['email']
+                send_email_key(email, key, handler_url_name='verify_email_and_register')
+                request.session['validation_code'] = key
+                redirect_url = reverse('verify_email_and_register') + '?next=' + next_url
+                return HttpResponseRedirect(redirect_url)
+
+>>>>>>> e294275498398f85d573995c49eee399ec27746e
     providers = {
             'yahoo':'<font color="purple">Yahoo!</font>',
             'flickr':'<font color="#0063dc">flick</font><font color="#ff0084">r</font>&trade;',
@@ -904,6 +988,61 @@ def signin_failure(request, message):
     return show_signin_view(request)
 
 @not_authenticated
+@csrf.csrf_protect
+def verify_email_and_register(request):
+    """for POST request - check the validation code,
+    and if correct - create an account an log in the user
+
+    for GET - give a field to paste the activation code
+    and a button to send another validation email.
+    """
+    presented_code = request.REQUEST.get('validation_code', None)
+    if presented_code:
+        try:
+            #we get here with post if button is pushed
+            #or with "get" if emailed link is clicked
+            expected_code = request.session['validation_code']
+            assert(presented_code == expected_code)
+            #create an account!
+            username = request.session['username']
+            email = request.session['email']
+            password = request.session.get('password', None)
+            subscribe = request.session['subscribe']
+            user_identifier = request.session.get('user_identifier', None)
+            login_provider_name = request.session.get('login_provider_name', None)
+            if password:
+                user = create_authenticated_user_account(
+                    username=username,
+                    email=email,
+                    password=password,
+                    subscribe=subscribe
+                )
+            elif user_identifier and login_provider_name:
+                user = create_authenticated_user_account(
+                    username=username,
+                    email=email,
+                    user_identifier=user_identifier,
+                    login_provider_name=login_provider_name,
+                    subscribe=subscribe
+                )
+            else:
+                raise NotImplementedError()
+
+            login(request, user)
+            cleanup_post_register_session(request)
+            return HttpResponseRedirect(get_next_url(request))
+        except Exception, e:
+            message = _(
+                'Sorry, registration failed. '
+                'Please ask the site administrator for help.'
+            )
+            request.user.message_set.create(message=message)
+            return HttpResponseRedirect(reverse('index'))
+    else:
+        data = {'page_class': 'validate-email-page'}
+        return render_into_skin('authopenid/verify_email.html', data, request)
+
+@not_authenticated
 @decorators.valid_password_login_provider_required
 @csrf.csrf_protect
 @fix_recaptcha_remote_ip
@@ -913,8 +1052,7 @@ def signup_with_password(request):
     """
 
     logging.debug(get_request_info(request))
-    next = get_next_url(request)
-    login_form = forms.LoginForm(initial = {'next': next})
+    login_form = forms.LoginForm(initial = {'next': get_next_url(request)})
     #this is safe because second decorator cleans this field
     provider_name = request.REQUEST['login_provider']
 
@@ -946,6 +1084,7 @@ def signup_with_password(request):
             username = form.cleaned_data['username']
             password = form.cleaned_data['password1']
             email = form.cleaned_data['email']
+<<<<<<< HEAD
             provider_name = form.cleaned_data['login_provider']
 
             new_user = User.objects.create_user(username, email, password)
@@ -982,6 +1121,34 @@ def signup_with_password(request):
             #        [user.email])
             #logging.debug('new password acct created, confirmation email sent!')
             return HttpResponseRedirect(next)
+=======
+            subscribe = email_feeds_form.cleaned_data['subscribe']
+
+            if askbot_settings.REQUIRE_VALID_EMAIL_FOR == 'nothing':
+                user = create_authenticated_user_account(
+                    username=username,
+                    email=email,
+                    password=password,
+                    subscribe=subscribe
+                )
+                login(request, user)
+                cleanup_post_register_session(request)
+                return HttpResponseRedirect(get_next_url(request))
+            else:
+                request.session['username'] = username
+                request.session['email'] = email
+                request.session['password'] = password
+                request.session['subscribe'] = subscribe
+                #todo: generate a key and save it in the session
+                key = util.generate_random_key()
+                email = request.session['email']
+                send_email_key(email, key, handler_url_name='verify_email_and_register')
+                request.session['validation_code'] = key
+                redirect_url = reverse('verify_email_and_register') + \
+                                '?next=' + get_next_url(request)
+                return HttpResponseRedirect(redirect_url)
+
+>>>>>>> e294275498398f85d573995c49eee399ec27746e
         else:
             #todo: this can be solved with a decorator, maybe
             form.initial['login_provider'] = provider_name
@@ -990,7 +1157,7 @@ def signup_with_password(request):
         #todo: here we have duplication of get_password_login_provider...
         form = RegisterForm(
                         initial={
-                            'next':next,
+                            'next': get_next_url(request),
                             'login_provider': provider_name
                         }
                     )
@@ -1051,66 +1218,42 @@ def xrdf(request):
     return_to = "%s%s" % (url_host, reverse('user_complete_signin'))
     return HttpResponse(XRDF_TEMPLATE % {'return_to': return_to})
 
-def find_email_validation_messages(user):
-    msg_text = _('your email needs to be validated see %(details_url)s') \
-        % {'details_url':reverse('faq') + '#validate'}
-    return user.message_set.filter(message__exact=msg_text)
-
-def set_email_validation_message(user):
-    messages = find_email_validation_messages(user)
-    msg_text = _('your email needs to be validated see %(details_url)s') \
-        % {'details_url':reverse('faq') + '#validate'}
-    if len(messages) == 0:
-        user.message_set.create(message=msg_text)
-
-def clear_email_validation_message(user):
-    messages = find_email_validation_messages(user)
-    messages.delete()
-
-def set_new_email(user, new_email, nomessage=False):
+def set_new_email(user, new_email):
     if new_email != user.email:
         user.email = new_email
         user.email_isvalid = False
         user.save()
-        if askbot_settings.EMAIL_VALIDATION == True:
-            send_new_email_key(user,nomessage=nomessage)
 
-def _send_email_key(user):
+def send_email_key(email, key, handler_url_name='user_account_recover'):
     """private function. sends email containing validation key
     to user's email address
     """
-    subject = _("Recover your %(site)s account") % {'site': askbot_settings.APP_SHORT_NAME}
+    subject = _("Recover your %(site)s account") % \
+                {'site': askbot_settings.APP_SHORT_NAME}
 
     url = urlparse(askbot_settings.APP_URL)
     data = {
         'validation_link': url.scheme + '://' + url.netloc + \
-                            reverse(
-                                    'user_account_recover',
-                                    kwargs={'key':user.email_key}
-                            )
+                            reverse(handler_url_name) +\
+                            '?validation_code=' + key
     }
     template = get_template('authopenid/email_validation.txt')
     message = template.render(data)
-    send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
+    send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [email])
 
+<<<<<<< HEAD
 def send_new_email_key(user,nomessage=False):
     import random
     random.seed()
     user.email_key = '%032x' % random.getrandbits(128)
+=======
+def send_user_new_email_key(user):
+    user.email_key = util.generate_random_key()
+>>>>>>> e294275498398f85d573995c49eee399ec27746e
     user.save()
-    _send_email_key(user)
-    if nomessage==False:
-        set_email_validation_message(user)
+    send_email_key(user.email, user.email_key)
 
-@login_required
-@csrf.csrf_protect
-def send_email_key(request):
-    """
-    url = /email/sendkey/
-
-    view that is shown right after sending email key
-    email sending is called internally
-
+<<<<<<< HEAD
     raises 404 if email validation is off
     if current email is valid shows 'key_not_sent' view of
     authopenid/changeemail.html template
@@ -1134,6 +1277,9 @@ def send_email_key(request):
         raise Http404
 
 def account_recover(request, key = None):
+=======
+def account_recover(request):
+>>>>>>> e294275498398f85d573995c49eee399ec27746e
     """view similar to send_email_key, except
     it allows user to recover an account by entering
     his/her email address
@@ -1149,7 +1295,7 @@ def account_recover(request, key = None):
         form = forms.AccountRecoveryForm(request.POST)
         if form.is_valid():
             user = form.cleaned_data['user']
-            send_new_email_key(user, nomessage = True)
+            send_user_new_email_key(user)
             message = _(
                     'Please check your email and visit the enclosed link.'
                 )
@@ -1164,6 +1310,7 @@ def account_recover(request, key = None):
                             account_recovery_form = form
                         )
     else:
+        key = request.GET.get('validation_code', None)
         if key is None:
             return HttpResponseRedirect(reverse('user_signin'))
 
@@ -1197,26 +1344,3 @@ def validation_email_sent(request):
         'action_type': 'validate'
     }
     return render_into_skin('authopenid/changeemail.html', data, request)
-
-def verifyemail(request,id=None,key=None):
-    """
-    view that is shown when user clicks email validation link
-    url = /email/verify/{{user.id}}/{{user.email_key}}/
-    """
-    logging.debug('')
-    if askbot_settings.EMAIL_VALIDATION == True:
-        user = User.objects.get(id=id)
-        if user:
-            if user.email_key == key:
-                user.email_isvalid = True
-                clear_email_validation_message(user)
-                user.save()
-                data = {'action_type': 'validation_complete'}
-                return render_into_skin(
-                            'authopenid/changeemail.html',
-                            data,
-                            request
-                        )
-            else:
-                logging.error('hmm, no user found for email validation message - foul play?')
-    raise Http404
