@@ -957,9 +957,8 @@ class Post(models.Model):
             user_set_getter(
                 tag_selections__in = tag_selections
             ).filter(
+                email_tag_filter_strategy = email_tag_filter_strategy,
                 notification_subscriptions__in = subscription_records
-            ).filter(
-                email_tag_filter_strategy = email_tag_filter_strategy
             )
         )
 
