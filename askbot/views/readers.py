@@ -565,6 +565,19 @@ def question(request, id):#refactor - long subroutine. display question body, an
                     previous_answer = answer
                     break
 
+    #shared with ...
+    users_count, groups_count = thread.get_sharing_info()
+    shared_users = thread.get_users_shared_with(
+                                        max_count=2,
+                                        exclude_user=request.user
+                                    )
+    sharing_info = {
+        'users': shared_users,
+        'groups': thread.get_groups_shared_with(max_count=2),
+        'more_users_count': max(0, users_count - 3),
+        'more_groups_count': max(0, groups_count - 3)
+    }
+
     data = {
         'is_cacheable': False,#is_cacheable, #temporary, until invalidation fix
         'long_time': const.LONG_TIME,#"forever" caching
@@ -586,6 +599,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
         'similar_threads' : thread.get_similar_threads(),
         'language_code': translation.get_language(),
         'paginator_context' : paginator_context,
+        'sharing_info': sharing_info,
         'show_post': show_post,
         'show_comment': show_comment,
         'show_comment_position': show_comment_position,

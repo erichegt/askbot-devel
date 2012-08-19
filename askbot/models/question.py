@@ -497,6 +497,34 @@ class Thread(models.Model):
         else:
             return self.get_answers(user).count()
 
+    def get_sharing_info(self):
+        """returns shared with user and group count"""
+        groups = self.groups
+        ugroups = groups.filter(name__startswith='_internal_')
+        ggroups = groups.exclude(name__startswith='_internal_')
+        return ugroups.count(), ggroups.count()
+
+    def get_users_shared_with(self, max_count=None, exclude_user=None):
+        """returns query set of users with whom
+        this thread is shared
+        """
+        groups = self.groups.filter(name__startswith='_internal_')
+
+        if exclude_user:
+            groups = groups.exclude(created_by__id=exclude_user.id)
+
+        user_ids = groups.values_list('created_by__id', flat=True)
+        if max_count:
+            user_ids = user_ids[:max_count]
+        return User.objects.filter(id__in=user_ids)
+
+    def get_groups_shared_with(self, max_count=None):
+        """returns query set of groups with whom thread is shared"""
+        groups = self.groups.exclude(name__startswith='_internal_')
+        if max_count:
+            groups = groups[:max_count]
+        return groups
+
     def update_favorite_count(self):
         self.favourite_count = FavoriteQuestion.objects.filter(thread=self).count()
         self.save()

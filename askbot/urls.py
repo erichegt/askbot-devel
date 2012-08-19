@@ -72,11 +72,20 @@ urlpatterns = patterns('',
     ),
 
     # END main page urls
-
     url(
         r'^api/get_questions/',
         views.commands.api_get_questions,
-        name = 'api_get_questions'
+        name='api_get_questions'
+    ),
+    url(
+        r'^get-thread-shared-users/',
+        views.commands.get_thread_shared_users,
+        name='get_thread_shared_users'
+    ),
+    url(
+        r'^get-thread-shared-groups/',
+        views.commands.get_thread_shared_groups,
+        name='get_thread_shared_groups'
     ),
     url(
         r'^save-draft-question/',

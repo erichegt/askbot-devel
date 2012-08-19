@@ -882,55 +882,6 @@ def register(request, login_provider_name=None, user_identifier=None):
             email = register_form.cleaned_data['email']
             subscribe = email_feeds_form.cleaned_data['subscribe']
 
-<<<<<<< HEAD
-            user = User.objects.create_user(username, email)
-            user_registered.send(None, user = user)
-
-            logging.debug('creating new openid user association for %s')
-
-            UserAssociation(
-                openid_url = user_identifier,
-                user = user,
-                provider_name = login_provider_name,
-                last_used_timestamp = datetime.datetime.now()
-            ).save()
-
-            del request.session['user_identifier']
-            del request.session['login_provider_name']
-
-            logging.debug('logging the user in')
-
-            user = authenticate(method = 'force', user_id = user.id)
-            if user is None:
-                error_message = 'please make sure that ' + \
-                                'askbot.deps.django_authopenid.backends.AuthBackend' + \
-                                'is in your settings.AUTHENTICATION_BACKENDS'
-                raise Exception(error_message)
-
-            login(request, user)
-
-            logging.debug('saving email feed settings')
-            email_feeds_form.save(user)
-
-        #check if we need to post a question that was added anonymously
-        #this needs to be a function call becase this is also done
-        #if user just logged in and did not need to create the new account
-
-        if user != None:
-            if askbot_settings.EMAIL_VALIDATION == True:
-                logging.debug('sending email validation')
-                send_new_email_key(user, nomessage=True)
-                output = validation_email_sent(request)
-                set_email_validation_message(user) #message set after generating view
-                return output
-            if user.is_authenticated():
-                logging.debug('success, send user to main page')
-                return HttpResponseRedirect(reverse('index'))
-            else:
-                logging.debug('have really strange error')
-                raise Exception('openid login failed')#should not ever get here
-
-=======
             if askbot_settings.REQUIRE_VALID_EMAIL_FOR == 'nothing':
 
                 user = create_authenticated_user_account(
@@ -954,7 +905,6 @@ def register(request, login_provider_name=None, user_identifier=None):
                 redirect_url = reverse('verify_email_and_register') + '?next=' + next_url
                 return HttpResponseRedirect(redirect_url)
 
->>>>>>> e294275498398f85d573995c49eee399ec27746e
     providers = {
             'yahoo':'<font color="purple">Yahoo!</font>',
             'flickr':'<font color="#0063dc">flick</font><font color="#ff0084">r</font>&trade;',
@@ -1084,44 +1034,6 @@ def signup_with_password(request):
             username = form.cleaned_data['username']
             password = form.cleaned_data['password1']
             email = form.cleaned_data['email']
-<<<<<<< HEAD
-            provider_name = form.cleaned_data['login_provider']
-
-            new_user = User.objects.create_user(username, email, password)
-            user_registered.send(None, user = new_user)
-
-            logging.debug('new user %s created' % username)
-            if provider_name != 'local':
-                raise NotImplementedError('must run create external user code')
-
-            user = authenticate(
-                        username = username,
-                        password = password,
-                        provider_name = provider_name,
-                        method = 'password'
-                    )
-
-            login(request, user)
-            logging.debug('new user logged in')
-            email_feeds_form.save(user)
-            logging.debug('email feeds form saved')
-
-            # send email
-            #subject = _("Welcome email subject line")
-            #message_template = get_emplate(
-            #        'authopenid/confirm_email.txt'
-            #)
-            #message_context = Context({
-            #    'signup_url': askbot_settings.APP_URL + reverse('user_signin'),
-            #    'username': username,
-            #    'password': password,
-            #})
-            #message = message_template.render(message_context)
-            #send_mail(subject, message, settings.DEFAULT_FROM_EMAIL,
-            #        [user.email])
-            #logging.debug('new password acct created, confirmation email sent!')
-            return HttpResponseRedirect(next)
-=======
             subscribe = email_feeds_form.cleaned_data['subscribe']
 
             if askbot_settings.REQUIRE_VALID_EMAIL_FOR == 'nothing':
@@ -1148,7 +1060,6 @@ def signup_with_password(request):
                                 '?next=' + get_next_url(request)
                 return HttpResponseRedirect(redirect_url)
 
->>>>>>> e294275498398f85d573995c49eee399ec27746e
         else:
             #todo: this can be solved with a decorator, maybe
             form.initial['login_provider'] = provider_name
@@ -1241,45 +1152,12 @@ def send_email_key(email, key, handler_url_name='user_account_recover'):
     message = template.render(data)
     send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [email])
 
-<<<<<<< HEAD
-def send_new_email_key(user,nomessage=False):
-    import random
-    random.seed()
-    user.email_key = '%032x' % random.getrandbits(128)
-=======
 def send_user_new_email_key(user):
     user.email_key = util.generate_random_key()
->>>>>>> e294275498398f85d573995c49eee399ec27746e
     user.save()
     send_email_key(user.email, user.email_key)
 
-<<<<<<< HEAD
-    raises 404 if email validation is off
-    if current email is valid shows 'key_not_sent' view of
-    authopenid/changeemail.html template
-    """
-    if askbot_settings.EMAIL_VALIDATION == True:
-        if request.user.email_isvalid:
-            data = {
-                'email': request.user.email,
-                'action_type': 'key_not_sent',
-                'change_link': reverse('user_changeemail')
-            }
-            return render_into_skin(
-                        'authopenid/changeemail.html',
-                        data,
-                        request
-                    )
-        else:
-            send_new_email_key(request.user)
-            return validation_email_sent(request)
-    else:
-        raise Http404
-
-def account_recover(request, key = None):
-=======
 def account_recover(request):
->>>>>>> e294275498398f85d573995c49eee399ec27746e
     """view similar to send_email_key, except
     it allows user to recover an account by entering
     his/her email address

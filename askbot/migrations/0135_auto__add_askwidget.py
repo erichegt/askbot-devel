@@ -77,7 +77,7 @@ class Migration(SchemaMigration):
         },
         'askbot.askwidget': {
             'Meta': {'object_name': 'AskWidget'},
-            'default_group': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['askbot.Tag']", 'null': 'True', 'blank': 'True'}),
+            'tag': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['askbot.Tag']", 'null': 'True', 'blank': 'True'}),
             'group': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'groups'", 'null': 'True', 'to': "orm['askbot.Tag']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'inner_style': ('django.db.models.fields.TextField', [], {'default': "''"}),
