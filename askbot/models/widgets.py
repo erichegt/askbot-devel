@@ -30,13 +30,26 @@ class AskWidget(models.Model):
     def __unicode__(self):
         return "Widget: %s" % self.title
 
+SEARCH_ORDER_BY = (
+                    ('-added_at', _('date ascendant')),
+                    ('added_at', _('date descendant')),
+                    ('-last_activity_at', _('activity descendant')),
+                    ('last_activity_at', _('activity ascendant')),
+                    ('-answer_count', _('answers descendant')),
+                    ('answer_count', _('answers ascendant')),
+                    ('-score', _('votes descendant')),
+                    ('score', _('votes ascendant')),
+                  )
+
 class QuestionWidget(models.Model):
     title = models.CharField(max_length=100)
     question_number = models.PositiveIntegerField(default=7)
-    tagnames = models.CharField('tags', max_length=50)
+    tagnames = models.CharField(_('tags'), max_length=50)
     group = models.ForeignKey(Tag, null=True, blank=True)
     search_query = models.CharField(max_length=50)
-    style = models.TextField('css for the widget',
+    order_by = models.CharField(max_length=18,
+            choices=SEARCH_ORDER_BY, default='-added_at')
+    style = models.TextField(_('css for the widget'),
             default=DEFAULT_INNER_STYLE, blank=True)
 
     class Meta:

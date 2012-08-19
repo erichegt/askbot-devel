@@ -3,11 +3,11 @@
 <html>
 <head>
     <style type="text/css">
-        {{settings.QUESTIONS_WIDGET_CSS|safe}}
+        {{widget.style|safe}}
     </style>
 </head>
 <body>
-    {{settings.QUESTIONS_WIDGET_HEADER|safe}}
+    {{widget.title|safe}}
     <div id="container">
         <ul>
             {% for thread in threads %}
@@ -16,6 +16,5 @@
             {% endfor %}
         </ul>
     </div> 
-    {{settings.QUESTIONS_WIDGET_FOOTER|safe}}
 </body>
 </html>

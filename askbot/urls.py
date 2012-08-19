@@ -433,16 +433,11 @@ urlpatterns = patterns('',
         views.widgets.list_widgets,
         name = 'list_widgets'
     ),
-    #url(
-    #    r'^%s%s$' % (_('widgets/'), _('questions/')),
-    #    views.widgets.widget_questions,
-    #    name='widget_questions'
-    #),
-    #url(
-    #    r'^widgets/questions/(?P<widget_id>\d+)/$',
-    #    views.widgets.question_widget,
-    #    name = 'question_widget'
-    #),
+    url(
+        r'^widgets/questions/(?P<widget_id>\d+)/$',
+        views.widgets.question_widget,
+        name = 'question_widget'
+    ),
     url(
         r'^feeds/(?P<url>.*)/$',
         'django.contrib.syndication.views.feed',

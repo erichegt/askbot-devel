@@ -129,3 +129,35 @@ class WidgetCreatorViewsTests(AskbotTestCase):
     #    self.client.login(username='user1', password='testpass')
     #    response = self.client.get('/widgets/foo/create/')
     #    self.assertEquals(404, response.status_code)
+
+
+class QuestionWidgetViewsTests(AskbotTestCase):
+
+    def setUp(self):
+        self.user = self.create_user('testuser')
+        self.client = Client()
+        self.widget =  models.QuestionWidget.objects.create(title="foo",
+                                   question_number=5, search_query='test',
+                                   tagnames='test')
+
+        #we post 6 questions!
+        titles = ('test question 1', 'this is a test',
+                  'without the magic word', 'test test test',
+                  'test just another test', 'no magic word',
+                  'test another', 'I can no believe is a test')
+
+        tagnames = 'test foo bar'
+        for title in titles:
+            self.post_question(title=title, tags=tagnames)
+
+    def test_valid_response(self):
+        filter_params = {'title__icontains': self.widget.search_query,
+                         'tags__name__in': self.widget.tagnames.split(' ')}
+
+        threads = models.Thread.objects.filter(**filter_params)[:5]
+
+        response = self.client.get(reverse('question_widget', args=(self.widget.id, )))
+        self.assertEquals(200, response.status_code)
+
+        self.assertQuerysetEqual(threads, response.context['threads'])
+        self.assertEquals(self.widget, response.context['widget'])

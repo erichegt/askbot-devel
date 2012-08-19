@@ -8,20 +8,36 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
 
+        # Adding model 'QuestionWidget'
+        db.create_table('askbot_questionwidget', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('title', self.gf('django.db.models.fields.CharField')(max_length=100)),
+            ('question_number', self.gf('django.db.models.fields.PositiveIntegerField')(default=7)),
+            ('tagnames', self.gf('django.db.models.fields.CharField')(max_length=50)),
+            ('group', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['askbot.Tag'], null=True, blank=True)),
+            ('search_query', self.gf('django.db.models.fields.CharField')(max_length=50)),
+            ('order_by', self.gf('django.db.models.fields.CharField')(default='-added_at', max_length=18)),
+            ('style', self.gf('django.db.models.fields.TextField')(default='', blank=True)),
+        ))
+        db.send_create_signal('askbot', ['QuestionWidget'])
+
         # Adding model 'AskWidget'
         db.create_table('askbot_askwidget', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('title', self.gf('django.db.models.fields.CharField')(max_length=100)),
             ('group', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='groups', null=True, to=orm['askbot.Tag'])),
             ('tag', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['askbot.Tag'], null=True, blank=True)),
-            ('include_text_field', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True)),
-            ('inner_style', self.gf('django.db.models.fields.TextField')(default='')),
-            ('outer_style', self.gf('django.db.models.fields.TextField')(default='')),
+            ('include_text_field', self.gf('django.db.models.fields.BooleanField')(default=False)),
+            ('inner_style', self.gf('django.db.models.fields.TextField')(default='', blank=True)),
+            ('outer_style', self.gf('django.db.models.fields.TextField')(default='', blank=True)),
         ))
         db.send_create_signal('askbot', ['AskWidget'])
 
 
     def backwards(self, orm):
+
+        # Deleting model 'QuestionWidget'
+        db.delete_table('askbot_questionwidget')
 
         # Deleting model 'AskWidget'
         db.delete_table('askbot_askwidget')
@@ -77,11 +93,12 @@ class Migration(SchemaMigration):
         },
         'askbot.askwidget': {
             'Meta': {'object_name': 'AskWidget'},
-            'tag': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['askbot.Tag']", 'null': 'True', 'blank': 'True'}),
             'group': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'groups'", 'null': 'True', 'to': "orm['askbot.Tag']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'inner_style': ('django.db.models.fields.TextField', [], {'default': "''"}),
-            'outer_style': ('django.db.models.fields.TextField', [], {'default': "''"}),
+            'include_text_field': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'inner_style': ('django.db.models.fields.TextField', [], {'default': "''", 'blank': 'True'}),
+            'outer_style': ('django.db.models.fields.TextField', [], {'default': "''", 'blank': 'True'}),
+            'tag': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['askbot.Tag']", 'null': 'True', 'blank': 'True'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         'askbot.award': {
@@ -226,6 +243,17 @@ class Migration(SchemaMigration):
             'question': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'viewed'", 'to': "orm['askbot.Post']"}),
             'when': ('django.db.models.fields.DateTimeField', [], {}),
             'who': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'question_views'", 'to': "orm['auth.User']"})
+        },
+        'askbot.questionwidget': {
+            'Meta': {'object_name': 'QuestionWidget'},
+            'group': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['askbot.Tag']", 'null': 'True', 'blank': 'True'}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'order_by': ('django.db.models.fields.CharField', [], {'default': "'-added_at'", 'max_length': '18'}),
+            'question_number': ('django.db.models.fields.PositiveIntegerField', [], {'default': '7'}),
+            'search_query': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
+            'style': ('django.db.models.fields.TextField', [], {'default': "''", 'blank': 'True'}),
+            'tagnames': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
+            'title': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         'askbot.replyaddress': {
             'Meta': {'object_name': 'ReplyAddress'},

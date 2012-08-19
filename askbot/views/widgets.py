@@ -221,13 +221,26 @@ def question_widget(request, widget_id):
     if request.method != 'GET':
         raise Http404
 
-    tags_input = request.GET.get('tags','').strip()
-    if len(tags_input) > 0:
-        tags = [tag.strip() for tag in tags_input.split(',')]
-        threads = models.Thread.objects.filter(tags__name__in=tags)[:askbot_settings.QUESTIONS_WIDGET_MAX_QUESTIONS]
+    filter_params = {}
 
+    if widget.tagnames:
+        filter_params['tags__name__in'] = widget.tagnames.split(' ')
+
+    if widget.group:
+        filter_params['groups'] = widget.group
+
+    #simple title search for now
+    if widget.search_query:
+        filter_params['title__icontains'] = widget.search_query
+
+    if filter_params:
+        threads = models.Thread.objects.filter(**filter_params).order_by(widget.order_by)[:widget.question_number]
     else:
-        threads = models.Thread.objects.all()[:askbot_settings.QUESTIONS_WIDGET_MAX_QUESTIONS]
+        threads = models.Thread.objects.all().order_by(widget.order_by)[:widget.question_number]
 
-    data = { 'threads': threads }
+    data = {
+             'threads': threads,
+             'widget': widget
+           }
+
     return render_into_skin('embed/question_widget.html', data, request)
