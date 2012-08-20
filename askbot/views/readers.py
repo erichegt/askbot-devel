@@ -568,12 +568,12 @@ def question(request, id):#refactor - long subroutine. display question body, an
     #shared with ...
     users_count, groups_count = thread.get_sharing_info()
     shared_users = thread.get_users_shared_with(
-                                        max_count=2,
+                                        max_count=2,#"visitor" is implicit
                                         exclude_user=request.user
                                     )
     sharing_info = {
         'users': shared_users,
-        'groups': thread.get_groups_shared_with(max_count=2),
+        'groups': thread.get_groups_shared_with(max_count=3),
         'more_users_count': max(0, users_count - 3),
         'more_groups_count': max(0, groups_count - 3)
     }

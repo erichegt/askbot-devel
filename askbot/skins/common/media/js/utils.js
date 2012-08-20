@@ -569,6 +569,132 @@ DeleteIcon.prototype.setContent = function(content){
 }
 
 /**
+ * @contstructor
+ * Simple modal dialog with Ok/Cancel buttons by default
+ */
+var ModalDialog = function() {
+    WrappedElement.call(this);
+    this._accept_button_text = gettext('Ok');
+    this._reject_button_text = gettext('Cancel');
+    this._heading_text = 'Add heading by setHeadingText()';
+    this._initial_content = undefined;
+    this._accept_handler = function(){};
+    var me = this;
+    this._reject_handler = function() { me.hide(); };
+    this._content_element = undefined;
+};
+inherits(ModalDialog, WrappedElement);
+
+ModalDialog.prototype.show = function() {
+    this._element.modal('show');
+};
+
+ModalDialog.prototype.hide = function() {
+    this._element.modal('hide');
+};
+
+ModalDialog.prototype.setContent = function(content) {
+    this._initial_content = content;
+    if (this._content_element) {
+        this._content_element.html(content);
+    }
+};
+
+ModalDialog.prototype.prependContent = function(content) {
+    this._content_element.prepend(content);
+};
+
+ModalDialog.prototype.setHeadingText = function(text) {
+    this._heading_text = text;
+};
+
+ModalDialog.prototype.setAcceptButtonText = function(text) {
+    this._accept_button_text = text;
+};
+
+ModalDialog.prototype.setRejectButtonText = function(text) {
+    this._reject_button_text = text;
+};
+
+ModalDialog.prototype.setAcceptHandler = function(handler) {
+    this._accept_handler = handler;
+};
+
+ModalDialog.prototype.setRejectHandler = function(handler) {
+    this._reject_handler = handler;
+};
+
+ModalDialog.prototype.clearMessages = function() {
+    this._element.find('.alert').remove();
+};
+
+ModalDialog.prototype.setMessage = function(text, message_type) {
+    var box = new AlertBox();
+    box.setText(text);
+    if (message_type === 'error') {
+        box.setError(true);
+    }
+    this.prependContent(box.getElement());
+};
+
+ModalDialog.prototype.createDom = function() {
+    this._element = this.makeElement('div')
+    var element = this._element;
+
+    element.addClass('modal');
+
+    //1) create header
+    var header = this.makeElement('div')
+    header.addClass('modal-header');
+    element.append(header);
+
+    var close_link = this.makeElement('div');
+    close_link.addClass('close');
+    close_link.attr('data-dismiss', 'modal');
+    close_link.html('x');
+    header.append(close_link);
+
+    var title = this.makeElement('h3');
+    title.html(this._heading_text);
+    header.append(title);
+
+    //2) create content
+    var body = this.makeElement('div')
+    body.addClass('modal-body');
+    element.append(body);
+    this._content_element = body;
+    if (this._initial_content) {
+        this._content_element.append(this._initial_content);
+    }
+
+    //3) create footer with accept and reject buttons (ok/cancel).
+    var footer = this.makeElement('div');
+    footer.addClass('modal-footer');
+    element.append(footer);
+
+    var accept_btn = this.makeElement('button');
+    accept_btn.addClass('btn btn-primary');
+    accept_btn.html(this._accept_button_text);
+    footer.append(accept_btn);
+
+    if (this._reject_button_text) {
+        var reject_btn = this.makeElement('button');
+        reject_btn.addClass('btn cancel');
+        reject_btn.html(this._reject_button_text);
+        footer.append(reject_btn);
+    }
+
+    //4) attach event handlers to the buttons
+    setupButtonEventHandlers(accept_btn, this._accept_handler);
+    if (this._reject_button_text) {
+        setupButtonEventHandlers(reject_btn, this._reject_handler);
+    }
+    setupButtonEventHandlers(close_link, this._reject_handler);
+
+    this.hide();
+};
+
+/**
  * attaches a modal menu with a text editor
  * to a link. The modal menu is from bootstrap.js
  */
