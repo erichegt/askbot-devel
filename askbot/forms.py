@@ -893,7 +893,7 @@ class AskWidgetForm(forms.Form, FormWithHideableFields):
     '''Simple form with just the title to ask a question'''
 
     title = TitleField()
-    text = EditorField(required=False)
+    text = EditorField()
     ask_anonymously = forms.BooleanField(
         label=_('ask anonymously'),
         help_text=_(
@@ -911,6 +911,9 @@ class AskWidgetForm(forms.Form, FormWithHideableFields):
 
         if not include_text:
             self.hide_field('text')
+            self.fields['text'].required=False
+        else:
+            self.fields['text'].min_length = askbot_settings.MIN_QUESTION_BODY_LENGTH
 
 class AskByEmailForm(forms.Form):
     """:class:`~askbot.forms.AskByEmailForm`
