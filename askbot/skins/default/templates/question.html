@@ -8,6 +8,7 @@
 {% block forestyle %}
     <link rel="canonical" href="{{settings.APP_URL|strip_path}}{{question.get_absolute_url()}}" />
     <link rel="stylesheet" type="text/css" href="{{'/js/wmd/wmd.css'|media}}" />
+    <link href="{{'/bootstrap/css/bootstrap.css'|media}}" rel="stylesheet" type="text/css" />
 {% endblock %}
 {% block forejs %}
     <script type="text/javascript">
