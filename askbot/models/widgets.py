@@ -12,6 +12,38 @@ DEFAULT_INNER_STYLE = ''
 
 DEFAULT_OUTER_STYLE = ''
 
+DEFAULT_QUESTION_STYLE = '''
+@import url('http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:300,400,700');
+body {
+    overflow: hidden;
+}
+
+#container {
+    width: 200px;
+    height: 350px;
+}
+ul {
+    list-style: none;
+    padding: 5px;
+    margin: 5px;
+}
+li {
+    border-bottom: #CCC 1px solid;
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+li:last-child {
+    border: none;
+}
+a {
+    text-decoration: none;
+    color: #464646;
+    font-family: 'Yanone Kaffeesatz', sans-serif;
+    font-size: 15px;
+}
+'''
+
+
 class AskWidget(models.Model):
     '''stores widgets styles and options'''
     title = models.CharField(max_length=100)
@@ -31,8 +63,8 @@ class AskWidget(models.Model):
         return "Widget: %s" % self.title
 
 SEARCH_ORDER_BY = (
-                    ('-added_at', _('date ascendant')),
-                    ('added_at', _('date descendant')),
+                    ('-added_at', _('date descendant')),
+                    ('added_at', _('date ascendant')),
                     ('-last_activity_at', _('activity descendant')),
                     ('last_activity_at', _('activity ascendant')),
                     ('-answer_count', _('answers descendant')),
@@ -46,11 +78,12 @@ class QuestionWidget(models.Model):
     question_number = models.PositiveIntegerField(default=7)
     tagnames = models.CharField(_('tags'), max_length=50)
     group = models.ForeignKey(Tag, null=True, blank=True)
-    search_query = models.CharField(max_length=50)
+    search_query = models.CharField(max_length=50,
+            null=True, blank=True)
     order_by = models.CharField(max_length=18,
             choices=SEARCH_ORDER_BY, default='-added_at')
     style = models.TextField(_('css for the widget'),
-            default=DEFAULT_INNER_STYLE, blank=True)
+            default=DEFAULT_QUESTION_STYLE, blank=True)
 
     class Meta:
         app_label = 'askbot'
@@ -85,11 +118,6 @@ class CreateQuestionWidgetForm(forms.ModelForm, FormWithHideableFields):
     tagnames = TagNamesField()
     group = forms.ModelChoiceField(queryset=get_groups().exclude(name__startswith='_internal'),
             required=False)
-
-    #def __init__(self, *args, **kwargs):
-    #    super(CreateQuestionWidgetForm, self).__init__(*args, **kwargs)
-    #    if not askbot_settings.GROUPS_ENABLED:
-    #        self.hide_field('group')
 
     class Meta:
         model = QuestionWidget

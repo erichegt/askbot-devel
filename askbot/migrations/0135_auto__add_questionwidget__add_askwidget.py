@@ -15,9 +15,9 @@ class Migration(SchemaMigration):
             ('question_number', self.gf('django.db.models.fields.PositiveIntegerField')(default=7)),
             ('tagnames', self.gf('django.db.models.fields.CharField')(max_length=50)),
             ('group', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['askbot.Tag'], null=True, blank=True)),
-            ('search_query', self.gf('django.db.models.fields.CharField')(max_length=50)),
+            ('search_query', self.gf('django.db.models.fields.CharField')(max_length=50, null=True, blank=True)),
             ('order_by', self.gf('django.db.models.fields.CharField')(default='-added_at', max_length=18)),
-            ('style', self.gf('django.db.models.fields.TextField')(default='', blank=True)),
+            ('style', self.gf('django.db.models.fields.TextField')(default='', blank=True, null=True)),
         ))
         db.send_create_signal('askbot', ['QuestionWidget'])
 

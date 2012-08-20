@@ -156,6 +156,7 @@ def create_widget(request, model):
         form = form_class()
 
     data = {'form': form,
+            'action': 'edit',
             'widget_name': model}
 
     return render_into_skin('embed/widget_form.html', data, request)
@@ -175,6 +176,7 @@ def edit_widget(request, model, widget_id):
         form = form_class(instance=widget)
 
     data = {'form': form,
+            'action': 'edit',
             'widget_name': model}
     return render_into_skin('embed/widget_form.html', data, request)
 

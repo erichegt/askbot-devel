@@ -11,7 +11,7 @@
     <div id="container">
         <ul>
             {% for thread in threads %}
-                <li><a href="{{settings.APP_URL|strip_path}}{{ thread.get_absolute_url() }}">
+                <li><a href="{{settings.APP_URL|strip_path}}{{ thread.get_absolute_url() }}" target="_blank">
                   {{ thread.title|escape }}</a></li>
             {% endfor %}
         </ul>
