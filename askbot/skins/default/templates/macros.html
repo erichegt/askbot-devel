@@ -206,11 +206,15 @@ poor design of the data or methods on data objects #}
 </ul>
 {%- endmacro -%}
 
+{%- macro user_group_link(group) -%}
+    <a class="group-name"
+        href="{% url users_by_group group.id, group.name|replace('-', ' ')|slugify %}"
+    >{{ group.name|escape }}</a>
+{%- endmacro -%}
+
 {%- macro user_group(group, membership_info) -%}
     <td>
-        <a class="group-name"
-            href="{% url users_by_group group.id, group.name|replace('-', ' ')|slugify %}"
-        >{{ group.name|escape }}</a>
+        {{ user_group_link(group) }}
     </td>
     <td>
     <span class="group-description">

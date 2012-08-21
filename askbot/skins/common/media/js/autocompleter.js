@@ -10,6 +10,7 @@ var AutoCompleter = function(options) {
      * Default options for autocomplete plugin
      */
     var defaults = {
+        promptText: '',
         autocompleteMultiple: true,
         multipleSeparator: ' ',//a single character
         inputClass: 'acInput',
@@ -147,6 +148,11 @@ AutoCompleter.prototype.decorate = function(element){
     this._element.attr('autocomplete', 'off');
 
     /**
+     * Set prompt text
+     */
+    this.setPrompt();
+
+    /**
      * Create DOM element to hold results
      */
     this._results = $('<div></div>').hide();
@@ -161,6 +167,21 @@ AutoCompleter.prototype.decorate = function(element){
     this.setEventHandlers();
 };
 
+AutoCompleter.prototype.setPrompt = function() {
+    this._element.val(this.options['promptText']);
+    this._element.addClass('prompt');
+};
+
+AutoCompleter.prototype.removePrompt = function() {
+    if (this._element.hasClass('prompt')) {
+        this._element.removeClass('prompt');
+        var val = this._element.val();
+        if (val === this.options['promptText']) {
+            this._element.val('');
+        }
+    }
+};
+
 AutoCompleter.prototype.setEventHandlers = function(){
     /**
      * Shortcut to self
@@ -171,6 +192,9 @@ AutoCompleter.prototype.setEventHandlers = function(){
      * Attach keyboard monitoring to $elem
      */
     self._element.keydown(function(e) {
+
+        self.removePrompt();
+
         self.lastKeyPressed_ = e.keyCode;
         switch(self.lastKeyPressed_) {
 
@@ -204,6 +228,10 @@ AutoCompleter.prototype.setEventHandlers = function(){
             break;
 
             case 27: // escape
+                if ($.trim(self._element.val()) === '') {
+                    self.setPrompt();
+                    return false;
+                }
                 if (self.active_) {
                     e.preventDefault();
                     self.finish();

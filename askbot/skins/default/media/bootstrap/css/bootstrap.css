@@ -965,7 +965,7 @@ input[type="button"],
 input[type="reset"],
 input[type="submit"] {
   width: auto;
-  height: auto;
+  /*height: auto;*/
 }
 select,
 input[type="file"] {

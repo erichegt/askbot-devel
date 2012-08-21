@@ -3905,6 +3905,7 @@ $(document).ready(function() {
         var groupsAc = new AutoCompleter({
             url: askbot['urls']['getGroupsList'],
             preloadData: true,
+            promptText: gettext('Group name:'),
             minChars: 1,
             useCache: false,
             matchInside: true,
@@ -3918,6 +3919,7 @@ $(document).ready(function() {
         var usersAc = new AutoCompleter({
             url: '/get-users-info/',
             preloadData: true,
+            promptText: gettext('User name:'),
             minChars: 1,
             useCache: false,
             matchInside: true,

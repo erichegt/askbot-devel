@@ -39,6 +39,12 @@ input, select {
     margin-left:0px;
 }
 
+input[type="text"].prompt,
+input[type="password"].prompt {
+    font-style: italic;
+    color: @info-text;
+}
+
 textarea:focus, input:focus{
     outline: none;
 }
@@ -531,6 +537,7 @@ body.anon {
         margin-bottom: 4px;
         color: @info-text;
         font-family:@main-font;
+        font-size: 14px;
     }
 
     p.info-box-follow-up-links {
@@ -562,6 +569,10 @@ body.anon {
     }
     .contributorback{
         background: #eceeeb url(../images/contributorsback.png) no-repeat center left;
+    }
+
+    form {
+        margin: 0px;
     }
 
     label {
@@ -1474,11 +1485,17 @@ ul#related-tags li {
     .rounded-corners(4px);
 }
 
+.share-input-col {
+    width: 160px;
+    text-align: center;
+}
+
 .add-everyone-group {
     text-align: center;
     margin: auto;
     display: block;
     padding: 0 10px;
+    height: 25px;
 }
 
 .add-groups:hover {

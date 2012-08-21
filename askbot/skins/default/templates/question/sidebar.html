@@ -51,51 +51,21 @@
 <div class="clearfix"></div>
 <div class="box sharing-widget">
     {% if thread.is_private() %}
-        <h2>{% trans %}Share{% endtrans %}</h2>
-        <label for="share_user_name">{% trans %}Share with users{% endtrans %}</label>
-        <p>
-            <a href="{{ request.user.get_profile_url() }}">
-                {% trans %}You{% endtrans %}
-            </a>
-        </p>
-        {% for user in sharing_info['users'] %}
-            <p>{{ user.get_profile_link() }}<p>
-        {% endfor %}
-        {% if sharing_info['more_users_count'] > 0 %}
-            <p><a 
-                class="see-related-users"
-                data-url="{% url get_thread_shared_users %}"
-                data-thread-id="{{ thread.id }}"
-            >{% trans more_count=sharing_info['more_users_count'] %}... and {{ more_count }} more{% endtrans %}
-            </a></p>
-        {% endif %}
+        <h2>{% trans %}Invite{% endtrans %}</h2>
+        <p style="margin: 16px 0"
+        >Invite others to help answer this question</p>
         <form action="{% url share_question_with_user %}" method="post">{% csrf_token %}
             <input id="share_user_name" type="text" class="groups-input" name="recipient_name" />
             <input type="hidden" name="thread_id" value="{{ thread.id }}"/>
             <input type="submit" class="add-groups" value="{% trans %}add{% endtrans %}"/>
         </form>
-        {% if sharing_info['groups'].count() > 0 %}
-            <label for="group_name">{% trans %}Shared with groups:{% endtrans %}</label>
-        {% else %}
-            <label for="group_name">{% trans %}Share with a group{% endtrans %}</label>
-        {% endif %}
-        {% for group in sharing_info['groups'] %}
-            <p>{{ macros.user_group(group) }}</p>
-        {% endfor %}
-        {% if sharing_info['more_groups_count'] > 0 %}
-            <p><a 
-                class="see-related-groups"
-                data-url="{% url get_thread_shared_groups %}"
-                data-thread-id="{{ thread.id }}"
-            >{% trans more_count=sharing_info['more_groups_count'] %}... and {{ more_count }} more{% endtrans %}
-            </a></p>
-        {% endif %}
+        <p class="share-input-col">{% trans %}- or -{% endtrans %}</p>
         <form action="{% url share_question_with_group %}" method="post">{% csrf_token %}
             <input id="share_group_name" type="text" class="groups-input" name="recipient_name" />
             <input type="hidden" name="thread_id" value="{{ thread.id }}"/>
             <input type="submit" class="add-groups" value="{% trans %}add{% endtrans %}"/>
         </form>
-        <p style="text-align: center">{% trans %}or{% endtrans %}</p>
+        <p class="share-input-col">{% trans %}- or -{% endtrans %}</p>
         <form action="{% url share_question_with_group %}" method="post">{% csrf_token %}
             <input
                 type="hidden"
@@ -103,13 +73,65 @@
                 value="{{ settings.GLOBAL_GROUP_NAME }}"
             />
             <input type="hidden" name="thread_id" value="{{ thread.id }}"/>
+            <p class="share-input-col">
             <input 
                 type="submit"
                 class="add-groups add-everyone-group"
                 value="{% trans %}share with everyone{% endtrans %}"
             />
+            </p>
         </form>
 
+        {% set shared_users_count = sharing_info['users'].count() %}
+        {% set shared_groups_count = sharing_info['groups'].count() %}
+
+        {% if shared_users_count or shared_groups_count %}
+            <p 
+                style="margin:16px 0 4px 0"
+            >{% trans %}This question is currently shared only with:{% endtrans %}</p>
+        {% endif %}
+        <h3>{% trans %}Individual users{% endtrans %}</h3>
+            {% set comma = joiner(',') %}
+            {{ comma() }}
+        <p>
+        <a href="{{ request.user.get_profile_url() }}">
+            {% trans %}You{% endtrans -%}
+        </a>{%- if shared_users_count -%}
+                {%- for user in sharing_info['users'] %}{{ comma() }}
+                    {{ user.get_profile_link() }}
+                {%- endfor -%}
+            {% endif -%}
+            {%- if sharing_info['more_users_count'] > 0 %}
+                {% trans %}and{% endtrans %}
+                <a 
+                    class="see-related-users"
+                    data-url="{% url get_thread_shared_users %}"
+                    data-thread-id="{{ thread.id }}"
+                >{% trans 
+                        more_count=sharing_info['more_users_count'] 
+                    %}{{ more_count }} more{% endtrans %}
+                </a>
+            {% endif %}
+        </p>
+
+        {% if shared_groups_count %}
+            <h3>{% trans %}Groups{% endtrans %}</h3>
+            <p>
+                {% set comma = joiner(',') %}
+                {%- for group in sharing_info['groups'] -%}{{ comma() }}
+                    {{ macros.user_group_link(group) }}
+                {%- endfor -%}
+                {% if sharing_info['more_groups_count'] > 0 %}
+                    {% trans %}and{% endtrans %}
+                    <a 
+                        class="see-related-groups"
+                        data-url="{% url get_thread_shared_groups %}"
+                        data-thread-id="{{ thread.id }}"
+                    >{% trans more_count=sharing_info['more_groups_count'] %}{{ more_count }} more{% endtrans %}
+                    </a>
+                {% endif %}
+            </p>
+        {% endif %}
     {% else %}
         <h2>{% trans %}Public thread{% endtrans %}</h2>
         <p>{% trans site_name=settings.APP_SHORT_NAME %}This thread is public, all members of {{ site_name }} can read this page.{% endtrans %}</p>
