@@ -1,6 +1,14 @@
 from askbot import startup_procedures
 startup_procedures.run()
 
+from django.contrib.auth.models import User
+#set up a possibility for the users to follow others
+try:
+    import followit
+    followit.register(User)
+except ImportError:
+    pass
+
 import collections
 import datetime
 import hashlib
@@ -11,7 +19,6 @@ from django.db.models import signals as django_signals
 from django.template import Context
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
-from django.contrib.auth.models import User
 from django.utils.safestring import mark_safe
 from django.utils.html import escape
 from django.db import models
@@ -3479,13 +3486,6 @@ signals.post_updated.connect(record_post_update_activity)
 #to tell when the revision becomes publicly visible, not when it is saved
 signals.post_revision_published.connect(notify_author_of_published_revision)
 signals.site_visited.connect(record_user_visit)
-
-#set up a possibility for the users to follow others
-try:
-    import followit
-    followit.register(User)
-except ImportError:
-    pass
 
 __all__ = [
         'signals',
