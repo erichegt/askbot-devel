@@ -3,18 +3,19 @@
   href="{% url tags %}"
   {% if active_tab == 'tags' %}class="on"{% endif %}
 >{% trans %}tags{% endtrans %}</a>
-<a 
-  id="navUsers"
-  href="{% url users %}"
-  {% if active_tab == 'users' %}class="on"{% endif %}
->{% trans %}users{% endtrans %}</a>
 {% if settings.GROUPS_ENABLED %}
 <a
   id="navGroups"
   href="{% url groups %}"
   {% if active_tab == 'groups' %}class="on"{% endif %}
->{% trans %}groups{% endtrans %}
+>{% trans %}people & groups{% endtrans %}
 </a>
+{%else%}
+<a 
+  id="navUsers"
+  href="{% url users %}"
+  {% if active_tab == 'users' %}class="on"{% endif %}
+>{% trans %}users{% endtrans %}</a>
 {% endif %}
 {% if settings.BADGES_MODE == 'public' %}
 <a 

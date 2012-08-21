@@ -519,6 +519,11 @@ class PageLoadTestCase(AskbotTestCase):
             template='user_profile/user_inbox.html',
         )
 
+    def test_user_page_with_groups_enabled(self):
+        askbot_settings.GROUPS_ENABLED = True
+        self.try_url('users', status_code=302)
+        askbot_settings.GROUPS_ENABLED = False
+        self.try_url('users', status_code=200)
 
 class AvatarTests(AskbotTestCase):
 
