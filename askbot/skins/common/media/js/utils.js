@@ -456,6 +456,10 @@ TippedInput.prototype.createDom = function() {
 /**
  * Attaches the TippedInput behavior to
  * a pre-existing <input> element
+ * 
+ * decorate() method normally does not create
+ * new dom elements, but it might add some missing elements,
+ * if necessary.
  */
 TippedInput.prototype.decorate = function(element){
     this._element = element;//mandatory line
