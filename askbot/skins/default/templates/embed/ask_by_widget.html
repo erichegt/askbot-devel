@@ -1,0 +1,40 @@
+{% extends "widget_base.html" %}
+{% import "macros.html" as macros %}
+{% block forestyle %}
+  <style type="text/css" media="screen">
+    #editor {
+      display: block;
+      min-height: 200px;
+      width: 100%;
+      margin: 0;
+      border: #CCE6EC 2px solid;
+    }
+
+    #id_title{
+      width: 100%;
+      font-size: 130%;
+      border: #CCE6EC 3px solid;
+    }
+
+    #submit{
+      float: right; 
+      font-size: 130%;
+    }
+  </style>
+{%endblock%}
+
+{%block body%}
+<form action="." method="POST" accept-charset="utf-8">
+  {% csrf_token %}
+  <p>{{form.title}}</p>
+    {{form.text}}
+  {% if form.ask_anonymously %}
+    <p>{{form.ask_anonymously.label_tag()}}: {{form.ask_anonymously}}</p>
+  {%endif%}
+  <input type="submit" value="Ask your question" id="submit" />
+</form>
+{{form.errors}}
+{%endblock%}
+{% block endjs %}
+{% endblock %}
+

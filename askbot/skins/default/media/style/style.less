@@ -39,6 +39,12 @@ input, select {
     margin-left:0px;
 }
 
+input[type="text"].prompt,
+input[type="password"].prompt {
+    font-style: italic;
+    color: @info-text;
+}
+
 textarea:focus, input:focus{
     outline: none;
 }
@@ -384,6 +390,25 @@ body.user-messages {
     }
 }
 
+.validate-email-page {
+    label {
+        color: @info-text;
+        line-height: 1.35;
+        display: block;
+        margin: 10px 0;
+    }
+    #validation-code {
+        padding-left:5px;
+        border:#cce6ec 3px solid;
+        height:25px;
+        font-size: 14px;
+        width: 200px;
+    }
+    form {
+        margin-bottom: 30px;
+    }
+}
+
 #searchBar { /* Main search form , check widgets/search_bar.html */
     display: inline-block;
     background-color: #fff;
@@ -512,6 +537,7 @@ body.anon {
         margin-bottom: 4px;
         color: @info-text;
         font-family:@main-font;
+        font-size: 14px;
     }
 
     p.info-box-follow-up-links {
@@ -543,6 +569,10 @@ body.anon {
     }
     .contributorback{
         background: #eceeeb url(../images/contributorsback.png) no-repeat center left;
+    }
+
+    form {
+        margin: 0px;
     }
 
     label {
@@ -1435,6 +1465,50 @@ ul#related-tags li {
             float: left;
         }
     }
+}
+
+.groups-input,
+.users-input {
+    width:152px;
+    padding-left:5px;
+    border:#c9c9b5 1px solid;
+    height:25px;
+    font-size: 14px;
+}
+
+.add-groups,
+.add-users {
+    border:0;
+    font-weight:bold;
+    margin-top:-2px;
+    .button-style(27px, 14px);
+    .rounded-corners(4px);
+}
+
+.share-input-col {
+    width: 160px;
+    text-align: center;
+}
+
+.add-everyone-group {
+    text-align: center;
+    margin: auto;
+    display: block;
+    padding: 0 10px;
+    height: 25px;
+}
+
+.add-groups:hover {
+    .button-style-hover;
+}
+
+#id_user,
+#id_user_author {
+    border:#cce6ec 3px solid;
+    height:25px;
+    padding-left:5px;
+    width:395px;
+    font-size:14px;
 }
 
 .groups-input,

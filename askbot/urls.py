@@ -70,13 +70,21 @@ urlpatterns = patterns('',
         views.readers.questions,
         name='questions'
     ),
-
     # END main page urls
-
     url(
         r'^api/get_questions/',
         views.commands.api_get_questions,
-        name = 'api_get_questions'
+        name='api_get_questions'
+    ),
+    url(
+        r'^get-thread-shared-users/',
+        views.commands.get_thread_shared_users,
+        name='get_thread_shared_users'
+    ),
+    url(
+        r'^get-thread-shared-groups/',
+        views.commands.get_thread_shared_groups,
+        name='get_thread_shared_groups'
     ),
     url(
         r'^save-draft-question/',
@@ -143,11 +151,6 @@ urlpatterns = patterns('',
         views.readers.revisions,
         kwargs = {'post_type': 'question'},
         name='question_revisions'
-    ),
-    url(
-        r'^%s%s$' % (_('widgets/'), _('questions/')),
-        views.readers.widget_questions,
-        name='widget_questions'
     ),
     url(#ajax only
         r'^comment/upvote/$',
@@ -382,14 +385,57 @@ urlpatterns = patterns('',
     ),
     #widgets url!
     url(
-        r'^widgets/ask/$',
+        r'^%s$' % (_('widgets/')),
+        views.widgets.widgets,
+        name = 'widgets'
+    ),
+
+    url(
+        r'^%s%s(?P<widget_id>\d+)/$' % (_('widgets/'), _('ask/')),
         views.widgets.ask_widget,
         name = 'ask_by_widget'
     ),
     url(
-        r'^widgets/ask/complete/$',
+        r'^%s%s(?P<widget_id>\d+).js$' % (_('widgets/'), _('ask/')),
+        views.widgets.render_ask_widget_js,
+        name = 'render_ask_widget'
+    ),
+    url(
+        r'^%s%s(?P<widget_id>\d+).css$' % (_('widgets/'), _('ask/')),
+        views.widgets.render_ask_widget_css,
+        name = 'render_ask_widget_css'
+    ),
+
+    url(
+        r'^%s%s%s$' % (_('widgets/'), _('ask/'), _('complete/')),
         views.widgets.ask_widget_complete,
         name = 'ask_by_widget_complete'
+    ),
+    url(
+        r'^%s(?P<model>\w+)/%s$' % (_('widgets/'), _('create/')),
+        views.widgets.create_widget,
+        name = 'create_widget'
+    ),
+    url(
+        r'^%s(?P<model>\w+)/%s(?P<widget_id>\d+)/$' % (_('widgets/'), _('edit/')),
+        views.widgets.edit_widget,
+        name = 'edit_widget'
+    ),
+    url(
+        r'^%s(?P<model>\w+)/%s(?P<widget_id>\d+)/$' % (_('widgets/'), _('delete/')),
+        views.widgets.delete_widget,
+        name = 'delete_widget'
+    ),
+
+    url(
+        r'^%s(?P<model>\w+)/$' % (_('widgets/')),
+        views.widgets.list_widgets,
+        name = 'list_widgets'
+    ),
+    url(
+        r'^widgets/questions/(?P<widget_id>\d+)/$',
+        views.widgets.question_widget,
+        name = 'question_widget'
     ),
     url(
         r'^feeds/(?P<url>.*)/$',

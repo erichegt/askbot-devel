@@ -1,4 +1,4 @@
-{% from "macros.html" import gravatar %}
+{% import "macros.html" as macros %}
 <div class="userList">
     <table class="list-table">
         <tr>
@@ -6,10 +6,10 @@
                 {% for user in users %}
                 <div class="user">
                     <ul>
-                            <li class="thumb">{{ gravatar(user, 32) }}</li>
-                            <li><a href="{% url user_profile user.id, user.username|slugify %}{% if profile_section %}?sort={{profile_section}}{% endif %}">{{user.username|escape}}</a>{{ user_country_flag(user) }}</li>
+                            <li class="thumb">{{ macros.gravatar(user, 32) }}</li>
+                            <li><a href="{% url user_profile user.id, user.username|slugify %}{% if profile_section %}?sort={{profile_section}}{% endif %}">{{user.username|escape}}</a>{{ macros.user_country_flag(user) }}</li>
                             <li>{{ 
-                                    user_score_and_badge_summary(
+                                    macros.user_score_and_badge_summary(
                                         user, 
                                         karma_mode = karma_mode,
                                         badges_mode = badges_mode

@@ -207,25 +207,31 @@ poor design of the data or methods on data objects #}
 </ul>
 {%- endmacro -%}
 
+{%- macro user_group_link(group) -%}
+    <a class="group-name"
+        href="{% url users_by_group group.id, group.name|replace('-', ' ')|slugify %}"
+    >{{ group.name|escape }}</a>
+{%- endmacro -%}
+
 {%- macro user_group(group, membership_info) -%}
     <td>
-        <a class="group-name"
-            href="{% url users_by_group group.id, group.name|replace('-', ' ')|slugify %}"
-        >{{ group.name|replace('-', ' ')|escape }}</a><br/>
-        <span class="group-description">
-        {% if group.tag_wiki %}
-            {{ group.tag_wiki.summary }}
-        {% endif %}
-        </span>
-        {% if membership_info %}
-            <br/>
-            {{ group_join_button(
-                    group_id = group.id,
-                    can_join = membership_info['can_join'],
-                    is_member = membership_info['is_member']
-                )
-            }}
-        {% endif %}
+        {{ user_group_link(group) }}
+    </td>
+    <td>
+    <span class="group-description">
+    {% if group.tag_wiki %}
+        {{ group.tag_wiki.summary }}
+    {% endif %}
+    </span>
+    {% if membership_info %}
+        <br/>
+        {{ group_join_button(
+                group_id = group.id,
+                can_join = membership_info['can_join'],
+                is_member = membership_info['is_member']
+            )
+        }}
+    {% endif %}
     </td>
 {%- endmacro -%}
 

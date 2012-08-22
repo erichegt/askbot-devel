@@ -30,6 +30,7 @@ from askbot.utils import decorators
 from askbot.utils import url_utils
 from askbot import mail
 from askbot.skins.loaders import render_into_skin, get_template
+from askbot.skins.loaders import render_into_skin_as_string
 from askbot import const
 
 
@@ -474,6 +475,40 @@ def get_tags_by_wildcard(request):
     names = matching_tags.values_list('name', flat = True)[:20]
     re_data = simplejson.dumps({'tag_count': count, 'tag_names': list(names)})
     return HttpResponse(re_data, mimetype = 'application/json')
+
+@decorators.get_only
+def get_thread_shared_users(request):
+    """returns snippet of html with users"""
+    thread_id = request.GET['thread_id']
+    thread_id = IntegerField().clean(thread_id)
+    thread = models.Thread.objects.get(id=thread_id)
+    users = thread.get_users_shared_with()
+    data = {
+        'users': users,
+    }
+    html = render_into_skin_as_string('widgets/user_list.html', data, request)
+    re_data = simplejson.dumps({
+        'html': html,
+        'users_count': users.count(),
+        'success': True
+    })
+    return HttpResponse(re_data, mimetype='application/json')
+
+@decorators.get_only
+def get_thread_shared_groups(request):
+    """returns snippet of html with groups"""
+    thread_id = request.GET['thread_id']
+    thread_id = IntegerField().clean(thread_id)
+    thread = models.Thread.objects.get(id=thread_id)
+    groups = thread.get_groups_shared_with()
+    data = {'groups': groups}
+    html = render_into_skin_as_string('widgets/groups_list.html', data, request)
+    re_data = simplejson.dumps({
+        'html': html,
+        'groups_count': groups.count(),
+        'success': True
+    })
+    return HttpResponse(re_data, mimetype='application/json')
 
 @decorators.ajax_only
 def get_html_template(request):

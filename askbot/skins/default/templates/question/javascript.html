@@ -27,6 +27,7 @@
     {% endif %}
     askbot['settings']['tagSource'] = '{{ settings.TAG_SOURCE }}';
 </script>
+<script type="text/javascript" src='{{"/bootstrap/js/bootstrap.js"|media}}'></script>
 {% if settings.EDITOR_TYPE == 'markdown' %}
     <script type='text/javascript' src='{{"/js/wmd/showdown.js"|media}}'></script>
     <script type='text/javascript' src='{{"/js/wmd/wmd.js"|media}}'></script>

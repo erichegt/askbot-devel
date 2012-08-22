@@ -69,7 +69,7 @@ class PageLoadTestCase(AskbotTestCase):
         self.old_cache = cache.cache
         #Disable caching (to not interfere with production cache,
         #not sure if that's possible but let's not risk it)
-        cache.cache = DummyCache('', {}) 
+        cache.cache = DummyCache('', {})
 
     def tearDown(self):
         cache.cache = self.old_cache  # Restore caching
@@ -311,12 +311,12 @@ class PageLoadTestCase(AskbotTestCase):
                 status_code=status_code,
                 template='users.html'
             )
-        self.try_url(
-                'widget_questions',
-                status_code = status_code,
-                data={'tags': 'tag-1-0'},
-                template='question_widget.html',
-            )
+        #self.try_url(
+        #        'widget_questions',
+        #        status_code = status_code,
+        #        data={'tags': 'tag-1-0'},
+        #        template='question_widget.html',
+        #    )
         #todo: really odd naming conventions for sort methods
         self.try_url(
                 'users',
@@ -626,4 +626,4 @@ class CommandViewTests(AskbotTestCase):
         tag1 = self.create_tag('tag1')
         response = self.client.get(reverse('load_tag_wiki_text'))
         self.assertEqual(response.status_code, 400)#bad request
-        
+

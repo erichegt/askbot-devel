@@ -503,6 +503,50 @@ class Thread(models.Model):
         else:
             return self.get_answers(user).count()
 
+    def get_sharing_info(self, visitor=None):
+        """returns a dictionary with abbreviated thread sharing info:
+        * users - up to a certain number of users, excluding the visitor
+        * groups - up to a certain number of groups
+        * more_users_count - remaining count of shared-with users
+        * more_groups_count - remaining count of shared-with groups
+        """
+        shared_users = thread.get_users_shared_with(
+                                            max_count=2,#"visitor" is implicit
+                                            exclude_user=visitor
+                                        )
+        groups = self.groups
+        ugroups = groups.filter(name__startswith='_internal_')
+        ggroups = groups.exclude(name__startswith='_internal_')
+
+        sharing_info = {
+            'users': shared_users,
+            'groups': thread.get_groups_shared_with(max_count=3),
+            'more_users_count': max(0, ugroups.count() - 3),
+            'more_groups_count': max(0, ggroups.count() - 3)
+        }
+        return sharing_info
+
+    def get_users_shared_with(self, max_count=None, exclude_user=None):
+        """returns query set of users with whom
+        this thread is shared
+        """
+        groups = self.groups.filter(name__startswith='_internal_')
+
+        if exclude_user:
+            groups = groups.exclude(created_by__id=exclude_user.id)
+
+        user_ids = groups.values_list('created_by__id', flat=True)
+        if max_count:
+            user_ids = user_ids[:max_count]
+        return User.objects.filter(id__in=user_ids)
+
+    def get_groups_shared_with(self, max_count=None):
+        """returns query set of groups with whom thread is shared"""
+        groups = self.groups.exclude(name__startswith='_internal_')
+        if max_count:
+            groups = groups[:max_count]
+        return groups
+
     def update_favorite_count(self):
         self.favourite_count = FavoriteQuestion.objects.filter(thread=self).count()
         self.save()

@@ -40,7 +40,6 @@ from askbot.models.badges import award_badges_signal
 from askbot.models.tag import get_global_group
 from askbot.models.tag import get_groups
 from askbot.skins.loaders import render_into_skin
-from askbot.templatetags import extra_tags
 from askbot.search.state_manager import SearchState
 from askbot.utils import url_utils
 from askbot.utils.loading import load_module
