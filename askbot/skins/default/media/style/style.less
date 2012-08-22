@@ -313,19 +313,28 @@ body.user-messages {
     }
 
     #navTags{
-        .sprites(-50px,-5px)
+        .sprites(0px,-95px)
     }
 
     #navUsers{
-        .sprites(-125px,-5px)
+        .sprites(3px,-132px)
     }
 
     #navGroups{
-        .sprites(-125px,-5px)
+        .sprites(3px,-132px)
     }
 
     #navBadges{
-        .sprites(-210px,-5px)
+        .sprites(0px,-170px)
+    }
+
+    .dropdown {
+        float:left;
+    }
+
+    .dropdown-menu{
+        top: 120%;
+        left: 7%;
     }
 }
 
@@ -3839,4 +3848,25 @@ textarea.tipped-input {
         -moz-box-shadow: none;
         box-shadow: none;
     }
+}
+
+/* fixes for bootstrap */
+.caret {
+    margin-bottom: 7px;
+}
+.btn-group {
+    text-align: left;
+}
+.btn-toolbar {
+    margin: 0;
+}
+.modal-footer {
+    text-align: left;
+}
+.modal p {
+    font-size: 14px;
+}
+.modal-body > textarea {
+    width: 515px;
+    margin-bottom: 0px;
 }

@@ -6,6 +6,7 @@ import sys
 from django.conf import settings
 import askbot
 from askbot import api
+from askbot import models
 from askbot import const
 from askbot.conf import settings as askbot_settings
 from askbot.skins.loaders import get_skin
@@ -46,9 +47,17 @@ def application_settings(request):
     my_settings['LOGOUT_REDIRECT_URL'] = url_utils.get_logout_redirect_url()
     my_settings['USE_ASKBOT_LOGIN_SYSTEM'] = 'askbot.deps.django_authopenid' \
         in settings.INSTALLED_APPS
-    return {
+    context = {
         'settings': my_settings,
         'skin': get_skin(request),
         'moderation_items': api.get_info_on_moderation_items(request.user),
         'noscript_url': const.DEPENDENCY_URLS['noscript'],
     }
+
+    if askbot_settings.GROUPS_ENABLED:
+        context['group_list'] = models.Tag.group_tags.get_all().filter(
+                                                        deleted=False
+                                                    ).exclude(
+                                                        name__startswith='_internal_')
+
+    return context

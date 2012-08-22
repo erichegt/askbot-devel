@@ -41,6 +41,9 @@
         });
     </script>
 {% endif %}
+{%if settings.GROUPS_ENABLED%}
+<script type="text/javascript" src="{{'/bootstrap/js/bootstrap.js'|media}}" /></script>
+{% endif %}
 <script type="text/javascript">
     /*<![CDATA[*/
     $(document).ready(function(){
@@ -75,6 +78,9 @@
         if (askbot['data']['userIsAdminOrMod']) {
             $('body').addClass('admin');
         }
+        {%if settings.GROUPS_ENABLED%}
+          $(".dropdown-toggle").dropdown();        
+        {% endif %}
     });
 {% if user_messages %}
     $('#validate_email_alert').click(function(){notify.close(true)})

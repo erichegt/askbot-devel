@@ -59,6 +59,15 @@ def owner_or_moderator_required(f):
 
 def show_users(request, by_group=False, group_id=None, group_slug=None):
     """Users view, including listing of users by group"""
+
+    if askbot_settings.GROUPS_ENABLED and not by_group:
+        default_group = get_global_group()
+        group_slug = slugify(default_group.name)
+        new_url = reverse('users_by_group',
+                kwargs={'group_id': default_group.id,
+                        'group_slug': group_slug})
+        return HttpResponseRedirect(new_url)
+
     users = models.User.objects.exclude(status = 'b')
     group = None
     group_email_moderation_enabled = False
@@ -397,7 +406,7 @@ def user_stats(request, user, context):
         interesting_tag_names = None
         ignored_tag_names = None
         subscribed_tag_names = None
-        
+
 #    tags = models.Post.objects.filter(author=user).values('id', 'thread', 'thread__tags')
 #    post_ids = set()
 #    thread_ids = set()

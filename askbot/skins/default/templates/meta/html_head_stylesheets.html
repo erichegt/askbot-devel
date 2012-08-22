@@ -1,3 +1,6 @@
+{%if settings.GROUPS_ENABLED%}
+<link href="{{'/bootstrap/css/bootstrap.css'|media}}" rel="stylesheet" type="text/css" />
+{% endif %}
 {% if settings.ASKBOT_CSS_DEVEL == False %}
 
 <link href="{{"/style/style.css"|media }}" rel="stylesheet" type="text/css" />
