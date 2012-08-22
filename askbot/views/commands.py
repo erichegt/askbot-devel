@@ -331,7 +331,7 @@ def vote(request, id):
 
             response_data['count'] = post.offensive_flag_count
             response_data['success'] = 1
-        
+
         elif vote_type in ['7.6', '8.6']:
             #flag question or answer
             if vote_type == '7.6':
@@ -469,7 +469,7 @@ def get_tags_by_wildcard(request):
     wildcard = request.GET.get('wildcard', None)
     if wildcard is None:
         raise Http404
-        
+
     matching_tags = models.Tag.objects.get_by_wildcards( [wildcard,] )
     count = matching_tags.count()
     names = matching_tags.values_list('name', flat = True)[:20]
@@ -917,7 +917,7 @@ def edit_group_membership(request):
 @decorators.admins_only
 def save_group_logo_url(request):
     """saves urls for the group logo"""
-    form = forms.GroupLogoURLForm(request.POST)    
+    form = forms.GroupLogoURLForm(request.POST)
     if form.is_valid():
         group_id = form.cleaned_data['group_id']
         image_url = form.cleaned_data['image_url']
@@ -1055,8 +1055,8 @@ def save_post_reject_reason(request):
 @decorators.admins_only
 def moderate_suggested_tag(request):
     """accepts or rejects a suggested tag
-    if thread id is given, then tag is 
-    applied to or removed from only one thread, 
+    if thread id is given, then tag is
+    applied to or removed from only one thread,
     otherwise the decision applies to all threads
     """
     form = forms.ModerateTagForm(request.POST)

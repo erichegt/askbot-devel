@@ -1,15 +1,22 @@
+{% import "macros.html" as macros%}
 <a 
   id="navTags"
   href="{% url tags %}"
   {% if active_tab == 'tags' %}class="on"{% endif %}
 >{% trans %}tags{% endtrans %}</a>
 {% if settings.GROUPS_ENABLED %}
+<span class="dropdown">
 <a
-  id="navGroups"
-  href="{% url groups %}"
-  {% if active_tab == 'groups' %}class="on"{% endif %}
->{% trans %}people & groups{% endtrans %}
+  id="navGroups" class='dropdown-toggle {% if active_tab == 'groups' %}"on"{% endif %}'
+  href="{% url groups %}" data-target="#" >
+  {% trans %}people & groups{% endtrans %}
 </a>
+<ul id="groups-dropdown" class="dropdown-menu" role="menu" aria-labelledby="navGroups">
+  {%for group in group_list%}
+  <li>{{ macros.user_group_link(group) }}</li>
+  {%endfor%}
+</ul>
+</span>
 {%else%}
 <a 
   id="navUsers"

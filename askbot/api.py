@@ -9,7 +9,7 @@ from askbot import models
 from askbot import const
 
 def get_info_on_moderation_items(user):
-    """returns a dictionary with 
+    """returns a dictionary with
     counts of new and seen moderation items for a given user
     if user is not a moderator or admin, returns None
     """
@@ -48,7 +48,7 @@ def get_admin(seed_user_id = None):
 
     if the user is not found, or there are no moderators/admins
     User.DoesNotExist will be raised
-    
+
     The reason this function is here and not on a manager of
     the user object is because we still patch the django-auth User table
     and it's probably better not to patch the manager
