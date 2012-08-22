@@ -460,6 +460,12 @@ TippedInput.prototype.createDom = function() {
  * decorate() method normally does not create
  * new dom elements, but it might add some missing elements,
  * if necessary.
+ *
+ * for example the decorate might be composing inside
+ * a more complex widget, in which case other elements
+ * can be added via a "composition" pattern, or 
+ * just "naked dom elements" added to the current widget's element
+ *
  */
 TippedInput.prototype.decorate = function(element){
     this._element = element;//mandatory line
