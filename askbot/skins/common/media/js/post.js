@@ -3883,8 +3883,6 @@ $(document).ready(function() {
     var proxyUserNameInput = $('#id_post_author_username');
     var proxyUserEmailInput = $('#id_post_author_email');
     if (proxyUserNameInput.length === 1) {
-        var tip = new TippedInput();
-        tip.decorate(proxyUserNameInput);
 
         var userSelectHandler = function(data) {
             proxyUserEmailInput.val(data['data'][0]);
@@ -3893,6 +3891,7 @@ $(document).ready(function() {
         var fakeUserAc = new AutoCompleter({
             url: '/get-users-info/',//askbot['urls']['get_users_info'],
             preloadData: true,
+            promptText: gettext('User name:'),
             minChars: 1,
             useCache: true,
             matchInside: true,
@@ -3900,11 +3899,13 @@ $(document).ready(function() {
             delay: 10,
             onItemSelect: userSelectHandler
         });
+
         fakeUserAc.decorate(proxyUserNameInput);
-    }
-    if (proxyUserEmailInput.length === 1) {
-        var tip = new TippedInput();
-        tip.decorate(proxyUserEmailInput);
+        if (proxyUserEmailInput.length === 1) {
+            var tip = new TippedInput();
+            tip.decorate(proxyUserEmailInput);
+        }
+        
     }
     //if groups are enabled - activate share functions
     var groupsInput = $('#share_group_name');
