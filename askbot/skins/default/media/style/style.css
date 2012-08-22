@@ -311,16 +311,16 @@ body.user-messages {
   text-decoration: underline;
 }
 #metaNav #navTags {
-  background: 7px -81px url(../images/sprites.png) no-repeat;
+  background: 0px -95px url(../images/sprites.png) no-repeat;
 }
 #metaNav #navUsers {
-  background: 12px -120px url(../images/sprites.png) no-repeat;
+  background: 3px -132px url(../images/sprites.png) no-repeat;
 }
 #metaNav #navGroups {
-  background: 10px -120px url(../images/sprites.png) no-repeat;
+  background: 3px -132px url(../images/sprites.png) no-repeat;
 }
 #metaNav #navBadges {
-  background: 10px -157px url(../images/sprites.png) no-repeat;
+  background: 0px -170px url(../images/sprites.png) no-repeat;
 }
 #metaNav .dropdown {
   float: left;

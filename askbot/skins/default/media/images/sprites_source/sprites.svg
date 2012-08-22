@@ -221,9 +221,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="5.118198"
-     inkscape:cx="12.402135"
-     inkscape:cy="109.70793"
+     inkscape:zoom="1.8095563"
+     inkscape:cx="-20.257428"
+     inkscape:cy="137.9209"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -350,7 +350,7 @@
          style="font-size:14.30124187px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#e90f0f;fill-opacity:1;font-family:Trebuchet MS;-inkscape-font-specification:Trebuchet MS">X</tspan></text>
     <g
        id="g3045"
-       transform="translate(-46.460961,81.75573)">
+       transform="translate(-46.460961,89.75573)">
       <path
          inkscape:connector-curvature="0"
          style="fill:#e7e8a8;fill-opacity:1;fill-rule:evenodd;stroke:none"
@@ -374,7 +374,7 @@
     </g>
     <g
        id="g3049"
-       transform="translate(-130.64701,119.66187)">
+       transform="translate(-130.64701,127.66187)">
       <path
          style="fill:#e7e8a8;fill-opacity:1;stroke:none"
          d="m 143.74707,850.88647 c -5.0386,0.15973 -7.45306,6.82507 -4.44845,10.23363 -5.35784,2.62945 -3.73419,8.64761 -3.90826,13.70497 6.23105,0 12.46221,0 18.69326,0 -0.0342,-5.17704 1.38659,-11.61813 -4.44823,-13.9621 3.5491,-4.27537 -0.52838,-10.73631 -5.88832,-9.9765 z"
@@ -401,7 +401,7 @@
     </g>
     <g
        id="g3054"
-       transform="translate(-214.86075,155.94135)">
+       transform="translate(-214.86075,163.94135)">
       <path
          inkscape:connector-curvature="0"
          id="path5491"
@@ -513,7 +513,7 @@
        sodipodi:cy="147.08873"
        sodipodi:rx="11.136931"
        sodipodi:ry="9.0156116"
-       d="m 234.75944,147.08873 a 11.136931,9.0156116 0 1 1 -22.27386,0 11.136931,9.0156116 0 1 1 22.27386,0 z"
+       d="m 234.75944,147.08873 c 0,4.97918 -4.98617,9.01561 -11.13693,9.01561 -6.15075,0 -11.13693,-4.03643 -11.13693,-9.01561 0,-4.97918 4.98618,-9.01561 11.13693,-9.01561 6.15076,0 11.13693,4.03643 11.13693,9.01561 z"
        transform="matrix(1.2054549,0,0,1.1341085,-99.371969,741.25595)" />
   </g>
 </svg>
