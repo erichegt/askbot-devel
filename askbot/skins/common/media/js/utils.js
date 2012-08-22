@@ -249,20 +249,65 @@ var inherits = function(childCtor, parentCtor) {
     childCtor.prototype.constructor = childCtor;
 };
 
-/* wrapper around jQuery object */
+/** wrapper around jQuery object
+ * @constructor
+ * the top level "class" for other elements
+ * I.e. all other things must inherit this class.
+ * For an example of the inheritance pattern,
+ * please see the "TippedInput" below.
+ */
 var WrappedElement = function(){
     this._element = null;
     this._in_document = false;
 };
+/* note that we do not call inherits() here
+ * See TippedInput as an example of a subclass
+ */
+
+/**
+ * notice that we use ObjCls.prototype.someMethod = function()
+ * notation - as we use Javascript's prototypal inheritance
+ * explicitly. The point of this is to be able to eventually
+ * use the Closure Compiler
+ */
 WrappedElement.prototype.setElement = function(element){
     this._element = element;
 };
+
+/** 
+ * this function must be overridden for any object
+ * what will use "DOM generation" pattern
+ *
+ * Inside this function two things can happen:
+ * 1) dom structure creation
+ * 2) event handlers attached to the dom structure
+ */
 WrappedElement.prototype.createDom = function(){
+    /* inside at the very least you must assign
+     * a jQuery object to a parameter called _element
+     */
     this._element = $('<div></div>');
 };
+
+/**
+ * @param {object} element, a jQuery object wrapping a single
+ * DOM element.
+ *
+ * This function must be overridden in the subclasses
+ * that are used in the "decoration" pattern
+ */
 WrappedElement.prototype.decorate = function(element){
     this._element = element;
 };
+
+/**
+ * This method should not be overridden
+ * Normally you call this method to generate the dom
+ * structure, if applicable, or just obtain the
+ * jQuery object encapsulating the dom.
+ * 
+ * @return {object} jQuery
+ */
 WrappedElement.prototype.getElement = function(){
     if (this._element === null){
         this.createDom();
@@ -278,10 +323,23 @@ WrappedElement.prototype.enterDocument = function(){
 WrappedElement.prototype.hasElement = function(){
     return (this._element !== null);
 };
+/**
+ * A utility method, returning a new jQuery object for
+ * some HTML tag
+ *
+ * Example:
+ * var ageInput = this.makeElement('input');
+ */
 WrappedElement.prototype.makeElement = function(html_tag){
     //makes jQuery element with tags
     return $('<' + html_tag + '></' + html_tag + '>');
 };
+/**
+ * Removes object's DOM element from the DOM tree
+ * should be overridden to remove the event handlers
+ * and properly destroy the dom structure
+ * as well as any other included sub-elements
+ */
 WrappedElement.prototype.dispose = function(){
     this._element.remove();
     this._in_document = false;
@@ -320,14 +378,29 @@ Widget.prototype.makeButton = function(label, handler) {
  * perhaps empty text, the instruction is restored.
  * When instruction is shown, class "blank" is present
  * in the input/textare element.
+ *
+ * For the usage examples - search for "new TippedInput"
+ * there is at least one example for both - decoration and
+ * the "dom creation" patterns.
+ * 
+ * Also - in the FileUploadDialog the TippedInput is used
+ * as a sub-element - the widget composition use case.
  */
 var TippedInput = function(){
+    /* the call below is part 1 of the inheritance pattern */
     WrappedElement.call(this);
     this._instruction = null;
     this._attrs = {};
     //this._is_one_shot = false;//if true on starting typing effect is gone
 };
 inherits(TippedInput, WrappedElement);
+/* the line above is part 2 of the inheritance pattern
+ see definition of the function "inherits" for more details
+*/
+
+/* Below are all the custom methods of the
+  TippedInput class, as well as some required functions
+*/
 
 TippedInput.prototype.reset = function(){
     $(this._element).val(this._instruction);
@@ -364,22 +437,38 @@ TippedInput.prototype.setVal = function(value){
         }
     }
 };
-
+/**
+ * Creates the DOM of tipped input from scratch
+ * Notice that there is also a "decorate" method.
+ * At least one - createDom or decorate is required,
+ * depending on the usage.
+ */
 TippedInput.prototype.createDom = function() {
     this._element = this.makeElement('input');
     var element = this._element;
     element.val(this._instruction);
+
+    //here we re-use the decorate call (next method)
+    //to avoid copy-pasting code
     this.decorate(element);
 };
 
+/**
+ * Attaches the TippedInput behavior to
+ * a pre-existing <input> element
+ */
 TippedInput.prototype.decorate = function(element){
-    this._element = element;
+    this._element = element;//mandatory line
+
+    //part 1 - initialize some values and create dom
     element.attr(this._attrs);
 
     var instruction_text = this.getVal();
     this._instruction = instruction_text;
     this.reset();
     var me = this;
+
+    //part 2 - attach event handlers
     $(element).focus(function(){
         if (me.isBlank()){
             $(element)
