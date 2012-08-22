@@ -21,11 +21,6 @@ urlpatterns = patterns('askbot.deps.django_authopenid.views',
     ),
     url(r'^%s$' % _('register/'), 'register', name='user_register'),
     url(
-        r'^%s$' % _('verify-user-information/'),
-        'verify_user_information',
-        name = 'verify_user_information'
-    ),
-    url(
         r'^%s$' % _('signup/'),
         'signup_with_password',
         name='user_signup_with_password'

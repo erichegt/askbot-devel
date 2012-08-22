@@ -510,7 +510,7 @@ class Thread(models.Model):
         * more_users_count - remaining count of shared-with users
         * more_groups_count - remaining count of shared-with groups
         """
-        shared_users = thread.get_users_shared_with(
+        shared_users = self.get_users_shared_with(
                                             max_count=2,#"visitor" is implicit
                                             exclude_user=visitor
                                         )
@@ -520,7 +520,7 @@ class Thread(models.Model):
 
         sharing_info = {
             'users': shared_users,
-            'groups': thread.get_groups_shared_with(max_count=3),
+            'groups': self.get_groups_shared_with(max_count=3),
             'more_users_count': max(0, ugroups.count() - 3),
             'more_groups_count': max(0, ggroups.count() - 3)
         }

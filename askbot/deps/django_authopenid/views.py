@@ -859,53 +859,6 @@ def finalize_generic_signin(
                     user_identifier=user_identifier
                 )
 
-@login_required
-@csrf.csrf_protect
-def verify_user_information(request):
-    """this view collects the same information from
-    user ase :func:`register`, but requires that user is
-    already logged in and does not create a new user record
-    or change anything in instances of :class:`UserAssociation`
-    """
-    register_form = forms.OpenidRegisterForm(
-                initial={
-                    'next': reverse('index'),
-                    'username': request.user.username,
-                    'email': request.user.email
-                }
-            )
-    email_feeds_form = askbot_forms.SimpleEmailSubscribeForm()
-
-    if request.method == 'POST':
-        register_form = forms.OpenidRegisterForm(request.POST)
-        email_feeds_form = askbot_forms.SimpleEmailSubscribeForm(request.POST)
-        if register_form.is_valid() and email_feeds_form.is_valid():
-
-            email_feeds_form.save(request.user)
-
-            request.user.username = register_form.cleaned_data['username']
-            request.user.email = register_form.cleaned_data['email']
-            request.user.save()
-
-            if askbot_settings.EMAIL_VALIDATION == True:
-                logging.debug('sending email validation')
-                send_new_email_key(request.user, nomessage=True)
-                output = validation_email_sent(request)
-                set_email_validation_message(request.user) #message set after generating view
-                return output
-
-            logging.debug('success, send user to main page')
-            return HttpResponseRedirect(reverse('index'))
-    
-    logging.debug('printing authopenid/complete.html output')
-    data = {
-        'openid_register_form': register_form,
-        'email_feeds_form': email_feeds_form,
-        'default_form_action': request.path #post to this view
-    }
-    return render_into_skin('authopenid/complete.html', data, request)
-
-
 @not_authenticated
 @csrf.csrf_protect
 def register(request, login_provider_name=None, user_identifier=None):
@@ -1251,7 +1204,7 @@ def send_email_key(email, key, handler_url_name='user_account_recover'):
     }
     template = get_template('authopenid/email_validation.txt')
     message = template.render(data)
-    send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [email])
+    send_mail(subject, message, django_settings.DEFAULT_FROM_EMAIL, [email])
 
 def send_user_new_email_key(user):
     user.email_key = util.generate_random_key()

@@ -395,7 +395,7 @@ TippedInput.prototype.decorate = function(element){
                 .addClass('blank');
         }
     });
-    makeKeyHandler(13, function(){
+    makeKeyHandler(27, function(){
         $(element).blur();
     });
 };

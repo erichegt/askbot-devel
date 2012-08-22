@@ -318,7 +318,7 @@ class BadgeTests(AskbotTestCase):
     def test_guru_badge1(self):
         self.assert_guru_badge_works('upvote_answer')
 
-    def test_guru_badge1(self):
+    def test_guru_badge2(self):
         self.assert_guru_badge_works('accept_best_answer')
 
     def test_necromancer_badge(self):
