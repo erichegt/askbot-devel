@@ -7,7 +7,7 @@
 {% if settings.GROUPS_ENABLED %}
 <span class="dropdown">
 <a
-  id="navGroups" class='dropdown-toggle {% if active_tab == 'groups' %}"on"{% endif %}'
+  id="navGroups" class='{% if active_tab == 'groups' %}"on"{% endif %}'
   href="{% url groups %}" data-target="#" >
   {% trans %}people & groups{% endtrans %}
 </a>
