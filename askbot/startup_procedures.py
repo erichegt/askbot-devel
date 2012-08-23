@@ -512,6 +512,24 @@ def test_custom_user_profile_tab():
         footer = 'Please carefully read about adding a custom user profile tab.'
         print_errors(errors, header = header, footer = footer)
 
+def test_longerusername():
+    """tests proper installation of the "longerusername" app
+    """
+    errors = list()
+    if 'longerusername' not in django_settings.INSTALLED_APPS:
+        errors.append(
+            "add 'longerusername', as the first item in the INSTALLED_APPS"
+        )
+    else:
+        index = django_settings.INSTALLED_APPS.index('longerusername')
+        if index != 0:
+            message = "move 'longerusername', to the beginning of INSTALLED_APPS"
+            raise AskbotConfigError(message)
+
+    if errors:
+        errors.append('run "python manage.py migrate longerusername"')
+        print_errors(errors)
+
 def run_startup_tests():
     """function that runs
     all startup tests, mainly checking settings config so far
@@ -527,6 +545,7 @@ def run_startup_tests():
     test_celery()
     #test_csrf_cookie_domain()
     test_staticfiles()
+    test_longerusername()
     test_avatar()
     settings_tester = SettingsTester({
         'CACHE_MIDDLEWARE_ANONYMOUS_ONLY': {
