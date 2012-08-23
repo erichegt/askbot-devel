@@ -3,6 +3,7 @@ Changes in Askbot
 
 Development version
 -------------------
+* Allow user names longer than 30 characters (Evgeny)
 * Option to disable feedback form for the anonymos users (Evgeny)
 * Optional restriction to have confirmed email address to join forum (Evgeny)
 * Optional list of allowed email addresses and email domain name for the new users (Evgeny)
