@@ -213,10 +213,13 @@ poor design of the data or methods on data objects #}
     >{{ group.name|escape }}</a>
 {%- endmacro -%}
 
-{%- macro user_group(group, membership_info) -%}
+{%- macro user_group(group, membership_info, show_count=False) -%}
     <td>
         {{ user_group_link(group) }}
     </td>
+    {% if show_count %}
+        <td>{{ group.users_count }}</td>
+    {% endif %}
     <td>
     <span class="group-description">
     {% if group.tag_wiki %}

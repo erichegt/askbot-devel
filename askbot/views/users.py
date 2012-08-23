@@ -1018,7 +1018,7 @@ def groups(request, id = None, slug = None):
                                     )
 
     groups = groups.exclude(name__startswith='_internal_')
-
+    groups = groups.annotate(users_count=Count('user_memberships'))
     groups = groups.select_related('group_profile')
 
     user_can_add_groups = request.user.is_authenticated() and \
