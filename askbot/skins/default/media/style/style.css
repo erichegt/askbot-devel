@@ -319,14 +319,18 @@ body.user-messages {
 #metaNav #navGroups {
   background: 3px -132px url(../images/sprites.png) no-repeat;
 }
-#metaNav #navBadges {
-  background: 0px -170px url(../images/sprites.png) no-repeat;
+#metaNav a.group-name {
+  padding: 0px;
+}
+#metaNav span.dropdown:hover ul.dropdown-menu {
+  display: block;
 }
 #metaNav .dropdown {
   float: left;
 }
 #metaNav .dropdown-menu {
-  top: 120%;
+  /*top: 120%;*/
+
   left: 7%;
 }
 #header.with-logo #userToolsNav {
