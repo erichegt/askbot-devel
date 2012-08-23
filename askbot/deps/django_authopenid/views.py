@@ -86,7 +86,7 @@ from askbot.models.signals import user_logged_in, user_registered
 
 def create_authenticated_user_account(
     username=None, email=None, password=None,
-    user_identifier=None, login_provider_name=None, subscribe=False
+    user_identifier=None, login_provider_name=None
 ):
     """creates a user account, user association with
     the login method and the the default email subscriptions
@@ -108,9 +108,7 @@ def create_authenticated_user_account(
             last_used_timestamp = datetime.datetime.now()
         ).save()
 
-    subscribe_form = askbot_forms.SimpleEmailSubscribeForm(
-                                        {'subscribe': subscribe}
-                                    )
+    subscribe_form = askbot_forms.SimpleEmailSubscribeForm({'subscribe': 'y'})
     subscribe_form.full_clean()
     logging.debug('saving email feed settings')
     subscribe_form.save(user)
@@ -133,7 +131,6 @@ def cleanup_post_register_session(request):
         'login_provider_name',
         'username',
         'email',
-        'subscribe',
         'password',
         'validation_code'
     )
@@ -340,7 +337,6 @@ def signin(request, template_name='authopenid/signin.html'):
     """
     logging.debug('in signin view')
     on_failure = signin_failure
-    email_feeds_form = askbot_forms.SimpleEmailSubscribeForm()
 
     #we need a special priority on where to redirect on successful login
     #here:
@@ -892,7 +888,6 @@ def register(request, login_provider_name=None, user_identifier=None):
                     'email': request.session.get('email', ''),
                 }
             )
-    email_feeds_form = askbot_forms.SimpleEmailSubscribeForm()
 
     if request.method == 'GET':
         assert(login_provider_name is not None)
@@ -915,17 +910,11 @@ def register(request, login_provider_name=None, user_identifier=None):
 
         logging.debug('trying to create new account associated with openid')
         register_form = forms.OpenidRegisterForm(request.POST)
-        email_feeds_form = askbot_forms.SimpleEmailSubscribeForm(request.POST)
         if not register_form.is_valid():
             logging.debug('OpenidRegisterForm is INVALID')
-        elif not email_feeds_form.is_valid():
-            logging.debug('SimpleEmailSubscribeForm is INVALID')
         else:
-            logging.debug('OpenidRegisterForm and SimpleEmailSubscribeForm are valid')
-
             username = register_form.cleaned_data['username']
             email = register_form.cleaned_data['email']
-            subscribe = email_feeds_form.cleaned_data['subscribe']
 
             if 'ldap_user_info' in request.session:
                 user_info = request.session['ldap_user_info']
@@ -942,7 +931,6 @@ def register(request, login_provider_name=None, user_identifier=None):
                             email=email,
                             user_identifier=user_identifier,
                             login_provider_name=login_provider_name,
-                            subscribe=subscribe
                         )
                 login(request, user)
                 cleanup_post_register_session(request)
@@ -950,7 +938,6 @@ def register(request, login_provider_name=None, user_identifier=None):
             else:
                 request.session['username'] = username
                 request.session['email'] = email
-                request.session['subscribe'] = subscribe
                 key = util.generate_random_key()
                 email = request.session['email']
                 send_email_key(email, key, handler_url_name='verify_email_and_register')
@@ -974,7 +961,6 @@ def register(request, login_provider_name=None, user_identifier=None):
     logging.debug('printing authopenid/complete.html output')
     data = {
         'openid_register_form': register_form,
-        'email_feeds_form': email_feeds_form,
         'default_form_action': django_settings.LOGIN_URL,
         'provider':mark_safe(provider_logo),
         'username': username,
@@ -1011,7 +997,6 @@ def verify_email_and_register(request):
             username = request.session['username']
             email = request.session['email']
             password = request.session.get('password', None)
-            subscribe = request.session['subscribe']
             user_identifier = request.session.get('user_identifier', None)
             login_provider_name = request.session.get('login_provider_name', None)
             if password:
@@ -1019,7 +1004,6 @@ def verify_email_and_register(request):
                     username=username,
                     email=email,
                     password=password,
-                    subscribe=subscribe
                 )
             elif user_identifier and login_provider_name:
                 user = create_authenticated_user_account(
@@ -1027,7 +1011,6 @@ def verify_email_and_register(request):
                     email=email,
                     user_identifier=user_identifier,
                     login_provider_name=login_provider_name,
-                    subscribe=subscribe
                 )
             else:
                 raise NotImplementedError()
@@ -1068,7 +1051,6 @@ def signup_with_password(request):
     logging.debug('request method was %s' % request.method)
     if request.method == 'POST':
         form = RegisterForm(request.POST)
-        email_feeds_form = askbot_forms.SimpleEmailSubscribeForm(request.POST)
 
         #validation outside if to remember form values
         logging.debug('validating classic register form')
@@ -1077,25 +1059,19 @@ def signup_with_password(request):
             logging.debug('classic register form validated')
         else:
             logging.debug('classic register form is not valid')
-        form2_is_valid = email_feeds_form.is_valid()
-        if form2_is_valid:
-            logging.debug('email feeds form validated')
-        else:
-            logging.debug('email feeds form is not valid')
-        if form1_is_valid and form2_is_valid:
+
+        if form1_is_valid:
             logging.debug('both forms are valid')
             next = form.cleaned_data['next']
             username = form.cleaned_data['username']
             password = form.cleaned_data['password1']
             email = form.cleaned_data['email']
-            subscribe = email_feeds_form.cleaned_data['subscribe']
 
             if askbot_settings.REQUIRE_VALID_EMAIL_FOR == 'nothing':
                 user = create_authenticated_user_account(
                     username=username,
                     email=email,
                     password=password,
-                    subscribe=subscribe
                 )
                 login(request, user)
                 cleanup_post_register_session(request)
@@ -1104,7 +1080,6 @@ def signup_with_password(request):
                 request.session['username'] = username
                 request.session['email'] = email
                 request.session['password'] = password
-                request.session['subscribe'] = subscribe
                 #todo: generate a key and save it in the session
                 key = util.generate_random_key()
                 email = request.session['email']
@@ -1126,7 +1101,6 @@ def signup_with_password(request):
                             'login_provider': provider_name
                         }
                     )
-        email_feeds_form = askbot_forms.SimpleEmailSubscribeForm()
     logging.debug('printing legacy signup form')
 
     major_login_providers = util.get_enabled_major_login_providers()
@@ -1135,7 +1109,6 @@ def signup_with_password(request):
     context_data = {
                 'form': form,
                 'page_class': 'openid-signin',
-                'email_feeds_form': email_feeds_form,
                 'major_login_providers': major_login_providers.values(),
                 'minor_login_providers': minor_login_providers.values(),
                 'login_form': login_form

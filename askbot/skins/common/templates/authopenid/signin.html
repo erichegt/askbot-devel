@@ -24,25 +24,25 @@
         {% endtrans %}
         </div>
     {% endif %}
+    {% if not (view_subtype == 'default' and have_buttons) %}
     <p id='login-intro'>
-    {% if view_subtype == 'default' and have_buttons %}
-        {% trans %}Choose your favorite service below to sign in using secure OpenID or similar technology. Your external service password always stays confidential and you don't have to rememeber or create another one.{% endtrans %}
-    {% elif view_subtype == 'add_openid' and have_buttons %}
-        {% if existing_login_methods %}
-            {% trans %}It's a good idea to make sure that your existing login methods still work, or add a new one. Please click any of the icons below to check/change or add new login methods.{% endtrans %}
-        {% else %}
-            {% trans %}Please add a more permanent login method by clicking one of the icons below, to avoid logging in via email each time.{% endtrans %}
+        {% if view_subtype == 'add_openid' and have_buttons %}
+            {% if existing_login_methods %}
+                {% trans %}It's a good idea to make sure that your existing login methods still work, or add a new one. Please click any of the icons below to check/change or add new login methods.{% endtrans %}
+            {% else %}
+                {% trans %}Please add a more permanent login method by clicking one of the icons below, to avoid logging in via email each time.{% endtrans %}
+            {% endif %}
+        {% elif view_subtype == 'change_openid' and have_buttons %}
+            {% if existing_login_methods %}
+                {% trans %}Click on one of the icons below to add a new login method or re-validate an existing one.{% endtrans %}
+            {% else %}
+                {% trans %}You don't have a method to log in right now, please add one or more by clicking any of the icons below.{% endtrans %}
+            {% endif %}
+        {% elif view_subtype == 'email_sent' %}
+            {% trans %}Please check your email and visit the enclosed link to re-connect to your account{% endtrans %}
         {% endif %}
-    {% elif view_subtype == 'change_openid' and have_buttons %}
-        {% if existing_login_methods %}
-            {% trans %}Click on one of the icons below to add a new login method or re-validate an existing one.{% endtrans %}
-        {% else %}
-            {% trans %}You don't have a method to log in right now, please add one or more by clicking any of the icons below.{% endtrans %}
-        {% endif %}
-    {% elif view_subtype == 'email_sent' %}
-        {% trans %}Please check your email and visit the enclosed link to re-connect to your account{% endtrans %}
-    {% endif %}
     </p>
+    {% endif %}
     {% if openid_error_message %}
         <p class="warning">{{ openid_error_message }}</p>
     {% endif %}
