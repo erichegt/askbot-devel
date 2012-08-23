@@ -82,7 +82,8 @@ class Migration(DataMigration):
                 thread.groups.add(group)
                 done_count += 1
 
-        print 'Added global group to %d threads.\n' % done_count
+        if items.count():
+            print 'Added global group to %d threads.\n' % done_count
 
         post_types = ('question', 'answer')
         posts = orm['askbot.Post'].objects.filter(post_type__in=post_types)
@@ -93,7 +94,8 @@ class Migration(DataMigration):
                 post.groups.add(group)
                 done_count += 1
 
-        print 'Added global group to %d posts.\n' % done_count
+        if posts.count():
+            print 'Added global group to %d posts.\n' % done_count
 
         comments = orm['askbot.Post'].objects.filter(post_type='comment')
         message = 'Copying group information from answers ' +\
@@ -105,7 +107,8 @@ class Migration(DataMigration):
                 comment.groups.add(*parent_post_groups)
                 done_count += 1
 
-        print 'Added global group to %d comments.\n' % done_count
+        if comments.count():
+            print 'Added global group to %d comments.\n' % done_count
 
         users = orm['auth.User'].objects.all()
         message = 'Adding all users to the global group'
@@ -117,7 +120,8 @@ class Migration(DataMigration):
                 membership.save()
                 done_count += 1
 
-        print 'Added global group to %d users.' % done_count
+        if users.count():
+            print 'Added global group to %d users.' % done_count
 
 
     def backwards(self, orm):

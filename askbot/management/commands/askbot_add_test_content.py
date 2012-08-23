@@ -14,7 +14,7 @@ NUM_COMMENTS = 20
 # karma. This can be calculated dynamically - max of MIN_REP_TO_... settings
 INITIAL_REPUTATION = 500
 
-BAD_STUFF = ''#"<script>alert('hohoho')</script>"
+BAD_STUFF = "<script>alert('hohoho')</script>"
 
 # Defining template inputs.
 USERNAME_TEMPLATE = BAD_STUFF + "test_user_%s"

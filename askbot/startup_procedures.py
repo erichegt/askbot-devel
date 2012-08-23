@@ -18,6 +18,7 @@ from django.conf import settings as django_settings
 from django.core.exceptions import ImproperlyConfigured
 from askbot.utils.loading import load_module
 from askbot.utils.functions import enumerate_string_list
+from askbot.utils.url_utils import urls_equal
 from urlparse import urlparse
 
 PREAMBLE = """\n
@@ -512,6 +513,66 @@ def test_custom_user_profile_tab():
         footer = 'Please carefully read about adding a custom user profile tab.'
         print_errors(errors, header = header, footer = footer)
 
+def get_tinymce_sample_config():
+    """returns the sample configuration for TinyMCE
+    as string"""
+    askbot_root = askbot.get_install_directory()
+    file_path = os.path.join(
+                    askbot_root, 'setup_templates', 'tinymce_sample_config.py'
+                )
+    config_file = open(file_path, 'r')
+    sample_config = config_file.read()
+    config_file.close()
+    return sample_config
+
+def test_tinymce():
+    """tests the tinymce editor setup"""
+    errors = list()
+    if 'tinymce' not in django_settings.INSTALLED_APPS:
+        errors.append("add 'tinymce', to the INSTALLED_APPS")
+
+    required_attrs = (
+        'TINYMCE_COMPRESSOR',
+        'TINYMCE_JS_ROOT',
+        'TINYMCE_URL',
+        'TINYMCE_DEFAULT_CONFIG'
+    )
+
+    missing_attrs = list()
+    for attr in required_attrs:
+        if not hasattr(django_settings, attr):
+            missing_attrs.append(attr)
+
+    if missing_attrs:
+        errors.append('add missing settings: %s' % ', '.join(missing_attrs))
+
+    #check compressor setting
+    compressor_on = getattr(django_settings, 'TINYMCE_COMPRESSOR', False)
+    if compressor_on is False:
+        errors.append('add line: TINYMCE_COMPRESSOR = True')
+
+    #check js root setting
+    js_root = getattr(django_settings, 'TINYMCE_JS_ROOT', '')
+    relative_js_path = 'common/media/js/tinymce/'
+    expected_js_root = os.path.join(django_settings.STATIC_ROOT, relative_js_path)
+    if os.path.normpath(js_root) != os.path.normpath(expected_js_root):
+        js_root_template = "add line: TINYMCE_JS_ROOT = os.path.join(STATIC_ROOT, '%s')"
+        errors.append(js_root_template % relative_js_path)
+
+    #check url setting
+    url = getattr(django_settings, 'TINYMCE_URL', '')
+    expected_url = django_settings.STATIC_URL + relative_js_path
+    if urls_equal(url, expected_url) is False:
+        js_url_template = "add line: TINYMCE_URL = STATIC_URL + '%s'"
+        errors.append(js_url_template % relative_js_path)
+
+    if errors:
+        header = 'Please add the tynymce editor configuration ' + \
+            'to your settings.py file.'
+        footer = 'You might want to use this sample configuration ' + \
+                'as template:\n\n' + get_tinymce_sample_config()
+        print_errors(errors, header=header, footer=footer)
+
 def run_startup_tests():
     """function that runs
     all startup tests, mainly checking settings config so far
@@ -526,6 +587,7 @@ def run_startup_tests():
     test_middleware()
     test_celery()
     #test_csrf_cookie_domain()
+    test_tinymce()
     test_staticfiles()
     test_avatar()
     settings_tester = SettingsTester({
