@@ -59,6 +59,7 @@ class UserNameField(StrippedNonEmptyCharField):
         must_exist=False,
         skip_clean=False,
         label=_('Choose a screen name'),
+        widget_attrs=None,
         **kw
     ):
         self.must_exist = must_exist
@@ -79,8 +80,14 @@ class UserNameField(StrippedNonEmptyCharField):
         if 'error_messages' in kw:
             error_messages.update(kw['error_messages'])
             del kw['error_messages']
+
+        if widget_attrs:
+            widget_attrs.update(login_form_widget_attrs)
+        else:
+            widget_attrs = login_form_widget_attrs
+
         super(UserNameField,self).__init__(max_length=30,
-                widget=forms.TextInput(attrs=login_form_widget_attrs),
+                widget=forms.TextInput(attrs=widget_attrs),
                 label=label,
                 error_messages=error_messages,
                 **kw

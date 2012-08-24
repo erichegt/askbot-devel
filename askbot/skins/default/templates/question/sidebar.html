@@ -49,6 +49,7 @@
 </div>
 
 <div class="clearfix"></div>
+{% if settings.GROUPS_ENABLED %}
 <div class="box sharing-widget">
     {% if thread.is_private() %}
         <h2>{% trans %}Invite{% endtrans %}</h2>
@@ -137,6 +138,7 @@
         <p>{% trans site_name=settings.APP_SHORT_NAME %}This thread is public, all members of {{ site_name }} can read this page.{% endtrans %}</p>
     {% endif %}
 </div>
+{% endif %}
 
 {% if settings.SIDEBAR_QUESTION_SHOW_META %}
 <div class="box statsWidget">
@@ -154,7 +156,7 @@
 </div>
 {% endif %}
 
-{% if similar_threads.data and settings.SIDEBAR_QUESTION_SHOW_RELATED %}
+{% if similar_threads.data() and settings.SIDEBAR_QUESTION_SHOW_RELATED %}
     {#% cache 1800 "related_questions" related_questions question.id language_code %#}
     <div class="box">
         <h2>{% trans %}Related questions{% endtrans %}</h2>

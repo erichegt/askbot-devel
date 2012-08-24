@@ -329,7 +329,7 @@ DraftPost.prototype.decorate = function(element) {
     this._element = element;
     this.assignContentElements();
     this.backupData();
-    setInterval(this.getSaveHandler(), 5000);//auto-save twice a minute
+    setInterval(this.getSaveHandler(), 30000);//auto-save twice a minute
     var me = this;
     window.onbeforeunload = function() {
         var saveHandler = me.getSaveHandler();
