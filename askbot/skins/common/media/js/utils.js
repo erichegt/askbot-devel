@@ -1626,10 +1626,16 @@ GroupDropdown.prototype.prependGroup = function(group_name, url){
 GroupDropdown.prototype._add_group_handler = function(group_name){
   var group_name = this._input_box_element.val();
   self = this;
-  $.post(askbot['urls']['add_group'], 
-     {group: group_name},
-     function(data, textStatus, jqXHR){
-       if (data.status=='ok'){
+  if (!group_name){
+    return;
+  }
+
+  $.ajax({
+    type: 'POST',
+    url: askbot['urls']['add_group'],
+    data: {group: group_name},
+    success: function(data){
+       if (data.success){
          self.prependGroup(data.group_name, data.url);
          self._input_box_element.hide();
          self._add_link.show();
@@ -1637,8 +1643,9 @@ GroupDropdown.prototype._add_group_handler = function(group_name){
        } else{
          return false;
        }
-     }
-  );
+     },
+     error: function(){console.log('error');}
+  });
 };
 
 GroupDropdown.prototype.enableAddGroups = function(){

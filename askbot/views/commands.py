@@ -948,11 +948,8 @@ def add_group(request):
         url = reverse('users_by_group', kwargs={'group_id': group.id,
                    'group_slug': slugify(group_name)})
         response_dict = dict(group_name = group_name,
-                             status='ok',
                              url = url )
         return response_dict
-    else:
-        return dict(status='error')
 
 @csrf.csrf_exempt
 @decorators.ajax_only
