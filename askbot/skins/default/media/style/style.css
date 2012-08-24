@@ -314,14 +314,12 @@ body.user-messages {
 #metaNav #navTags {
   background: 0px -95px url(../images/sprites.png) no-repeat;
 }
-#metaNav #navBadges {
-  background: 0px -170px url(../images/sprites.png) no-repeat;
-}
-#metaNav #navUsers {
-  background: 3px -132px url(../images/sprites.png) no-repeat;
-}
+#metaNav #navUsers,
 #metaNav #navGroups {
-  background: 3px -132px url(../images/sprites.png) no-repeat;
+  background: 3px -133px url(../images/sprites.png) no-repeat;
+}
+#metaNav #navBadges {
+  background: 3px -170px url(../images/sprites.png) no-repeat;
 }
 #metaNav a.group-name {
   padding: 0px;
