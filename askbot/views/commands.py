@@ -20,6 +20,7 @@ from django.utils import simplejson
 from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from django.utils.translation import string_concat
+from askbot.utils.slug import slugify
 from askbot import models
 from askbot import forms
 from askbot.conf import should_show_sort_by_relevance
@@ -927,6 +928,26 @@ def save_group_logo_url(request):
     else:
         raise ValueError('invalid data found when saving group logo')
 
+@csrf.csrf_exempt
+@decorators.ajax_only
+@decorators.post_only
+@decorators.admins_only
+def add_group(request):
+    group_name = request.POST.get('group')
+    if group_name:
+        group = models.Tag.group_tags.get_or_create(
+                            group_name=group_name,
+                            user=request.user,
+                        )
+
+        url = reverse('users_by_group', kwargs={'group_id': group.id,
+                   'group_slug': slugify(group_name)})
+        response_dict = dict(group_name = group_name,
+                             status='ok',
+                             url = url )
+        return response_dict
+    else:
+        return dict(status='error')
 
 @csrf.csrf_exempt
 @decorators.ajax_only

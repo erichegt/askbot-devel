@@ -75,6 +75,14 @@
         if (askbot['data']['userIsAdminOrMod']) {
             $('body').addClass('admin');
         }
+        {%if settings.GROUPS_ENABLED %}
+        askbot['urls']['add_group'] = "{% url add_group %}";
+        var group_dropdown = new GroupDropdown({{group_list}});
+        $('.dropdown').append(group_dropdown.getElement());
+        {%if request.user.is_superuser%}
+        group_dropdown.enableAddGroups();
+        {%endif%}
+        {% endif %}
     });
 {% if user_messages %}
     $('#validate_email_alert').click(function(){notify.close(true)})

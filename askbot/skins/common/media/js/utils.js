@@ -1555,6 +1555,100 @@ SelectBox.prototype.decorate = function(element){
     });
 };
 
+/**
+ * This is a dropdown list elment 
+ */
+
+var GroupDropdown = function(groups){
+    WrappedElement.call(this);
+    this._group_list = groups; 
+    this._input_box = new TippedInput();
+    this._input_box.setInstruction('group name');
+    this._input_box.createDom();
+    this._input_box_element = this._input_box.getElement();
+    this._input_box_element.hide();
+    this._add_link = this.makeElement('a');
+    this._add_link.attr('href', '#');
+    this._add_link.text('add new group');
+};
+inherits(GroupDropdown, WrappedElement);
+
+GroupDropdown.prototype.createDom =  function(){
+  this._element = this.makeElement('ul');
+  this._element.attr('class', 'dropdown-menu');
+  this._element.attr('id', 'groups-dropdown');
+  this._element.attr('role', 'menu');
+  this._element.attr('aria-labelledby', 'navGroups');
+
+  for (i=0; i<this._group_list.length; i++){
+    li_element = this.makeElement('li');
+    a_element = this.makeElement('a');
+    a_element.text(this._group_list[i].name);
+    a_element.attr('href', this._group_list[i].link);
+    li_element.append(a_element);
+    this._element.append(li_element);
+  }
+};
+
+GroupDropdown.prototype.decorate = function(element){
+  this._element = element; 
+  this._element.attr('class', 'dropdown-menu');
+  this._element.attr('id', 'groups-dropdown');
+  this._element.attr('role', 'menu');
+  this._element.attr('aria-labelledby', 'navGroups');
+
+  for (i=0; i<this._group_list.length; i++){
+    li_element = this.makeElement('li');
+    a_element = this.makeElement('a');
+    a_element.text(this._group_list[i].name);
+    a_element.attr('href', this._group_list[i].link);
+    li_element.append(a_element);
+    this._element.append(li_element);
+  }
+};
+
+GroupDropdown.prototype.prependGroup = function(group_name, url){
+  new_group_li = this.makeElement('li');
+  new_group_a = this.makeElement('a');
+  new_group_a.attr('href', url);
+  new_group_a.text(group_name);
+  new_group_li.append(new_group_a);
+  this._element.prepend(new_group_li);
+};
+
+GroupDropdown.prototype._add_group_handler = function(group_name){
+  var group_name = this._input_box_element.val();
+  self = this;
+  $.post(askbot['urls']['add_group'], 
+     {group: group_name},
+     function(data, textStatus, jqXHR){
+       if (data.status=='ok'){
+         self.prependGroup(data.group_name, data.url);
+         self._input_box_element.hide();
+         self._add_link.show();
+         return true; 
+       } else{
+         return false;
+       }
+     }
+  );
+};
+
+GroupDropdown.prototype.enableAddGroups = function(){
+    var self = this;
+    this._add_link.click(function(){ 
+      self._add_link.hide();
+      self._input_box_element.show(); 
+    });
+    this._input_box_element.keydown(function(event){
+      if (event.which == 13 || event.keyCode==13){
+        self._add_group_handler(); 
+      }
+    });
+    this._element.append(this._add_link);
+    this._element.append(this._input_box_element);
+};
+
 var Tag = function(){
     SimpleControl.call(this);
     this._deletable = false;

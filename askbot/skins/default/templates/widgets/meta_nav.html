@@ -11,11 +11,6 @@
   href="{% url groups %}" data-target="#" >
   {% trans %}people & groups{% endtrans %}
 </a>
-<ul id="groups-dropdown" class="dropdown-menu" role="menu" aria-labelledby="navGroups">
-  {%for group in group_list%}
-  <li>{{ macros.user_group_link(group) }}</li>
-  {%endfor%}
-</ul>
 </span>
 {%else%}
 <a 

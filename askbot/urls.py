@@ -273,6 +273,11 @@ urlpatterns = patterns('',
         name = 'delete_group_logo'
     ),
     url(#ajax only
+        r'^add-group/',
+        views.commands.add_group,
+        name = 'add_group'
+    ),
+    url(#ajax only
         r'^toggle-group-profile-property/',
         views.commands.toggle_group_profile_property,
         name = 'toggle_group_profile_property'

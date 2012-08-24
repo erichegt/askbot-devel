@@ -89,7 +89,7 @@ def separate_unused_tags(tags):
     return used, unused
 
 def tags_match_some_wildcard(tag_names, wildcard_tags):
-    """Same as 
+    """Same as
     :meth:`~askbot.models.tag.TagQuerySet.tags_match_some_wildcard`
     except it works on tag name strings
     """
