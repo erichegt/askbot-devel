@@ -68,7 +68,8 @@ select {
   margin-left: 0px;
 }
 input[type="text"].prompt,
-input[type="password"].prompt {
+input[type="password"].prompt,
+input.tipped-input.blank {
   font-style: italic;
   color: #707070;
 }
@@ -313,6 +314,9 @@ body.user-messages {
 #metaNav #navTags {
   background: 0px -95px url(../images/sprites.png) no-repeat;
 }
+#metaNav #navBadges {
+  background: 0px -170px url(../images/sprites.png) no-repeat;
+}
 #metaNav #navUsers {
   background: 3px -132px url(../images/sprites.png) no-repeat;
 }
@@ -321,6 +325,27 @@ body.user-messages {
 }
 #metaNav a.group-name {
   padding: 0px;
+  float: center;
+  margin: 5px 0px 5px 10px;
+}
+#metaNav input.group-name {
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: #e2e2ae 1px solid;
+  color: #e2e2ae;
+  height: 25px;
+  font-size: 18px;
+  font-weight: 100;
+  text-decoration: none;
+  display: block;
+  float: left;
+}
+#metaNav input.group-name:focus {
+  border: none;
+}
+#metaNav a.group-name:hover {
+  background-color: transparent;
 }
 #metaNav span.dropdown:hover ul.dropdown-menu {
   display: block;
@@ -329,8 +354,6 @@ body.user-messages {
   float: left;
 }
 #metaNav .dropdown-menu {
-  /*top: 120%;*/
-
   left: 7%;
 }
 #header.with-logo #userToolsNav {
@@ -1432,7 +1455,7 @@ ul#related-tags li {
   color: #1b79bd;
   border-top: #f0f0ec 1px solid;
   border-left: #f0f0ec 1px solid;
-  height: 30px;
+  min-height: 30px;
   line-height: 30px;
   font-weight: normal;
 }
@@ -1491,6 +1514,7 @@ ul#related-tags li {
 .edit-question-page table.proxy-user-info,
 .edit-answer-page table.proxy-user-info {
   border-spacing: 0px;
+  width: 100%;
 }
 .ask-page table.proxy-user-info .form-item,
 .question-page table.proxy-user-info .form-item,
@@ -1554,6 +1578,80 @@ ul#related-tags li {
   display: block;
   padding: 0 10px;
   height: 25px;
+}
+.add-groups:hover {
+  background-color: #cde5e9;
+  background-repeat: no-repeat;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#cde5e9), color-stop(25%, #cde5e9), to(#94b3ba));
+  background-image: -webkit-linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
+  background-image: -moz-linear-gradient(top, #cde5e9, #cde5e9 25%, #94b3ba);
+  background-image: -ms-linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
+  background-image: -o-linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
+  background-image: linear-gradient(#cde5e9, #cde5e9 25%, #94b3ba);
+  text-decoration: none;
+  text-shadow: 0px 1px 0px #c6d9dd;
+  -moz-text-shadow: 0px 1px 0px #c6d9dd;
+  -webkit-text-shadow: 0px 1px 0px #c6d9dd;
+}
+#id_user,
+#id_user_author {
+  border: #cce6ec 3px solid;
+  height: 25px;
+  padding-left: 5px;
+  width: 395px;
+  font-size: 14px;
+}
+.groups-input,
+.users-input {
+  width: 152px;
+  padding-left: 5px;
+  border: #c9c9b5 1px solid;
+  height: 25px;
+  font-size: 14px;
+}
+.add-groups,
+.add-users {
+  border: 0;
+  font-weight: bold;
+  margin-top: -2px;
+  height: 27px;
+  font-size: 14px;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  color: #4a757f;
+  font-family: 'Open Sans Condensed', Arial, sans-serif;
+  text-shadow: 0px 1px 0px #c6d9dd;
+  -moz-text-shadow: 0px 1px 0px #c6d9dd;
+  -webkit-text-shadow: 0px 1px 0px #c6d9dd;
+  border-top: #eaf2f3 1px solid;
+  background-color: #d1e2e5;
+  background-repeat: no-repeat;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#d1e2e5), color-stop(25%, #d1e2e5), to(#a9c2c7));
+  background-image: -webkit-linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
+  background-image: -moz-linear-gradient(top, #d1e2e5, #d1e2e5 25%, #a9c2c7);
+  background-image: -ms-linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
+  background-image: -o-linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
+  background-image: linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
+  border-radius: 4px;
+  -ms-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  -khtml-border-radius: 4px;
+  -webkit-box-shadow: 1px 1px 2px #636363;
+  -moz-box-shadow: 1px 1px 2px #636363;
+  box-shadow: 1px 1px 2px #636363;
+  border-radius: 4px;
+  -ms-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  -khtml-border-radius: 4px;
+}
+.add-everyone-group {
+  text-align: center;
+  margin: auto;
+  display: block;
+  padding: 0 10px;
 }
 .add-groups:hover {
   background-color: #cde5e9;
@@ -2302,6 +2400,7 @@ ul#related-tags li {
 }
 .question-page .answer .vote-buttons {
   float: left;
+  margin-top: 10px;
 }
 .question-page .accepted-answer {
   background-color: #f7fecc;
@@ -3133,9 +3232,6 @@ table.form-as-table th {
 table.ab-subscr-form {
   width: 45em;
 }
-table.ab-tag-filter-form {
-  width: 45em;
-}
 .submit-row {
   line-height: 30px;
   padding-top: 10px;
@@ -3146,10 +3242,16 @@ table.ab-tag-filter-form {
   line-height: 20px;
   color: red;
 }
-.error {
+.error,
+.openid-signin p.error {
   color: darkred;
   margin: 0;
-  font-size: 10px;
+  font-size: 12px;
+  font-weight: bold;
+  text-align: left;
+}
+.openid-signin p.error {
+  text-align: center;
 }
 label.retag-error {
   color: darkred;
@@ -3549,6 +3651,9 @@ p.signup_p {
   list-style-position: outside;
   margin: 0;
 }
+.simple-subscribe-options input {
+  display: inline;
+}
 /* a workaround to set link colors correctly */
 .wmd-preview a {
   color: #1b79bd;
@@ -3764,6 +3869,11 @@ body.anon.lang-es #searchBar .searchInputCancelable {
   color: white;
   background: #b32f2f;
 }
+.question-page .post-update-info a.primary-group-name,
+a.primary-group-name {
+  color: #990E08;
+  font-weight: bold;
+}
 .users-page .wmd-prompt-dialog {
   background: #ccc;
 }
@@ -3794,6 +3904,17 @@ img.group-logo {
 }
 #groups-list td {
   padding-bottom: 5px;
+}
+.groups-page #groups-list th,
+.groups-page #groups-list td {
+  padding-right: 20px;
+}
+.groups-page #groups-list th {
+  font-weight: bold;
+}
+.groups-page #groups-list th:nth-child(2),
+.groups-page #groups-list td:nth-child(2) {
+  text-align: center;
 }
 #reject-edit-modal input,
 #reject-edit-modal textarea {
@@ -3897,12 +4018,18 @@ textarea.tipped-input {
   margin-top: 8px;
   height: 13px;
 }
-.tag-editor input.new-tags-input {
-  border-style: none;
+.tag-editor input.new-tags-input,
+.tag-editor input.new-tags-input:focus {
+  border: none;
   font-size: 15px;
   font-color: #707070;
   line-height: 16px;
   margin-top: 9px;
+  -webkit-box-shadow: none;
+  /* undo bootstrap glow */
+
+  -moz-box-shadow: none;
+  box-shadow: none;
 }
 /* fixes for bootstrap */
 .caret {

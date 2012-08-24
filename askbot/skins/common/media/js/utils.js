@@ -1566,9 +1566,11 @@ var GroupDropdown = function(groups){
     this._input_box.setInstruction('group name');
     this._input_box.createDom();
     this._input_box_element = this._input_box.getElement();
+    this._input_box_element.attr('class', 'group-name');
     this._input_box_element.hide();
     this._add_link = this.makeElement('a');
     this._add_link.attr('href', '#');
+    this._add_link.attr('class', 'group-name');
     this._add_link.text('add new group');
 };
 inherits(GroupDropdown, WrappedElement);
@@ -1585,6 +1587,7 @@ GroupDropdown.prototype.createDom =  function(){
     a_element = this.makeElement('a');
     a_element.text(this._group_list[i].name);
     a_element.attr('href', this._group_list[i].link);
+    a_element.attr('class', 'group-name');
     li_element.append(a_element);
     this._element.append(li_element);
   }
@@ -1602,6 +1605,7 @@ GroupDropdown.prototype.decorate = function(element){
     a_element = this.makeElement('a');
     a_element.text(this._group_list[i].name);
     a_element.attr('href', this._group_list[i].link);
+    a_element.attr('class', 'group-name');
     li_element.append(a_element);
     this._element.append(li_element);
   }
@@ -1611,6 +1615,7 @@ GroupDropdown.prototype.prependGroup = function(group_name, url){
   new_group_li = this.makeElement('li');
   new_group_a = this.makeElement('a');
   new_group_a.attr('href', url);
+  new_group_a.attr('class', 'group-name');
   new_group_a.text(group_name);
   new_group_li.append(new_group_a);
   this._element.prepend(new_group_li);
@@ -1639,14 +1644,24 @@ GroupDropdown.prototype.enableAddGroups = function(){
     this._add_link.click(function(){ 
       self._add_link.hide();
       self._input_box_element.show(); 
+      self._input_box_element.focus(); 
     });
     this._input_box_element.keydown(function(event){
       if (event.which == 13 || event.keyCode==13){
         self._add_group_handler(); 
+        self._input_box_element.val('');
       }
     });
-    this._element.append(this._add_link);
-    this._element.append(this._input_box_element);
+
+    var divider = this.makeElement('li');
+    divider.attr('class', 'divider');
+    this._element.append(divider);
+
+    var container = this.makeElement('li');
+    container.append(this._add_link);
+    container.append(this._input_box_element);
+
+    this._element.append(container);
 };
 
 var Tag = function(){

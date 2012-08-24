@@ -313,19 +313,48 @@ body.user-messages {
     }
 
     #navTags{
-        .sprites(0px,-95px)
+        .sprites(0px,-95px);
+    }
+
+    #navBadges{
+       .sprites(0px,-170px);
     }
 
     #navUsers{
-        .sprites(3px,-132px)
+        .sprites(3px,-132px);
     }
 
     #navGroups{
-        .sprites(3px,-132px)
+        .sprites(3px,-132px);
     }
 
     a.group-name {
         padding: 0px;
+        float:center;
+        margin:5px 0px 5px 10px;
+    }
+    
+    input.group-name{
+        border-top:none;
+        border-left:none;
+        border-right:none;
+        border-bottom: #e2e2ae 1px solid;
+        color: #e2e2ae;
+        height: 25px;
+        font-size: 18px;
+        font-weight: 100;
+        text-decoration: none;
+        display: block;
+        float: left;
+
+    }
+
+    input.group-name:focus{
+        border:none;
+    }
+
+    a.group-name:hover{
+        background-color: transparent;
     }
 
     span.dropdown:hover ul.dropdown-menu {
@@ -337,7 +366,6 @@ body.user-messages {
     }
 
     .dropdown-menu{
-        /*top: 120%;*/
         left: 7%;
     }
 
