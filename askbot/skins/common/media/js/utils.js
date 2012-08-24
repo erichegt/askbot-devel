@@ -494,9 +494,11 @@ TippedInput.prototype.decorate = function(element){
                 .addClass('blank');
         }
     });
-    makeKeyHandler(27, function(){
-        $(element).blur();
-    });
+    $(element).keydown(
+        makeKeyHandler(27, function(){
+            $(element).blur();
+        })
+    );
 };
 
 /**
@@ -1968,6 +1970,7 @@ AutoCompleter.prototype.setEventHandlers = function(){
     self._element.blur(function() {
         if ($.trim(self._element.val()) === '') {
             self.setPrompt();
+            self._results.hide();
             return true;
         }
         if (self.finishOnBlur_) {

@@ -529,12 +529,17 @@ def get_tag_list(request):
     """returns tags to use in the autocomplete
     function
     """
-    tag_names = models.Tag.objects.filter(
+    tags = models.Tag.objects.filter(
                         deleted = False,
                         status = models.Tag.STATUS_ACCEPTED
-                    ).values_list(
+                    ).exclude(
+                        name__startswith='_internal_'
+                    )
+
+    tag_names = tags.values_list(
                         'name', flat = True
                     )
+
     output = '\n'.join(map(escape, tag_names))
     return HttpResponse(output, mimetype = 'text/plain')
 
