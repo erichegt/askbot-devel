@@ -38,10 +38,8 @@ from askbot.models.question import QuestionView, AnonymousQuestion
 from askbot.models.question import DraftQuestion
 from askbot.models.question import FavoriteQuestion
 from askbot.models.tag import Tag, MarkedTag
-from askbot.models.tag import get_global_group
-from askbot.models.tag import get_group_names
-from askbot.models.tag import get_groups
 from askbot.models.tag import format_personal_group_name
+from askbot.models.group import get_groups, get_global_group
 from askbot.models.user import EmailFeedSetting, ActivityAuditStatus, Activity
 from askbot.models.user import GroupMembership, GroupProfile
 from askbot.models.post import Post, PostRevision
@@ -3352,7 +3350,6 @@ def add_user_to_global_group(sender, instance, created, **kwargs):
     ``instance`` is an instance of ``User`` class
     """
     if created:
-        from askbot.models.tag import get_global_group
         instance.edit_group_membership(
             group=get_global_group(),
             user=instance,
@@ -3500,6 +3497,7 @@ signals.post_updated.connect(record_post_update_activity)
 signals.post_revision_published.connect(notify_author_of_published_revision)
 signals.site_visited.connect(record_user_visit)
 
+
 __all__ = [
         'signals',
 
@@ -3538,6 +3536,6 @@ __all__ = [
 
         'get_model',
         'get_admins_and_moderators',
-        'get_group_names',
-        'get_groups'
+        'get_groups',
+        'get_global_group',
 ]

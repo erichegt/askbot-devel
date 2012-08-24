@@ -37,8 +37,8 @@ from askbot.conf import settings as askbot_settings
 from askbot import models
 from askbot import exceptions
 from askbot.models.badges import award_badges_signal
-from askbot.models.tag import get_global_group
-from askbot.models.tag import get_groups
+from askbot.models.group import get_global_group, get_groups
+from askbot.models.group import get_group_manager
 from askbot.skins.loaders import render_into_skin
 from askbot.search.state_manager import SearchState
 from askbot.utils import url_utils
@@ -81,7 +81,7 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
                 return HttpResponseRedirect('groups')
             else:
                 try:
-                    group = models.Tag.group_tags.get(id = group_id)
+                    group = get_group_manager().get(id = group_id)
                     group_email_moderation_enabled = \
                         (
                             askbot_settings.GROUP_EMAIL_ADDRESSES_ENABLED \
@@ -462,7 +462,7 @@ def user_stats(request, user, context):
     badges = badges_dict.items()
     badges.sort(key=operator.itemgetter(1), reverse=True)
 
-    user_groups = models.Tag.group_tags.get_for_user(user = user)
+    user_groups = get_group_manager().get_for_user(user = user)
     user_groups = user_groups.exclude(name__startswith='_internal_')
     global_group = get_global_group()
     user_groups = user_groups.exclude(name=global_group.name)
@@ -1011,11 +1011,9 @@ def groups(request, id = None, slug = None):
         scope = 'all-groups'
 
     if scope == 'all-groups':
-        groups = models.Tag.group_tags.get_all()
+        groups = get_groups()
     else:
-        groups = models.Tag.group_tags.get_for_user(
-                                        user = request.user
-                                    )
+        groups = get_group_manager().get_for_user(user=request.user)
 
     groups = groups.exclude(name__startswith='_internal_')
     groups = groups.annotate(users_count=Count('user_memberships'))

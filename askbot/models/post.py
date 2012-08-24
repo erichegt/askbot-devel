@@ -28,8 +28,8 @@ from askbot.models.user import Activity
 from askbot.models.user import EmailFeedSetting
 from askbot.models.user import GroupMembership
 from askbot.models.tag import Tag, MarkedTag
-from askbot.models.tag import get_groups, tags_match_some_wildcard
-from askbot.models.tag import get_global_group
+from askbot.models.tag import tags_match_some_wildcard
+from askbot.models.group import get_groups, get_global_group
 from askbot.conf import settings as askbot_settings
 from askbot import exceptions
 from askbot.utils import markup
@@ -232,7 +232,7 @@ class PostManager(BaseQuerySetManager):
             comment = const.POST_STATUS['default_version'],
             by_email = by_email
         )
-        
+
         return post
 
     #todo: instead of this, have Thread.add_answer()
@@ -567,7 +567,7 @@ class Post(models.Model):
             for group in groups:
                 for comment in comments:
                     PostToGroup.objects.get_or_create(post=comment, tag=group)
-            
+
 
     def remove_from_groups(self, groups):
         PostToGroup.objects.filter(post=self, tag__in=groups).delete()
@@ -647,7 +647,7 @@ class Post(models.Model):
                                 post=self,
                                 recipients=notify_sets['for_email'],
                             )
- 
+
     def make_private(self, user, group_id = None):
         """makes post private within user's groups
         todo: this is a copy-paste in thread and post
@@ -1237,7 +1237,7 @@ class Post(models.Model):
         result['for_mentions'] = set(mentioned_users) - set(exclude_list)
         #what users are included depends on the post type
         #for example for question - all Q&A contributors
-        #are included, for comments only authors of comments and parent 
+        #are included, for comments only authors of comments and parent
         #post are included
         result['for_inbox'] = self.get_response_receivers(exclude_list=exclude_list)
 
@@ -1934,7 +1934,7 @@ class PostRevision(models.Model):
     text       = models.TextField()
 
     approved = models.BooleanField(default=False, db_index=True)
-    approved_by = models.ForeignKey(User, null = True, blank = True) 
+    approved_by = models.ForeignKey(User, null = True, blank = True)
     approved_at = models.DateTimeField(null = True, blank = True)
 
     by_email = models.BooleanField(default = False)#true, if edited by email
@@ -2015,7 +2015,7 @@ class PostRevision(models.Model):
                     body_text = body_text,
                     recipient_list = [self.author.email,],
                 )
-                
+
             else:
                 message = _(
                     'Your post was placed on the moderation queue '

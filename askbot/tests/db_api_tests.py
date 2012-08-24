@@ -1,4 +1,4 @@
-"""Tests database api - the basic data entry 
+"""Tests database api - the basic data entry
 functions that happen on behalf of users
 
 e.g. ``some_user.do_something(...)``
@@ -13,7 +13,7 @@ from askbot.tests.utils import AskbotTestCase
 from askbot import models
 from askbot import const
 from askbot.conf import settings as askbot_settings
-from askbot.models.tag import get_global_group
+from askbot.models.group import get_global_group
 import datetime
 
 class DBApiTests(AskbotTestCase):
@@ -249,7 +249,7 @@ class UserLikeTagTests(AskbotTestCase):
         self.setup_wildcard('aouaou* o* on* oeu*', 'bad')
         self.assert_affinity_is('like', False)
         self.assert_affinity_is('dislike', True)
-        
+
         self.setup_wildcard('one*', 'good')
         self.assert_affinity_is('like', True)
         self.assert_affinity_is('dislike', False)
@@ -297,7 +297,7 @@ class GlobalTagSubscriberGetterTests(AskbotTestCase):
         self.assertEquals(actual_subscribers, expected_subscribers)
 
     def test_nobody_likes_any_tags(self):
-        """no-one had marked tags, so the set 
+        """no-one had marked tags, so the set
         of subscribers must be empty
         """
         self.assert_subscribers_are(
@@ -430,7 +430,7 @@ class TagAndGroupTests(AskbotTestCase):
             'question_comment': question_comment,
             'answer_comment': answer_comment
         }
-        
+
     def test_group_cannot_create_case_variant_tag(self):
         self.post_question(user = self.u1, tags = 'one two three')
         models.Tag.group_tags.get_or_create(user = self.u1, group_name = 'One')
@@ -546,7 +546,7 @@ class TagAndGroupTests(AskbotTestCase):
         self.assertObjectGroupsEqual(data['question_comment'], groups)
         self.assertObjectGroupsEqual(data['answer'], groups)
         self.assertObjectGroupsEqual(data['answer_comment'], groups)
-        
+
         data['thread'].make_public(recursive=True)
 
         global_group = get_global_group()

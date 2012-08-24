@@ -8,25 +8,6 @@ from askbot import const
 from askbot.conf import settings as askbot_settings
 from askbot.utils import category_tree
 
-def get_global_group():
-    """Returns the global group,
-    if necessary, creates one
-    """
-    #todo: when groups are disconnected from tags,
-    #find comment as shown below in the test cases and
-    #revert the values
-    #todo: change groups to django groups
-    group_name = askbot_settings.GLOBAL_GROUP_NAME
-    try:
-        return Tag.group_tags.get(name=group_name)
-    except Tag.DoesNotExist:
-        from askbot.models import get_admin
-        return Tag.group_tags.get_or_create(
-                            group_name=group_name,
-                            user=get_admin(),
-                            is_open=False
-                        )
-
 def delete_tags(tags):
     """deletes tags in the list"""
     tag_ids = [tag.id for tag in tags]
@@ -291,6 +272,7 @@ class GroupTagQuerySet(TagQuerySet):
 
     def get_for_user(self, user=None, private=False):
         if private:
+            from askbot.models.group import get_global_group
             global_group = get_global_group()
             return self.filter(
                         user_memberships__user=user
@@ -306,14 +288,9 @@ class GroupTagQuerySet(TagQuerySet):
         )
 
     def get_by_name(self, group_name = None):
+        from askbot.models.group import clean_group_name
         return self.get(name = clean_group_name(group_name))
 
-
-def clean_group_name(name):
-    """group names allow spaces,
-    tag names do not, so we use this method
-    to replace spaces with dashes"""
-    return re.sub('\s+', '-', name.strip())
 
 class GroupTagManager(BaseQuerySetManager):
     """manager for group tags"""
@@ -326,6 +303,7 @@ class GroupTagManager(BaseQuerySetManager):
         #todo: here we might fill out the group profile
 
         #replace spaces with dashes
+        from askbot.models.group import clean_group_name
         group_name = clean_group_name(group_name)
         try:
             #iexact is important!!! b/c we don't want case variants
@@ -390,10 +368,3 @@ class MarkedTag(models.Model):
 
     class Meta:
         app_label = 'askbot'
-
-def get_groups():
-    return Tag.group_tags.get_all()
-
-def get_group_names():
-    #todo: cache me
-    return get_groups().values_list('name', flat = True)

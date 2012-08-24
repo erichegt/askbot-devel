@@ -25,7 +25,7 @@ from askbot import models
 from askbot import forms
 from askbot.conf import should_show_sort_by_relevance
 from askbot.conf import settings as askbot_settings
-from askbot.models.tag import get_global_group
+from askbot.models.group import get_global_group
 from askbot.utils import category_tree
 from askbot.utils import decorators
 from askbot.utils import url_utils
