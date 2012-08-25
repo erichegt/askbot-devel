@@ -2993,10 +2993,9 @@ def send_instant_notifications_about_activity_in_post(
 
     logger = logging.getLogger()
     if logger.getEffectiveLevel() <= logging.DEBUG:
-        message = 'email alert for %s post id=%d' % (post.post_type, post.id)
         log_id = uuid.uuid1()
-        message += ', logId=%s' % log_id
-        #logger.debug(message)
+        message = 'email-alert %s, logId=%s' % (post.get_absolute_url(), log_id)
+        logger.debug(message)
     else:
         log_id = None
 
@@ -3031,11 +3030,10 @@ def send_instant_notifications_about_activity_in_post(
             )
         except askbot_exceptions.EmailNotSent, error:
             logger.debug(
-                'fail %s, error=%s, logId=%s' % (user.email, error, log_id)
+                '%s, error=%s, logId=%s' % (user.email, error, log_id)
             )
         else:
-            pass
-            #logger.debug('success %s, logId=%s' % (user.email, log_id))
+            logger.debug('success %s, logId=%s' % (user.email, log_id))
 
 
 def notify_author_of_published_revision(
