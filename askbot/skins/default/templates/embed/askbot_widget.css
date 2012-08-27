@@ -11,7 +11,11 @@
 
 #{{variable_name}} div{
      width:600px;
+     {%if widget.include_text_field%}
      height:400px;
+     {%else%}
+     height:160px;
+     {%endif%}
      margin: 100px auto;
      background-color: #fff;
      border:1px solid #000;
