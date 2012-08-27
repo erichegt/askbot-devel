@@ -14,6 +14,8 @@ class Migration(DataMigration):
         for profile in profiles.iterator():
             group_tag = profile.group_tag
             group_name = group_tag.name.replace('-', ' ')
+            if group_name.startswith('_internal_'):
+                group_name = group_name.replace('_internal_', '', 1)
             print 'Group: %s' % group_name
 
             group = orm['askbot.Group']()
@@ -57,10 +59,9 @@ class Migration(DataMigration):
             group_tag.user_memberships.all().delete()
             profile.delete()
 
-            if group_tag.threads.count() == 0:
-                import pdb
-                pdb.set_trace()
-                group_tag.delete()
+            #if group_tag.threads.count() == 0:
+            #    group_tag.delete()
+
 
 
     def backwards(self, orm):
