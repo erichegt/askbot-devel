@@ -4,7 +4,7 @@ import re
 
 from django.conf import settings
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.core import cache  # import cache, not from cache import cache, to be able to monkey-patch cache.cache in test cases
 from django.core.urlresolvers import reverse
 from django.utils.hashcompat import md5_constructor
@@ -443,6 +443,7 @@ class Thread(models.Model):
 
     tags = models.ManyToManyField('Tag', related_name='threads')
     groups = models.ManyToManyField('Tag', related_name='group_threads')
+    new_groups = models.ManyToManyField(Group, db_table='askbot_thread_groups')
 
     # Denormalised data, transplanted from Question
     tagnames = models.CharField(max_length=125)

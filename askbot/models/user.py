@@ -6,6 +6,7 @@ from django.db.backends.dummy.base import IntegrityError
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.contrib.auth.models import User
+from django.contrib.auth.models import Group as AuthGroup
 from django.core import exceptions
 from django.forms import EmailField, URLField
 from django.utils.translation import ugettext as _
@@ -341,8 +342,22 @@ class EmailFeedSetting(models.Model):
         self.save()
 
 
+class AuthUserGroups(models.Model):
+    """explicit model for the auth_user_groups bridge table.
+    Should not be used directly, but via a subclass
+    """
+    group = models.ForeignKey(AuthGroup)
+    user = models.ForeignKey(User)
+
+    class Meta:
+        app_label = 'auth'
+        unique_together = ('group', 'user')
+        db_table = 'auth_user_groups'
+        managed = False
+
+
 class GroupMembership(models.Model):
-    """an explicit model to link users and the tags
+    """an explicit model to link users and the groups
     that by being recorded with this relation automatically
     become group tags
     """
@@ -352,6 +367,27 @@ class GroupMembership(models.Model):
     class Meta:
         app_label = 'askbot'
         unique_together = ('group', 'user')
+
+
+class Group(AuthGroup):
+    """group profile for askbot"""
+    logo_url = models.URLField(null = True)
+    moderate_email = models.BooleanField(default = True)
+    is_open = models.BooleanField(default = False)
+    #preapproved email addresses and domain names to auto-join groups
+    #trick - the field is padded with space and all tokens are space separated
+    preapproved_emails = models.TextField(
+                            null = True, blank = True, default = ''
+                        )
+    #only domains - without the '@' or anything before them
+    preapproved_email_domains = models.TextField(
+                            null = True, blank = True, default = ''
+                        )
+
+    class Meta:
+        app_label = 'askbot'
+        db_table = 'askbot_group'
+
 
 class GroupProfile(models.Model):
     """stores group profile data"""

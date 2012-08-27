@@ -2,6 +2,7 @@ from django.core.management.base import NoArgsCommand
 from askbot.models import User
 from optparse import make_option
 from askbot.utils.console import choice_dialog
+from askbot.conf import settings as askbot_settings
 
 
 NUM_USERS = 40
@@ -34,12 +35,33 @@ ANSWER_TEMPLATE = BAD_STUFF + """Accelerator photo sharing business school drop 
 COMMENT_TEMPLATE = BAD_STUFF + """Main differentiators business model micro economics
                     marketplace equity augmented reality human computer"""
 
+ALERT_SETTINGS_KEYS = (
+    'DEFAULT_NOTIFICATION_DELIVERY_SCHEDULE_Q_ASK',
+    'DEFAULT_NOTIFICATION_DELIVERY_SCHEDULE_Q_ANS',
+    'DEFAULT_NOTIFICATION_DELIVERY_SCHEDULE_Q_ALL',
+    'DEFAULT_NOTIFICATION_DELIVERY_SCHEDULE_Q_SEL',
+    'DEFAULT_NOTIFICATION_DELIVERY_SCHEDULE_M_AND_C',
+)
 
 class Command(NoArgsCommand):
     option_list = NoArgsCommand.option_list + (
         make_option('--noinput', action='store_false', dest='interactive', default=True,
             help='Do not prompt the user for input of any kind.'),
     )
+
+    def save_alert_settings(self):
+        settings = {}
+        for key in ALERT_SETTINGS_KEYS:
+            settings[key] = getattr(askbot_settings, key)
+        self.alert_settings = settings
+
+    def stop_alerts(self):
+        for key in ALERT_SETTINGS_KEYS:
+            askbot_settings.update(key, 'n')
+
+    def restore_saved_alert_settings(self):
+        for key in ALERT_SETTINGS_KEYS:
+            askbot_settings.update(key, self.alert_settings[key])
 
     def print_if_verbose(self, text):
         "Only print if user chooses verbose output"
@@ -207,7 +229,8 @@ class Command(NoArgsCommand):
             if answer != "yes":
                 return
 
-
+        self.save_alert_settings()
+        self.stop_alerts()# saves time on running the command
 
         # Create Users
         users = self.create_users()
@@ -258,5 +281,7 @@ class Command(NoArgsCommand):
                             force = True,
                         )
         self.print_if_verbose("User has accepted a best answer")
+
+        self.restore_saved_alert_settings()
 
         self.print_if_verbose("DONE")

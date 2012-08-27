@@ -9,6 +9,7 @@ from django.contrib.sitemaps import ping_google
 from django.utils import html
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.contrib.auth.models import Group
 from django.core import urlresolvers
 from django.db import models
 from django.utils import html as html_utils
@@ -51,6 +52,15 @@ class PostToGroup(models.Model):
     class Meta:
         unique_together = ('post', 'tag')
         db_table = 'askbot_post_groups'
+        app_label = 'askbot'
+
+
+class PostToGroup2(models.Model):
+    post = models.ForeignKey('Post')
+    group = models.ForeignKey(Group)
+
+    class Meta:
+        unique_together = ('post', 'group')
         app_label = 'askbot'
 
 
@@ -324,6 +334,7 @@ class Post(models.Model):
     parent = models.ForeignKey('Post', blank=True, null=True, related_name='comments') # Answer or Question for Comment
     thread = models.ForeignKey('Thread', blank=True, null=True, default = None, related_name='posts')
     groups = models.ManyToManyField('Tag', through='PostToGroup', related_name = 'group_posts')#used for group-private posts
+    new_groups = models.ManyToManyField(Group, through='PostToGroup2')
 
     author = models.ForeignKey(User, related_name='posts')
     added_at = models.DateTimeField(default=datetime.datetime.now)
