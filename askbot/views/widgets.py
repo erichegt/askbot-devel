@@ -60,6 +60,12 @@ def ask_widget(request, widget_id):
 
     widget = get_object_or_404(models.AskWidget, id=widget_id)
 
+    if widget.tag:
+        related_questions = models.Thread.objects.filter(tags=widget.tag,
+                                                         accepted_answer__isnull=False)[:3]
+    else:
+        related_questions = models.Thread.objects.filter(accepted_answer__isnull=False)[:3]
+
     if request.method == "POST":
         form = forms.AskWidgetForm(include_text=widget.include_text_field,
                 data=request.POST)
@@ -118,7 +124,10 @@ def ask_widget(request, widget_id):
 
         form = forms.AskWidgetForm(include_text=widget.include_text_field)
 
-    data = {'form': form, 'widget': widget}
+    data = {
+            'form': form, 'widget': widget,
+            'related_questions': related_questions
+           }
     return render_into_skin('embed/ask_by_widget.html', data, request)
 
 @login_required

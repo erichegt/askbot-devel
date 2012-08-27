@@ -12,9 +12,9 @@
 #{{variable_name}} div{
      width:600px;
      {%if widget.include_text_field%}
-     height:400px;
+     height:525px;
      {%else%}
-     height:160px;
+     height:310px;
      {%endif%}
      margin: 100px auto;
      background-color: #fff;
@@ -25,5 +25,5 @@
 
 #{{variable_name}} iframe{
      width:600px;
-     height:400px;
+     height:550px;
 }

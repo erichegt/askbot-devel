@@ -20,14 +20,47 @@
       float: right; 
       font-size: 130%;
     }
+
+    .title{
+      font-family: 'Open Sans Condensed', Arial, sans-serif; 
+      font-size: 25px;
+      margin-bottom: 10px;
+    }
+
+    .related-questions{
+      margin-bottom: 10px;
+    }
+
+    .related-questions p, a{
+      font-size: 110%;
+      margin:0;
+    }
+
+    .related-questions a{
+      text-decoration: none;
+      font-size: 80%;
+      color: #000;
+      margin-left: 15px;
+    }
+    {{widget.inner_style}}
   </style>
 {%endblock%}
 
 {%block body%}
+<div class="title">{{widget.title}}</div>
 <form action="." method="POST" accept-charset="utf-8">
   {% csrf_token %}
-  <p>{{form.title}}</p>
-    {{form.text}}
+  <label>{%trans%}Please enter a descriptive title for your question{%endtrans%}</label>
+  {{form.title}}
+  {% if related_questions %}
+  <div class='related-questions'>
+    <p>{%trans%}Related questions: {%endtrans%}
+    {%for question in related_questions %}
+      <div class='question'><a href="{{question.get_absolute_url()}}">{{question.title}}</a></div>
+    {%endfor%}
+  </div>
+  {%endif%}
+  {{form.text}}
   {% if form.ask_anonymously %}
     <p>{{form.ask_anonymously.label_tag()}}: {{form.ask_anonymously}}</p>
   {%endif%}
