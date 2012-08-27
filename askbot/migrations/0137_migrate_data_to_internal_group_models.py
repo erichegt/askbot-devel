@@ -46,7 +46,7 @@ class Migration(DataMigration):
                 thread.groups.remove(group_tag)
 
             print 'moving posts'
-            posts = group_tag.group_posts.iterator()
+            posts = orm['askbot.Post'].objects.filter(groups=group_tag)
             for post in posts:
                 post.new_groups.add(group)
                 post.groups.remove(group_tag)
@@ -58,6 +58,8 @@ class Migration(DataMigration):
             profile.delete()
 
             if group_tag.threads.count() == 0:
+                import pdb
+                pdb.set_trace()
                 group_tag.delete()
 
 
@@ -212,7 +214,7 @@ class Migration(DataMigration):
             'deleted': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'db_index': 'True'}),
             'deleted_at': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
             'deleted_by': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'deleted_posts'", 'null': 'True', 'to': "orm['auth.User']"}),
-            'groups': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'group_posts'", 'symmetrical': 'False', 'through': "orm['askbot.PostToGroup']", 'to': "orm['askbot.Tag']"}),
+            'groups': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'group_posts'", 'symmetrical': 'False', 'db_table': '"askbot_post_groups_old"', 'to': "orm['askbot.Tag']"}),
             'html': ('django.db.models.fields.TextField', [], {'null': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'is_anonymous': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
@@ -221,7 +223,7 @@ class Migration(DataMigration):
             'locked': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'locked_at': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
             'locked_by': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'locked_posts'", 'null': 'True', 'to': "orm['auth.User']"}),
-            'new_groups': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Group']", 'through': "orm['askbot.PostToGroup2']", 'symmetrical': 'False'}),
+            'new_groups': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Group']", 'db_table': '"askbot_post_groups"', 'symmetrical': 'False'}),
             'offensive_flag_count': ('django.db.models.fields.SmallIntegerField', [], {'default': '0'}),
             'old_answer_id': ('django.db.models.fields.PositiveIntegerField', [], {'default': 'None', 'unique': 'True', 'null': 'True', 'blank': 'True'}),
             'old_comment_id': ('django.db.models.fields.PositiveIntegerField', [], {'default': 'None', 'unique': 'True', 'null': 'True', 'blank': 'True'}),
