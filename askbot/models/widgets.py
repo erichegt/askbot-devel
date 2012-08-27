@@ -78,8 +78,9 @@ class QuestionWidget(models.Model):
     question_number = models.PositiveIntegerField(default=7)
     tagnames = models.CharField(_('tags'), max_length=50)
     group = models.ForeignKey(Tag, null=True, blank=True)
-    search_query = models.CharField(max_length=50,
-            null=True, blank=True)
+    search_query = models.CharField(
+        max_length=50, null=True, blank=True, default=''
+    )
     order_by = models.CharField(max_length=18,
             choices=SEARCH_ORDER_BY, default='-added_at')
     style = models.TextField(_('css for the widget'),

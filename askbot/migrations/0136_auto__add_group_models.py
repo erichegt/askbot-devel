@@ -1,47 +1,70 @@
-# encoding: utf-8
+# -*- coding: utf-8 -*-
 import datetime
 from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
 
+
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+        #rename old askbot_post_groups
+        db.delete_unique('askbot_post_groups', ['post_id', 'tag_id'])
+        db.rename_table('askbot_post_groups', 'askbot_post_groups_old')
+        db.create_unique('askbot_post_groups_old', ['post_id', 'tag_id'])
 
-        # Adding model 'QuestionWidget'
-        db.create_table('askbot_questionwidget', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('title', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('question_number', self.gf('django.db.models.fields.PositiveIntegerField')(default=7)),
-            ('tagnames', self.gf('django.db.models.fields.CharField')(max_length=50)),
-            ('group', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['askbot.Tag'], null=True, blank=True)),
-            ('search_query', self.gf('django.db.models.fields.CharField')(max_length=50, null=True, blank=True, default='')),
-            ('order_by', self.gf('django.db.models.fields.CharField')(default='-added_at', max_length=18)),
-            ('style', self.gf('django.db.models.fields.TextField')(default='', blank=True, null=True)),
+        #rename old askbot_thread_groups
+        db.delete_unique('askbot_thread_groups', ['thread_id', 'tag_id'])
+        db.rename_table('askbot_thread_groups', 'askbot_thread_groups_old')
+        db.create_unique('askbot_thread_groups_old', ['thread_id', 'tag_id'])
+
+        # Adding model 'Group'
+        db.create_table('askbot_group', (
+            ('group_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['auth.Group'], unique=True, primary_key=True)),
+            ('logo_url', self.gf('django.db.models.fields.URLField')(max_length=200, null=True)),
+            ('moderate_email', self.gf('django.db.models.fields.BooleanField')(default=True)),
+            ('is_open', self.gf('django.db.models.fields.BooleanField')(default=False)),
+            ('preapproved_emails', self.gf('django.db.models.fields.TextField')(default='', null=True, blank=True)),
+            ('preapproved_email_domains', self.gf('django.db.models.fields.TextField')(default='', null=True, blank=True)),
         ))
-        db.send_create_signal('askbot', ['QuestionWidget'])
+        db.send_create_signal('askbot', ['Group'])
 
-        # Adding model 'AskWidget'
-        db.create_table('askbot_askwidget', (
+        db.create_table('askbot_post_groups', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('title', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('group', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='groups', null=True, to=orm['askbot.Tag'])),
-            ('tag', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['askbot.Tag'], null=True, blank=True)),
-            ('include_text_field', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('inner_style', self.gf('django.db.models.fields.TextField')(default='', blank=True)),
-            ('outer_style', self.gf('django.db.models.fields.TextField')(default='', blank=True)),
+            ('post', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['askbot.Post'])),
+            ('group', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.Group'])),
         ))
-        db.send_create_signal('askbot', ['AskWidget'])
+        db.send_create_signal('askbot', ['PostToGroup2'])
 
+        # Adding unique constraint on 'PostToGroup2', fields ['post', 'group']
+        db.create_unique('askbot_post_groups', ['post_id', 'group_id'])
+
+        # Adding M2M table for field groups2 on 'Thread'
+        db.create_table('askbot_thread_groups', (
+            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
+            ('thread', models.ForeignKey(orm['askbot.thread'], null=False)),
+            ('group', models.ForeignKey(orm['auth.group'], null=False))
+        ))
+        db.create_unique('askbot_thread_groups', ['thread_id', 'group_id'])
 
     def backwards(self, orm):
+        # Removing unique constraint on 'PostToGroup2', fields ['post', 'group']
+        db.delete_unique('askbot_post_groups', ['post_id', 'group_id'])
 
-        # Deleting model 'QuestionWidget'
-        db.delete_table('askbot_questionwidget')
+        # Deleting model 'PostToGroup2'
+        db.delete_table('askbot_post_groups')
 
-        # Deleting model 'AskWidget'
-        db.delete_table('askbot_askwidget')
+        db.delete_table('askbot_group')
 
+
+        db.delete_unique('askbot_post_groups_old', ['post_id', 'tag_id'])
+        db.rename_table('askbot_post_groups_old', 'askbot_post_groups')
+        db.create_unique('askbot_post_groups', ['post_id', 'tag_id'])
+
+        # Removing M2M table for field groups2 on 'Thread'
+        db.delete_unique('askbot_thread_groups_old', ['thread_id', 'tag_id'])
+        db.rename_table('askbot_thread_groups_old', 'askbot_thread_groups')
+        db.create_unique('askbot_thread_groups', ['thread_id', 'tag_id'])
 
     models = {
         'askbot.activity': {
@@ -116,7 +139,7 @@ class Migration(SchemaMigration):
             'awarded_count': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'awarded_to': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'badges'", 'symmetrical': 'False', 'through': "orm['askbot.Award']", 'to': "orm['auth.User']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'slug': ('django.db.models.fields.SlugField', [], {'unique': 'True', 'max_length': '50', 'db_index': 'True'})
+            'slug': ('django.db.models.fields.SlugField', [], {'unique': 'True', 'max_length': '50'})
         },
         'askbot.draftanswer': {
             'Meta': {'object_name': 'DraftAnswer'},
@@ -182,6 +205,7 @@ class Migration(SchemaMigration):
             'deleted_at': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
             'deleted_by': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'deleted_posts'", 'null': 'True', 'to': "orm['auth.User']"}),
             'groups': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'group_posts'", 'symmetrical': 'False', 'through': "orm['askbot.PostToGroup']", 'to': "orm['askbot.Tag']"}),
+            'groups2': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Group']", 'through': "orm['askbot.PostToGroup2']", 'symmetrical': 'False'}),
             'html': ('django.db.models.fields.TextField', [], {'null': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'is_anonymous': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
@@ -237,6 +261,12 @@ class Migration(SchemaMigration):
             'post': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['askbot.Post']"}),
             'tag': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['askbot.Tag']"})
         },
+        'askbot.posttogroup2': {
+            'Meta': {'unique_together': "(('post', 'group'),)", 'object_name': 'PostToGroup2'},
+            'group': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.Group']"}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'post': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['askbot.Post']"})
+        },
         'askbot.questionview': {
             'Meta': {'object_name': 'QuestionView'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
@@ -250,8 +280,8 @@ class Migration(SchemaMigration):
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'order_by': ('django.db.models.fields.CharField', [], {'default': "'-added_at'", 'max_length': '18'}),
             'question_number': ('django.db.models.fields.PositiveIntegerField', [], {'default': '7'}),
-            'search_query': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
-            'style': ('django.db.models.fields.TextField', [], {'default': "''", 'blank': 'True'}),
+            'search_query': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '50', 'null': 'True', 'blank': 'True'}),
+            'style': ('django.db.models.fields.TextField', [], {'default': '"\\n@import url(\'http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:300,400,700\');\\nbody {\\n    overflow: hidden;\\n}\\n\\n#container {\\n    width: 200px;\\n    height: 350px;\\n}\\nul {\\n    list-style: none;\\n    padding: 5px;\\n    margin: 5px;\\n}\\nli {\\n    border-bottom: #CCC 1px solid;\\n    padding-bottom: 5px;\\n    padding-top: 5px;\\n}\\nli:last-child {\\n    border: none;\\n}\\na {\\n    text-decoration: none;\\n    color: #464646;\\n    font-family: \'Yanone Kaffeesatz\', sans-serif;\\n    font-size: 15px;\\n}\\n"', 'blank': 'True'}),
             'tagnames': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
@@ -306,6 +336,7 @@ class Migration(SchemaMigration):
             'favourite_count': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'followed_by': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'followed_threads'", 'symmetrical': 'False', 'to': "orm['auth.User']"}),
             'groups': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'group_threads'", 'symmetrical': 'False', 'to': "orm['askbot.Tag']"}),
+            'groups2': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Group']", 'db_table': "'askbot_thread_groups'", 'symmetrical': 'False'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'last_activity_at': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'last_activity_by': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'unused_last_active_in_threads'", 'to': "orm['auth.User']"}),
@@ -378,7 +409,7 @@ class Migration(SchemaMigration):
             'status': ('django.db.models.fields.CharField', [], {'default': "'w'", 'max_length': '2'}),
             'subscribed_tags': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'}),
-            'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'}),
+            'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '255'}),
             'website': ('django.db.models.fields.URLField', [], {'max_length': '200', 'blank': 'True'})
         },
         'contenttypes.contenttype': {
