@@ -56,6 +56,12 @@ class AskWidget(models.Model):
     inner_style = models.TextField(default=DEFAULT_INNER_STYLE, blank=True)
     outer_style= models.TextField(default=DEFAULT_OUTER_STYLE, blank=True)
 
+    def get_related_questions(self):
+        if self.tag:
+            pass
+        else:
+            pass
+
     class Meta:
         app_label = 'askbot'
 
