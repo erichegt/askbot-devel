@@ -4,7 +4,7 @@ import re
 
 from django.conf import settings
 from django.db import models
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User
 from django.core import cache  # import cache, not from cache import cache, to be able to monkey-patch cache.cache in test cases
 from django.core.urlresolvers import reverse
 from django.utils.hashcompat import md5_constructor
@@ -25,6 +25,7 @@ from askbot.models.base import DraftContent, BaseQuerySetManager
 from askbot.models.tag import Tag, get_groups
 from askbot.models.post import Post, PostRevision
 from askbot.models.post import PostToGroup2 as PostToGroup
+from askbot.models.user import Group
 from askbot.models import signals
 from askbot import const
 from askbot.utils.lists import LazyList

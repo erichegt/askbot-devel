@@ -344,7 +344,6 @@ class EmailFeedSetting(models.Model):
 
 class AuthUserGroups(models.Model):
     """explicit model for the auth_user_groups bridge table.
-    Should not be used directly, but via a subclass
     """
     group = models.ForeignKey(AuthGroup)
     user = models.ForeignKey(User)

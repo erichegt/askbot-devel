@@ -9,7 +9,6 @@ from django.contrib.sitemaps import ping_google
 from django.utils import html
 from django.conf import settings
 from django.contrib.auth.models import User
-from django.contrib.auth.models import Group
 from django.core import urlresolvers
 from django.db import models
 from django.utils import html as html_utils
@@ -27,7 +26,7 @@ from askbot.utils.slug import slugify
 from askbot import const
 from askbot.models.user import Activity
 from askbot.models.user import EmailFeedSetting
-#from askbot.models.user import Group
+from askbot.models.user import Group
 from askbot.models.tag import Tag, MarkedTag
 from askbot.models.tag import get_groups, tags_match_some_wildcard
 from askbot.models.tag import get_global_group
