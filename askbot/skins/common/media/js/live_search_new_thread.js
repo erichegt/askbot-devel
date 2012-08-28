@@ -43,6 +43,7 @@ var liveSearchNewThreadInit = function() {
                 list_item.append(count_element);
                 var link = $('<a></a>');
                 link.attr('href', url);
+                link.attr('target', '_blank');
                 list_item.append(link);
                 title_element = $('<span class="title"></span>');
                 title_element.html(title);

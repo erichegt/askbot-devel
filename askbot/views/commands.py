@@ -719,6 +719,7 @@ def api_get_questions(request):
     threads = threads.distinct()[:30]
     thread_list = [{
         'title': escape(thread.title),
+        'url': thread.get_absolute_url(),
         'answer_count': thread.get_answer_count(request.user)
     } for thread in threads]
     json_data = simplejson.dumps(thread_list)
