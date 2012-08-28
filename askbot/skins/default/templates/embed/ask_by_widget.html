@@ -100,39 +100,6 @@
     var minSearchWordLength = {{settings.MIN_SEARCH_WORD_LENGTH}};
     askbot['urls']['api_get_questions'] = '{% url api_get_questions %}';
     liveSearchNewThreadInit();
-/*
-    var createRelatedDOM = function(data){
-      element = $('<div></div>');
-      element.attr({class:"question"});
-      link = $("<a></a>");
-      //link.attr({href:})
-      link.text(data.title);
-      element.append(link);
-      $('.related-questions').append(element);
-    };
-
-    $(document).ready(function(){
-      $('.related-questions').hide();
-      $("#id_title").change(function(){
-        data = {query: this.value, _: new Date().getTime()};
-        console.log(data);
-        $.getJSON("{% url api_get_questions %}", data, function(data){
-
-          console.log('entro');
-          if (data.length != 0){
-            $('.related-questions').show();
-          } else{
-            $('.related-questions').hide();
-          }
-
-          $.each(data, function(key, value){
-            createRelatedDOM(value);
-          });
-        }); 
-      });
-        
-    });
-    */
   </script>
 {% endblock %}
 
