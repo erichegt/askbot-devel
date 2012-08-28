@@ -3,6 +3,7 @@ import datetime
 from south.db import db
 from south.v2 import DataMigration
 from django.db import models
+from askbot.utils.console import ProgressBar
 
 class Migration(DataMigration):
 
@@ -10,13 +11,14 @@ class Migration(DataMigration):
         "Write your forwards methods here."
         
         profiles = orm['askbot.GroupProfile'].objects.all()
-        print 'Transfering group information from Tag to Group model'
-        for profile in profiles.iterator():
+        items = profiles.iterator()
+        count = profiles.count()
+        message = 'Transfering group information from Tag to Group model'
+        for profile in ProgressBar(items, count, message):
             group_tag = profile.group_tag
             group_name = group_tag.name.replace('-', ' ')
             if group_name.startswith('_internal_'):
                 group_name = group_name.replace('_internal_', '', 1)
-            print 'Group: %s' % group_name
 
             group = orm['askbot.Group']()
             group.name = group_name
@@ -30,31 +32,28 @@ class Migration(DataMigration):
                 #see if such group is already there
                 auth_group = orm['auth.Group'].objects.get(name=group_name)
                 group.group_ptr = auth_group
-                print 'merging with Django group'
             except orm['auth.Group'].DoesNotExist:
                 pass
 
             group.save()
 
-            print 'moving users'
             memberships = group_tag.user_memberships.iterator()
             for old_membership in memberships:
                 old_membership.user.groups.add(group)
 
-            print 'moving threads'
             threads = orm['askbot.Thread'].objects.filter(groups=group_tag)
             for thread in threads:
                 thread.new_groups.add(group)
                 thread.groups.remove(group_tag)
 
-            print 'moving posts'
             posts = orm['askbot.Post'].objects.filter(groups=group_tag)
             for post in posts:
                 post.new_groups.add(group)
                 post.groups.remove(group_tag)
 
-        print 'Deleting old group information'
-        for profile in profiles.iterator():
+        message = 'Deleting old group information'
+        items = profiles.iterator()
+        for profile in ProgressBar(items, count, message):
             group_tag = profile.group_tag
             group_tag.user_memberships.all().delete()
             profile.delete()
