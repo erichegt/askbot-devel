@@ -356,19 +356,6 @@ class AuthUserGroups(models.Model):
         managed = False
 
 
-class GroupMembership(models.Model):
-    """an explicit model to link users and the groups
-    that by being recorded with this relation automatically
-    become group tags
-    """
-    group = models.ForeignKey(Tag, related_name = 'user_memberships')
-    user = models.ForeignKey(User, related_name = 'group_memberships')
-
-    class Meta:
-        app_label = 'askbot'
-        unique_together = ('group', 'user')
-
-
 class Group(AuthGroup):
     """group profile for askbot"""
     logo_url = models.URLField(null = True)
@@ -387,31 +374,6 @@ class Group(AuthGroup):
     class Meta:
         app_label = 'askbot'
         db_table = 'askbot_group'
-
-
-class GroupProfile(models.Model):
-    """stores group profile data"""
-    group_tag = models.OneToOneField(
-                            Tag,
-                            unique = True,
-                            related_name = 'group_profile'
-                        )
-    logo_url = models.URLField(null = True)
-    moderate_email = models.BooleanField(default = True)
-    is_open = models.BooleanField(default = False)
-    #preapproved email addresses and domain names to auto-join groups
-    #trick - the field is padded with space and all tokens are space separated
-    preapproved_emails = models.TextField(
-                            null = True, blank = True, default = ''
-                        )
-    #only domains - without the '@' or anything before them
-    preapproved_email_domains = models.TextField(
-                            null = True, blank = True, default = ''
-                        )
-
-    class Meta:
-        #added to make account merges work properly
-        app_label = 'askbot'
 
     def can_accept_user(self, user):
         """True if user is preapproved to join the group"""

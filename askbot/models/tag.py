@@ -192,11 +192,7 @@ class TagManager(BaseQuerySetManager):
 
     def get_content_tags(self):
         """temporary function that filters out the group tags"""
-        return self.annotate(
-            member_count = models.Count('user_memberships')
-        ).filter(
-            member_count = 0
-        )
+        return self.all()
 
     def create(self, name = None, created_by = None, **kwargs):
         """Creates a new tag"""
@@ -392,7 +388,8 @@ class MarkedTag(models.Model):
         app_label = 'askbot'
 
 def get_groups():
-    return Tag.group_tags.get_all()
+    from askbot.models import Group
+    return Group.objects.all()
 
 def get_group_names():
     #todo: cache me

@@ -43,10 +43,11 @@ from askbot.models.tag import get_group_names
 from askbot.models.tag import get_groups
 from askbot.models.tag import format_personal_group_name
 from askbot.models.user import EmailFeedSetting, ActivityAuditStatus, Activity
-from askbot.models.user import GroupMembership, GroupProfile
+from askbot.models.user import AuthUserGroups as GroupMembership
+from askbot.models.user import Group
 from askbot.models.post import Post, PostRevision
 from askbot.models.post import PostFlagReason, AnonymousAnswer
-from askbot.models.post import PostToGroup
+from askbot.models.post import PostToGroup2 as PostToGroup
 from askbot.models.post import DraftAnswer
 from askbot.models.reply_by_email import ReplyAddress
 from askbot.models import signals
@@ -3530,7 +3531,7 @@ __all__ = [
         'ActivityAuditStatus',
         'EmailFeedSetting',
         'GroupMembership',
-        'GroupProfile',
+        'Group',
 
         'User',
 

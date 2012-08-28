@@ -27,7 +27,7 @@ from askbot.utils.slug import slugify
 from askbot import const
 from askbot.models.user import Activity
 from askbot.models.user import EmailFeedSetting
-from askbot.models.user import GroupMembership
+#from askbot.models.user import Group
 from askbot.models.tag import Tag, MarkedTag
 from askbot.models.tag import get_groups, tags_match_some_wildcard
 from askbot.models.tag import get_global_group
@@ -42,19 +42,6 @@ from askbot.utils.diff import textDiff as htmldiff
 from askbot.utils import mysql
 
 
-class PostToGroup(models.Model):
-    """the "trough" table for the
-    relation of groups to posts
-    """
-    post = models.ForeignKey('Post')
-    tag = models.ForeignKey('Tag')
-
-    class Meta:
-        unique_together = ('post', 'tag')
-        db_table = 'askbot_post_groups'
-        app_label = 'askbot'
-
-
 class PostToGroup2(models.Model):
     post = models.ForeignKey('Post')
     group = models.ForeignKey(Group)
@@ -62,6 +49,7 @@ class PostToGroup2(models.Model):
     class Meta:
         unique_together = ('post', 'group')
         app_label = 'askbot'
+        db_table = 'askbot_post_groups'
 
 
 class PostQuerySet(models.query.QuerySet):
@@ -333,7 +321,6 @@ class Post(models.Model):
 
     parent = models.ForeignKey('Post', blank=True, null=True, related_name='comments') # Answer or Question for Comment
     thread = models.ForeignKey('Thread', blank=True, null=True, default = None, related_name='posts')
-    groups = models.ManyToManyField('Tag', through='PostToGroup', related_name = 'group_posts')#used for group-private posts
     new_groups = models.ManyToManyField(Group, through='PostToGroup2')
 
     author = models.ForeignKey(User, related_name='posts')

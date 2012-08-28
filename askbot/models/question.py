@@ -24,7 +24,7 @@ from askbot.models.tag import delete_tags, separate_unused_tags
 from askbot.models.base import DraftContent, BaseQuerySetManager
 from askbot.models.tag import Tag, get_groups
 from askbot.models.post import Post, PostRevision
-from askbot.models.post import PostToGroup
+from askbot.models.post import PostToGroup2 as PostToGroup
 from askbot.models import signals
 from askbot import const
 from askbot.utils.lists import LazyList
@@ -442,8 +442,7 @@ class Thread(models.Model):
     title = models.CharField(max_length=300)
 
     tags = models.ManyToManyField('Tag', related_name='threads')
-    groups = models.ManyToManyField('Tag', related_name='group_threads')
-    new_groups = models.ManyToManyField(Group, db_table='askbot_thread_groups')
+    groups = models.ManyToManyField(Group, db_table='askbot_thread_groups')
 
     # Denormalised data, transplanted from Question
     tagnames = models.CharField(max_length=125)
