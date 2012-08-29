@@ -900,7 +900,6 @@ class AskWidgetForm(forms.Form, FormWithHideableFields):
     '''Simple form with just the title to ask a question'''
 
     title = TitleField()
-    text = EditorField()
     ask_anonymously = forms.BooleanField(
         label=_('ask anonymously'),
         help_text=_(
@@ -915,7 +914,7 @@ class AskWidgetForm(forms.Form, FormWithHideableFields):
         #hide ask_anonymously field
         if not askbot_settings.ALLOW_ASK_ANONYMOUSLY:
             self.hide_field('ask_anonymously')
-
+        self.fields['text'] = EditorField()
         if not include_text:
             self.hide_field('text')
             self.fields['text'].required=False

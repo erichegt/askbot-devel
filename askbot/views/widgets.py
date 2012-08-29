@@ -117,7 +117,7 @@ def ask_widget(request, widget_id):
                 return redirect(next_url)
 
         form = forms.AskWidgetForm(include_text=widget.include_text_field)
-
+        
     data = {
             'form': form,
             'widget': widget,
