@@ -33,6 +33,7 @@ REQUIREMENTS = {
     'lamson': 'Lamson',
     'pytz': 'pytz',
     'tinymce': 'django-tinymce',
+    'longerusername': 'longerusername'
 }
 
 #necessary for interoperability of django and coffin
