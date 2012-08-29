@@ -47,7 +47,7 @@ from askbot.models.user import AuthUserGroups as GroupMembership
 from askbot.models.user import Group
 from askbot.models.post import Post, PostRevision
 from askbot.models.post import PostFlagReason, AnonymousAnswer
-from askbot.models.post import PostToGroup2 as PostToGroup
+from askbot.models.post import PostToGroup
 from askbot.models.post import DraftAnswer
 from askbot.models.reply_by_email import ReplyAddress
 from askbot.models import signals
@@ -2207,11 +2207,11 @@ def get_profile_link(self):
 def user_get_groups(self, private=False):
     """returns a query set of groups to which user belongs"""
     #todo: maybe cache this query
-    return Tag.group_tags.get_for_user(self, private=private)
+    return Group.objects.get_for_user(self, private=private)
 
 def user_get_personal_group(self):
     group_name = format_personal_group_name(self)
-    return Tag.group_tags.get(name=group_name)
+    return Group.objects.get(name=group_name)
 
 def user_get_foreign_groups(self):
     """returns a query set of groups to which user does not belong"""
@@ -2243,8 +2243,6 @@ def user_get_groups_membership_info(self, groups):
 
     ``groups`` is a group tag query set
     """
-    groups = groups.select_related('group_profile')
-
     group_ids = groups.values_list('id', flat = True)
     memberships = GroupMembership.objects.filter(
                                 user__id = self.id,
@@ -2258,7 +2256,7 @@ def user_get_groups_membership_info(self, groups):
         info[membership.group_id]['is_member'] = True
 
     for group in groups:
-        info[group.id]['can_join'] = group.group_profile.can_accept_user(self)
+        info[group.id]['can_join'] = group.can_accept_user(self)
 
     return info
 
@@ -2634,8 +2632,12 @@ def user_join_group(self, group):
 def user_leave_group(self, group):
     self.edit_group_membership(group=group, user=self, action='remove')
 
-def user_is_group_member(self, group = None):
-    return self.group_memberships.filter(group = group).count() == 1
+def user_is_group_member(self, group=None):
+    import pdb
+    pdb.set_trace()
+    return GroupMembership.objects.filter(
+                            user=self, group=group
+                        ).count() == 1
 
 User.add_to_class(
     'add_missing_askbot_subscriptions',
@@ -3371,7 +3373,7 @@ def add_user_to_personal_group(sender, instance, created, **kwargs):
         #in theore here we may have two users that will have
         #identical group names!!!
         group_name = format_personal_group_name(instance)
-        group = Tag.group_tags.get_or_create(
+        group = Group.objects.get_or_create(
                     group_name=group_name, user=instance
                 )
         instance.edit_group_membership(

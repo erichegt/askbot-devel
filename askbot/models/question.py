@@ -24,7 +24,7 @@ from askbot.models.tag import delete_tags, separate_unused_tags
 from askbot.models.base import DraftContent, BaseQuerySetManager
 from askbot.models.tag import Tag, get_groups
 from askbot.models.post import Post, PostRevision
-from askbot.models.post import PostToGroup2 as PostToGroup
+from askbot.models.post import PostToGroup
 from askbot.models.user import Group
 from askbot.models import signals
 from askbot import const
@@ -534,11 +534,19 @@ class Thread(models.Model):
         groups = self.groups.filter(name__startswith='_internal_')
 
         if exclude_user:
-            groups = groups.exclude(created_by__id=exclude_user.id)
+            exclude_user_group = exclude_user.get_personal_group()
+            groups = groups.exclude(name=exclude_user_group.name)
 
-        user_ids = groups.values_list('created_by__id', flat=True)
         if max_count:
-            user_ids = user_ids[:max_count]
+            groups = groups[:max_count]
+
+        from askbot.models import GroupMembership
+        user_ids = GroupMembership.objects.filter(
+                                    group__in=groups
+                                ).values_list(
+                                    'user__id', flat=True
+                                )
+
         return User.objects.filter(id__in=user_ids)
 
     def get_groups_shared_with(self, max_count=None):
@@ -904,7 +912,7 @@ class Thread(models.Model):
         The add by ID now only works if user belongs to that group
         """
         if group_id:
-            group = Tag.group_tags.get(id=group_id)
+            group = Group.objects.get(id=group_id)
             groups = [group]
             self.add_to_groups(groups)
 

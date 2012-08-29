@@ -17,15 +17,11 @@ def get_global_group():
     #revert the values
     #todo: change groups to django groups
     group_name = askbot_settings.GLOBAL_GROUP_NAME
+    from askbot.models import Group
     try:
-        return Tag.group_tags.get(name=group_name)
-    except Tag.DoesNotExist:
-        from askbot.models import get_admin
-        return Tag.group_tags.get_or_create(
-                            group_name=group_name,
-                            user=get_admin(),
-                            is_open=False
-                        )
+        return Group.objects.get(name=group_name)
+    except Group.DoesNotExist:
+        return Group.objects.create(name=group_name, is_open=False)
 
 def delete_tags(tags):
     """deletes tags in the list"""
@@ -282,28 +278,6 @@ class TagManager(BaseQuerySetManager):
 
         return created_tags
 
-class GroupTagQuerySet(TagQuerySet):
-    """Custom query set for the group"""
-
-    def get_for_user(self, user=None, private=False):
-        if private:
-            global_group = get_global_group()
-            return self.filter(
-                        user_memberships__user=user
-                    ).exclude(id=global_group.id)
-        else:
-            return self.filter(user_memberships__user = user)
-
-    def get_all(self):
-        return self.annotate(
-            member_count = models.Count('user_memberships')
-        ).filter(
-            member_count__gt = 0
-        )
-
-    def get_by_name(self, group_name = None):
-        return self.get(name = clean_group_name(group_name))
-
 
 def clean_group_name(name):
     """group names allow spaces,
@@ -311,29 +285,6 @@ def clean_group_name(name):
     to replace spaces with dashes"""
     return re.sub('\s+', '-', name.strip())
 
-class GroupTagManager(BaseQuerySetManager):
-    """manager for group tags"""
-
-    def get_query_set(self):
-        return GroupTagQuerySet(self.model)
-
-    def get_or_create(self, group_name = None, user = None, is_open=True):
-        """creates a group tag or finds one, if exists"""
-        #todo: here we might fill out the group profile
-
-        #replace spaces with dashes
-        group_name = clean_group_name(group_name)
-        try:
-            #iexact is important!!! b/c we don't want case variants
-            #of tags
-            tag = self.get(name__iexact = group_name)
-        except self.model.DoesNotExist:
-            tag = self.model(name = group_name, created_by = user)
-            tag.save()
-            from askbot.models.user import GroupProfile
-            group_profile = GroupProfile(group_tag = tag, is_open=is_open)
-            group_profile.save()
-        return tag
 
 class Tag(models.Model):
     #a couple of status constants
@@ -364,7 +315,6 @@ class Tag(models.Model):
                             )
 
     objects = TagManager()
-    group_tags = GroupTagManager()
 
     class Meta:
         app_label = 'askbot'

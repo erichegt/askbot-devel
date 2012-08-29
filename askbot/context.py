@@ -55,9 +55,8 @@ def application_settings(request):
     }
 
     if askbot_settings.GROUPS_ENABLED:
-        context['group_list'] = models.Tag.group_tags.get_all().filter(
-                                                        deleted=False
-                                                    ).exclude(
-                                                        name__startswith='_internal_')
+        context['group_list'] = models.Group.objects.exclude(
+                                        name__startswith='_internal_'
+                                    )
 
     return context

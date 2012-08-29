@@ -19,9 +19,7 @@ class ThreadModelTestsWithGroupsEnabled(AskbotTestCase):
                 'm_and_c': 'i'
             }
         )
-        self.group = models.Tag.group_tags.get_or_create(
-            group_name = 'jockeys', user = self.admin
-        )
+        self.group = models.Group.objects.get_or_create(group_name = 'jockeys')
         self.admin.edit_group_membership(
             group = self.group,
             user = self.admin,

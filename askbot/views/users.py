@@ -81,18 +81,17 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
                 return HttpResponseRedirect('groups')
             else:
                 try:
-                    group = models.Tag.group_tags.get(id = group_id)
+                    group = models.Group.objects.get(id = group_id)
                     group_email_moderation_enabled = \
                         (
                             askbot_settings.GROUP_EMAIL_ADDRESSES_ENABLED \
                             and askbot_settings.ENABLE_CONTENT_MODERATION
                         )
-                    user_can_join_group = group.group_profile.can_accept_user(request.user)
-                except models.Tag.DoesNotExist:
+                    user_can_join_group = group.can_accept_user(request.user)
+                except models.Group.DoesNotExist:
                     raise Http404
                 if group_slug == slugify(group.name):
-                    users = users.filter(
-                        group_memberships__group__id = group_id
+                    users = users.filter(groups__id = group_id
                     )
                     if request.user.is_authenticated():
                         user_is_group_member = bool(
@@ -462,7 +461,7 @@ def user_stats(request, user, context):
     badges = badges_dict.items()
     badges.sort(key=operator.itemgetter(1), reverse=True)
 
-    user_groups = models.Tag.group_tags.get_for_user(user = user)
+    user_groups = models.Group.objects.get_for_user(user = user)
     user_groups = user_groups.exclude(name__startswith='_internal_')
     global_group = get_global_group()
     user_groups = user_groups.exclude(name=global_group.name)
@@ -1011,15 +1010,14 @@ def groups(request, id = None, slug = None):
         scope = 'all-groups'
 
     if scope == 'all-groups':
-        groups = models.Tag.group_tags.get_all()
+        groups = models.Group.objects.all()
     else:
-        groups = models.Tag.group_tags.get_for_user(
-                                        user = request.user
+        groups = models.Group.objects.get_for_user(
+                                        user=request.user
                                     )
 
     groups = groups.exclude(name__startswith='_internal_')
-    groups = groups.annotate(users_count=Count('user_memberships'))
-    groups = groups.select_related('group_profile')
+    groups = groups.annotate(users_count=Count('user'))
 
     user_can_add_groups = request.user.is_authenticated() and \
             request.user.is_administrator_or_moderator()

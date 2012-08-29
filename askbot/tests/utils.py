@@ -252,10 +252,7 @@ class AskbotTestCase(TestCase):
         return tag
 
     def create_group(self, group_name=None, user=None):
-        return models.Tag.group_tags.get_or_create(
-                                        group_name='private',
-                                        user=self.u1
-                                    )
+        return models.Group.objects.get_or_create(group_name='private')
 
     def post_comment(
                 self,

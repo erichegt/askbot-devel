@@ -656,12 +656,12 @@ def get_groups_list(request):
     """returns names of group tags
     for the autocomplete function"""
     global_group = get_global_group()
-    group_names = models.Tag.group_tags.get_all().filter(
+    group_names = models.Group.objects.all().filter(
                                     deleted = False
                                 ).exclude(
-                                    name=global_group.name
-                                ).exclude(
                                     name__startswith='_internal_'
+                                ).exclude(
+                                    name=global_group.name
                                 ).values_list(
                                     'name', flat = True
                                 )
@@ -896,7 +896,7 @@ def edit_group_membership(request):
         #warning: possible race condition
         if action == 'add':
             group_params = {'group_name': group_name, 'user': user}
-            group = models.Tag.group_tags.get_or_create(**group_params)
+            group = models.Group.objects.get_or_create(**group_params)
             request.user.edit_group_membership(user, group, 'add')
             template = get_template('widgets/group_snippet.html')
             return {
@@ -906,9 +906,9 @@ def edit_group_membership(request):
             }
         elif action == 'remove':
             try:
-                group = models.Tag.group_tags.get_by_name(group_name = group_name)
+                group = models.Group.objects.get(group_name = group_name)
                 request.user.edit_group_membership(user, group, 'remove')
-            except models.Tag.DoesNotExist:
+            except models.Group.DoesNotExist:
                 raise exceptions.PermissionDenied()
         else:
             raise exceptions.PermissionDenied()
@@ -926,9 +926,9 @@ def save_group_logo_url(request):
     if form.is_valid():
         group_id = form.cleaned_data['group_id']
         image_url = form.cleaned_data['image_url']
-        group = models.Tag.group_tags.get(id = group_id)
-        group.group_profile.logo_url = image_url
-        group.group_profile.save()
+        group = models.Group.objects.get(id = group_id)
+        group.logo_url = image_url
+        group.save()
     else:
         raise ValueError('invalid data found when saving group logo')
 
@@ -939,9 +939,9 @@ def save_group_logo_url(request):
 @decorators.admins_only
 def delete_group_logo(request):
     group_id = IntegerField().clean(int(request.POST['group_id']))
-    group = models.Tag.group_tags.get(id = group_id)
-    group.group_profile.logo_url = None
-    group.group_profile.save()
+    group = models.Group.objects.get(id = group_id)
+    group.logo_url = None
+    group.save()
 
 
 @csrf.csrf_exempt
@@ -964,10 +964,10 @@ def toggle_group_profile_property(request):
     property_name = CharField().clean(request.POST['property_name'])
     assert property_name in ('is_open', 'moderate_email')
 
-    group = models.Tag.objects.get(id = group_id)
-    new_value = not getattr(group.group_profile, property_name)
-    setattr(group.group_profile, property_name, new_value)
-    group.group_profile.save()
+    group = models.Group.objects.get(id = group_id)
+    new_value = not getattr(group, property_name)
+    setattr(group, property_name, new_value)
+    group.save()
     return {'is_enabled': new_value}
 
 
@@ -980,8 +980,8 @@ def edit_object_property_text(request):
     property_name = CharField().clean(request.REQUEST['property_name'])
 
     accessible_fields = (
-        ('GroupProfile', 'preapproved_emails'),
-        ('GroupProfile', 'preapproved_email_domains')
+        ('Group', 'preapproved_emails'),
+        ('Group', 'preapproved_email_domains')
     )
 
     if (model_name, property_name) not in accessible_fields:
@@ -1007,7 +1007,7 @@ def join_or_leave_group(request):
         raise exceptions.PermissionDenied()
 
     group_id = IntegerField().clean(request.POST['group_id'])
-    group = models.Tag.objects.get(id = group_id)
+    group = models.Group.objects.get(id = group_id)
 
     if request.user.is_group_member(group):
         action = 'remove'
@@ -1070,7 +1070,7 @@ def moderate_suggested_tag(request):
         thread_id = form.cleaned_data.get('thread_id', None)
 
         try:
-            tag = models.Tag.objects.get(id = tag_id)#can tag not exist?
+            tag = models.Tag.objects.get(id=tag_id)#can tag not exist?
         except models.Tag.DoesNotExist:
             return
 
@@ -1208,7 +1208,7 @@ def share_question_with_group(request):
             if group_name == askbot_settings.GLOBAL_GROUP_NAME:
                 thread.make_public(recursive=True)
             else:
-                group = models.Tag.group_tags.get(name=group_name)
+                group = models.Group.objects.get(name=group_name)
                 thread.add_to_groups((group,), recursive=True)
 
             #get notif sets after

@@ -17,9 +17,6 @@ class Migration(DataMigration):
         for profile in ProgressBar(items, count, message):
             group_tag = profile.group_tag
             group_name = group_tag.name.replace('-', ' ')
-            if group_name.startswith('_internal_'):
-                group_name = group_name.replace('_internal_', '', 1)
-
             group = orm['askbot.Group']()
             group.name = group_name
             group.logo_url = profile.logo_url
