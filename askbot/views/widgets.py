@@ -22,8 +22,8 @@ WIDGETS_MODELS = {
                  }
 
 WIDGETS_FORMS = {
-                'ask': models.widgets.CreateAskWidgetForm,
-                'question': models.widgets.CreateQuestionWidgetForm,
+                'ask': forms.CreateAskWidgetForm,
+                'question': forms.CreateQuestionWidgetForm,
                }
 
 def _get_model(key):
@@ -154,10 +154,12 @@ def list_widgets(request, model):
 @decorators.admins_only
 def create_widget(request, model):
     form_class = _get_form(model)
+    model_class = _get_model(model)
     if request.method == 'POST':
         form = form_class(request.POST)
         if form.is_valid():
-            form.save()
+            instance = model_class(**form.cleaned_data) 
+            instance.save()
             return redirect('list_widgets', model=model)
     else:
         form = form_class()
@@ -174,13 +176,15 @@ def edit_widget(request, model, widget_id):
     form_class = _get_form(model)
     widget = get_object_or_404(model_class, pk=widget_id)
     if request.method == 'POST':
-        form = form_class(request.POST,
-                instance=widget)
+        form = form_class(request.POST)
         if form.is_valid():
-            form.save()
+            instance = model_class(**form.cleaned_data) 
+            instance.save()
             return redirect('list_widgets', model=model)
     else:
-        form = form_class(instance=widget)
+        initial_dict = dict.copy(widget.__dict__)
+        del initial_dict['_state']
+        form = form_class(initial=initial_dict)
 
     data = {'form': form,
             'action': 'edit',
