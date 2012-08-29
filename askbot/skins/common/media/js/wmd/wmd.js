@@ -3,10 +3,10 @@
 Attacklab.wmdBase = function(){
 
 	// A few handy aliases for readability.
-	var wmd  = top.Attacklab;
-	var doc  = top.document;
-	var re   = top.RegExp;
-	var nav  = top.navigator;
+	var wmd  = self.Attacklab;
+	var doc  = self.document;
+	var re   = self.RegExp;
+	var nav  = self.navigator;
 	
 	// Some namespaces.
 	wmd.Util = {};

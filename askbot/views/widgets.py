@@ -120,7 +120,8 @@ def ask_widget(request, widget_id):
 
     data = {
             'form': form,
-            'widget': widget
+            'widget': widget,
+            'editor_type': askbot_settings.EDITOR_TYPE
            }
     return render_into_skin('embed/ask_by_widget.html', data, request)
 

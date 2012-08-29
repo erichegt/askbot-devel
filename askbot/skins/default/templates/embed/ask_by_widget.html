@@ -1,13 +1,20 @@
 {% extends "widget_base.html" %}
 {% import "macros.html" as macros %}
 {% block forestyle %}
+  {% if editor_type == 'markdown' %}
+  <link rel="stylesheet" type="text/css" href="{{"/js/wmd/wmd.css"|media}}" />
+  {%endif%}
   <style type="text/css" media="screen">
     #editor {
       display: block;
       min-height: 200px;
-      width: 100%;
+      width: 99.5%;
       margin: 0;
-      border: #CCE6EC 2px solid;
+      border:none;
+    }
+    .wmd-container{
+      border: #CCE6EC 3px solid;
+      width: 100%;
     }
 
     #id_title{
@@ -72,6 +79,15 @@
       -webkit-border-radius: 3px;
       -khtml-border-radius: 3px;
     }
+    {% if editor_type == 'markdown' %}
+    #wmd-button-bar {
+      background: url({{"/js/wmd/images/editor-toolbar-background.png"|media}}) repeat-x bottom;
+      height: 30px;
+      border: 0;
+      display: block;
+    }
+    {% endif %}
+
     {{widget.inner_style}}
   </style>
 {%endblock%}
@@ -86,7 +102,19 @@
   <div id='question-list'>
   </div>
   {%endif%}
-  {{form.text}}
+{% if widget.include_text_field %}
+  {% if editor_type == 'markdown' %}
+      <div class="wmd-container">
+          <div id="wmd-button-bar" class="wmd-panel"></div>
+          {{ form.text }}{# this element is resizable and will be wrapped by js #}
+      </div>
+  {% else %}
+      <div class="wmd-container">
+          {{ form.media }}
+          {{ form.text }}
+      </div>
+  {% endif %}
+{% endif %}
   {% if form.ask_anonymously %}
     <p>{{form.ask_anonymously.label_tag()}}: {{form.ask_anonymously}}</p>
   {%endif%}
@@ -95,11 +123,18 @@
 {{form.errors}}
 {%endblock%}
 {% block endjs %}
-  <script type='text/javascript' src='{{"/js/live_search_new_thread.js"|media}}'></script>
-  <script type="text/javascript" charset="utf-8">
+<script type="text/javascript" src='{{"/js/live_search_new_thread.js"|media}}'></script>
+<script type="text/javascript" charset="utf-8">
     var minSearchWordLength = {{settings.MIN_SEARCH_WORD_LENGTH}};
     askbot['urls']['api_get_questions'] = '{% url api_get_questions %}';
     liveSearchNewThreadInit();
-  </script>
-{% endblock %}
+</script>
 
+<script type='text/javascript' src='{{"/js/editor.js"|media}}'></script>
+{% if editor_type == 'markdown' %}
+    <script type='text/javascript' src='{{"/js/wmd/showdown.js"|media}}'></script>
+    <script type='text/javascript' src='{{"/js/wmd/wmd.js"|media}}'></script>
+{% else %}
+    {% include "meta/tinymce.html" %}
+{% endif %}
+{% endblock %}
