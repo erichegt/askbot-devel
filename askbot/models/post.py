@@ -9,7 +9,6 @@ from django.contrib.sitemaps import ping_google
 from django.utils import html
 from django.conf import settings
 from django.contrib.auth.models import User
-from django.contrib.auth.models import Group
 from django.core import urlresolvers
 from django.db import models
 from django.utils import html as html_utils
@@ -27,7 +26,8 @@ from askbot.utils.slug import slugify
 from askbot import const
 from askbot.models.user import Activity
 from askbot.models.user import EmailFeedSetting
-from askbot.models.user import GroupMembership
+from askbot.models.user import Group
+from askbot.models.user import AuthUserGroups as GroupMembership
 from askbot.models.tag import Tag, MarkedTag
 from askbot.models.tag import tags_match_some_wildcard
 from askbot.models.group import get_groups, get_global_group
@@ -43,25 +43,13 @@ from askbot.utils import mysql
 
 
 class PostToGroup(models.Model):
-    """the "trough" table for the
-    relation of groups to posts
-    """
-    post = models.ForeignKey('Post')
-    tag = models.ForeignKey('Tag')
-
-    class Meta:
-        unique_together = ('post', 'tag')
-        db_table = 'askbot_post_groups'
-        app_label = 'askbot'
-
-
-class PostToGroup2(models.Model):
     post = models.ForeignKey('Post')
     group = models.ForeignKey(Group)
 
     class Meta:
         unique_together = ('post', 'group')
         app_label = 'askbot'
+        db_table = 'askbot_post_groups'
 
 
 class PostQuerySet(models.query.QuerySet):
@@ -333,8 +321,7 @@ class Post(models.Model):
 
     parent = models.ForeignKey('Post', blank=True, null=True, related_name='comments') # Answer or Question for Comment
     thread = models.ForeignKey('Thread', blank=True, null=True, default = None, related_name='posts')
-    groups = models.ManyToManyField('Tag', through='PostToGroup', related_name = 'group_posts')#used for group-private posts
-    new_groups = models.ManyToManyField(Group, through='PostToGroup2')
+    groups = models.ManyToManyField(Group, through='PostToGroup')
 
     author = models.ForeignKey(User, related_name='posts')
     added_at = models.DateTimeField(default=datetime.datetime.now)
@@ -572,21 +559,20 @@ class Post(models.Model):
     def add_to_groups(self, groups):
         #todo: use bulk-creation
         for group in groups:
-            PostToGroup.objects.get_or_create(post=self, tag=group)
+            PostToGroup.objects.get_or_create(post=self, group=group)
         if self.is_answer() or self.is_question():
             comments = self.comments.all()
             for group in groups:
                 for comment in comments:
-                    PostToGroup.objects.get_or_create(post=comment, tag=group)
-
+                    PostToGroup.objects.get_or_create(post=comment, group=group)
 
     def remove_from_groups(self, groups):
-        PostToGroup.objects.filter(post=self, tag__in=groups).delete()
+        PostToGroup.objects.filter(post=self, group__in=groups).delete()
         if self.is_answer() or self.is_question():
             comment_ids = self.comments.all().values_list('id', flat=True)
             PostToGroup.objects.filter(
                         post__id__in=comment_ids,
-                        tag__in=groups
+                        group__in=groups
                     ).delete()
 
 
@@ -664,7 +650,7 @@ class Post(models.Model):
         todo: this is a copy-paste in thread and post
         """
         if group_id:
-            group = Tag.group_tags.get(id=group_id)
+            group = Group.objects.get(id=group_id)
             groups = [group]
             self.add_to_groups(groups)
 
@@ -1979,9 +1965,9 @@ class PostRevision(models.Model):
             if self.by_email and self.email_address:
                 group_name = self.email_address.split('@')[0]
                 try:
-                    group = Tag.objects.get(name = group_name, deleted = False)
+                    group = Group.objects.get(name = group_name, deleted = False)
                     return group.group.profile.moderate_email
-                except Tag.DoesNotExist:
+                except Group.DoesNotExist:
                     pass
             return True
         return False

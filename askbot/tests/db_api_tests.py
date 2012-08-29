@@ -431,13 +431,6 @@ class TagAndGroupTests(AskbotTestCase):
             'answer_comment': answer_comment
         }
 
-    def test_group_cannot_create_case_variant_tag(self):
-        self.post_question(user = self.u1, tags = 'one two three')
-        models.Tag.group_tags.get_or_create(user = self.u1, group_name = 'One')
-        tag_one = models.Tag.objects.filter(name__iexact = 'one')
-        self.assertEqual(tag_one.count(), 1)
-        self.assertEqual(tag_one[0].name, 'one')
-
     def test_posts_added_to_global_group(self):
         q = self.post_question(user=self.u1)
         group_name = askbot_settings.GLOBAL_GROUP_NAME
@@ -579,3 +572,18 @@ class TagAndGroupTests(AskbotTestCase):
 
         visible_threads = models.Thread.objects.get_visible(AnonymousUser())
         self.assertEqual(visible_threads.count(), 0)
+
+class GroupTests(AskbotTestCase):
+
+    def setUp(self):
+        self.u1 = self.create_user('user1')
+
+    def test_join_group(self):
+        #create group
+        group = models.Group(name='somegroup')
+        group.save()
+        #join
+        self.u1.join_group(group)
+        #assert membership of askbot group object
+        found_count = self.u1.get_groups().filter(name='somegroup').count()
+        self.assertEqual(found_count, 1)

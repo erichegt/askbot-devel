@@ -14,7 +14,9 @@ from django.utils.html import strip_tags
 from askbot import const
 from askbot.conf import settings as askbot_settings
 from askbot.utils import functions
-from askbot.models.tag import Tag
+from askbot.models.base import BaseQuerySetManager
+from askbot.models.tag import Tag, get_global_group
+from askbot.models.tag import clean_group_name#todo - delete this
 from askbot.forms import DomainNameField
 from askbot.utils.forms import email_is_allowed
 
@@ -344,7 +346,6 @@ class EmailFeedSetting(models.Model):
 
 class AuthUserGroups(models.Model):
     """explicit model for the auth_user_groups bridge table.
-    Should not be used directly, but via a subclass
     """
     group = models.ForeignKey(AuthGroup)
     user = models.ForeignKey(User)
@@ -356,17 +357,47 @@ class AuthUserGroups(models.Model):
         managed = False
 
 
-class GroupMembership(models.Model):
-    """an explicit model to link users and the groups
-    that by being recorded with this relation automatically
-    become group tags
-    """
-    group = models.ForeignKey(Tag, related_name = 'user_memberships')
-    user = models.ForeignKey(User, related_name = 'group_memberships')
+class GroupQuerySet(models.query.QuerySet):
+    """Custom query set for the group"""
 
-    class Meta:
-        app_label = 'askbot'
-        unique_together = ('group', 'user')
+    def get_for_user(self, user=None, private=False):
+        if private:
+            global_group = get_global_group()
+            return self.filter(
+                        user=user
+                    ).exclude(id=global_group.id)
+        else:
+            return self.filter(user = user)
+
+    def get_by_name(self, group_name = None):
+        return self.get(name = clean_group_name(group_name))
+
+
+class GroupManager(BaseQuerySetManager):
+    """model manager for askbot groups"""
+    
+    def get_query_set(self):
+        return GroupQuerySet(self.model)
+
+    def create(self, **kwargs):
+        name = kwargs['name']
+        try:
+            group_ptr = AuthGroup.objects.get(name=name)
+            kwargs['group_ptr'] = group_ptr
+        except AuthGroup.DoesNotExist:
+            pass
+        return super(GroupManager, self).create(**kwargs)
+
+    def get_or_create(self, group_name = None, user = None, is_open=True):
+        """creates a group tag or finds one, if exists"""
+        #todo: here we might fill out the group profile
+        try:
+            #iexact is important!!! b/c we don't want case variants
+            #of tags
+            group = self.get(name__iexact = group_name)
+        except self.model.DoesNotExist:
+            group = self.create(name=group_name, is_open=is_open)
+        return group
 
 
 class Group(AuthGroup):
@@ -384,34 +415,11 @@ class Group(AuthGroup):
                             null = True, blank = True, default = ''
                         )
 
+    objects = GroupManager()
+
     class Meta:
         app_label = 'askbot'
         db_table = 'askbot_group'
-
-
-class GroupProfile(models.Model):
-    """stores group profile data"""
-    group_tag = models.OneToOneField(
-                            Tag,
-                            unique = True,
-                            related_name = 'group_profile'
-                        )
-    logo_url = models.URLField(null = True)
-    moderate_email = models.BooleanField(default = True)
-    is_open = models.BooleanField(default = False)
-    #preapproved email addresses and domain names to auto-join groups
-    #trick - the field is padded with space and all tokens are space separated
-    preapproved_emails = models.TextField(
-                            null = True, blank = True, default = ''
-                        )
-    #only domains - without the '@' or anything before them
-    preapproved_email_domains = models.TextField(
-                            null = True, blank = True, default = ''
-                        )
-
-    class Meta:
-        #added to make account merges work properly
-        app_label = 'askbot'
 
     def can_accept_user(self, user):
         """True if user is preapproved to join the group"""
@@ -419,7 +427,7 @@ class GroupProfile(models.Model):
             return False
 
         #a special case - automatic global group cannot be joined or left
-        if self.group_tag.name == askbot_settings.GLOBAL_GROUP_NAME:
+        if self.name == askbot_settings.GLOBAL_GROUP_NAME:
             return False
 
         if self.is_open:
@@ -462,4 +470,4 @@ class GroupProfile(models.Model):
 
     def save(self, *args, **kwargs):
         self.clean()
-        super(GroupProfile, self).save(*args, **kwargs)
+        super(Group, self).save(*args, **kwargs)

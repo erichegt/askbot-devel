@@ -59,10 +59,9 @@ def application_settings(request):
     }
 
     if askbot_settings.GROUPS_ENABLED:
-        groups = models.Tag.group_tags.get_all().filter(
-                                                        deleted=False
-                                                    ).exclude(
-                                                        name__startswith='_internal_').values('id', 'name')
+        groups = models.Group.objects.exclude(
+                                              name__startswith='_internal_'
+                                             ).values('id', 'name')
         group_list = []
         for group in groups:
             group_slug = slugify(group['name'])
