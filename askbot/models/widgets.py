@@ -122,9 +122,11 @@ class CreateAskWidgetForm(forms.ModelForm, FormWithHideableFields):
         model = AskWidget
 
 class CreateQuestionWidgetForm(forms.ModelForm, FormWithHideableFields):
-    tagnames = TagNamesField()
     group = forms.ModelChoiceField(queryset=get_groups().exclude(name__startswith='_internal'),
             required=False)
+
+    def __init__(self, *args, **kwargs):
+        self.fields['tagnames'] = TagNamesField()
 
     class Meta:
         model = QuestionWidget
