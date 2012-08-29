@@ -37,8 +37,8 @@ from askbot.conf import settings as askbot_settings
 from askbot import models
 from askbot import exceptions
 from askbot.models.badges import award_badges_signal
-from askbot.models.group import get_global_group, get_groups
-from askbot.models.group import get_group_manager
+from askbot.models.tag import get_global_group
+from askbot.models.tag import get_groups
 from askbot.skins.loaders import render_into_skin
 from askbot.search.state_manager import SearchState
 from askbot.utils import url_utils

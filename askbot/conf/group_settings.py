@@ -20,7 +20,7 @@ settings.register(
 )
 
 def group_name_update_callback(old_name, new_name):
-    from askbot.models.group import get_global_group, clean_group_name
+    from askbot.models.tag import get_global_group, clean_group_name
     cleaned_new_name = clean_group_name(new_name.strip())
 
     if new_name == '':

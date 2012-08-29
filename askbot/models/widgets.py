@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
 from askbot.conf import settings as askbot_settings
 from askbot.models import Tag
-from askbot.models.group import get_groups
+from askbot.models.tag import get_groups
 from askbot.forms import FormWithHideableFields, TagNamesField
 from askbot.conf import settings as askbot_settings
 from django import forms

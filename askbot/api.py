@@ -5,9 +5,8 @@ api must become a place to manupulate the data in the askbot application
 so that other implementations of the data storage could be possible
 """
 from django.db.models import Q
-
-from askbot import const
 from askbot import models
+from askbot import const
 
 def get_info_on_moderation_items(user):
     """returns a dictionary with

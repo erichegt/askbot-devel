@@ -284,7 +284,6 @@ def clean_group_name(name):
     to replace spaces with dashes"""
     return re.sub('\s+', '-', name.strip())
 
-
 class Tag(models.Model):
     #a couple of status constants
     STATUS_SUGGESTED = 0

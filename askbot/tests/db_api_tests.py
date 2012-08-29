@@ -13,7 +13,7 @@ from askbot.tests.utils import AskbotTestCase
 from askbot import models
 from askbot import const
 from askbot.conf import settings as askbot_settings
-from askbot.models.group import get_global_group
+from askbot.models.tag import get_global_group
 import datetime
 
 class DBApiTests(AskbotTestCase):

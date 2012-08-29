@@ -29,8 +29,8 @@ from askbot.models.user import EmailFeedSetting
 from askbot.models.user import Group
 from askbot.models.user import AuthUserGroups as GroupMembership
 from askbot.models.tag import Tag, MarkedTag
-from askbot.models.tag import tags_match_some_wildcard
-from askbot.models.group import get_groups, get_global_group
+from askbot.models.tag import get_groups, tags_match_some_wildcard
+from askbot.models.tag import get_global_group
 from askbot.conf import settings as askbot_settings
 from askbot import exceptions
 from askbot.utils import markup

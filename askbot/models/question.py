@@ -16,13 +16,13 @@ from askbot.conf import settings as askbot_settings
 from askbot import mail
 from askbot.mail import messages
 from askbot.models.tag import Tag
-from askbot.models.group import get_global_group
-from askbot.models.group import get_groups
+from askbot.models.tag import get_groups
+from askbot.models.tag import get_global_group
 from askbot.models.tag import get_tags_by_names
 from askbot.models.tag import filter_accepted_tags, filter_suggested_tags
 from askbot.models.tag import delete_tags, separate_unused_tags
 from askbot.models.base import DraftContent, BaseQuerySetManager
-from askbot.models.tag import Tag
+from askbot.models.tag import Tag, get_groups
 from askbot.models.post import Post, PostRevision
 from askbot.models.post import PostToGroup
 from askbot.models.user import Group
@@ -198,7 +198,7 @@ class ThreadManager(BaseQuerySetManager):
 
         # TODO: add a possibility to see deleted questions
         qs = self.filter(
-                posts__post_type='question',
+                posts__post_type='question', 
                 posts__deleted=False
             ) # (***) brings `askbot_post` into the SQL query, see the ordering section below
 
@@ -236,7 +236,7 @@ class ThreadManager(BaseQuerySetManager):
                 ) # TODO: unify with search_state.author ?
 
         #unified tags - is list of tags taken from the tag selection
-        #plus any tags added to the query string with #tag or [tag:something]
+        #plus any tags added to the query string with #tag or [tag:something] 
         #syntax.
         #run tag search in addition to these unified tags
         meta_data = {}
@@ -477,7 +477,7 @@ class Thread(models.Model):
     score = models.IntegerField(default = 0)
 
     objects = ThreadManager()
-
+    
     class Meta:
         app_label = 'askbot'
 
@@ -671,7 +671,7 @@ class Thread(models.Model):
         return 'thread-data-%s-%s' % (self.id, sort_method)
 
     def invalidate_cached_post_data(self):
-        """needs to be called when anything notable
+        """needs to be called when anything notable 
         changes in the post data - on votes, adding,
         deleting, editing content"""
         #we can call delete_many() here if using Django > 1.2
@@ -831,8 +831,8 @@ class Thread(models.Model):
                     url = question_post.get_absolute_url()
                     title = thread.get_title(question_post)
                     result.append({'url': url, 'title': title})
-
-            return result
+                
+            return result 
 
         def get_cached_data():
             """similar thread data will expire
@@ -867,7 +867,7 @@ class Thread(models.Model):
         return False
 
     def add_child_posts_to_groups(self, groups):
-        """adds questions and answers of the thread to
+        """adds questions and answers of the thread to 
         given groups, comments are taken care of implicitly
         by the underlying ``Post`` methods
         """
