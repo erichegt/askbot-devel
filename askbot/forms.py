@@ -934,6 +934,7 @@ class CreateAskWidgetForm(forms.Form, FormWithHideableFields):
                         widget=forms.Textarea,
                         required=False
                     )
+    include_text_field = forms.BooleanField(required=False)
 
     def __init__(self, *args, **kwargs):
         from askbot.models import Tag
