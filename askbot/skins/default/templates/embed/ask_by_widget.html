@@ -58,7 +58,8 @@
       -moz-border-radius: 3px;
       border-radius: 3px;
       background: #fff;
-      width:97%;
+      width:97.4%;
+      margin-top: -4.9px;
     }
 
     #question-list h2{
@@ -68,10 +69,13 @@
       padding: 3px 0 3px 5px;
       padding-bottom: 0;
       border-top: #F0F0EC 1px solid;
-      border-left: #F0F0EC 1px solid;
       min-height: 30px;
       line-height: 30px;
       font-weight: normal
+    }
+
+    #question-list h2:first-child{
+      border-top: none; 
     }
 
     #question-list a{
@@ -152,7 +156,7 @@
 <script type="text/javascript" charset="utf-8">
     var minSearchWordLength = {{settings.MIN_SEARCH_WORD_LENGTH}};
     askbot['urls']['api_get_questions'] = '{% url api_get_questions %}';
-    liveSearchNewThreadInit();
+    liveSearchNewThreadInit(true);
     $(document).ready(function(){
       $("#id_title").focus();
     });
