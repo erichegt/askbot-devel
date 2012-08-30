@@ -17,7 +17,8 @@ var liveSearchNewThreadInit = function(auto_focus_out) {
 
     query.focusout(function(){
         if (auto_focus_out){
-            restart_query();
+            var restart_query_handle = setTimeout(restart_query, 500);
+            restart_query_handle();
         }
     });
 
