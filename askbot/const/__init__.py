@@ -414,7 +414,7 @@ SEARCH_ORDER_BY = (
                     ('score', _('votes ascendant')),
                   )
 
-DEFAULT_QUESTION_STYLE = '''
+DEFAULT_QUESTION_WIDGET_STYLE = """
 @import url('http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:300,400,700');
 body {
     overflow: hidden;
@@ -443,7 +443,7 @@ a {
     font-family: 'Yanone Kaffeesatz', sans-serif;
     font-size: 15px;
 }
-'''
+"""
 
 #an exception import * because that file has only strings
 from askbot.const.message_keys import *

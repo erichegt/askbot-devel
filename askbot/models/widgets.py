@@ -1,13 +1,7 @@
 from django.db import models
-from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
-from askbot.conf import settings as askbot_settings
 from askbot.models import Tag, Group
-from askbot.models.tag import get_groups
-from askbot.forms import FormWithHideableFields, TagNamesField
-from askbot.conf import settings as askbot_settings
-from django import forms
-from askbot.const import DEFAULT_QUESTION_STYLE, SEARCH_ORDER_BY
+from askbot.const import DEFAULT_QUESTION_WIDGET_STYLE, SEARCH_ORDER_BY
 
 class AskWidget(models.Model):
     '''stores widgets styles and options'''
@@ -45,7 +39,7 @@ class QuestionWidget(models.Model):
     order_by = models.CharField(max_length=18,
             choices=SEARCH_ORDER_BY, default='-added_at')
     style = models.TextField(_('css for the widget'),
-            default=DEFAULT_QUESTION_STYLE, blank=True)
+            default=DEFAULT_QUESTION_WIDGET_STYLE, blank=True)
 
     class Meta:
         app_label = 'askbot'

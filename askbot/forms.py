@@ -938,8 +938,10 @@ class CreateAskWidgetForm(forms.Form, FormWithHideableFields):
     def __init__(self, *args, **kwargs):
         from askbot.models import Tag
         super(CreateAskWidgetForm, self).__init__(*args, **kwargs)
-        self.fields['group'] = forms.ModelChoiceField(queryset=get_groups().exclude(
-            name__startswith='_internal'), required=False)
+        self.fields['group'] = forms.ModelChoiceField(
+            queryset=get_groups().exclude(name__startswith='_internal_'),
+            required=False
+        )
         self.fields['tag'] = forms.ModelChoiceField(queryset=Tag.objects.get_content_tags(), 
             required=False)
         if not askbot_settings.GROUPS_ENABLED:
@@ -950,17 +952,23 @@ class CreateQuestionWidgetForm(forms.Form, FormWithHideableFields):
     question_number =  forms.CharField(initial='7')
     tagnames  =  forms.CharField(label=_('tags'), max_length=50)
     search_query =  forms.CharField(max_length=50, required=False)
-    order_by = forms.ChoiceField(choices=const.SEARCH_ORDER_BY, 
-                                 initial='-addet_at')
-    style = forms.CharField(widget=forms.Textarea, 
-                            initial=const.DEFAULT_QUESTION_STYLE, 
-                            required=False)
+    order_by = forms.ChoiceField(
+        choices=const.SEARCH_ORDER_BY, 
+        initial='-added_at'
+    )
+    style = forms.CharField(
+        widget=forms.Textarea, 
+        initial=const.DEFAULT_QUESTION_WIDGET_STYLE, 
+        required=False
+    )
 
     def __init__(self, *args, **kwargs):
         super(CreateQuestionWidgetForm, self).__init__(*args, **kwargs)
         self.fields['tagnames'] = TagNamesField()
-        self.fields['group'] = forms.ModelChoiceField(queryset=get_groups().exclude(name__startswith='_internal'),
-                                        required=False)
+        self.fields['group'] = forms.ModelChoiceField(
+            queryset=get_groups().exclude(name__startswith='_internal'),
+            required=False
+        )
 
 class AskByEmailForm(forms.Form):
     """:class:`~askbot.forms.AskByEmailForm`
