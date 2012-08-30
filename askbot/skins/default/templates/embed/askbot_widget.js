@@ -32,7 +32,7 @@ var {{variable_name}} = {
     closeButton.setAttribute('href', '#');
     closeButton.setAttribute('id', 'AskbotModalClose');
     closeButton.setAttribute('onClick', '{{variable_name}}.widgetToggle();');
-    closeButton.innerText = 'Close';
+    closeButton.innerHTML= 'Close';
 
     containerDiv.appendChild(closeButton);
 
@@ -52,9 +52,10 @@ var {{variable_name}} = {
     var buttonDiv = document.createElement('div');
     buttonDiv.setAttribute('id', "AskbotAskButton");
 
-    var closeButton = document.createElement('button');
+    var closeButton = document.createElement('input');
     closeButton.setAttribute('onClick', '{{variable_name}}.widgetToggle();');
-    closeButton.innerText = label;
+    closeButton.setAttribute('type', 'button');
+    closeButton.value = label;
 
     buttonDiv.appendChild(closeButton);
     
