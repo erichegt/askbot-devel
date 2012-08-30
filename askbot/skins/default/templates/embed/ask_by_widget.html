@@ -4,7 +4,15 @@
   {% if editor_type == 'markdown' %}
   <link rel="stylesheet" type="text/css" href="{{"/js/wmd/wmd.css"|media}}" />
   {%endif%}
+  {% if settings.USE_LOCAL_FONTS %}
+    {% include "meta/fonts.html" %}
+  {% else %}
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed:400,700&amp;subset=latin,cyrillic-ext,latin-ext' rel='stylesheet' type='text/css' />
+  {% endif %}
   <style type="text/css" media="screen">
+    body{
+      font-family: Verdana, Arial, Helvetica, sans-serif;
+    }
     #editor {
       display: block;
       min-height: 200px;
@@ -18,9 +26,15 @@
     }
 
     #id_title{
+      {% if editor_type == 'markdown' %}
       width: 100%;
+      {%else%}
+      padding: 0px 0 0 5px;
+      width: 99.2%;
+      {%endif%}
       font-size: 130%;
       border: #CCE6EC 3px solid;
+      max-width: 600px;
     }
 
     #submit{
@@ -97,7 +111,9 @@
 <form action="." method="POST" accept-charset="utf-8">
   {% csrf_token %}
   <label>{%trans%}Please enter a descriptive title for your question{%endtrans%}</label>
-  <input autocomplete="off" id="id_title" type="text" name="title" size="70" class='questionTitleInput'>
+  <div class="input-title">
+    <input autocomplete="off" id="id_title" type="text" name="title" size="70" class='questionTitleInput'>
+  </div>
   {% if related_questions %}
   <div id='question-list'>
   </div>

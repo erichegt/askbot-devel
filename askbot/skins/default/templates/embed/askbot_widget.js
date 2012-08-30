@@ -17,6 +17,7 @@ var {{variable_name}} = {
     //creating the div
     var motherDiv = document.createElement('div');
     motherDiv.setAttribute("id", {{variable_name}}.element_id);
+    motherDiv.style.visibility = "hidden";
 
     var containerDiv = document.createElement('div');
     motherDiv.appendChild(containerDiv);

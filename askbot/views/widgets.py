@@ -220,6 +220,7 @@ def render_ask_widget_css(request, widget_id):
     content_tpl =  get_template('embed/askbot_widget.css', request)
     context_dict = {'widget': widget,
                     'host': request.get_host(),
+                    'editor_type': askbot_settings.EDITOR_TYPE,
                     'variable_name': variable_name}
     content =  content_tpl.render(Context(context_dict))
     return HttpResponse(content, mimetype='text/css')

@@ -12,7 +12,11 @@
 #{{variable_name}} div{
      width:600px;
      {%if widget.include_text_field%}
-     height:450px;
+     {% if editor_type == 'markdown' %}
+     height:480px;
+     {%else%}
+     height:420px;
+     {%endif%}
      {%else%}
      height:210px;
      {%endif%}
@@ -25,5 +29,9 @@
 
 #{{variable_name}} iframe{
      width:600px;
-     height:450px;
+     {% if editor_type == 'markdown' %}
+     height:480px;
+     {%else%}
+     height:420px;
+     {%endif%}
 }
