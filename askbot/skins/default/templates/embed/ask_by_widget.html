@@ -56,15 +56,17 @@
       text-decoration: none;
       margin: 0px;
       font-size: 13px;
-      color: #005580;
       padding: 3px 0 3px 5px;
-      margin-left: 15px;
       padding-bottom: 0;
       border-top: #F0F0EC 1px solid;
       border-left: #F0F0EC 1px solid;
       min-height: 30px;
       line-height: 30px;
       font-weight: normal
+    }
+
+    #question-list a{
+      color: #005580;
     }
 
     #question-list a:hover{
@@ -114,10 +116,8 @@
   <div class="input-title">
     <input autocomplete="off" id="id_title" type="text" name="title" size="70" class='questionTitleInput'>
   </div>
-  {% if related_questions %}
   <div id='question-list'>
   </div>
-  {%endif%}
 {% if widget.include_text_field %}
   {% if editor_type == 'markdown' %}
       <div class="wmd-container">
