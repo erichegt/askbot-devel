@@ -497,6 +497,8 @@ def get_tag_list(request):
     tag_names = models.Tag.objects.filter(
                         deleted = False,
                         status = models.Tag.STATUS_ACCEPTED
+                    ).exclude(
+                        name__startswith='_internal_'
                     ).values_list(
                         'name', flat = True
                     )
