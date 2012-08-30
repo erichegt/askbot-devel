@@ -128,6 +128,9 @@
     var minSearchWordLength = {{settings.MIN_SEARCH_WORD_LENGTH}};
     askbot['urls']['api_get_questions'] = '{% url api_get_questions %}';
     liveSearchNewThreadInit();
+    $(document).ready(function(){
+      $("#id_title").focus();
+    });
 </script>
 
 <script type='text/javascript' src='{{"/js/editor.js"|media}}'></script>
@@ -138,3 +141,4 @@
     {% include "meta/tinymce.html" %}
 {% endif %}
 {% endblock %}
+  

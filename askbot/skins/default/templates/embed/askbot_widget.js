@@ -3,6 +3,9 @@ var {{variable_name}} = {
   widgetToggle: function() {
     element = document.getElementById({{variable_name}}.element_id);
     element.style.visibility = (element.style.visibility == "visible") ? "hidden" : "visible";
+    if (element.style.visibility == "visible"){
+      $("#" + {{variable_name}}.element_id + " iframe").focus();
+    }
   },
   toHtml: function() {
     var html = {{variable_name}}.createButton();
@@ -14,7 +17,6 @@ var {{variable_name}} = {
     //creating the div
     var motherDiv = document.createElement('div');
     motherDiv.setAttribute("id", {{variable_name}}.element_id);
-    console.log(motherDiv);
 
     var containerDiv = document.createElement('div');
     motherDiv.appendChild(containerDiv);
@@ -40,7 +42,6 @@ var {{variable_name}} = {
 
     var body = document.getElementsByTagName('body')[0];
     if (body){
-      console.log(body.firstChild);
       body.insertBefore(motherDiv, body.firstChild);
       body.insertBefore(link, body.firstChild);
     }
@@ -68,6 +69,5 @@ var onload_functions = function(){
   {{variable_name}}.toHtml();
 }
 
-console.log(onload_functions);
 window.onload = onload_functions();
 document.write({{variable_name}}.createButton().outerHTML);
