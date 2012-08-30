@@ -15,7 +15,7 @@
      {% if editor_type == 'markdown' %}
      height:480px;
      {%else%}
-     height:420px;
+     height:440px;
      {%endif%}
      {%else%}
      height:210px;
@@ -32,6 +32,6 @@
      {% if editor_type == 'markdown' %}
      height:480px;
      {%else%}
-     height:420px;
+     height:440px;
      {%endif%}
 }
