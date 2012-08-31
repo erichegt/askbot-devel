@@ -46,11 +46,10 @@ class PostToGroup(models.Model):
     relation of groups to posts
     """
     post = models.ForeignKey('Post')
-    tag = models.ForeignKey('Tag')
-    group = models.ForeignKey(Group, null=True, blank=True)
+    group = models.ForeignKey(Group)
 
     class Meta:
-        unique_together = ('post', 'tag')
+        unique_together = ('post', 'group')
         db_table = 'askbot_post_groups'
         app_label = 'askbot'
 
@@ -324,7 +323,7 @@ class Post(models.Model):
 
     parent = models.ForeignKey('Post', blank=True, null=True, related_name='comments') # Answer or Question for Comment
     thread = models.ForeignKey('Thread', blank=True, null=True, default = None, related_name='posts')
-    groups = models.ManyToManyField('Tag', through='PostToGroup', related_name = 'group_posts')#used for group-private posts
+    groups = models.ManyToManyField(Group, through='PostToGroup', related_name = 'group_posts')#used for group-private posts
 
     author = models.ForeignKey(User, related_name='posts')
     added_at = models.DateTimeField(default=datetime.datetime.now)

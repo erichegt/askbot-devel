@@ -192,11 +192,7 @@ class TagManager(BaseQuerySetManager):
 
     def get_content_tags(self):
         """temporary function that filters out the group tags"""
-        return self.annotate(
-            member_count = models.Count('user_memberships')
-        ).filter(
-            member_count = 0
-        )
+        return self.all()
 
     def create(self, name = None, created_by = None, **kwargs):
         """Creates a new tag"""
@@ -292,18 +288,12 @@ class GroupTagQuerySet(TagQuerySet):
     def get_for_user(self, user=None, private=False):
         if private:
             global_group = get_global_group()
-            return self.filter(
-                        user_memberships__user=user
-                    ).exclude(id=global_group.id)
+            return self.exclude(id=global_group.id)
         else:
             return self.filter(user_memberships__user = user)
 
     def get_all(self):
-        return self.annotate(
-            member_count = models.Count('user_memberships')
-        ).filter(
-            member_count__gt = 0
-        )
+        return self.all()
 
     def get_by_name(self, group_name = None):
         return self.get(name = clean_group_name(group_name))

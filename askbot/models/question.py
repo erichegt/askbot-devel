@@ -439,11 +439,10 @@ from askbot.models.user import Group
 class ThreadToGroup(models.Model):
     """temp bridge table between threads and groups"""
     thread = models.ForeignKey('Thread')
-    tag = models.ForeignKey('Tag')
-    group = models.ForeignKey(Group, null=True, blank=True)
+    group = models.ForeignKey(Group)
 
     class Meta:
-        unique_together = ('thread', 'tag')
+        unique_together = ('thread', 'group')
         db_table = 'askbot_thread_groups'
         app_label = 'askbot'
 
@@ -456,7 +455,7 @@ class Thread(models.Model):
 
     tags = models.ManyToManyField('Tag', related_name='threads')
     groups = models.ManyToManyField(
-        'Tag', related_name='group_threads', through=ThreadToGroup
+        Group, related_name='group_threads', through=ThreadToGroup
     )
 
     # Denormalised data, transplanted from Question

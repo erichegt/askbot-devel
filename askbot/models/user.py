@@ -362,19 +362,19 @@ class Group(AuthGroup):
         db_table = 'askbot_group'
 
 
-class GroupMembership(models.Model):
+class GroupMembership(object):
     """an explicit model to link users and the tags
     that by being recorded with this relation automatically
     become group tags
     """
-    group = models.ForeignKey(Tag, related_name = 'user_memberships')
-    user = models.ForeignKey(User, related_name = 'group_memberships')
+    group = models.ForeignKey(Tag)
+    user = models.ForeignKey(User)
 
     class Meta:
         app_label = 'askbot'
         unique_together = ('group', 'user')
 
-class GroupProfile(models.Model):
+class GroupProfile(object):
     """stores group profile data"""
     group_tag = models.OneToOneField(
                             Tag,
