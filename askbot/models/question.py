@@ -708,9 +708,10 @@ class Thread(models.Model):
         if self.has_accepted_answer() and self.accepted_answer.deleted == False:
             #Put the accepted answer to front
             #the second check is for the case when accepted answer is deleted
-            accepted_answer = post_map[self.accepted_answer_id]
-            answers.remove(accepted_answer)
-            answers.insert(0, accepted_answer)
+            if self.accepted_answer_id in post_map:
+                accepted_answer = post_map[self.accepted_answer_id]
+                answers.remove(accepted_answer)
+                answers.insert(0, accepted_answer)
 
         return (question_post, answers, post_to_author)
 
