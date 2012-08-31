@@ -435,6 +435,17 @@ class ThreadManager(BaseQuerySetManager):
         return self.filter(id__in = thread_ids)
 
 
+class ThreadToGroup(models.Model):
+    """temp bridge table between threads and groups"""
+    thread = models.ForeignKey('Thread')
+    tag = models.ForeignKey('Tag')
+
+    class Meta:
+        unique_together = ('thread', 'tag')
+        db_table = 'askbot_thread_groups'
+        app_label = 'askbot'
+
+
 class Thread(models.Model):
     SUMMARY_CACHE_KEY_TPL = 'thread-question-summary-%d'
     ANSWER_LIST_KEY_TPL = 'thread-answer-list-%d'
@@ -442,7 +453,9 @@ class Thread(models.Model):
     title = models.CharField(max_length=300)
 
     tags = models.ManyToManyField('Tag', related_name='threads')
-    groups = models.ManyToManyField('Tag', related_name='group_threads')
+    groups = models.ManyToManyField(
+        'Tag', related_name='group_threads', through=ThreadToGroup
+    )
 
     # Denormalised data, transplanted from Question
     tagnames = models.CharField(max_length=125)
