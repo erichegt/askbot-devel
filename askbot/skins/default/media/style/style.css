@@ -359,6 +359,7 @@ body.user-messages {
 }
 #metaNav .dropdown-menu a {
   color: #666;
+  height: 25px;
 }
 #header.with-logo #userToolsNav {
   position: absolute;
