@@ -34,13 +34,18 @@ class Migration(DataMigration):
 
             group.save()
 
+            #update thread groups
             thread_groups = orm['askbot.ThreadToGroup'].objects
             thread_groups = thread_groups.filter(tag=group_tag)
             thread_groups.update(group=group)
-
+            #update post groups
             post_groups = orm['askbot.PostToGroup'].objects
             post_groups = post_groups.filter(tag=group_tag)
             post_groups.update(group=group)
+            #update user groups
+            memberships = group_tag.user_memberships.all()
+            for membership in memberships:
+                membership.user.groups.add(group)
 
         db_engine_name = askbot.get_database_engine_name()
         if 'postgresql_psycopg2' in db_engine_name:
