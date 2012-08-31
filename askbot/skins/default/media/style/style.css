@@ -285,7 +285,7 @@ body.user-messages {
 #metaNav a {
   color: #e2e2ae;
   padding: 0px 0px 0px 35px;
-  height: 25px;
+  height: 35px;
   line-height: 25px;
   margin: 5px 0px 0px 10px;
   font-size: 18px;
@@ -327,17 +327,16 @@ body.user-messages {
   margin: 5px 0px 5px 10px;
 }
 #metaNav input.group-name {
-  border-top: none;
-  border-left: none;
-  border-right: none;
-  border-bottom: #e2e2ae 1px solid;
-  color: #e2e2ae;
+  border: none;
   height: 25px;
   font-size: 18px;
   font-weight: 100;
   text-decoration: none;
   display: block;
-  float: left;
+  margin: 0px 10px 0px 10px;
+  width: 140px;
+  font-family: 'Open Sans Condensed', Arial, sans-serif;
+  font-weight: 100;
 }
 #metaNav input.group-name:focus {
   border: none;
@@ -348,11 +347,19 @@ body.user-messages {
 #metaNav span.dropdown:hover ul.dropdown-menu {
   display: block;
 }
+#metaNav div.dropdown-container:hover ul.dropdown-menu {
+  display: block;
+}
 #metaNav .dropdown {
   float: left;
 }
 #metaNav .dropdown-menu {
+  border-top: none;
   left: 7%;
+}
+#metaNav .dropdown-menu a {
+  color: #666;
+  height: 25px;
 }
 #header.with-logo #userToolsNav {
   position: absolute;
@@ -362,9 +369,6 @@ body.user-messages {
 #header.without-logo #userToolsNav {
   float: left;
   margin-top: 7px;
-}
-#header.without-logo #metaNav {
-  margin-bottom: 7px;
 }
 #secondaryHeader {
   /* Div containing Home button, scope navigation, search form and ask button, check blocks/secondary_header.html */

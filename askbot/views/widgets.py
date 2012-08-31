@@ -72,10 +72,10 @@ def ask_widget(request, widget_id):
                 text = ' '
 
 
-            if widget.group:
-                group_id = widget.group.id
-            else:
-                group_id = None
+            #if widget.group:
+            #    group_id = widget.group.id
+            #else:
+            #    group_id = None
 
             if widget.tag:
                 tagnames = widget.tag.name
@@ -88,7 +88,7 @@ def ask_widget(request, widget_id):
                 'wiki': False,
                 'text': text,
                 'tagnames': tagnames,
-                'group_id': group_id,
+                #'group_id': group_id,
                 'is_anonymous': ask_anonymously
             }
             if request.user.is_authenticated():
@@ -117,7 +117,7 @@ def ask_widget(request, widget_id):
                 return redirect(next_url)
 
         form = forms.AskWidgetForm(include_text=widget.include_text_field)
-        
+
     data = {
             'form': form,
             'widget': widget,
@@ -158,7 +158,7 @@ def create_widget(request, model):
     if request.method == 'POST':
         form = form_class(request.POST)
         if form.is_valid():
-            instance = model_class(**form.cleaned_data) 
+            instance = model_class(**form.cleaned_data)
             instance.save()
             return redirect('list_widgets', model=model)
     else:
@@ -178,7 +178,7 @@ def edit_widget(request, model, widget_id):
     if request.method == 'POST':
         form = form_class(request.POST)
         if form.is_valid():
-            instance = model_class(**form.cleaned_data) 
+            instance = model_class(**form.cleaned_data)
             instance.save()
             return redirect('list_widgets', model=model)
     else:
@@ -220,6 +220,7 @@ def render_ask_widget_css(request, widget_id):
     content_tpl =  get_template('embed/askbot_widget.css', request)
     context_dict = {'widget': widget,
                     'host': request.get_host(),
+                    'editor_type': askbot_settings.EDITOR_TYPE,
                     'variable_name': variable_name}
     content =  content_tpl.render(Context(context_dict))
     return HttpResponse(content, mimetype='text/css')
@@ -239,8 +240,8 @@ def question_widget(request, widget_id):
     if widget.tagnames:
         filter_params['tags__name__in'] = widget.tagnames.split(' ')
 
-    if widget.group:
-        filter_params['groups'] = widget.group
+    #if widget.group:
+    #    filter_params['groups'] = widget.group
 
     #simple title search for now
     if widget.search_query:

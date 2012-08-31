@@ -12,7 +12,11 @@
 #{{variable_name}} div{
      width:600px;
      {%if widget.include_text_field%}
-     height:450px;
+     {% if editor_type == 'markdown' %}
+     height:480px;
+     {%else%}
+     height:500px;
+     {%endif%}
      {%else%}
      height:210px;
      {%endif%}
@@ -20,10 +24,19 @@
      background-color: #fff;
      border:1px solid #000;
      padding:15px;
-     text-align:right;
+     padding-left: 10px;
+     text-align: right;
+}
+
+#{{variable_name}} a{
+     padding:5px;
 }
 
 #{{variable_name}} iframe{
      width:600px;
-     height:450px;
+     {% if editor_type == 'markdown' %}
+     height:480px;
+     {%else%}
+     height:520px;
+     {%endif%}
 }

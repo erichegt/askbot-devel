@@ -941,8 +941,9 @@ def save_group_logo_url(request):
 def add_group(request):
     group_name = request.POST.get('group')
     if group_name:
-        group = models.Tag.group_tags.get_or_create(
+        group = models.Group.objects.get_or_create(
                             group_name=group_name,
+                            is_open=True,
                             user=request.user,
                         )
 
