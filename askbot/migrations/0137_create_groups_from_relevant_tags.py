@@ -1,10 +1,12 @@
 # encoding: utf-8
 import datetime
+import os
 from south.db import db
 from south.v2 import DataMigration
 from django.db import models
 import askbot
 from askbot.utils.console import ProgressBar
+from askbot.search.postgresql import setup_full_text_search
 
 class Migration(DataMigration):
 
@@ -62,6 +64,16 @@ class Migration(DataMigration):
             group_tag = profile.group_tag
             group_tag.user_memberships.all().delete()
             profile.delete()
+
+        #for postgresql setup new user full text search
+        if 'postgresql_psycopg2' in db_engine_name:
+            
+            script_path = os.path.join(
+                askbot.get_install_directory(),
+                'search', 'postgresql', 
+                'user_profile_search_08312012.plsql'
+            )
+            setup_full_text_search(script_path)
 
 
     def backwards(self, orm):
