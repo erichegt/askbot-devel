@@ -4,7 +4,7 @@ from django.utils.translation import ugettext as _
 from askbot.conf import settings as askbot_settings
 from askbot.models import Tag
 from askbot.models.tag import get_groups
-from askbot.forms import FormWithHideableFields, TagNamesField
+from askbot.forms import FormWithHideableFields#, TagNamesField
 from askbot.conf import settings as askbot_settings
 from django import forms
 
@@ -115,7 +115,7 @@ class CreateAskWidgetForm(forms.ModelForm, FormWithHideableFields):
         model = AskWidget
 
 class CreateQuestionWidgetForm(forms.ModelForm, FormWithHideableFields):
-    tagnames = TagNamesField()
+    #tagnames = TagNamesField()
     group = forms.ModelChoiceField(queryset=get_groups().exclude(name__startswith='_internal'),
             required=False)
 

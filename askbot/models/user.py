@@ -341,6 +341,27 @@ class EmailFeedSetting(models.Model):
         self.save()
 
 
+from django.contrib.auth.models import Group as AuthGroup
+class Group(AuthGroup):
+    """group profile for askbot"""
+    logo_url = models.URLField(null = True)
+    moderate_email = models.BooleanField(default = True)
+    is_open = models.BooleanField(default = False)
+    #preapproved email addresses and domain names to auto-join groups
+    #trick - the field is padded with space and all tokens are space separated
+    preapproved_emails = models.TextField(
+                            null = True, blank = True, default = ''
+                        )
+    #only domains - without the '@' or anything before them
+    preapproved_email_domains = models.TextField(
+                            null = True, blank = True, default = ''
+                        )
+
+    class Meta:
+        app_label = 'askbot'
+        db_table = 'askbot_group'
+
+
 class GroupMembership(models.Model):
     """an explicit model to link users and the tags
     that by being recorded with this relation automatically

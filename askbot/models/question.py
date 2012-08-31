@@ -435,10 +435,12 @@ class ThreadManager(BaseQuerySetManager):
         return self.filter(id__in = thread_ids)
 
 
+from askbot.models.user import Group
 class ThreadToGroup(models.Model):
     """temp bridge table between threads and groups"""
     thread = models.ForeignKey('Thread')
     tag = models.ForeignKey('Tag')
+    group = models.ForeignKey(Group, null=True, blank=True)
 
     class Meta:
         unique_together = ('thread', 'tag')

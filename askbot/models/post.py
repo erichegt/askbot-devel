@@ -40,13 +40,14 @@ from askbot.models.base import BaseQuerySetManager, DraftContent
 from askbot.utils.diff import textDiff as htmldiff
 from askbot.utils import mysql
 
-
+from askbot.models.user import Group
 class PostToGroup(models.Model):
     """the "trough" table for the
     relation of groups to posts
     """
     post = models.ForeignKey('Post')
     tag = models.ForeignKey('Tag')
+    group = models.ForeignKey(Group, null=True, blank=True)
 
     class Meta:
         unique_together = ('post', 'tag')
