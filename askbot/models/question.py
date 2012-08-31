@@ -443,7 +443,7 @@ class Thread(models.Model):
     title = models.CharField(max_length=300)
 
     tags = models.ManyToManyField('Tag', related_name='threads')
-    groups = models.ManyToManyField(Group, db_table='askbot_thread_groups')
+    groups = models.ManyToManyField(Group, related_name='group_threads', db_table='askbot_thread_groups')
 
     # Denormalised data, transplanted from Question
     tagnames = models.CharField(max_length=125)

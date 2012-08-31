@@ -41,7 +41,6 @@ from askbot.models.base import BaseQuerySetManager, DraftContent
 from askbot.utils.diff import textDiff as htmldiff
 from askbot.utils import mysql
 
-
 class PostToGroup(models.Model):
     post = models.ForeignKey('Post')
     group = models.ForeignKey(Group)
@@ -321,7 +320,7 @@ class Post(models.Model):
 
     parent = models.ForeignKey('Post', blank=True, null=True, related_name='comments') # Answer or Question for Comment
     thread = models.ForeignKey('Thread', blank=True, null=True, default = None, related_name='posts')
-    groups = models.ManyToManyField(Group, through='PostToGroup')
+    groups = models.ManyToManyField(Group, through='PostToGroup', related_name = 'group_posts')#used for group-private posts
 
     author = models.ForeignKey(User, related_name='posts')
     added_at = models.DateTimeField(default=datetime.datetime.now)
