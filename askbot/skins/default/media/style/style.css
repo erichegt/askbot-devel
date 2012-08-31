@@ -285,7 +285,7 @@ body.user-messages {
 #metaNav a {
   color: #e2e2ae;
   padding: 0px 0px 0px 35px;
-  height: 25px;
+  height: 35px;
   line-height: 25px;
   margin: 5px 0px 0px 10px;
   font-size: 18px;
@@ -347,10 +347,14 @@ body.user-messages {
 #metaNav span.dropdown:hover ul.dropdown-menu {
   display: block;
 }
+#metaNav div.dropdown-container:hover ul.dropdown-menu {
+  display: block;
+}
 #metaNav .dropdown {
   float: left;
 }
 #metaNav .dropdown-menu {
+  border-top: none;
   left: 7%;
 }
 #metaNav .dropdown-menu a {
@@ -364,9 +368,6 @@ body.user-messages {
 #header.without-logo #userToolsNav {
   float: left;
   margin-top: 7px;
-}
-#header.without-logo #metaNav {
-  margin-bottom: 7px;
 }
 #secondaryHeader {
   /* Div containing Home button, scope navigation, search form and ask button, check blocks/secondary_header.html */
