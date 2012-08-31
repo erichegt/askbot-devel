@@ -327,17 +327,16 @@ body.user-messages {
   margin: 5px 0px 5px 10px;
 }
 #metaNav input.group-name {
-  border-top: none;
-  border-left: none;
-  border-right: none;
-  border-bottom: #e2e2ae 1px solid;
-  color: #e2e2ae;
+  border: none;
   height: 25px;
   font-size: 18px;
   font-weight: 100;
   text-decoration: none;
   display: block;
-  float: left;
+  margin: 0px 10px 0px 10px;
+  width: 140px;
+  font-family: 'Open Sans Condensed', Arial, sans-serif;
+  font-weight: 100;
 }
 #metaNav input.group-name:focus {
   border: none;
@@ -353,6 +352,9 @@ body.user-messages {
 }
 #metaNav .dropdown-menu {
   left: 7%;
+}
+#metaNav .dropdown-menu a {
+  color: #666;
 }
 #header.with-logo #userToolsNav {
   position: absolute;
