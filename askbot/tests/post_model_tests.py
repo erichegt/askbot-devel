@@ -11,9 +11,14 @@ from django.core.cache.backends.locmem import LocMemCache
 
 from django.core.exceptions import ValidationError
 from askbot.tests.utils import AskbotTestCase
-from askbot.models import Post, PostRevision, Thread, Tag
+from askbot.models import Post
+from askbot.models import PostRevision
+from askbot.models import Thread
+from askbot.models import Tag
+from askbot.models import Group
 from askbot.search.state_manager import DummySearchState
 from django.utils import simplejson
+from askbot.conf import settings as askbot_settings
 
 
 class PostModelTests(AskbotTestCase):
@@ -132,6 +137,36 @@ class PostModelTests(AskbotTestCase):
         self.assertEqual('/question/3/lala-x-lala/', p.get_absolute_url(thread=th))
         self.assertTrue(p._thread_cache is th)
         self.assertEqual('/question/3/lala-x-lala/', p.get_absolute_url(thread=th))
+
+    def test_get_moderators_with_groups(self):
+        groups_enabled_backup = askbot_settings.GROUPS_ENABLED
+        askbot_settings.update('GROUPS_ENABLED', True)
+        #create group
+        group = Group(name='testers')
+        group.save()
+
+        #create one admin and one moderator, and one reg user
+        mod1 = self.create_user('mod1', status='m')
+        adm1 = self.create_user('adm1', status='d')
+        reg1 = self.create_user('reg1')
+        #join them to the group
+        mod1.join_group(group)
+        adm1.join_group(group)
+        reg1.join_group(group)
+        #create one admin and one moderator, and one reg user
+        mod2 = self.create_user('mod2', status='m')
+        adm2 = self.create_user('adm2', status='d')
+        reg2 = self.create_user('reg2')
+        #make a post
+        question = self.post_question(user=reg1, group_id=group.id)
+        #run get_moderators and see that only one admin and one
+        mods = question.get_moderators()
+        self.assertEqual(
+            set([mod1, adm1]),
+            set(mods)
+        )
+        #moderator are in the set of moderators
+        askbot_settings.update('GROUPS_ENABLED', groups_enabled_backup)
 
 
 class ThreadTagModelsTests(AskbotTestCase):

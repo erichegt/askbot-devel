@@ -66,13 +66,6 @@ def get_model(model_name):
     """a shortcut for getting model for an askbot app"""
     return models.get_model('askbot', model_name)
 
-def get_admins_and_moderators():
-    """returns query set of users who are site administrators
-    and moderators"""
-    return User.objects.filter(
-        models.Q(is_superuser=True) | models.Q(status='m')
-    )
-
 def get_admin():
     """returns admin with the lowest user ID
     if there are no users at all - creates one
@@ -3253,7 +3246,7 @@ def record_flag_offensive(instance, mark_by, **kwargs):
 #    recipients = instance.get_author_list(
 #                                        exclude_list = [mark_by]
 #                                    )
-    activity.add_recipients(get_admins_and_moderators())
+    activity.add_recipients(instance.get_moderators())
 
 def remove_flag_offensive(instance, mark_by, **kwargs):
     "Remove flagging activity"
@@ -3543,7 +3536,6 @@ __all__ = [
         'ReplyAddress',
 
         'get_model',
-        'get_admins_and_moderators',
         'get_group_names',
         'get_groups'
 ]

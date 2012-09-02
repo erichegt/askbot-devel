@@ -555,6 +555,14 @@ class Post(models.Model):
     def is_reject_reason(self):
         return self.post_type == 'reject_reason'
 
+    def get_moderators(self):
+        """returns query set of users who are site administrators
+        and moderators"""
+        user_filter = models.Q(is_superuser=True) | models.Q(status='m')
+        if askbot_settings.GROUPS_ENABLED:
+            user_filter = user_filter & models.Q(groups__in=self.groups.all())
+        return User.objects.filter(user_filter)
+
     def add_to_groups(self, groups):
         #todo: use bulk-creation
         for group in groups:
@@ -1971,6 +1979,7 @@ class PostRevision(models.Model):
             return True
         return False
 
+
     def place_on_moderation_queue(self):
         """If revision is the first one,
         keeps the post invisible until the revision
@@ -2027,7 +2036,7 @@ class PostRevision(models.Model):
             #merging multiple edits. We don't have a solution for this yet.
             activity_type = const.TYPE_ACTIVITY_MODERATED_POST_EDIT
 
-        from askbot.models import Activity, get_admins_and_moderators
+        from askbot.models import Activity
         activity = Activity(
                         user = self.author,
                         content_object = self,
@@ -2036,7 +2045,7 @@ class PostRevision(models.Model):
                     )
         activity.save()
         #todo: make this group-sensitive
-        activity.add_recipients(get_admins_and_moderators())
+        activity.add_recipients(self.post.get_moderators())
 
     def moderate_or_publish(self):
         """either place on moderation queue or announce

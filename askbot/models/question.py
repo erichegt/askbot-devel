@@ -1024,6 +1024,8 @@ class Thread(models.Model):
         #todo: factor out - tell author about suggested tags
         suggested_tags = filter_suggested_tags(added_tags)
         if len(suggested_tags) > 0:
+            #1) notify author that the tag is going to be moderated
+            #todo: factor this out
             if len(suggested_tags) == 1:
                 msg = _(
                     'Tag %s is new and will be submitted for the '
@@ -1035,6 +1037,7 @@ class Thread(models.Model):
                     'moderators approval'
                 ) % ', '.join([tag.name for tag in suggested_tags])
             user.message_set.create(message = msg)
+            #2) todo: notify moderators about newly suggested tags
 
         ####################################################################
         self.update_summary_html() # regenerate question/thread summary html

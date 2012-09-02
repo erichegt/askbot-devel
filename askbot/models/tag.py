@@ -265,16 +265,12 @@ class TagManager(BaseQuerySetManager):
             created_tags.append(tag)
 
         for tag_name in set(tag_names) - set(pre_suggested_tag_names):
-
             #status for the new tags is automatically set within the create()
             new_tag = Tag.objects.create(name = tag_name, created_by = user)
             created_tags.append(new_tag)
 
             if new_tag.status == Tag.STATUS_SUGGESTED:
                 new_tag.suggested_by.add(user)
-
-            #todo: here we have a chance to send a signal and notify
-            #whoever wants about the new tag creation
 
         return created_tags
 
