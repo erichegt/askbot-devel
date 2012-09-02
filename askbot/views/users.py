@@ -749,7 +749,7 @@ def user_responses(request, user, context):
         'active_tab':'users',
         'page_class': 'user-profile-page',
         'tab_name' : 'inbox',
-        'inbox_section':section,
+        'inbox_section': section,
         'tab_description' : _('comments and answers to others questions'),
         'page_title' : _('profile - responses'),
         'post_reject_reasons': reject_reasons,
