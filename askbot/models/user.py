@@ -402,9 +402,15 @@ class GroupManager(BaseQuerySetManager):
 
 class Group(AuthGroup):
     """group profile for askbot"""
+    OPENNESS_CHOICES = (
+        (0, 'open'),
+        (1, 'moderated'),
+        (2, 'closed'),
+    )
     logo_url = models.URLField(null = True)
     moderate_email = models.BooleanField(default = True)
     is_open = models.BooleanField(default = False)
+    openness = models.SmallIntegerField(default=2)
     #preapproved email addresses and domain names to auto-join groups
     #trick - the field is padded with space and all tokens are space separated
     preapproved_emails = models.TextField(

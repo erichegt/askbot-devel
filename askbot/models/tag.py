@@ -21,7 +21,7 @@ def get_global_group():
     try:
         return Group.objects.get(name=group_name)
     except Group.DoesNotExist:
-        return Group.objects.create(name=group_name, is_open=False)
+        return Group.objects.create(name=group_name)
 
 def delete_tags(tags):
     """deletes tags in the list"""
