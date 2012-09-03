@@ -3,6 +3,8 @@
 {% block forestyle %}
   {% if editor_type == 'markdown' %}
   <link rel="stylesheet" type="text/css" href="{{"/js/wmd/wmd.css"|media}}" />
+  {%else %}
+    <link href="{{'/bootstrap/css/bootstrap.css'|media}}" rel="stylesheet" type="text/css" />
   {%endif%}
   {% if settings.USE_LOCAL_FONTS %}
     {% include "meta/fonts.html" %}
@@ -39,8 +41,10 @@
       border: #CCE6EC 3px solid;
       max-width: 600px;
     }
+
     #id_title:focus {
       outline: none;
+      box-shadow:none;
     }
 
     .title{
@@ -59,7 +63,11 @@
       -moz-border-radius: 3px;
       border-radius: 3px;
       background: #fff;
+      {% if editor_type == 'markdown' %}
       width:97.4%;
+      {%else%}
+      width:90.8%;
+      {%endif%}
       margin-top: -4.9px;
     }
 
