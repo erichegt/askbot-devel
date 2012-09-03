@@ -47,14 +47,23 @@
             </label>
             <br/>
         {% endif %}
-        <input type="checkbox" 
-            id="open-or-close-group"
-            {% if group.is_open %}checked="checked"{% endif %}
-            data-toggle-url="{% url toggle_group_profile_property %}"
-        />
-        <label for="open-or-close-group">
-            {% trans %}anyone can join{% endtrans %}
+        <label for="group-openness-selector">
+            {% trans %}How users join this group?{% endtrans %}
         </label>
+        <br/>
+        <select 
+            id="group-openness-selector"
+            data-url="{% url set_group_openness %}"
+        >
+            {% for choice in group_openness_choices %}
+            <option 
+                {% if choice[0] == group.openness %}
+                selected="selected"
+                {% endif %}
+                value="{{choice[0]}}"
+            >{{ choice[1] }}</option>
+            {% endfor %}
+        </select>
         <br/>
         <a 
             id="preapproved-emails"

@@ -943,7 +943,7 @@ def add_group(request):
     if group_name:
         group = models.Group.objects.get_or_create(
                             group_name=group_name,
-                            is_open=True,
+                            openness=models.Group.OPEN,
                             user=request.user,
                         )
 
@@ -982,13 +982,24 @@ def toggle_group_profile_property(request):
     #todo: this might be changed to more general "toggle object property"
     group_id = IntegerField().clean(int(request.POST['group_id']))
     property_name = CharField().clean(request.POST['property_name'])
-    assert property_name in ('is_open', 'moderate_email')
-
+    assert property_name == 'moderate_email'
     group = models.Group.objects.get(id = group_id)
     new_value = not getattr(group, property_name)
     setattr(group, property_name, new_value)
     group.save()
     return {'is_enabled': new_value}
+
+
+@csrf.csrf_exempt
+@decorators.ajax_only
+@decorators.post_only
+@decorators.admins_only
+def set_group_openness(request):
+    group_id = IntegerField().clean(int(request.POST['group_id']))
+    value = IntegerField().clean(int(request.POST['value']))
+    group = models.Group.objects.get(id=group_id)
+    group.openness = value
+    group.save()
 
 
 @csrf.csrf_exempt

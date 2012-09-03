@@ -163,14 +163,18 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
     }
     paginator_context = functions.setup_paginator(paginator_data) #
 
+    #todo: move to contexts
+    #extra context for the groups
     if askbot_settings.GROUPS_ENABLED:
         #todo: cleanup this branched code after groups are migrated to auth_group
         user_groups = get_groups().exclude(name__startswith='_internal_')
         if len(user_groups) <= 1:
             assert(user_groups[0].name == askbot_settings.GLOBAL_GROUP_NAME)
             user_groups = None
+        group_openness_choices = models.Group().get_openness_choices()
     else:
         user_groups = None
+        group_openness_choices = None
 
     data = {
         'active_tab': 'users',
@@ -183,7 +187,8 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
         'group_email_moderation_enabled': group_email_moderation_enabled,
         'user_can_join_group': user_can_join_group,
         'user_is_group_member': user_is_group_member,
-        'user_groups': user_groups
+        'user_groups': user_groups,
+        'group_openness_choices': group_openness_choices
     }
     return render_into_skin('users.html', data, request)
 

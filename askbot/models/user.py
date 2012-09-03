@@ -388,7 +388,7 @@ class GroupManager(BaseQuerySetManager):
             pass
         return super(GroupManager, self).create(**kwargs)
 
-    def get_or_create(self, group_name = None, user = None, is_open=True):
+    def get_or_create(self, group_name = None, user = None, openness=None):
         """creates a group tag or finds one, if exists"""
         #todo: here we might fill out the group profile
         try:
@@ -396,21 +396,26 @@ class GroupManager(BaseQuerySetManager):
             #of tags
             group = self.get(name__iexact = group_name)
         except self.model.DoesNotExist:
-            group = self.create(name=group_name, is_open=is_open)
+            if openness:
+                group = self.create(name=group_name, openness=openness)
+            else:
+                group = self.create(name=group_name)
         return group
 
 
 class Group(AuthGroup):
     """group profile for askbot"""
+    OPEN = 0
+    MODERATED = 1
+    CLOSED = 2
     OPENNESS_CHOICES = (
-        (0, 'open'),
-        (1, 'moderated'),
-        (2, 'closed'),
+        (OPEN, 'open'),
+        (MODERATED, 'moderated'),
+        (CLOSED, 'closed'),
     )
     logo_url = models.URLField(null = True)
     moderate_email = models.BooleanField(default = True)
-    is_open = models.BooleanField(default = False)
-    openness = models.SmallIntegerField(default=2)
+    openness = models.SmallIntegerField(default=CLOSED, choices=OPENNESS_CHOICES)
     #preapproved email addresses and domain names to auto-join groups
     #trick - the field is padded with space and all tokens are space separated
     preapproved_emails = models.TextField(
@@ -427,6 +432,16 @@ class Group(AuthGroup):
         app_label = 'askbot'
         db_table = 'askbot_group'
 
+    def get_openness_choices(self):
+        """gives answers to question
+        "How can users join this group?"
+        """
+        return (
+            (Group.OPEN, _('Can join when they want')),
+            (Group.MODERATED, _('Users ask permission')),
+            (Group.CLOSED, _('Moderator adds users'))
+        )
+
     def can_accept_user(self, user):
         """True if user is preapproved to join the group"""
         if user.is_anonymous():
@@ -436,7 +451,7 @@ class Group(AuthGroup):
         if self.name == askbot_settings.GLOBAL_GROUP_NAME:
             return False
 
-        if self.is_open:
+        if self.openness == Group.OPEN:
             return True
 
         if user.is_administrator_or_moderator():

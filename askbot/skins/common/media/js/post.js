@@ -2557,13 +2557,13 @@ UserGroupProfileEditor.prototype.decorate = function(element){
     this._moderate_email_btn = moderate_email_btn;
     moderate_email_toggle.decorate(moderate_email_btn);
 
-    var open_group_toggle = new TwoStateToggle();
-    open_group_toggle.setPostData({
+    var opennessSelector = new DropdownSelect();
+    var selectorElement = element.find('#group-openness-selector');
+    opennessSelector.setPostData({
         group_id: this.getTagId(),
-        property_name: 'is_open'
+        property_name: 'openness'
     });
-    var open_group_btn = element.find('#open-or-close-group');
-    open_group_toggle.decorate(open_group_btn);
+    opennessSelector.decorate(selectorElement);
 
     var email_editor = new TextPropertyEditor();
     email_editor.decorate(element.find('#preapproved-emails'));

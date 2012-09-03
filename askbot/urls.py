@@ -280,7 +280,12 @@ urlpatterns = patterns('',
     url(#ajax only
         r'^toggle-group-profile-property/',
         views.commands.toggle_group_profile_property,
-        name = 'toggle_group_profile_property'
+        name='toggle_group_profile_property'
+    ),
+    url(#ajax only
+        r'^set-group-openness/',
+        views.commands.set_group_openness,
+        name='set_group_openness'
     ),
     url(#ajax only
         r'^edit-object-property-text/',
