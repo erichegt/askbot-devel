@@ -13,9 +13,9 @@
      width:600px;
      {%if widget.include_text_field%}
      {% if editor_type == 'markdown' %}
-     height:480px;
-     {%else%}
      height:500px;
+     {%else%}
+     height:520px;
      {%endif%}
      {%else%}
      height:210px;
@@ -35,8 +35,8 @@
 #{{variable_name}} iframe{
      width:600px;
      {% if editor_type == 'markdown' %}
-     height:480px;
+     height:500px;
      {%else%}
-     height:520px;
+     height:540px;
      {%endif%}
 }
