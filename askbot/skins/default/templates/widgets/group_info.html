@@ -16,8 +16,8 @@
     <div class="clearfix"></div>
         {{ macros.group_join_button(
                 group_id = group.id,
-                can_join = user_can_join_group,
-                is_member = user_is_group_member
+                acceptance_level = user_acceptance_level,
+                membership_level = user_is_group_member
             )
         }}
     {% if request.user.is_authenticated() and request.user.is_administrator() %}

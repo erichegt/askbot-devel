@@ -71,8 +71,8 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
     users = models.User.objects.exclude(status = 'b')
     group = None
     group_email_moderation_enabled = False
-    user_can_join_group = False
-    user_is_group_member = False
+    user_acceptance_level = 'closed'
+    user_membership_level = 'none'
     if by_group == True:
         if askbot_settings.GROUPS_ENABLED == False:
             raise Http404
@@ -87,18 +87,18 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
                             askbot_settings.GROUP_EMAIL_ADDRESSES_ENABLED \
                             and askbot_settings.ENABLE_CONTENT_MODERATION
                         )
-                    user_can_join_group = group.can_accept_user(request.user)
+                    user_acceptance_level = group.get_acceptance_level_for_user(
+                                                                    request.user
+                                                                )
                 except models.Group.DoesNotExist:
                     raise Http404
                 if group_slug == slugify(group.name):
                     users = users.filter(groups__id = group_id
                     )
                     if request.user.is_authenticated():
-                        user_is_group_member = bool(
-                                                    users.filter(
-                                                        id = request.user.id
-                                                    ).count()
-                                                )
+                        if bool(users.filter(id = request.user.id).count()):
+                            user_membership_level = 'full'
+
                 else:
                     group_page_url = reverse(
                                         'users_by_group',
@@ -185,8 +185,8 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
         'tab_id' : sortby,
         'paginator_context' : paginator_context,
         'group_email_moderation_enabled': group_email_moderation_enabled,
-        'user_can_join_group': user_can_join_group,
-        'user_is_group_member': user_is_group_member,
+        'user_acceptance_level': user_acceptance_level,
+        'user_membership_level': user_membership_level,
         'user_groups': user_groups,
         'group_openness_choices': group_openness_choices
     }
