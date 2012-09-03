@@ -2231,8 +2231,8 @@ def user_can_make_group_private_posts(self):
 def user_get_groups_membership_info(self, groups):
     """returts a defaultdict with values that are
     dictionaries with the following keys and values:
-    * key: can_join, value: True if user can join group
-    * key: is_member, value: True if user is member of group
+    * key: acceptance_level, value: 'closed', 'moderated', 'open'
+    * key: membership_level, value: 'none', 'pending', 'full'
 
     ``groups`` is a group tag query set
     """
@@ -2243,13 +2243,13 @@ def user_get_groups_membership_info(self, groups):
                             )
 
     info = collections.defaultdict(
-        lambda: {'can_join': False, 'is_member': False}
+        lambda: {'acceptance_level': 'closed', 'membership_level': 'none'}
     )
     for membership in memberships:
-        info[membership.group_id]['is_member'] = True
+        info[membership.group_id]['membership_level'] = 'full'
 
     for group in groups:
-        info[group.id]['can_join'] = group.can_accept_user(self)
+        info[group.id]['acceptance_level'] = group.get_acceptance_level_for_user(self)
 
     return info
 

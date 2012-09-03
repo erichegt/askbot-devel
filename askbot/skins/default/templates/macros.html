@@ -230,8 +230,8 @@ poor design of the data or methods on data objects #}
         <br/>
         {{ group_join_button(
                 group_id = group.id,
-                can_join = membership_info['can_join'],
-                is_member = membership_info['is_member']
+                acceptance_level = membership_info['aceptance_level'],
+                membership_level = membership_info['membership_level']
             )
         }}
     {% endif %}
@@ -248,21 +248,37 @@ poor design of the data or methods on data objects #}
     {% endif %}
 {%- endmacro -%}
 
-{%- macro group_join_button(group_id = None, can_join = False, is_member = False) -%}
-    {% if can_join %}
+{%- macro group_join_button(
+    group_id=None, acceptance_level='closed', membership_level='none')
+-%}
+    {% if acceptance_level in ('open', 'moderated') %}
         <button 
-            class="group-join-btn follow-toggle {% if is_member %}on on-state{% endif %}"
+            class="group-join-btn follow-toggle {% if membership_level != 'none' %}on on-state{% endif %}"
             data-group-id="{{group_id}}"
-            data-off-prompt-text="{% trans %}Leave this group{% endtrans %}"
-            data-on-prompt-text="{% trans %}Join this group{% endtrans %}"
-            data-on-state-text="{% trans %}You are a member{% endtrans %}"
-            data-off-state-text="{% trans %}Join this group{% endtrans %}"
+            {% if acceptance_level == 'open' %}
+                data-off-prompt-text="{% trans %}Leave this group{% endtrans %}"
+                data-on-prompt-text="{% trans %}Join this group{% endtrans %}"
+                data-on-state-text="{% trans %}You are a member{% endtrans %}"
+                data-off-state-text="{% trans %}Join this group{% endtrans %}"
+            {% else %}
+                {% if membership_level == 'full' %}
+                    data-off-prompt-text="{% trans %}Leave this group{% endtrans %}"
+                    data-on-state-text="{% trans %}You are a member{% endtrans %}"
+                {% else %}
+                    data-off-prompt-text="{% trans %}Cancel application{% endtrans %}"
+                    data-on-state-text="{% trans %}Waiting approval{% endtrans %}"
+                {% endif %}
+                data-on-prompt-text="{% trans %}Ask to join{% endtrans %}"
+                data-off-state-text="{% trans %}Ask to join{% endtrans %}"
+            {% endif %}
         >
-            {% if is_member %}
+            {% if membership_level == 'full' %}
                 {% trans %}You are a member{% endtrans %}
             {% else %}
-                {% if can_join %}
+                {% if acceptance_level == 'open' %}
                     {% trans %}Join this group{% endtrans %}
+                {% else %}
+                    {% trans %}Ask to join{% endtrans %}
                 {% endif %}
             {% endif %}
         </button>

@@ -442,29 +442,36 @@ class Group(AuthGroup):
             (Group.CLOSED, _('Moderator adds users'))
         )
 
-    def can_accept_user(self, user):
-        """True if user is preapproved to join the group"""
+    def get_acceptance_level_for_user(self, user):
+        """returns descriptive value, because it is to be used in the
+        templates"""
         if user.is_anonymous():
-            return False
+            return 'closed'
 
         #a special case - automatic global group cannot be joined or left
         if self.name == askbot_settings.GLOBAL_GROUP_NAME:
-            return False
+            return 'closed'
+
+        #todo - return 'closed' for internal per user groups too
 
         if self.openness == Group.OPEN:
-            return True
+            return 'open'
 
         if user.is_administrator_or_moderator():
-            return True
+            return 'open'
 
         #relying on a specific method of storage
-        return email_is_allowed(
+        if email_is_allowed(
             user.email,
             allowed_emails=self.preapproved_emails,
             allowed_email_domains=self.preapproved_email_domains
-        )
+        ):
+            return 'open'
 
-        return False
+        if self.openness == Group.MODERATED:
+            return 'moderated'
+
+        return 'closed'
 
     def clean(self):
         """called in `save()`

@@ -1042,16 +1042,16 @@ def join_or_leave_group(request):
 
     if request.user.is_group_member(group):
         action = 'remove'
-        is_member = False
+        membership_level = 'none'
     else:
         action = 'add'
-        is_member = True
+        membership_level = 'full'
     request.user.edit_group_membership(
         user = request.user,
         group = group,
         action = action
     )
-    return {'is_member': is_member}
+    return {'membership_level': membership_level}
 
 
 @csrf.csrf_exempt

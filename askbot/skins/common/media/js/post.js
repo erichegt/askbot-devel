@@ -2607,7 +2607,11 @@ GroupJoinButton.prototype.getHandler = function(){
             url: askbot['urls']['join_or_leave_group'],
             success: function(data){
                 if (data['success']){
-                    var new_state = data['is_member'] ? 'on-state':'off-state';
+                    var level = data['membership_level'];
+                    var new_state = 'off-state';
+                    if (level == 'full' || level == 'pending') {
+                        new_state = 'on-state';
+                    }
                     me.setState(new_state);
                 } else {
                     showMessage(me.getElement(), data['message']);
