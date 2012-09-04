@@ -87,17 +87,24 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
                             askbot_settings.GROUP_EMAIL_ADDRESSES_ENABLED \
                             and askbot_settings.ENABLE_CONTENT_MODERATION
                         )
-                    user_acceptance_level = group.get_acceptance_level_for_user(
+                    user_acceptance_level = group.get_openness_level_for_user(
                                                                     request.user
                                                                 )
                 except models.Group.DoesNotExist:
                     raise Http404
                 if group_slug == slugify(group.name):
-                    users = users.filter(groups__id = group_id
-                    )
+                    #filter users by full group memberships
+                    #todo: refactor as Group.get_full_members()
+                    full_level = models.GroupMembership.FULL
+                    memberships = models.GroupMembership.objects.filter(
+                                                    group=group, level=full_level
+                                                )
+                    user_ids = memberships.values_list('user__id', flat=True)
+                    users = users.filter(id__in=user_ids)
                     if request.user.is_authenticated():
-                        if bool(users.filter(id = request.user.id).count()):
-                            user_membership_level = 'full'
+                        membership = request.user.get_group_membership(group)
+                        if membership:
+                            user_membership_level = membership.get_level_display()
 
                 else:
                     group_page_url = reverse(

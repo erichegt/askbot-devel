@@ -361,12 +361,14 @@ class GroupMembership(AuthUserGroups):
     """contains one-to-one relation to ``auth_user_group``
     and extra membership profile fields"""
     #note: this may hold info on when user joined, etc
+    NONE = -1#not part of the choices as for this records should be just missing
     PENDING = 0
     FULL = 1
     LEVEL_CHOICES = (#'none' is by absence of membership
         (PENDING, 'pending'),
         (FULL, 'full')
     )
+    ALL_LEVEL_CHOICES = LEVEL_CHOICES + ((NONE, 'none'),)
     level = models.SmallIntegerField(
                         default=FULL,
                         choices=LEVEL_CHOICES,
@@ -374,6 +376,14 @@ class GroupMembership(AuthUserGroups):
 
     class Meta:
         app_label = 'askbot'
+
+    @classmethod
+    def get_level_value_display(cls, level):
+        """returns verbose value given a numerical value
+        includes the "fanthom" NONE
+        """
+        values_dict = dict(cls.ALL_LEVEL_CHOICES)
+        return values_dict[level]
 
 
 class GroupQuerySet(models.query.QuerySet):
@@ -461,7 +471,7 @@ class Group(AuthGroup):
             (Group.CLOSED, _('Moderator adds users'))
         )
 
-    def get_acceptance_level_for_user(self, user):
+    def get_openness_level_for_user(self, user):
         """returns descriptive value, because it is to be used in the
         templates. The value must match the verbose versions of the
         openness choices!!!

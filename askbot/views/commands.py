@@ -883,12 +883,16 @@ def read_message(request):#marks message a read
 @decorators.post_only
 @decorators.admins_only
 def edit_group_membership(request):
+    #todo: this call may need to go.
+    #it used to be the one creating groups
+    #from the user profile page
+    #we have a separate method
     form = forms.EditGroupMembershipForm(request.POST)
     if form.is_valid():
         group_name = form.cleaned_data['group_name']
         user_id = form.cleaned_data['user_id']
         try:
-            user = models.User.objects.get(id = user_id)
+            user = models.User.objects.get(id=user_id)
         except models.User.DoesNotExist:
             raise exceptions.PermissionDenied(
                 'user with id %d not found' % user_id
@@ -1033,25 +1037,30 @@ def edit_object_property_text(request):
 @decorators.ajax_only
 @decorators.post_only
 def join_or_leave_group(request):
-    """only current user can join/leave group"""
+    """called when user wants to join/leave
+    ask to join/cancel join request, depending
+    on the groups acceptance level for the given user
+
+    returns resulting "membership_level"
+    """
     if request.user.is_anonymous():
         raise exceptions.PermissionDenied()
 
-    group_id = IntegerField().clean(request.POST['group_id'])
-    group = models.Group.objects.get(id = group_id)
+    Group = models.Group
+    Membership = models.GroupMembership
 
-    if request.user.is_group_member(group):
-        action = 'remove'
-        membership_level = 'none'
+    group_id = IntegerField().clean(request.POST['group_id'])
+    group = Group.objects.get(id=group_id)
+
+    membership = request.user.get_group_membership(group)
+    if membership is None:
+        membership = request.user.join_group(group)
+        new_level = membership.get_level_display()
     else:
-        action = 'add'
-        membership_level = 'full'
-    request.user.edit_group_membership(
-        user = request.user,
-        group = group,
-        action = action
-    )
-    return {'membership_level': membership_level}
+        membership.delete()
+        new_level = Membership.get_level_value_display(Membership.NONE)
+
+    return {'membership_level': new_level}
 
 
 @csrf.csrf_exempt

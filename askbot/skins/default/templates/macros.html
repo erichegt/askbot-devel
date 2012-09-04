@@ -274,6 +274,8 @@ poor design of the data or methods on data objects #}
         >
             {% if membership_level == 'full' %}
                 {% trans %}You are a member{% endtrans %}
+            {% elif membership_level == 'pending' %}
+                {% trans %}Waiting approval{% endtrans %}
             {% else %}
                 {% if acceptance_level == 'open' %}
                     {% trans %}Join this group{% endtrans %}

@@ -2228,8 +2228,18 @@ def user_can_make_group_private_posts(self):
     """simplest implementation: user belongs to at least one group"""
     return self.get_groups(private=True).count() > 0
 
+def user_get_group_membership(self, group):
+    """returns a group membership object or None
+    if it is not there
+    """
+    try:
+        return GroupMembership.objects.get(user=self, group=group)
+    except GroupMembership.DoesNotExist:
+        return None
+    
+
 def user_get_groups_membership_info(self, groups):
-    """returts a defaultdict with values that are
+    """returns a defaultdict with values that are
     dictionaries with the following keys and values:
     * key: acceptance_level, value: 'closed', 'moderated', 'open'
     * key: membership_level, value: 'none', 'pending', 'full'
@@ -2246,14 +2256,13 @@ def user_get_groups_membership_info(self, groups):
         lambda: {'acceptance_level': 'closed', 'membership_level': 'none'}
     )
     for membership in memberships:
-        info[membership.group_id]['membership_level'] = 'full'
+        membership_level = membership.get_level_display()
+        info[membership.group_id]['membership_level'] = membership_level
 
     for group in groups:
-        info[group.id]['acceptance_level'] = group.get_acceptance_level_for_user(self)
+        info[group.id]['acceptance_level'] = group.get_openness_level_for_user(self)
 
     return info
-
-
 
 def user_get_karma_summary(self):
     """returns human readable sentence about
@@ -2607,23 +2616,46 @@ def user_update_wildcard_tag_selections(
     return new_tags
 
 
-def user_edit_group_membership(self, user = None, group = None, action = None):
+def user_edit_group_membership(self, user=None, group=None, action=None):
     """allows one user to add another to a group
     or remove user from group.
 
     If when adding, the group does not exist, it will be created
     the delete function is not symmetric, the group will remain
     even if it becomes empty
+
+    returns instance of GroupMembership (if action is "add") or None
     """
     if action == 'add':
-        GroupMembership.objects.get_or_create(user = user, group = group)
+        #calculate new level
+        openness = group.get_openness_level_for_user(user)
+
+        #a temporary shunt
+        if group.name == askbot_settings.GLOBAL_GROUP_NAME:
+            openness = 'open'
+        elif group.name == format_personal_group_name(user):
+            openness = 'open'
+
+        if openness == 'open':
+            level = GroupMembership.FULL
+        elif openness == 'moderated':
+            level = GroupMembership.PENDING
+        elif openness == 'closed':
+            raise django_exceptions.PermissionDenied()
+
+        membership, created = GroupMembership.objects.get_or_create(
+                        user=user, group=group, level=level
+                    )
+        return membership
+
     elif action == 'remove':
         GroupMembership.objects.get(user = user, group = group).delete()
+        return None
     else:
         raise ValueError('invalid action')
 
 def user_join_group(self, group):
-    self.edit_group_membership(group=group, user=self, action='add')
+    return self.edit_group_membership(group=group, user=self, action='add')
 
 def user_leave_group(self, group):
     self.edit_group_membership(group=group, user=self, action='remove')
@@ -2658,6 +2690,7 @@ User.add_to_class('get_marked_tags', user_get_marked_tags)
 User.add_to_class('get_marked_tag_names', user_get_marked_tag_names)
 User.add_to_class('get_groups', user_get_groups)
 User.add_to_class('get_foreign_groups', user_get_foreign_groups)
+User.add_to_class('get_group_membership', user_get_group_membership)
 User.add_to_class('get_personal_group', user_get_personal_group)
 User.add_to_class('get_primary_group', user_get_primary_group)
 User.add_to_class('strip_email_signature', user_strip_email_signature)
