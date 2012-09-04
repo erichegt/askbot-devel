@@ -190,6 +190,7 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
         'user_groups': user_groups,
         'group_openness_choices': group_openness_choices
     }
+
     return render_into_skin('users.html', data, request)
 
 @csrf.csrf_protect

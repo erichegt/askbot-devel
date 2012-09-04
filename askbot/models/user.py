@@ -444,7 +444,9 @@ class Group(AuthGroup):
 
     def get_acceptance_level_for_user(self, user):
         """returns descriptive value, because it is to be used in the
-        templates"""
+        templates. The value must match the verbose versions of the
+        openness choices!!!
+        """
         if user.is_anonymous():
             return 'closed'
 

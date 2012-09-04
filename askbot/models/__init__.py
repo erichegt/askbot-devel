@@ -2629,8 +2629,6 @@ def user_leave_group(self, group):
     self.edit_group_membership(group=group, user=self, action='remove')
 
 def user_is_group_member(self, group=None):
-    import pdb
-    pdb.set_trace()
     return GroupMembership.objects.filter(
                             user=self, group=group
                         ).count() == 1

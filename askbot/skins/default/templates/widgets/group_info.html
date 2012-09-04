@@ -17,7 +17,7 @@
         {{ macros.group_join_button(
                 group_id = group.id,
                 acceptance_level = user_acceptance_level,
-                membership_level = user_is_group_member
+                membership_level = user_membership_level
             )
         }}
     {% if request.user.is_authenticated() and request.user.is_administrator() %}
