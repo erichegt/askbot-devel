@@ -11,7 +11,6 @@ var {{variable_name}} = {
     var html = {{variable_name}}.createButton();
     var link = document.createElement('link');
     link.setAttribute("rel", "stylesheet");
-    //link.setAttribute("href", 'http://{{host}}{{"/style/askbot-modal.css"|media}}');
     link.setAttribute("href", 'http://{{host}}{%url render_ask_widget_css widget.id%}');
 
     //creating the div
@@ -43,8 +42,8 @@ var {{variable_name}} = {
 
     var body = document.getElementsByTagName('body')[0];
     if (body){
-      body.insertBefore(motherDiv, body.firstChild);
-      body.insertBefore(link, body.firstChild);
+      body.appendChild(link);
+      body.appendChild(motherDiv);
     }
   },
   createButton: function() {
