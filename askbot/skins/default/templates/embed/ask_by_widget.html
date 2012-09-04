@@ -3,6 +3,8 @@
 {% block forestyle %}
   {% if editor_type == 'markdown' %}
   <link rel="stylesheet" type="text/css" href="{{"/js/wmd/wmd.css"|media}}" />
+  {%else %}
+    <link href="{{'/bootstrap/css/bootstrap.css'|media}}" rel="stylesheet" type="text/css" />
   {%endif%}
   {% if settings.USE_LOCAL_FONTS %}
     {% include "meta/fonts.html" %}
@@ -39,8 +41,10 @@
       border: #CCE6EC 3px solid;
       max-width: 600px;
     }
+
     #id_title:focus {
       outline: none;
+      box-shadow:none;
     }
 
     .title{
@@ -59,7 +63,11 @@
       -moz-border-radius: 3px;
       border-radius: 3px;
       background: #fff;
+      {% if editor_type == 'markdown' %}
       width:97.4%;
+      {%else%}
+      width:90.8%;
+      {%endif%}
       margin-top: -4.9px;
     }
 
@@ -150,6 +158,10 @@
       width: 200px;
     } 
 
+    .field-errors{
+      font-size: 10px;
+      color: #ff0000;
+    }
     {{widget.inner_style}}
   </style>
 {%endblock%}
@@ -164,6 +176,13 @@
   </div>
   <div id='question-list'>
   </div>
+  {% if form.title.errors %}
+  <div class="field-errors">
+    {% for error in form.title.errors %}
+      {{error}}
+    {%endfor%}
+  </div>
+  {% endif %}
 {% if widget.include_text_field %}
   {% if editor_type == 'markdown' %}
       <div class="wmd-container">
@@ -176,13 +195,19 @@
           {{ form.text }}
       </div>
   {% endif %}
+  {% if form.text.errors %}
+  <div class="field-errors">
+    {% for error in form.text.errors %}
+      {{error}}
+    {%endfor%}
+  </div>
+  {% endif %}
 {% endif %}
   {% if form.ask_anonymously %}
     <p>{{form.ask_anonymously.label_tag()}}: {{form.ask_anonymously}}</p>
   {%endif%}
   <input type="submit" value="Ask your question" id="submit" />
 </form>
-{{form.errors}}
 {%endblock%}
 {% block endjs %}
 <script type="text/javascript" src='{{"/js/live_search_new_thread.js"|media}}'></script>
