@@ -121,7 +121,7 @@ or repost a bug, if that does not help"""
             print "%d questions match." % question_count
             print "First 10 are:"
         for question in questions[:10]:
-            print '* %s' % question.thread.title.strip()
+            print '* %s' % question.title.strip()
 
         from_tag_names = format_tag_name_list(from_tags)
         to_tag_names = format_tag_name_list(to_tags)
@@ -145,7 +145,7 @@ or repost a bug, if that does not help"""
             tag_names.difference_update(from_tag_names)
 
             admin.retag_question(
-                question = question,
+                question = question._question_post(),
                 tags = u' '.join(tag_names),
                 #silent = True #do we want to timestamp activity on question
             )
