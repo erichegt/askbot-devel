@@ -27,7 +27,7 @@ from askbot import const
 from askbot.models.user import Activity
 from askbot.models.user import EmailFeedSetting
 from askbot.models.user import Group
-from askbot.models.user import AuthUserGroups as GroupMembership
+from askbot.models.user import GroupMembership
 from askbot.models.tag import Tag, MarkedTag
 from askbot.models.tag import get_groups, tags_match_some_wildcard
 from askbot.models.tag import get_global_group

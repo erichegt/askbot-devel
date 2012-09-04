@@ -357,6 +357,25 @@ class AuthUserGroups(models.Model):
         managed = False
 
 
+class GroupMembership(AuthUserGroups):
+    """contains one-to-one relation to ``auth_user_group``
+    and extra membership profile fields"""
+    #note: this may hold info on when user joined, etc
+    PENDING = 0
+    FULL = 1
+    LEVEL_CHOICES = (#'none' is by absence of membership
+        (PENDING, 'pending'),
+        (FULL, 'full')
+    )
+    level = models.SmallIntegerField(
+                        default=FULL,
+                        choices=LEVEL_CHOICES,
+                    )
+
+    class Meta:
+        app_label = 'askbot'
+
+
 class GroupQuerySet(models.query.QuerySet):
     """Custom query set for the group"""
 
