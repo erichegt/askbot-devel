@@ -34,9 +34,5 @@
 
 #{{variable_name}} iframe{
      width:600px;
-     {% if editor_type == 'markdown' %}
      height:500px;
-     {%else%}
-     height:540px;
-     {%endif%}
 }
