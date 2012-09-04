@@ -216,6 +216,11 @@ Askbot supports posting replies by email. For this feature  to work ``Lamson`` a
     
     pip install django-lamson
 
+.. note::
+    On Windows installation of the Lamson module may require
+    additional work. Askbot does not support this feature
+    on Windows automatically.
+
 The lamson daemon needs a folder to store it's mail queue files and a folder to store log files, create the folders folder named ``run`` and ``logs`` within your project folder by executing the following commands:
 
     mkdir run

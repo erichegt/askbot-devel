@@ -21,6 +21,7 @@ Attacklab.wmdBase = function(){
 	
 	
 	// Used to work around some browser bugs where we can't use feature testing.
+    global.isChrome = /chrome/.test(nav.userAgent.toLowerCase());
 	global.isIE = /msie/.test(nav.userAgent.toLowerCase());
 	global.isIE_5or6 = /msie 6/.test(nav.userAgent.toLowerCase()) || /msie 5/.test(nav.userAgent.toLowerCase());
 	global.isIE_7plus = global.isIE && !global.isIE_5or6;
@@ -1598,6 +1599,10 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
 		
 		var regexText;
 		var replacementText;
+
+        if (global.isChrome) {//Chrome bug workaround
+            'X'.match(/()./);
+        }
 		
 		this.selection = this.selection.replace(/(^\n*)/, "");
 		this.startTag = this.startTag + re.$1;

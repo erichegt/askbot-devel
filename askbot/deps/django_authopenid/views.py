@@ -1072,7 +1072,7 @@ def signup_with_password(request):
         #todo: here we have duplication of get_password_login_provider...
         form = RegisterForm(
                         initial={
-                            'next':next,
+                            'next': get_next_url(request),
                             'login_provider': provider_name
                         }
                     )
