@@ -372,6 +372,22 @@ body.user-messages {
 #secondaryHeader #scopeWrapper .ask-message {
   font-size: 24px;
 }
+.validate-email-page label {
+  color: #707070;
+  line-height: 1.35;
+  display: block;
+  margin: 10px 0;
+}
+.validate-email-page #validation-code {
+  padding-left: 5px;
+  border: #cce6ec 3px solid;
+  height: 25px;
+  font-size: 14px;
+  width: 200px;
+}
+.validate-email-page form {
+  margin-bottom: 30px;
+}
 #searchBar {
   /* Main search form , check widgets/search_bar.html */
 
@@ -762,13 +778,20 @@ body.anon #searchBar .searchInputCancelable {
 }
 .questions-related p {
   line-height: 20px;
-  padding: 4px 0px 4px 0px;
+  padding: 4px 0px 9px 0px;
   font-size: 16px;
   font-weight: normal;
   border-bottom: #cccccc 1px solid;
 }
+.questions-related p:first-child {
+  margin-top: -4px;
+}
+.questions-related p:last-child {
+  border: none;
+}
 .questions-related a {
   font-size: 13px;
+  line-height: 1.3;
 }
 /* tips and markdown help are widgets for ask template */
 #tips li {
@@ -1358,7 +1381,45 @@ ul#related-tags li {
   font-size: 13px;
 }
 .ask-page #id_tags,
-.edit-question-page #id_tags,
+.edit-question-page #id_tags {
+  border: #cce6ec 3px solid;
+  height: 25px;
+  padding-left: 5px;
+  font-size: 14px;
+  width: 395px;
+}
+.ask-page #id_post_author_username,
+.question-page #id_post_author_username,
+.edit-question-page #id_post_author_username,
+.edit-answer-page #id_post_author_username,
+.ask-page #id_post_author_email,
+.question-page #id_post_author_email,
+.edit-question-page #id_post_author_email,
+.edit-answer-page #id_post_author_email {
+  border: #cce6ec 3px solid;
+  height: 25px;
+  padding-left: 5px;
+  font-size: 14px;
+  width: 186px;
+}
+.ask-page #id_post_author_email,
+.question-page #id_post_author_email,
+.edit-question-page #id_post_author_email,
+.edit-answer-page #id_post_author_email {
+  margin-left: 10px;
+}
+.ask-page table.proxy-user-info,
+.question-page table.proxy-user-info,
+.edit-question-page table.proxy-user-info,
+.edit-answer-page table.proxy-user-info {
+  border-spacing: 0px;
+}
+.ask-page table.proxy-user-info .form-item,
+.question-page table.proxy-user-info .form-item,
+.edit-question-page table.proxy-user-info .form-item,
+.edit-answer-page table.proxy-user-info .form-item {
+  float: left;
+}
 #id_user,
 #id_user_author {
   border: #cce6ec 3px solid;
@@ -1781,9 +1842,6 @@ ul#related-tags li {
 .question-page #fmanswer_button {
   margin: 8px 0px;
 }
-.question-page #fmanswer_button.answer-own-question {
-  width: 150px;
-}
 .question-page .question-img-favorite:hover {
   background: url(../images/vote-favorite-on.png);
 }
@@ -1974,6 +2032,24 @@ ul#related-tags li {
 }
 .question-page .comments .comment-body .edit {
   padding-left: 6px;
+}
+.question-page .comments .comment-body .convert {
+  display: inline;
+  white-space: nowrap;
+  padding-left: 0px;
+}
+.question-page .comments .comment-body .convert input {
+  background: none;
+  color: #1B79BD;
+  border: none;
+  width: auto;
+  font-family: Arial;
+  line-height: 12.5px;
+  font-size: 13px;
+}
+.question-page .comments .comment-body .convert input:hover {
+  text-decoration: underline;
+  cursor: pointer;
 }
 .question-page .comments .comment-body p {
   font-size: 13px;
