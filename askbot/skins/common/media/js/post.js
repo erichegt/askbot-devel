@@ -1437,6 +1437,8 @@ var Comment = function(widget, data){
     this._data = data || {};
     this._blank = true;//set to false by setContent
     this._element = null;
+    this._is_convertible = askbot['data']['userIsAdminOrMod'];
+    this.convert_link = null;
     this._delete_prompt = gettext('delete this comment');
     if (data && data['is_deletable']){
         this._deletable = data['is_deletable'];
@@ -1471,6 +1473,12 @@ Comment.prototype.decorate = function(element){
         this._edit_link = new EditLink();
         this._edit_link.setHandler(this.getEditHandler());
         this._edit_link.decorate(edit_link);
+    }
+
+    var convert_link = this._element.find('form.convert');
+    if (this._is_convertible){
+        this._convert_link = new ConvertLink(comment_id); 
+        this._convert_link.decorate(convert_link);
     }
 
     var vote = new CommentVoteButton(this);
@@ -1556,6 +1564,11 @@ Comment.prototype.setContent = function(data){
         this._edit_link.setHandler(this.getEditHandler())
         this._comment_body.append(this._edit_link.getElement());
     }
+
+    if (this._is_convertible){
+        this._convert_link = new ConvertLink(this._data['id']); 
+        this._comment_body.append(this._convert_link.getElement());
+    }
     this._element.append(this._comment_body);
 
     this._blank = false;
@@ -1579,6 +1592,9 @@ Comment.prototype.dispose = function(){
     }
     if (this._edit_link){
         this._edit_link.dispose();
+    }
+    if (this._convert_link){
+        this._convert_link.dispose();
     }
     this._data = null;
     Comment.superClass_.dispose.call(this);

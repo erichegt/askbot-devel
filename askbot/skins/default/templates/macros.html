@@ -392,7 +392,7 @@ for the purposes of the AJAX comment editor #}
                         <form action="{% url comment_to_answer %}" method="POST" accept-charset="utf-8" class='convert'>
                           {% csrf_token %}
                           <input type="hidden" value="{{comment.id}}" name="comment_id" id="id_comment_id">
-                          <input type="submit" value="{% trans %}convert to answer{% endtrans %}"></p>
+                          <input type="submit" value="{% trans %}convert to answer{% endtrans %}">
                         </form>
                     </div>
                 </div>
