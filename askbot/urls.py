@@ -87,6 +87,11 @@ urlpatterns = patterns('',
         name='get_thread_shared_groups'
     ),
     url(
+        r'^moderate-group-join-request/',
+        views.commands.moderate_group_join_request,
+        name='moderate_group_join_request'
+    ),
+    url(
         r'^save-draft-question/',
         views.commands.save_draft_question,
         name = 'save_draft_question'

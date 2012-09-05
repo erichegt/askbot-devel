@@ -401,7 +401,7 @@ class CommentTests(AskbotTestCase):
         comment = models.Post.objects.get_comments().get(id = self.comment.id)
         self.assertEquals(comment.score, 0)
 
-class TagAndGroupTests(AskbotTestCase):
+class GroupTests(AskbotTestCase):
     def setUp(self):
         self.u1 = self.create_user('u1')
         askbot_settings.update('GROUPS_ENABLED', True)
@@ -443,7 +443,7 @@ class TagAndGroupTests(AskbotTestCase):
         self.assertEqual(c.groups.filter(name=group_name).exists(), True)
 
     def test_posts_added_to_private_group(self):
-        group = self.create_group(group_name='private', user=self.u1)
+        group = self.create_group(group_name='private')
         self.u1.join_group(group)
 
         q = self.post_question(user=self.u1, is_private=True)
@@ -476,7 +476,7 @@ class TagAndGroupTests(AskbotTestCase):
     def test_making_public_question_private_works(self):
         question = self.post_question(user=self.u1)
         comment = self.post_comment(parent_post=question, user=self.u1)
-        group = self.create_group(group_name='private', user=self.u1)
+        group = self.create_group(group_name='private')
         self.u1.join_group(group)
         self.edit_question(question=question, user=self.u1, is_private=True)
         self.assertEqual(question.groups.count(), 2)
@@ -489,7 +489,7 @@ class TagAndGroupTests(AskbotTestCase):
         question = self.post_question(user=self.u1)
         answer = self.post_answer(question=question, user=self.u1)
         comment = self.post_comment(parent_post=answer, user=self.u1)
-        group = self.create_group(group_name='private', user=self.u1)
+        group = self.create_group(group_name='private')
         self.u1.join_group(group)
         self.edit_answer(user=self.u1, answer=answer, is_private=True)
         self.assertEqual(answer.groups.count(), 2)
@@ -502,7 +502,7 @@ class TagAndGroupTests(AskbotTestCase):
         question = self.post_question(self.u1)
 
         u2 = self.create_user('u2')
-        group = self.create_group(group_name='private', user=u2)
+        group = self.create_group(group_name='private')
         u2.join_group(group)
 
         answer = self.post_answer(question=question, user=u2, is_private=True)
@@ -521,7 +521,7 @@ class TagAndGroupTests(AskbotTestCase):
 
     def test_thread_answer_count_for_multiple_groups(self):
         question = self.post_question(self.u1)
-        group = self.create_group(group_name='private', user=self.u1)
+        group = self.create_group(group_name='private')
         self.u1.join_group(group)
         answer = self.post_answer(question=question, user=self.u1)
         answer.add_to_groups((group,))
@@ -529,7 +529,7 @@ class TagAndGroupTests(AskbotTestCase):
         self.assertEqual(answer.thread.posts.get_answers(self.u1).count(), 1)
 
     def test_thread_make_public_recursive(self):
-        private_group = self.create_group(group_name='private', user=self.u1)
+        private_group = self.create_group(group_name='private')
         self.u1.join_group(private_group)
         data = self.post_question_answer_and_comments(is_private=True)
 
@@ -553,7 +553,7 @@ class TagAndGroupTests(AskbotTestCase):
     def test_thread_add_to_groups_recursive(self):
         data = self.post_question_answer_and_comments()
 
-        private_group = self.create_group(group_name='private', user=self.u1)
+        private_group = self.create_group(group_name='private')
         thread = data['thread']
         thread.add_to_groups([private_group], recursive=True)
 
@@ -566,24 +566,46 @@ class TagAndGroupTests(AskbotTestCase):
         self.assertObjectGroupsEqual(data['answer_comment'], groups)
 
     def test_private_thread_is_invisible_to_anonymous_user(self):
-        group = self.create_group(group_name='private', user=self.u1)
+        group = self.create_group(group_name='private')
         self.u1.join_group(group)
         self.post_question(user=self.u1, is_private=True)
 
         visible_threads = models.Thread.objects.get_visible(AnonymousUser())
         self.assertEqual(visible_threads.count(), 0)
 
-class GroupTests(AskbotTestCase):
-
-    def setUp(self):
-        self.u1 = self.create_user('user1')
-
     def test_join_group(self):
         #create group
         group = models.Group(name='somegroup')
+        group.openness = models.Group.OPEN
         group.save()
         #join
+        self.u1 = self.create_user('user1')
         self.u1.join_group(group)
         #assert membership of askbot group object
         found_count = self.u1.get_groups().filter(name='somegroup').count()
         self.assertEqual(found_count, 1)
+
+    def test_group_moderation(self):
+        #create group
+        group = models.Group(name='somegroup')
+        #make it moderated
+        group.openness = models.Group.MODERATED
+        group.save()
+
+        #add moderator to the group
+        mod = self.create_user('mod', status='d')
+        mod.join_group(group)
+
+        #create a regular user
+        reg = self.create_user('reg')
+        reg.join_group(group)
+        #assert that moderator has a notification
+        acts = models.Activity.objects.filter(
+                        user=reg,
+                        activity_type=const.TYPE_ACTIVITY_ASK_TO_JOIN_GROUP,
+                        object_id=group.id
+                    )
+        self.assertEqual(acts.count(), 1)
+        self.assertEqual(acts[0].recipients.count(), 1)
+        recipient = acts[0].recipients.all()[0]
+        self.assertEqual(recipient, mod)

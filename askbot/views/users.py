@@ -671,6 +671,38 @@ def user_recent(request, user, context):
     context.update(data)
     return render_into_skin('user_profile/user_recent.html', context, request)
 
+#not a view - no direct url route here, called by `user_responses`
+def show_group_join_requests(request, user, context):
+    """show group join requests to admins who belong to the group"""
+    if request.user.is_administrator_or_moderator() is False:
+        raise Http404
+
+    #get group to which user belongs
+    groups = request.user.get_groups()
+    #construct a dictionary group id --> group object
+    #to avoid loading group via activity content object
+    groups_dict = dict([(group.id, group) for group in groups])
+
+    #get join requests for those groups
+    group_content_type = ContentType.objects.get_for_model(models.Group)
+    join_requests = models.Activity.objects.filter(
+                        activity_type=const.TYPE_ACTIVITY_ASK_TO_JOIN_GROUP,
+                        content_type=group_content_type,
+                        object_id__in=groups_dict.keys()
+                    ).order_by('-active_at')
+    data = {
+        'active_tab':'users',
+        'page_class': 'user-profile-page',
+        'tab_name' : 'join_requests',
+        'tab_description' : _('group joining requests'),
+        'page_title' : _('profile - moderation'),
+        'groups_dict': groups_dict,
+        'join_requests': join_requests
+    }
+    context.update(data)
+    return render_into_skin('user_profile/group_join_requests.html', context, request)
+    
+
 @owner_or_moderator_required
 def user_responses(request, user, context):
     """
@@ -700,6 +732,8 @@ def user_responses(request, user, context):
                 const.TYPE_ACTIVITY_MODERATED_NEW_POST,
                 const.TYPE_ACTIVITY_MODERATED_POST_EDIT
             )
+    elif section == 'join_requests':
+        return show_group_join_requests(request, user, context)
     else:
         raise Http404
 

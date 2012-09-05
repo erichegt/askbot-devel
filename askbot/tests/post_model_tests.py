@@ -441,7 +441,8 @@ class ThreadRenderCacheUpdateTests(AskbotTestCase):
             'thread': q.thread,
             'question': q,
             'search_state': DummySearchState(),
-            }
+            'visitor': None
+        }
         html = get_template('widgets/question_summary.html').render(context)
         return html
 
@@ -595,6 +596,8 @@ class ThreadRenderCacheUpdateTests(AskbotTestCase):
         self.assertEqual(html, thread.get_cached_summary_html())
 
     def test_view_count(self):
+        import pdb
+        pdb.set_trace()
         question = self.post_question()
         self.assertEqual(0, question.thread.view_count)
         self.assertEqual(0, Thread.objects.all()[0].view_count)

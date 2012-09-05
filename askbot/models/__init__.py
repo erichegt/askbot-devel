@@ -402,6 +402,26 @@ def user_get_or_create_fake_user(self, username, email):
         user.save()
     return user
 
+def user_notify_users(
+    self, notification_type=None, recipients=None, content_object=None
+):
+    """A utility function that creates instance
+    of :class:`Activity` and adds recipients
+    * `notification_type` - value should be one of TYPE_ACTIVITY_...
+    * `recipients` - an iterable of user objects
+    * `content_object` - any object related to the notification
+
+    todo: possibly add checks on the content_object, depending on the
+    notification_type
+    """
+    activity = Activity(
+                user=self,
+                activity_type=notification_type,
+                content_object=content_object
+            )
+    activity.save()
+    activity.add_recipients(recipients)
+
 def _assert_user_can(
                         user = None,
                         post = None, #related post (may be parent)
@@ -2630,7 +2650,7 @@ def user_edit_group_membership(self, user=None, group=None, action=None):
         #calculate new level
         openness = group.get_openness_level_for_user(user)
 
-        #a temporary shunt
+        #let people join these special groups, but not leave
         if group.name == askbot_settings.GLOBAL_GROUP_NAME:
             openness = 'open'
         elif group.name == format_personal_group_name(user):
@@ -2776,6 +2796,7 @@ User.add_to_class(
     user_update_wildcard_tag_selections
 )
 User.add_to_class('approve_post_revision', user_approve_post_revision)
+User.add_to_class('notify_users', user_notify_users)
 
 #assertions
 User.add_to_class('assert_can_vote_for_post', user_assert_can_vote_for_post)
@@ -3494,6 +3515,16 @@ def make_admin_if_first_user(instance, **kwargs):
         instance.set_admin_status()
     cache.cache.set('admin-created', True)
 
+def moderate_group_joining(sender, instance=None, created=False, **kwargs):
+    if created and instance.level == GroupMembership.PENDING:
+        user = instance.user
+        group = instance.group
+        user.notify_users(
+                notification_type=const.TYPE_ACTIVITY_ASK_TO_JOIN_GROUP,
+                recipients = group.get_moderators(),
+                content_object = group
+            )
+
 
 #signal for User model save changes
 django_signals.pre_save.connect(make_admin_if_first_user, sender=User)
@@ -3506,6 +3537,7 @@ django_signals.post_save.connect(notify_award_message, sender=Award)
 django_signals.post_save.connect(record_answer_accepted, sender=Post)
 django_signals.post_save.connect(record_vote, sender=Vote)
 django_signals.post_save.connect(record_favorite_question, sender=FavoriteQuestion)
+django_signals.post_save.connect(moderate_group_joining, sender=GroupMembership)
 
 if 'avatar' in django_settings.INSTALLED_APPS:
     from avatar.models import Avatar

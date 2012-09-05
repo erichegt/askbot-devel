@@ -45,6 +45,13 @@ inbox_section - forum|flags
         >
             {% trans %}flagged items ({{flag_count}}){% endtrans %}
         </a>
+        {% if join_requests_count %} |
+        <a href="{{request.user.get_absolute_url()}}?sort=inbox&section=join_requests"
+            {% if inbox_section == 'join_requests' %}class="on"{% endif %}
+        >
+            {% trans %}group join requests{% endtrans %}
+        </a>
+        {% endif %}
     </div>
     {% endif %}
     <div id="re_tools">

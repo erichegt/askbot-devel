@@ -1308,3 +1308,8 @@ def share_question_with_user(request):
         error_message = _('Sorry, looks like sharing request was invalid')
         request.user.message_set.create(message=error_message)
         return HttpResponseRedirect(thread.get_absolute_url())
+
+@csrf.csrf_protect
+def moderate_group_join_request(request):
+    """moderator of the group can accept or reject a new user"""
+    pass

@@ -369,10 +369,12 @@ class GroupMembership(AuthUserGroups):
         (FULL, 'full')
     )
     ALL_LEVEL_CHOICES = LEVEL_CHOICES + ((NONE, 'none'),)
+
     level = models.SmallIntegerField(
                         default=FULL,
                         choices=LEVEL_CHOICES,
                     )
+
 
     class Meta:
         app_label = 'askbot'
@@ -460,6 +462,12 @@ class Group(AuthGroup):
     class Meta:
         app_label = 'askbot'
         db_table = 'askbot_group'
+
+    def get_moderators(self):
+        """returns group moderators"""
+        user_filter = models.Q(is_superuser=True) | models.Q(status='m')
+        user_filter = user_filter & models.Q(groups__in=[self])
+        return User.objects.filter(user_filter)
 
     def get_openness_choices(self):
         """gives answers to question
