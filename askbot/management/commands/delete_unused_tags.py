@@ -1,26 +1,28 @@
 from django.core.management.base import NoArgsCommand
 from django.db import transaction
 from askbot import models
-from askbot.utils import console
+from askbot.utils.console import ProgressBar
+from askbot.conf import settings as askbot_settings
 import sys
 
 class Command(NoArgsCommand):
     @transaction.commit_manually
     def handle_noargs(self, **options):
         tags = models.Tag.objects.all()
-        count = 0
-        print "Searching for unused tags:",
+        message = 'Searching for unused tags:'
         total = tags.count()
+        tags = tags.iterator()
         deleted_tags = list()
-        for tag in tags:
+        for tag in ProgressBar(tags, total, message):
+            if tag.name == askbot_settings.GLOBAL_GROUP_NAME:#todo: temporary
+                continue
+            if tag.name.startswith('_internal_'):
+                continue
+
             if not tag.threads.exists():
                 deleted_tags.append(tag.name)
                 tag.delete()
             transaction.commit()
-            count += 1
-            progress = 100*float(count)/float(total)
-            console.print_progress('%6.2f%%', progress)
-        print '%6.2f%%' % 100
 
         if deleted_tags:
             found_count = len(deleted_tags)
