@@ -53,6 +53,7 @@
                 $("#fmanswer_button").hide();
             });
         {%endif%}
+        askbot['functions']['hideConvertLinks']();
     });
 
     $(window).bind('hashchange', animate_hashes);

@@ -671,10 +671,14 @@ def delete_comment(request):
 @decorators.admins_only
 @decorators.post_only
 def comment_to_answer(request):
-    comment_id = int(request.POST['comment_id'])
-    comment = get_object_or_404(models.Post, post_type = 'comment', id=comment_id)
-    comment.post_type = 'answer'
-    comment.save()
-    comment.thread.invalidate_cached_data()
+    comment_id = request.POST.get('comment_id')
+    if comment_id:
+        comment_id = int(comment_id)
+        comment = get_object_or_404(models.Post, post_type = 'comment', id=comment_id)
+        comment.post_type = 'answer'
+        comment.save()
+        comment.thread.invalidate_cached_data()
 
-    return HttpResponseRedirect(comment.get_absolute_url())
+        return HttpResponseRedirect(comment.get_absolute_url())
+    else:
+        raise Http404
