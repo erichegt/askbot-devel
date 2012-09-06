@@ -11,6 +11,7 @@ from django.forms import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import string_concat
 from django.template import Context
+from django.utils.html import strip_tags
 from askbot import exceptions
 from askbot import const
 from askbot.conf import settings as askbot_settings
@@ -103,14 +104,14 @@ def send_mail(
     try:
         assert(subject_line is not None)
         subject_line = prefix_the_subject_line(subject_line)
-        msg = mail.EmailMessage(
-                        subject_line, 
-                        body_text, 
+        msg = mail.EmailMultiAlternatives(
+                        subject_line,
+                        strip_tags(body_text),
                         from_email,
                         recipient_list,
                         headers = headers
                     )
-        msg.content_subtype = 'html'
+        msg.attach_alternative(body_text, "text/html")
         msg.send()
         if related_object is not None:
             assert(activity_type is not None)
@@ -227,7 +228,7 @@ def bounce_email(
     headers = {}
     if reply_to:
         headers['Reply-To'] = reply_to
-        
+
     send_mail(
         recipient_list = (email,),
         subject_line = 'Re: ' + subject,
@@ -284,7 +285,7 @@ def process_parts(parts, reply_code = None):
     """Process parts will upload the attachments and parse out the
     body, if body is multipart. Secondly - links to attachments
     will be added to the body of the question.
-    Returns ready to post body of the message and the list 
+    Returns ready to post body of the message and the list
     of uploaded files.
     """
     body_markdown = ''
@@ -302,7 +303,7 @@ def process_parts(parts, reply_code = None):
             stored_files.append(stored_file)
             body_markdown += markdown
 
-    #if the response separator is present - 
+    #if the response separator is present -
     #split the body with it, and discard the "so and so wrote:" part
     if reply_code:
         signature = extract_user_signature(body_markdown, reply_code)
