@@ -601,15 +601,10 @@ class Post(models.Model):
         * sends email alerts to all subscribers to the post
         """
         assert(activity_type is not None)
-        if self.is_comment():
-            #it's just a comment!
-            summary = self.text
+        if diff:
+            summary = diff
         else:
-            #summary = post.get_latest_revision().summary
-            if diff:
-                summary = diff
-            else:
-                summary = self.text
+            summary = self.get_snippet()
 
         update_activity = Activity(
                         user = updated_by,

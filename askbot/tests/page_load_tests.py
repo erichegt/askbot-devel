@@ -516,7 +516,7 @@ class PageLoadTestCase(AskbotTestCase):
             'user_profile',
             kwargs={'id': asker.id, 'slug': slugify(asker.username)},
             data={'sort':'inbox'},
-            template='user_profile/user_inbox.html',
+            template='user_inbox/responses_and_flags.html',
         )
 
     def test_user_page_with_groups_enabled(self):

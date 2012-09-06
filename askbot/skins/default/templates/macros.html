@@ -17,7 +17,7 @@
          {{ response.response_type }}
          ({{ timeago(response.timestamp) }}):<br/>
          {% if inbox_section != 'flags' %}
-             {{ response.response_snippet|escape }}
+             {{ response.response_snippet }}
          {% endif %}
     </a>
     {% if inbox_section == 'flags' %}

@@ -33,6 +33,7 @@ from askbot.utils.http import get_request_info
 from askbot.utils import functions
 from askbot import forms
 from askbot import const
+from askbot.views import context as view_context
 from askbot.conf import settings as askbot_settings
 from askbot import models
 from askbot import exceptions
@@ -672,6 +673,7 @@ def user_recent(request, user, context):
     return render_into_skin('user_profile/user_recent.html', context, request)
 
 #not a view - no direct url route here, called by `user_responses`
+@csrf.csrf_protect
 def show_group_join_requests(request, user, context):
     """show group join requests to admins who belong to the group"""
     if request.user.is_administrator_or_moderator() is False:
@@ -700,7 +702,7 @@ def show_group_join_requests(request, user, context):
         'join_requests': join_requests
     }
     context.update(data)
-    return render_into_skin('user_profile/group_join_requests.html', context, request)
+    return render_into_skin('user_inbox/group_join_requests.html', context, request)
     
 
 @owner_or_moderator_required
@@ -715,6 +717,10 @@ def user_responses(request, user, context):
     the view has two sub-views - "forum" - i.e. responses
     and "flags" - moderation items for mods only
     """
+
+    #0) temporary, till urls are fixed: update context 
+    #   to contain response counts for all sub-sections
+    context.update(view_context.get_for_inbox(request.user))
 
     #1) select activity types according to section
     section = request.GET.get('section', 'forum')
@@ -739,10 +745,8 @@ def user_responses(request, user, context):
 
     #2) load the activity notifications according to activity types
     #todo: insert pagination code here
-    memo_set = models.ActivityAuditStatus.objects.filter(
-                    user = request.user,
-                    activity__activity_type__in = activity_types
-                ).select_related(
+    memo_set = request.user.get_notifications(activity_types)
+    memo_set = memo_set.select_related(
                     'activity',
                     'activity__content_type',
                     'activity__question__thread',
@@ -803,7 +807,7 @@ def user_responses(request, user, context):
         'responses' : filtered_response_list,
     }
     context.update(data)
-    return render_into_skin('user_profile/user_inbox.html', context, request)
+    return render_into_skin('user_inbox/responses_and_flags.html', context, request)
 
 def user_network(request, user, context):
     if 'followit' not in django_settings.INSTALLED_APPS:

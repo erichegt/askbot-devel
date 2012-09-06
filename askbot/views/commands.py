@@ -901,7 +901,7 @@ def edit_group_membership(request):
         action = form.cleaned_data['action']
         #warning: possible race condition
         if action == 'add':
-            group_params = {'group_name': group_name, 'user': user}
+            group_params = {'name': group_name, 'user': user}
             group = models.Group.objects.get_or_create(**group_params)
             request.user.edit_group_membership(user, group, 'add')
             template = get_template('widgets/group_snippet.html')
@@ -946,7 +946,7 @@ def add_group(request):
     group_name = request.POST.get('group')
     if group_name:
         group = models.Group.objects.get_or_create(
-                            group_name=group_name,
+                            name=group_name,
                             openness=models.Group.OPEN,
                             user=request.user,
                         )
@@ -1312,4 +1312,30 @@ def share_question_with_user(request):
 @csrf.csrf_protect
 def moderate_group_join_request(request):
     """moderator of the group can accept or reject a new user"""
-    pass
+    request_id = IntegerField().clean(request.POST['request_id'])
+    action = request.POST['action']
+    assert(action in ('approve', 'deny'))
+
+    activity = get_object_or_404(models.Activity, pk=request_id)
+    group = activity.content_object
+    applicant = activity.user
+
+    if group.has_moderator(request.user):
+        group_membership = models.GroupMembership.objects.get(
+                                            user=applicant, group=group
+                                        )
+        if action == 'approve':
+            group_membership.level = models.GroupMembership.FULL
+            group_membership.save()
+            msg_data = {'user': applicant.username, 'group': group.name}
+            message = _('%(user)s, welcome to group %(group)s!') % msg_data
+            applicant.message_set.create(message=message)
+        else:
+            group_membership.delete()
+
+        activity.delete()
+        url = request.user.get_absolute_url() + '?sort=inbox&section=join_requests'
+        return HttpResponseRedirect(url)
+    else:
+        raise Http404
+

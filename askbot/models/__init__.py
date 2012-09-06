@@ -422,6 +422,14 @@ def user_notify_users(
     activity.save()
     activity.add_recipients(recipients)
 
+def user_get_notifications(self, notification_types=None, **kwargs):
+    """returns query set of activity audit status objects"""
+    return ActivityAuditStatus.objects.filter(
+                        user=self,
+                        activity__activity_type__in=notification_types,
+                        **kwargs
+                    )
+
 def _assert_user_can(
                         user = None,
                         post = None, #related post (may be parent)
@@ -2713,6 +2721,7 @@ User.add_to_class('get_foreign_groups', user_get_foreign_groups)
 User.add_to_class('get_group_membership', user_get_group_membership)
 User.add_to_class('get_personal_group', user_get_personal_group)
 User.add_to_class('get_primary_group', user_get_primary_group)
+User.add_to_class('get_notifications', user_get_notifications)
 User.add_to_class('strip_email_signature', user_strip_email_signature)
 User.add_to_class('get_groups_membership_info', user_get_groups_membership_info)
 User.add_to_class('get_anonymous_name', user_get_anonymous_name)
@@ -3422,7 +3431,7 @@ def add_user_to_personal_group(sender, instance, created, **kwargs):
         #identical group names!!!
         group_name = format_personal_group_name(instance)
         group = Group.objects.get_or_create(
-                    group_name=group_name, user=instance
+                    name=group_name, user=instance
                 )
         instance.edit_group_membership(
                     group=group, user=instance, action='add'

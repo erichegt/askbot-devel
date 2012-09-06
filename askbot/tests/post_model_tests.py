@@ -142,7 +142,7 @@ class PostModelTests(AskbotTestCase):
         groups_enabled_backup = askbot_settings.GROUPS_ENABLED
         askbot_settings.update('GROUPS_ENABLED', True)
         #create group
-        group = Group(name='testers')
+        group = Group(name='testers', openness=Group.OPEN)
         group.save()
 
         #create one admin and one moderator, and one reg user
@@ -320,6 +320,7 @@ class ThreadRenderLowLevelCachingTests(AskbotTestCase):
             'thread': thread,
             'question': thread._question_post(),
             'search_state': ss,
+            'visitor': None
         }
         proper_html = get_template('widgets/question_summary.html').render(context)
         self.assertEqual(test_html, proper_html)
@@ -596,8 +597,6 @@ class ThreadRenderCacheUpdateTests(AskbotTestCase):
         self.assertEqual(html, thread.get_cached_summary_html())
 
     def test_view_count(self):
-        import pdb
-        pdb.set_trace()
         question = self.post_question()
         self.assertEqual(0, question.thread.view_count)
         self.assertEqual(0, Thread.objects.all()[0].view_count)

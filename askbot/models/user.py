@@ -210,10 +210,7 @@ class Activity(models.Model):
         return user_qs[0]
 
     def get_snippet(self, max_length = 120):
-        if self.summary == '':
-            return self.content_object.get_snippet(max_length)
-        else:
-            return self.summary
+        return self.content_object.get_snippet(max_length)
 
     def get_absolute_url(self):
         return self.content_object.get_absolute_url()
@@ -419,18 +416,18 @@ class GroupManager(BaseQuerySetManager):
             pass
         return super(GroupManager, self).create(**kwargs)
 
-    def get_or_create(self, group_name = None, user = None, openness=None):
+    def get_or_create(self, name = None, user = None, openness=None):
         """creates a group tag or finds one, if exists"""
         #todo: here we might fill out the group profile
         try:
             #iexact is important!!! b/c we don't want case variants
             #of tags
-            group = self.get(name__iexact = group_name)
+            group = self.get(name__iexact = name)
         except self.model.DoesNotExist:
-            if openness:
-                group = self.create(name=group_name, openness=openness)
+            if openness is None:
+                group = self.create(name=name)
             else:
-                group = self.create(name=group_name)
+                group = self.create(name=name, openness=openness)
         return group
 
 
@@ -468,6 +465,11 @@ class Group(AuthGroup):
         user_filter = models.Q(is_superuser=True) | models.Q(status='m')
         user_filter = user_filter & models.Q(groups__in=[self])
         return User.objects.filter(user_filter)
+
+    def has_moderator(self, user):
+        """true, if user is a group moderator"""
+        mod_ids = self.get_moderators().values_list('id', flat=True)
+        return user.id in mod_ids
 
     def get_openness_choices(self):
         """gives answers to question
