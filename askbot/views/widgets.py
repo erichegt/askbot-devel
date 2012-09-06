@@ -202,7 +202,6 @@ def delete_widget(request, model, widget_id):
         return render_into_skin('embed/delete_widget.html',
                 {'widget': widget, 'widget_name': model}, request)
 
-@cache_page(60*30)
 def render_ask_widget_js(request, widget_id):
     widget = get_object_or_404(models.AskWidget, pk=widget_id)
     variable_name = "AskbotAskWidget%d" % widget.id
@@ -213,7 +212,6 @@ def render_ask_widget_js(request, widget_id):
     content =  content_tpl.render(Context(context_dict))
     return HttpResponse(content, mimetype='text/javascript')
 
-@cache_page(60*30)
 def render_ask_widget_css(request, widget_id):
     widget = get_object_or_404(models.AskWidget, pk=widget_id)
     variable_name = "AskbotAskWidget%d" % widget.id
@@ -225,7 +223,6 @@ def render_ask_widget_css(request, widget_id):
     content =  content_tpl.render(Context(context_dict))
     return HttpResponse(content, mimetype='text/css')
 
-@cache_page(60*30)
 def question_widget(request, widget_id):
     """Returns the first x questions based on certain tags.
     @returns template with those questions listed."""
