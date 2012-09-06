@@ -916,12 +916,10 @@ class AskWidgetForm(forms.Form, FormWithHideableFields):
         #hide ask_anonymously field
         if not askbot_settings.ALLOW_ASK_ANONYMOUSLY:
             self.hide_field('ask_anonymously')
-        self.fields['text'] = EditorField()
+        self.fields['text'] = QuestionEditorField()
         if not include_text:
             self.hide_field('text')
             self.fields['text'].required=False
-        else:
-            self.fields['text'].min_length = askbot_settings.MIN_QUESTION_BODY_LENGTH
 
 class CreateAskWidgetForm(forms.Form, FormWithHideableFields):
     title =  forms.CharField(max_length=100)
@@ -939,14 +937,14 @@ class CreateAskWidgetForm(forms.Form, FormWithHideableFields):
     def __init__(self, *args, **kwargs):
         from askbot.models import Tag
         super(CreateAskWidgetForm, self).__init__(*args, **kwargs)
-        #self.fields['group'] = forms.ModelChoiceField(
-        #    queryset=get_groups().exclude(name__startswith='_internal_'),
-        #    required=False
-        #)
+        self.fields['group'] = forms.ModelChoiceField(
+            queryset=get_groups().exclude(name__startswith='_internal_'),
+            required=False
+        )
         self.fields['tag'] = forms.ModelChoiceField(queryset=Tag.objects.get_content_tags(),
             required=False)
-        #if not askbot_settings.GROUPS_ENABLED:
-        #    self.hide_field('group')
+        if not askbot_settings.GROUPS_ENABLED:
+            self.hide_field('group')
 
 class CreateQuestionWidgetForm(forms.Form, FormWithHideableFields):
     title =  forms.CharField(max_length=100)
@@ -966,10 +964,10 @@ class CreateQuestionWidgetForm(forms.Form, FormWithHideableFields):
     def __init__(self, *args, **kwargs):
         super(CreateQuestionWidgetForm, self).__init__(*args, **kwargs)
         self.fields['tagnames'] = TagNamesField()
-        #self.fields['group'] = forms.ModelChoiceField(
-        #    queryset=get_groups().exclude(name__startswith='_internal'),
-        #    required=False
-        #)
+        self.fields['group'] = forms.ModelChoiceField(
+            queryset=get_groups().exclude(name__startswith='_internal'),
+            required=False
+        )
 
 class AskByEmailForm(forms.Form):
     """:class:`~askbot.forms.AskByEmailForm`

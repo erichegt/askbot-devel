@@ -72,10 +72,10 @@ def ask_widget(request, widget_id):
                 text = ' '
 
 
-            #if widget.group:
-            #    group_id = widget.group.id
-            #else:
-            #    group_id = None
+            if widget.group:
+                group_id = widget.group.id
+            else:
+                group_id = None
 
             if widget.tag:
                 tagnames = widget.tag.name
@@ -88,7 +88,7 @@ def ask_widget(request, widget_id):
                 'wiki': False,
                 'text': text,
                 'tagnames': tagnames,
-                #'group_id': group_id,
+                'group_id': group_id,
                 'is_anonymous': ask_anonymously
             }
             if request.user.is_authenticated():
@@ -167,7 +167,6 @@ def create_widget(request, model):
     data = {'form': form,
             'action': 'edit',
             'widget_name': model}
-
     return render_into_skin('embed/widget_form.html', data, request)
 
 @decorators.admins_only
@@ -237,8 +236,8 @@ def question_widget(request, widget_id):
     if widget.tagnames:
         filter_params['tags__name__in'] = widget.tagnames.split(' ')
 
-    #if widget.group:
-    #    filter_params['groups'] = widget.group
+    if widget.group:
+        filter_params['groups'] = widget.group
 
     #simple title search for now
     if widget.search_query:

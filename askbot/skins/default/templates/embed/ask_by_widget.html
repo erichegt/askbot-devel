@@ -161,6 +161,7 @@
     .field-errors{
       font-size: 10px;
       color: #ff0000;
+      height: 10px;
     }
     {{widget.inner_style}}
   </style>
@@ -176,13 +177,9 @@
   </div>
   <div id='question-list'>
   </div>
-  {% if form.title.errors %}
   <div class="field-errors">
-    {% for error in form.title.errors %}
-      {{error}}
-    {%endfor%}
+    {% for error in form.title.errors %} {{error}} {%endfor%}
   </div>
-  {% endif %}
 {% if widget.include_text_field %}
   {% if editor_type == 'markdown' %}
       <div class="wmd-container">
@@ -195,14 +192,10 @@
           {{ form.text }}
       </div>
   {% endif %}
-  {% if form.text.errors %}
   <div class="field-errors">
-    {% for error in form.text.errors %}
-      {{error}}
-    {%endfor%}
+    {% for error in form.text.errors %} {{error}} {%endfor%}
   </div>
   {% endif %}
-{% endif %}
   {% if form.ask_anonymously %}
     <p>{{form.ask_anonymously.label_tag()}}: {{form.ask_anonymously}}</p>
   {%endif%}
@@ -210,16 +203,6 @@
 </form>
 {%endblock%}
 {% block endjs %}
-<script type="text/javascript" src='{{"/js/live_search_new_thread.js"|media}}'></script>
-<script type="text/javascript" charset="utf-8">
-    var minSearchWordLength = {{settings.MIN_SEARCH_WORD_LENGTH}};
-    askbot['urls']['api_get_questions'] = '{% url api_get_questions %}';
-    liveSearchNewThreadInit(true);
-    $(document).ready(function(){
-      $("#id_title").focus();
-    });
-</script>
-
 <script type='text/javascript' src='{{"/js/editor.js"|media}}'></script>
 {% if editor_type == 'markdown' %}
     <script type='text/javascript' src='{{"/js/wmd/showdown.js"|media}}'></script>
@@ -227,5 +210,16 @@
 {% else %}
     {% include "meta/tinymce.html" %}
 {% endif %}
+
+<script type="text/javascript" src='{{"/js/live_search_new_thread.js"|media}}'></script>
+<script type="text/javascript" charset="utf-8">
+    var minSearchWordLength = {{settings.MIN_SEARCH_WORD_LENGTH}};
+    askbot['urls']['api_get_questions'] = '{% url api_get_questions %}';
+    askbot['urls']['upload'] = '{% url upload %}';
+    liveSearchNewThreadInit(true);
+    $(document).ready(function(){
+      $("#id_title").focus();
+    });
+</script>
 {% endblock %}
   

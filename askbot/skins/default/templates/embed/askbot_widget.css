@@ -13,7 +13,7 @@
      width:600px;
      {%if widget.include_text_field%}
      {% if editor_type == 'markdown' %}
-     height:500px;
+     height:520px;
      {%else%}
      height:520px;
      {%endif%}
