@@ -178,8 +178,8 @@ def edit_widget(request, model, widget_id):
     if request.method == 'POST':
         form = form_class(request.POST)
         if form.is_valid():
-            instance = model_class(**form.cleaned_data)
-            instance.save()
+            widget.__dict__.update(form.cleaned_data)
+            widget.save()
             return redirect('list_widgets', model=model)
     else:
         initial_dict = dict.copy(widget.__dict__)
