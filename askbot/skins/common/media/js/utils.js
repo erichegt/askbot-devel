@@ -655,6 +655,36 @@ EditLink.prototype.decorate = function(element){
     this.setHandlerInternal();
 };
 
+var ConvertLink = function(comment_id){
+    WrappedElement.call(this)
+    this._comment_id = comment_id;
+};
+inherits(ConvertLink, WrappedElement);
+
+ConvertLink.prototype.createDom = function(){
+    var element = this.makeElement('form');
+    element.addClass('convert');
+    element.attr('method', 'POST');
+    element.attr('action', askbot['urls']['convertComment']);
+    var hidden_input = this.makeElement('input');
+    hidden_input.attr('type', 'hidden');
+    hidden_input.attr('value', this._comment_id);
+    hidden_input.attr('name', 'comment_id');
+    hidden_input.attr('id', 'id_comment_id');
+    element.append(hidden_input);
+
+    var submit = this.makeElement('input');
+    submit.attr('type', 'submit');
+    submit.attr('value', gettext('convert to answer'));
+    element.append(submit);
+    this.decorate(element);
+};
+
+
+ConvertLink.prototype.decorate = function(element){
+    this._element = element;
+};
+
 var DeleteIcon = function(title){
     SimpleControl.call(this);
     this._title = title;

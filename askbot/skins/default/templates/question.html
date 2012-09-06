@@ -156,11 +156,22 @@
                     );
                 }
             }
+
+            function hide_convert_links(){
+              if (!askbot['data']['userIsAdminOrMod']){
+                var links = document.getElementsByClassName('convert');
+                for (i=0; i<links.length; i++){
+                  links[i].setAttribute('style', 'display:none;');
+                }
+              }
+            }
+            
             askbot['functions'] = askbot['functions'] || {};
             askbot['functions']['renderPostVoteButtons'] = render_vote_buttons;
             askbot['functions']['renderPostControls'] = render_post_controls;
             askbot['functions']['renderAddCommentButton'] = render_add_comment_button;
             askbot['functions']['renderAddAnswerButton'] = render_add_answer_button;
+            askbot['functions']['hideConvertLinks'] = hide_convert_links;
         })();
         /*]]>*/
     </script>

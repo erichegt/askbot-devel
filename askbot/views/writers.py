@@ -50,7 +50,7 @@ QUESTIONS_PAGE_SIZE = 10
 ANSWERS_PAGE_SIZE = 10
 
 @csrf.csrf_exempt
-def upload(request):#ajax upload file to a question or answer 
+def upload(request):#ajax upload file to a question or answer
     """view that handles file upload via Ajax
     """
 
@@ -71,6 +71,7 @@ def upload(request):#ajax upload file to a question or answer
         if file_name_prefix not in ('', 'group_logo_'):
             raise exceptions.PermissionDenied('invalid upload file name prefix')
 
+        #todo: check file type
         f = request.FILES['file-upload']#take first file
         #todo: extension checking should be replaced with mimetype checking
         #and this must be part of the form validation
@@ -121,14 +122,14 @@ def __import_se_data(dump_file):
     """non-view function that imports the SE data
     in the future may import other formats as well
 
-    In this function stdout is temporarily 
+    In this function stdout is temporarily
     redirected, so that the underlying importer management
     command could stream the output to the browser
 
     todo: maybe need to add try/except clauses to restore
     the redirects in the exceptional situations
     """
-    
+
     fake_stdout = tempfile.NamedTemporaryFile()
     real_stdout = sys.stdout
     sys.stdout = fake_stdout
@@ -226,7 +227,7 @@ def ask(request):#view used to ask a new question
                                                 author=request.user
                                             )
                 drafts.delete()
-                
+
                 user = form.get_post_user(request.user)
                 try:
                     question = user.post_question(
@@ -421,7 +422,7 @@ def edit_question(request, id):
                             body_text = form.cleaned_data['text'],
                             revision_comment = form.cleaned_data['summary'],
                             tags = form.cleaned_data['tags'],
-                            wiki = is_wiki, 
+                            wiki = is_wiki,
                             edit_anonymously = is_anon_edit,
                             is_private = post_privately
                         )
@@ -720,3 +721,18 @@ def delete_comment(request):
                     unicode(e),
                     mimetype = 'application/json'
                 )
+
+@decorators.admins_only
+@decorators.post_only
+def comment_to_answer(request):
+    comment_id = request.POST.get('comment_id')
+    if comment_id:
+        comment_id = int(comment_id)
+        comment = get_object_or_404(models.Post, post_type = 'comment', id=comment_id)
+        comment.post_type = 'answer'
+        comment.save()
+        comment.thread.invalidate_cached_data()
+
+        return HttpResponseRedirect(comment.get_absolute_url())
+    else:
+        raise Http404

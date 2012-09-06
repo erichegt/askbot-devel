@@ -5,6 +5,7 @@ Functions in the askbot module perform various
 basic actions on behalf of the forum application
 """
 import os
+import platform
 
 VERSION = (0, 7, 43)
 
@@ -30,11 +31,14 @@ REQUIREMENTS = {
     'recaptcha_works': 'django-recaptcha-works',
     'openid': 'python-openid',
     'pystache': 'pystache==0.3.1',
-    'lamson': 'Lamson',
     'pytz': 'pytz',
     'tinymce': 'django-tinymce',
+    'longerusername': 'longerusername',
 }
 
+if platform.system() != 'Windows':
+    REQUIREMENTS['lamson'] = 'Lamson'
+    
 #necessary for interoperability of django and coffin
 try:
     from askbot import patches

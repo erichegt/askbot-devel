@@ -6,6 +6,12 @@
   <noscript class="noscript">
     {% trans app_name = settings.APP_SHORT_NAME %}Please note: {{app_name}} requires javascript to work properly, please enable javascript in your browser, <a href="{{noscript_url}}">here is how</a>{% endtrans %}
   </noscript>
+  <script type="text/javascript">
+        //IE fix to hide the red margin
+  	var noscript = document.getElementsByTagName('noscript')[0];
+	noscript.style.padding = '0px';
+	noscript.style.backgroundColor = 'transparent';
+  </script>
 </div>
 <script type="text/javascript">
     var i18nLang = '{{settings.LANGUAGE_CODE}}';

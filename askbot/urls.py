@@ -71,6 +71,7 @@ urlpatterns = patterns('',
         name='questions'
     ),
     # END main page urls
+
     url(
         r'^api/get_questions/',
         views.commands.api_get_questions,
@@ -186,6 +187,11 @@ urlpatterns = patterns('',
         r'^comment/get_text/$',
         views.readers.get_comment,
         name='get_comment'
+    ),
+    url(#post only
+        r'^comment/convert/$',
+        views.writers.comment_to_answer,
+        name='comment_to_answer'
     ),
     url(
         r'^%s$' % _('tags/'),
