@@ -1475,9 +1475,9 @@ Comment.prototype.decorate = function(element){
         this._edit_link.decorate(edit_link);
     }
 
-    var convert_link = this._element.find('form.convert');
+    var convert_link = this._element.find('form.convert-comment');
     if (this._is_convertible){
-        this._convert_link = new ConvertLink(comment_id); 
+        this._convert_link = new CommentConvertLink(comment_id); 
         this._convert_link.decorate(convert_link);
     }
 
@@ -1566,7 +1566,7 @@ Comment.prototype.setContent = function(data){
     }
 
     if (this._is_convertible){
-        this._convert_link = new ConvertLink(this._data['id']); 
+        this._convert_link = new CommentConvertLink(this._data['id']); 
         this._comment_body.append(this._convert_link.getElement());
     }
     this._element.append(this._comment_body);

@@ -462,15 +462,15 @@ EditLink.prototype.decorate = function(element){
     this.setHandlerInternal();
 };
 
-var ConvertLink = function(comment_id){
+var CommentConvertLink = function(comment_id){
     WrappedElement.call(this)
     this._comment_id = comment_id;
 };
-inherits(ConvertLink, WrappedElement);
+inherits(CommentConvertLink, WrappedElement);
 
-ConvertLink.prototype.createDom = function(){
+CommentConvertLink.prototype.createDom = function(){
     var element = this.makeElement('form');
-    element.addClass('convert');
+    element.addClass('convert-comment');
     element.attr('method', 'POST');
     element.attr('action', askbot['urls']['convertComment']);
     var hidden_input = this.makeElement('input');
@@ -488,7 +488,7 @@ ConvertLink.prototype.createDom = function(){
 };
 
 
-ConvertLink.prototype.decorate = function(element){
+CommentConvertLink.prototype.decorate = function(element){
     this._element = element;
 };
 

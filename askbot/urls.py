@@ -164,6 +164,11 @@ urlpatterns = patterns('',
         views.writers.comment_to_answer,
         name='comment_to_answer'
     ),
+    url(#post only
+        r'^answer/convert/$',
+        views.writers.answer_to_comment,
+        name='answer_to_comment'
+    ),
     url(
         r'^%s$' % _('tags/'),
         views.readers.tags,
