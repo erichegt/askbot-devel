@@ -177,11 +177,29 @@ def edit_widget(request, model, widget_id):
     if request.method == 'POST':
         form = form_class(request.POST)
         if form.is_valid():
-            widget.__dict__.update(form.cleaned_data)
+            form_dict = dict.copy(form.cleaned_data)
+            for key in widget.__dict__:
+                if key.endswith('_id'):
+                    form_key = key.split('_id')[0]
+                    if form_dict[form_key]:
+                        form_dict[key] = form_dict[form_key].id
+                    del form_dict[form_key]
+                else:
+                    continue
+
+            widget.__dict__.update(form_dict)
             widget.save()
             return redirect('list_widgets', model=model)
     else:
         initial_dict = dict.copy(widget.__dict__)
+        for key in initial_dict:
+            if key.endswith('_id'):
+                new_key = key.split('_id')[0]
+                initial_dict[new_key] = initial_dict[key]
+                del initial_dict[key]
+            else:
+                continue
+
         del initial_dict['_state']
         form = form_class(initial=initial_dict)
 

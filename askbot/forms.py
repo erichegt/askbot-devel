@@ -919,7 +919,9 @@ class AskWidgetForm(forms.Form, FormWithHideableFields):
         self.fields['text'] = QuestionEditorField()
         if not include_text:
             self.hide_field('text')
-            self.fields['text'].required=False
+            #hack to make it validate
+            self.fields['text'].required = False
+            self.fields['text'].min_length = 0
 
 class CreateAskWidgetForm(forms.Form, FormWithHideableFields):
     title =  forms.CharField(max_length=100)
