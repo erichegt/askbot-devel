@@ -25,6 +25,7 @@
     askbot['urls']['unfollow_user'] = '/followit/unfollow/user/{{'{{'}}userId{{'}}'}}/';
     askbot['urls']['user_signin'] = '{{ settings.LOGIN_URL }}';
     askbot['settings']['static_url'] = '{{ settings.STATIC_URL }}';
+    askbot['urls']['getEditor'] = '{% url "get_editor" %}';
 </script>
 <script 
     type="text/javascript"

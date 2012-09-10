@@ -1,3 +1,4 @@
+//todo: refactor this into "Inbox" object or more specialized
 var setup_inbox = function(){
 
     var getSelected = function(){
@@ -114,15 +115,15 @@ var setup_inbox = function(){
 
     var rejectPostDialog = new RejectPostDialog();
     rejectPostDialog.decorate($('#reject-edit-modal'));
+    rejectPostDialog.setSelectedEditDataReader(function(){
+        return getSelected();
+    });
     setupButtonEventHandlers(
         $('#re_delete_post'),
         function(){
-            var data = getSelected();
-            if (data['id_list'].length === 0){
-                return;
+            if (rejectPostDialog.readSelectedEditData()) {
+                rejectPostDialog.show();
             }
-            rejectPostDialog.setSelectedEditData(data);
-            rejectPostDialog.show();
         }
     );
 
@@ -136,15 +137,6 @@ var setup_inbox = function(){
             $(response).append(control.getElement());
         });
     }
-    //setupButtonEventHandlers($('.re_expand'),
-    //                function(e){
-    //                    e.preventDefault();
-    //                    var re_snippet = $(this).find(".re_snippet:first")
-    //                    var re_content = $(this).find(".re_content:first")
-    //                    $(re_snippet).slideToggle();
-    //                    $(re_content).slideToggle();
-    //                }
-    //);
 };
 
 var setup_badge_details_toggle = function(){
@@ -182,9 +174,19 @@ PostModerationControls.prototype.getMemoId = function() {
     return this._parent_element.data('responseId');
 };
 
-PostModerationControls.prototype.removeMemo = function() {
+PostModerationControls.prototype.getMemoElement = function() {
     var reId = this.getMemoId();
-    $('#re_' + reId).remove();
+    return $('#re_' + reId);
+};
+
+PostModerationControls.prototype.removeMemo = function() {
+    this.getMemoElement().remove();
+};
+
+PostModerationControls.prototype.markMemo = function() {
+    var memo = this.getMemoElement();
+    var checkbox = memo.find('input[type="checkbox"]');
+    checkbox.attr('checked', true);
 };
 
 PostModerationControls.prototype.addReason = function(id, title) {
@@ -277,7 +279,9 @@ PostModerationControls.prototype.createDom = function() {
 
     var reasonsDlg = this._reasonsDialog;
     setupButtonEventHandlers(anchor, function() {
-        reasonsDlg.show();
+        me.markMemo();//mark current post
+        reasonsDlg.readSelectedEditData();//read data of selected edits
+        reasonsDlg.show();//open the "big" dialog
     });
     setupButtonEventHandlers(acceptBtn, function() { 
         me.moderatePost(null, 'remove_flag');
@@ -295,8 +299,19 @@ var RejectPostDialog = function(){
     this._selected_reason_id = null;
     this._state = null;//'select', 'preview', 'add-new'
     this._postModerationControls = [];
+    this._selectedEditDataReader = undefined;
 };
 inherits(RejectPostDialog, WrappedElement);
+
+RejectPostDialog.prototype.setSelectedEditDataReader = function(func) {
+    this._selectedEditDataReader = func;
+};
+
+RejectPostDialog.prototype.readSelectedEditData = function() {
+    var data = this._selectedEditDataReader();
+    this.setSelectedEditData(data);
+    return data['id_list'].length > 0;
+};
 
 RejectPostDialog.prototype.setSelectedEditData = function(data){
     this._selected_edit_data = data;
@@ -485,7 +500,10 @@ RejectPostDialog.prototype.rejectPost = function(reason_id){
         url: askbot['urls']['manageInbox'],
         success: function(data){
             if (data['success']){
-                memos.remove();
+                $.each(memos, function(idx, memo) {
+                    $(memo).next('.post-moderation-controls').remove();
+                    $(memo).remove();
+                });
                 me.hide();
             } else {
                 //only fatal errors here

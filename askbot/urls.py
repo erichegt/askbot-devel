@@ -118,6 +118,11 @@ urlpatterns = patterns('',
         name='get_users_info'
     ),
     url(
+        r'^get-editor/',
+        views.commands.get_editor,
+        name='get_editor'
+    ),
+    url(
         r'^%s%s$' % (_('questions/'), _('ask/')),
         views.writers.ask,
         name='ask'

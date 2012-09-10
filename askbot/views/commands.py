@@ -7,6 +7,7 @@ is not always very clean.
 """
 import datetime
 import logging
+from bs4 import BeautifulSoup
 from django.conf import settings as django_settings
 from django.core import exceptions
 #from django.core.management import call_command
@@ -32,6 +33,7 @@ from askbot.utils import url_utils
 from askbot import mail
 from askbot.skins.loaders import render_into_skin, get_template
 from askbot.skins.loaders import render_into_skin_as_string
+from askbot.skins.loaders import render_text_into_skin
 from askbot import const
 
 
@@ -1339,3 +1341,34 @@ def moderate_group_join_request(request):
     else:
         raise Http404
 
+@decorators.get_only
+def get_editor(request):
+    """returns bits of html for the tinymce editor in a dictionary with keys:
+    * html - the editor element
+    * scripts - an array of script tags
+    * success - True
+    """
+    config = simplejson.loads(request.GET['config'])
+    form = forms.EditorForm(editor_attrs=config)
+    editor_html = render_text_into_skin(
+        '{{ form.media }} {{ form.editor }}',
+        {'form': form},
+        request
+    )
+    #parse out javascript and dom, and return them separately
+    #we need that, because js needs to be added in a special way
+    html_soup = BeautifulSoup(editor_html)
+ 
+    parsed_scripts = list()
+    for script in html_soup.find_all('script'):
+        parsed_scripts.append({
+            'contents': script.string,
+            'src': script.get('src', None)
+        })
+
+    data = {
+        'html': str(html_soup.textarea),
+        'scripts': parsed_scripts,
+        'success': True
+    }
+    return HttpResponse(simplejson.dumps(data), mimetype='application/json')

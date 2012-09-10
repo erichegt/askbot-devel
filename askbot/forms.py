@@ -274,13 +274,14 @@ class EditorField(forms.CharField):
     min_length = 10  # sentinel default value
 
     def __init__(self, *args, **kwargs):
+        editor_attrs = kwargs.pop('editor_attrs', {})
         super(EditorField, self).__init__(*args, **kwargs)
         self.required = True
         widget_attrs = {'id': 'editor'}
         if askbot_settings.EDITOR_TYPE == 'markdown':
             self.widget = forms.Textarea(attrs=widget_attrs)
         elif askbot_settings.EDITOR_TYPE == 'tinymce':
-            self.widget = TinyMCE(attrs=widget_attrs)
+            self.widget = TinyMCE(attrs=widget_attrs, mce_attrs=editor_attrs)
         self.label  = _('content')
         self.help_text = u''
         self.initial = ''
@@ -461,6 +462,17 @@ class SummaryField(forms.CharField):
             'fixed spelling, grammar, improved style, this '
             'field is optional)'
         )
+
+
+class EditorForm(forms.Form):
+    """form with one field - `editor`
+    the field must be created dynamically, so it's added
+    in the __init__() function"""
+
+    def __init__(self, editor_attrs=None):
+        super(EditorForm, self).__init__()
+        editor_attrs = editor_attrs or {}
+        self.fields['editor'] = EditorField(editor_attrs=editor_attrs)
 
 
 class DumpUploadForm(forms.Form):

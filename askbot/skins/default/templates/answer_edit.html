@@ -59,8 +59,6 @@
     {% if settings.EDITOR_TYPE == 'markdown' %}
         <script type='text/javascript' src='{{"/js/wmd/showdown.js"|media}}'></script>
         <script type='text/javascript' src='{{"/js/wmd/wmd.js"|media}}'></script>
-    {% else %}
-        {% include "meta/tinymce.html" %}
     {% endif %}
     <script type="text/javascript">
         $().ready(function(){

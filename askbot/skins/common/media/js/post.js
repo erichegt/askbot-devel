@@ -2177,10 +2177,6 @@ WMD.prototype.setPreviewerEnabled = function(state){
     }
 };
 
-WMD.prototype.setEscapeHandler = function(handler){
-    this._escape_handler = handler;
-};
-
 WMD.prototype.createDom = function(){
     this._element = this.makeElement('div');
     var clearfix = this.makeElement('div').addClass('clearfix');
@@ -2227,7 +2223,67 @@ WMD.prototype.getText = function(){
 
 WMD.prototype.start = function(){
     Attacklab.Util.startEditor(true, this._enabled_buttons);
-    this._textarea.keyup(makeKeyHandler(27, this._escape_handler));
+};
+
+/**
+ * @constructor
+ */
+var TinyMCE = function(config) {
+    WrappedElement.call(this);
+    this._config = config || {};
+};
+inherits(TinyMCE, WrappedElement);
+
+/* 3 dummy functions to match WMD api */
+TinyMCE.prototype.setEnabledButtons = function() {};
+TinyMCE.prototype.start = function() {
+    this.loadEditor();
+};
+TinyMCE.prototype.setPreviewerEnabled = function() {};
+
+TinyMCE.prototype.setText = function(text) {
+    askbot['data']['editorContent'] = text;
+};
+
+TinyMCE.prototype.getText = function() {
+    return tinyMCE.activeEditor.getContent();
+};
+
+TinyMCE.prototype.loadEditor = function() {
+    var config = JSON.stringify(this._config);
+    var data = {config: config};
+    var editorBox = this._element;
+    var me = this;
+    $.ajax({
+        async: false,
+        type: 'GET',
+        dataType: 'json',
+        cache: false,
+        url: askbot['urls']['getEditor'],
+        data: data,
+        success: function(data) {
+            if (data['success']) {
+                editorBox.html(data['html']);
+                $.each(data['scripts'], function(idx, scriptData) {
+                    var scriptElement = me.makeElement('script');
+                    scriptElement.attr('type', 'text/javascript');
+                    if (scriptData['src']) {
+                        scriptElement.attr('src', scriptData['src']);
+                    }
+                    if (scriptData['contents']) {
+                        scriptElement.html(scriptData['contents']);
+                    }
+                    $('head').append(scriptElement);
+                });
+            }
+        }
+    });
+};
+
+TinyMCE.prototype.createDom = function() {
+    var editorBox = this.makeElement('div');
+    editorBox.addClass('wmd-container');
+    this._element = editorBox;
 };
 
 /**
@@ -2379,13 +2435,19 @@ TagWikiEditor.prototype.decorate = function(element){
     if (askbot['settings']['editorType'] === 'markdown') {
         var editor = new WMD();
     } else {
-        var editor = new TinyMCEWrapper();
+        var editor = new TinyMCE({//override defaults
+            mode: 'exact',
+            elements: 'editor',
+            theme_advanced_buttons1: 'bold, italic, |, link, |, numlist, bullist',
+            theme_advanced_buttons2: '',
+            plugins: '',
+            width: '200'
+        });
     }
     if (this._enabled_editor_buttons){
         editor.setEnabledButtons(this._enabled_editor_buttons);
     }
     editor.setPreviewerEnabled(this._is_previewer_enabled);
-    editor.setEscapeHandler(function(){me.cancelEdit()});
     this._editor = editor;
     setupButtonEventHandlers(edit_btn, function(){ me.startActivatingEditor() });
     setupButtonEventHandlers(cancel_btn, function(){me.cancelEdit()});
