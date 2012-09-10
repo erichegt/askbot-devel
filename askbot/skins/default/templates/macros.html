@@ -432,6 +432,7 @@ for the purposes of the AJAX comment editor #}
                     </div>
                 </div>
                 <script type="text/javascript">
+                    askbot['functions']['hideConvertLinks']();
                     askbot['functions']['renderPostControls']('{{comment.id}}');
                 </script>
             {% endfor %}
