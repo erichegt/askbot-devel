@@ -72,10 +72,10 @@ def ask_widget(request, widget_id):
                 text = ' '
 
 
-            #if widget.group:
-            #    group_id = widget.group.id
-            #else:
-            #    group_id = None
+            if widget.group:
+                group_id = widget.group.id
+            else:
+                group_id = None
 
             if widget.tag:
                 tagnames = widget.tag.name
@@ -88,7 +88,7 @@ def ask_widget(request, widget_id):
                 'wiki': False,
                 'text': text,
                 'tagnames': tagnames,
-                #'group_id': group_id,
+                'group_id': group_id,
                 'is_anonymous': ask_anonymously
             }
             if request.user.is_authenticated():
@@ -167,7 +167,6 @@ def create_widget(request, model):
     data = {'form': form,
             'action': 'edit',
             'widget_name': model}
-
     return render_into_skin('embed/widget_form.html', data, request)
 
 @decorators.admins_only
@@ -178,11 +177,29 @@ def edit_widget(request, model, widget_id):
     if request.method == 'POST':
         form = form_class(request.POST)
         if form.is_valid():
-            instance = model_class(**form.cleaned_data)
-            instance.save()
+            form_dict = dict.copy(form.cleaned_data)
+            for key in widget.__dict__:
+                if key.endswith('_id'):
+                    form_key = key.split('_id')[0]
+                    if form_dict[form_key]:
+                        form_dict[key] = form_dict[form_key].id
+                    del form_dict[form_key]
+                else:
+                    continue
+
+            widget.__dict__.update(form_dict)
+            widget.save()
             return redirect('list_widgets', model=model)
     else:
         initial_dict = dict.copy(widget.__dict__)
+        for key in initial_dict:
+            if key.endswith('_id'):
+                new_key = key.split('_id')[0]
+                initial_dict[new_key] = initial_dict[key]
+                del initial_dict[key]
+            else:
+                continue
+
         del initial_dict['_state']
         form = form_class(initial=initial_dict)
 
@@ -237,8 +254,8 @@ def question_widget(request, widget_id):
     if widget.tagnames:
         filter_params['tags__name__in'] = widget.tagnames.split(' ')
 
-    #if widget.group:
-    #    filter_params['groups'] = widget.group
+    if widget.group:
+        filter_params['groups'] = widget.group
 
     #simple title search for now
     if widget.search_query:
