@@ -2076,6 +2076,40 @@ ul#related-tags li {
 .question-page .answer-controls .permant-link {
   background: url(../images/link.png) no-repeat center left;
 }
+.question-page .post-controls .answer-convert,
+.question-page .answer-controls .answer-convert {
+  float: right;
+  clear: left;
+  /*background: url(../images/link.png) no-repeat center left;*/
+
+}
+.question-page .post-controls .answer-convert input,
+.question-page .answer-controls .answer-convert input {
+  font-size: 12px;
+  color: #777;
+  font-family: Arial;
+  text-decoration: none;
+  display: inline;
+  white-space: nowrap;
+  padding-left: 0px;
+  background: none;
+  border: none;
+  padding: 0px 7px 3px 18px;
+  float: right;
+  height: 18px;
+  line-height: 18px;
+  margin-top: -2px;
+  margin-left: 4px;
+}
+.question-page .post-controls .answer-convert input:hover,
+.question-page .answer-controls .answer-convert input:hover {
+  background-color: #f5f0c9;
+  border-radius: 3px;
+  -ms-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -khtml-border-radius: 3px;
+}
 .question-page .tabBar {
   width: 100%;
 }
@@ -2306,12 +2340,12 @@ ul#related-tags li {
 .question-page .comments .comment-body .edit {
   padding-left: 6px;
 }
-.question-page .comments .comment-body .convert {
+.question-page .comments .comment-body .convert-comment {
   display: inline;
   white-space: nowrap;
   padding-left: 0px;
 }
-.question-page .comments .comment-body .convert input {
+.question-page .comments .comment-body .convert-comment input {
   background: none;
   padding: 0px;
   color: #1B79BD;
@@ -2322,7 +2356,7 @@ ul#related-tags li {
   margin-left: 6px;
   font-size: 13px;
 }
-.question-page .comments .comment-body .convert input:hover {
+.question-page .comments .comment-body .convert-comment input:hover {
   text-decoration: underline;
   cursor: pointer;
 }

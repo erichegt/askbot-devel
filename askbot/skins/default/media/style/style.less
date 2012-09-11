@@ -1982,6 +1982,35 @@ ul#related-tags li {
         .permant-link{
             background: url(../images/link.png) no-repeat center left;
         }
+
+        .answer-convert{
+          float:right;
+          clear: left;
+          /*background: url(../images/link.png) no-repeat center left;*/
+        }
+        
+        .answer-convert input{
+            font-size:12px;
+            color: #777;
+            font-family:@body-font;
+            text-decoration: none;
+            display:inline;
+            white-space:nowrap;
+            padding-left: 0px;
+            background: none;
+            border: none;
+            padding: 0px 7px 3px 18px;
+            float:right;
+            height:18px;
+            line-height:18px;
+            margin-top:-2px;
+            margin-left:4px;
+        }
+        
+        .answer-convert input:hover{
+            background-color: #f5f0c9;
+            .rounded-corners(3px);
+        }
     }
     .tabBar{
        width:100%;
@@ -2178,13 +2207,13 @@ ul#related-tags li {
                 padding-left:6px;
             }
 
-            .convert {
+            .convert-comment{
               display: inline;
               white-space: nowrap;
               padding-left: 0px;
             }
 
-            .convert input{
+            .convert-comment input{
               background: none;
               padding: 0px;
               color: #1B79BD;
@@ -2196,7 +2225,7 @@ ul#related-tags li {
               font-size: 13px;
             }
 
-            .convert input:hover{
+            .convert-comment input:hover{
               text-decoration:underline;
               cursor:pointer;
             }

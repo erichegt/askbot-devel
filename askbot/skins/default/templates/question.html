@@ -54,6 +54,22 @@
                     }
                 }
             }
+
+            function hide_convert_answer_links(post_id){
+                var answer_convert_id = 'post-' + post_id + '-convert';
+                var convert_answer = document.getElementById(answer_convert_id);
+                if (data['userIsAdminOrMod']){
+                  var answer_id = 'post-id-' + post_id;
+                  var answer_container = document.getElementById(answer_id);
+                  var answer_element= answer_container.getElementsByClassName('answer-body')[0].children[1];
+                  if (answer_element.textContent.length > 300){
+                    convert_answer.parentNode.removeChild(convert_answer);
+                  }
+                } else{
+                  convert_answer.parentNode.removeChild(convert_answer);
+                }
+            }
+
             function render_post_controls(post_id){
                 if (data['userIsAdminOrMod']){
                     return;//all functions on
@@ -172,6 +188,7 @@
             askbot['functions']['renderAddCommentButton'] = render_add_comment_button;
             askbot['functions']['renderAddAnswerButton'] = render_add_answer_button;
             askbot['functions']['hideConvertLinks'] = hide_convert_links;
+            askbot['functions']['hideConvertAnswerLinks'] = hide_convert_answer_links;
         })();
         /*]]>*/
     </script>

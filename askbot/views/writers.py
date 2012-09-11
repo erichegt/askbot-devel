@@ -728,11 +728,40 @@ def comment_to_answer(request):
     comment_id = request.POST.get('comment_id')
     if comment_id:
         comment_id = int(comment_id)
-        comment = get_object_or_404(models.Post, post_type = 'comment', id=comment_id)
+        comment = get_object_or_404(models.Post,
+                post_type='comment', id=comment_id)
         comment.post_type = 'answer'
         comment.save()
+        comment.thread.update_answer_count()
         comment.thread.invalidate_cached_data()
 
         return HttpResponseRedirect(comment.get_absolute_url())
+    else:
+        raise Http404
+
+@decorators.admins_only
+@decorators.post_only
+def answer_to_comment(request):
+    answer_id = request.POST.get('answer_id')
+    if answer_id:
+        answer_id = int(answer_id)
+        answer = get_object_or_404(models.Post,
+                post_type = 'answer', id=answer_id)
+        if len(answer.text) <= 300:
+            answer.post_type = 'comment'
+            answer.parent =  answer.thread._question_post()
+            answer_comments = models.Post.objects.get_comments().filter(parent=answer)
+
+            for comment in answer_comments:
+                comment.parent = answer.parent
+                comment.save()
+
+            answer.parse_and_save(author=answer.author)
+            answer.thread.update_answer_count()
+            answer.thread.invalidate_cached_data()
+        else:
+            request.user.message_set.create(message = _("the selected answer cannot be a comment"))
+
+        return HttpResponseRedirect(answer.get_absolute_url())
     else:
         raise Http404
