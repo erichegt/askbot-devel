@@ -4,6 +4,38 @@ from django.test import TestCase
 from functools import wraps
 from askbot import models
 
+def with_settings(settings_dict):
+    """a decorator that will run function with settings
+    then apply previous settings and return the result
+    of the function.
+    If the function raises an exception - decorator
+    still restores the previous settings
+    """
+
+    def decorator(func):
+
+        @wraps(func)
+        def wrapped(*args, **kwargs):
+            from askbot.conf import settings as askbot_settings
+            backup_settings_dict = dict()
+            for key, value in settings_dict.items():
+                backup_settings_dict[key] = getattr(askbot_settings, key)
+                askbot_settings.update(key, value)
+            
+            try:
+                return func(*args, **kwargs)
+            except:
+                raise
+            finally:
+                for key, value in backup_settings_dict.items():
+                    askbot_settings.update(key, value)
+
+        return wrapped
+
+    return decorator
+                
+
+
 def create_user(
             username = None,
             email = None,

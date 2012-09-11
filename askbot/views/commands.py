@@ -659,16 +659,13 @@ def get_groups_list(request):
     """returns names of group tags
     for the autocomplete function"""
     global_group = get_global_group()
-    group_names = models.Group.objects.all().filter(
-                                    deleted = False
-                                ).exclude(
+    group_names = models.Group.objects.all().exclude(
                                     name__startswith='_internal_'
                                 ).exclude(
                                     name=global_group.name
                                 ).values_list(
                                     'name', flat = True
                                 )
-    group_names = map(lambda v: v.replace('-', ' '), group_names)
     output = '\n'.join(group_names)
     return HttpResponse(output, mimetype = 'text/plain')
 
@@ -714,7 +711,17 @@ def api_get_questions(request):
     query = request.GET.get('query', '').strip()
     if not query:
         return HttpResponseBadRequest('Invalid query')
-    threads = models.Thread.objects.get_for_query(query)
+
+    if askbot_settings.GROUPS_ENABLED:
+        threads = models.Thread.objects.get_visible(user=request.user)
+    else:
+        threads = models.Thread.objects.all()
+
+    threads = models.Thread.objects.get_for_query(
+                                    search_query=query,
+                                    qs=threads
+                                )
+
     if should_show_sort_by_relevance():
         threads = threads.extra(order_by = ['-relevance'])
     #todo: filter out deleted threads, for now there is no way
