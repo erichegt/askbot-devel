@@ -441,8 +441,14 @@ class Group(AuthGroup):
         (MODERATED, 'moderated'),
         (CLOSED, 'closed'),
     )
-    logo_url = models.URLField(null = True)
-    moderate_email = models.BooleanField(default = True)
+    logo_url = models.URLField(null=True)
+    moderate_email = models.BooleanField(default=True)
+    moderate_answers_to_enquirers = models.BooleanField(
+                        default=False,
+                        help_text='If true, answers to outsiders questions '
+                                'will be shown to the enquirers only when '
+                                'selected by the group moderators.'
+                    )
     openness = models.SmallIntegerField(default=CLOSED, choices=OPENNESS_CHOICES)
     #preapproved email addresses and domain names to auto-join groups
     #trick - the field is padded with space and all tokens are space separated

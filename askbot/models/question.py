@@ -436,6 +436,30 @@ class ThreadManager(BaseQuerySetManager):
         return self.filter(id__in = thread_ids)
 
 
+class ThreadToGroup(models.Model):
+    """the "through" many-to-many relation between
+    threads and groups - to distinguish full and "what's published"
+    visibility of threads to various groups
+    """
+    SHOW_PUBLISHED_RESPONSES = 0
+    SHOW_ALL_RESPONSES = 1
+    VISIBILITY_CHOICES = (
+        (SHOW_PUBLISHED_RESPONSES, 'show only published responses'),
+        (SHOW_ALL_RESPONSES, 'show all responses')
+    )
+    thread = models.ForeignKey('Thread')
+    group = models.ForeignKey(Group)
+    visibility = models.SmallIntegerField(
+                        choices=VISIBILITY_CHOICES,
+                        default=SHOW_ALL_RESPONSES
+                    )
+
+    class Meta:
+        unique_together = ('thread', 'group')
+        db_table = 'askbot_thread_groups'
+        app_label = 'askbot'
+
+
 class Thread(models.Model):
     SUMMARY_CACHE_KEY_TPL = 'thread-question-summary-%d'
     ANSWER_LIST_KEY_TPL = 'thread-answer-list-%d'
@@ -443,7 +467,7 @@ class Thread(models.Model):
     title = models.CharField(max_length=300)
 
     tags = models.ManyToManyField('Tag', related_name='threads')
-    groups = models.ManyToManyField(Group, related_name='group_threads', db_table='askbot_thread_groups')
+    groups = models.ManyToManyField(Group, through=ThreadToGroup, related_name='group_threads')
 
     # Denormalised data, transplanted from Question
     tagnames = models.CharField(max_length=125)
@@ -889,13 +913,19 @@ class Thread(models.Model):
         """adds thread to a list of groups
         ``groups`` argument may be any iterable of groups
         """
-        self.groups.add(*groups)
+        for group in groups:
+            #todo: change to bulk create when django 1.3 goes out of use
+            ThreadToGroup.objects.get_or_create(thread=self, group=group)
+
         if recursive == True:
             #comments are taken care of automatically
             self.add_child_posts_to_groups(groups)
 
     def remove_from_groups(self, groups, recursive=False):
-        self.groups.remove(*groups)
+        thread_groups =  ThreadToGroup.objects.filter(
+                                        thread=self, group__in=groups
+                                    )
+        thread_groups.delete()
         if recursive == True:
             self.remove_child_posts_from_groups(groups)
 
