@@ -2635,6 +2635,14 @@ UserGroupProfileEditor.prototype.decorate = function(element){
     this._moderate_email_btn = moderate_email_btn;
     moderate_email_toggle.decorate(moderate_email_btn);
 
+    var moderate_publishing_replies_toggle = new TwoStateToggle();
+    moderate_publishing_replies_toggle.setPostData({
+        group_id: this.getTagId(),
+        property_name: 'moderate_answers_to_enquirers'
+    });
+    var btn = element.find('#moderate-answers-to-enquirers');
+    moderate_publishing_replies_toggle.decorate(btn);
+
     var opennessSelector = new DropdownSelect();
     var selectorElement = element.find('#group-openness-selector');
     opennessSelector.setPostData({

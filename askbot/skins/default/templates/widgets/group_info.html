@@ -47,6 +47,18 @@
             </label>
             <br/>
         {% endif %}
+
+        <input
+            type="checkbox"
+            id="moderate-answers-to-enquirers"
+            {% if group.moderate_answers_to_enquirers %}checked="checked"{% endif %}
+            data-toggle-url="{% url toggle_group_profile_property %}"
+        />
+        <label for="moderate-answers-to-enquirers">
+            {% trans %}show only selected answers to enquirers{% endtrans %}
+        </label>
+        <br/>
+
         <label for="group-openness-selector">
             {% trans %}How users join this group?{% endtrans %}
         </label>

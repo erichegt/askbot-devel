@@ -995,7 +995,7 @@ def toggle_group_profile_property(request):
     #todo: this might be changed to more general "toggle object property"
     group_id = IntegerField().clean(int(request.POST['group_id']))
     property_name = CharField().clean(request.POST['property_name'])
-    assert property_name == 'moderate_email'
+    assert property_name in ('moderate_email', 'moderate_answers_to_enquirers')
     group = models.Group.objects.get(id = group_id)
     new_value = not getattr(group, property_name)
     setattr(group, property_name, new_value)
