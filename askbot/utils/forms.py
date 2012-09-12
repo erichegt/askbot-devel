@@ -80,7 +80,7 @@ class UserNameField(StrippedNonEmptyCharField):
             error_messages.update(kw['error_messages'])
             del kw['error_messages']
 
-        max_length = MAX_USERNAME_LENGTH
+        max_length = MAX_USERNAME_LENGTH()
         super(UserNameField,self).__init__(max_length=max_length,
                 widget=forms.TextInput(attrs=login_form_widget_attrs),
                 label=label,
