@@ -1852,6 +1852,7 @@ def user_post_answer(
         is_private = is_private,
         by_email = by_email
     )
+    #add to the answerer's group
     answer_post.add_to_groups([self.get_personal_group()])
 
     answer_post.thread.invalidate_cached_data()

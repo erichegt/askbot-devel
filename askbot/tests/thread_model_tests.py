@@ -1,6 +1,7 @@
 from askbot.tests.utils import AskbotTestCase
 from askbot.conf import settings as askbot_settings
 from askbot import models
+from askbot.models.tag import get_global_group
 import django.core.mail
 
 class ThreadModelTestsWithGroupsEnabled(AskbotTestCase):
@@ -57,3 +58,46 @@ class ThreadModelTestsWithGroupsEnabled(AskbotTestCase):
         self.assertEqual(len(django.core.mail.outbox), 1)
         user = self.reload_object(self.user)
         self.assertEqual(user.new_response_count, 1)
+
+    def test_answer_to_private_question_is_not_globally_visible(self):
+        question = self.post_question(user=self.admin, is_private=True)
+        answer = self.post_answer(question=question, user=self.admin, is_private=False)
+        global_group = get_global_group()
+        self.assertEqual(
+            global_group in set(answer.groups.all()),
+            False
+        )
+
+    def test_answer_to_group_question_is_not_globally_visible(self):
+        #ask into group where user is not a member
+        question = self.post_question(user=self.user, group_id=self.group.id)
+        #answer posted by a group member
+        answer = self.post_answer(question=question, user=self.admin, is_private=False)
+        global_group = get_global_group()
+        self.assertEqual(
+            global_group in set(answer.groups.all()),
+            False
+        )
+
+
+    def test_restrictive_response_publishing(self):
+        self.group.moderate_answers_to_enquirers = True
+        self.group.save()
+        question = self.post_question(user=self.user, group_id=self.group.id)
+        answer = self.post_answer(question=question, user=self.admin)
+
+        #answer and the user don't have groups in common
+        answer_groups = set(answer.groups.all())
+        user_groups = set(self.user.get_groups())
+        self.assertEqual(len(answer_groups & user_groups), 0)
+
+    def test_permissive_response_publishing(self):
+        self.group.moderate_answers_to_enquirers = False
+        self.group.save()
+        question = self.post_question(user=self.user, group_id=self.group.id)
+        answer = self.post_answer(question=question, user=self.admin)
+
+        #answer and user have one group in common
+        answer_groups = set(answer.groups.all())
+        user_groups = set(self.user.get_groups())
+        self.assertEqual(len(answer_groups & user_groups), 1)

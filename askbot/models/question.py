@@ -146,7 +146,7 @@ class ThreadManager(BaseQuerySetManager):
         )
 
         author_group = author.get_personal_group()
-        thread.add_to_groups([author_group])
+        thread.add_to_groups([author_group], visibility=ThreadToGroup.SHOW_PUBLISHED_RESPONSES)
         question.add_to_groups([author_group])
 
         if is_private or group_id:#add groups to thread and question
@@ -575,10 +575,19 @@ class Thread(models.Model):
 
     def get_groups_shared_with(self, max_count=None):
         """returns query set of groups with whom thread is shared"""
-        groups = self.groups.exclude(name__startswith='_internal_')
+        thread_groups = ThreadToGroup.objects.filter(
+                                        models.Q(
+                                            thread=self,
+                                            visibility=ThreadToGroup.SHOW_ALL_RESPONSES
+                                        ) & ~models.Q(
+                                            group__name__startswith='_internal_'
+                                        )
+                                    )
         if max_count:
-            groups = groups[:max_count]
-        return groups
+            thread_groups = thread_groups[:max_count]
+
+        group_ids = thread_groups.values_list('group_id', flat=True)
+        return Group.objects.filter(id__in=group_ids)
 
     def update_favorite_count(self):
         self.favourite_count = FavoriteQuestion.objects.filter(thread=self).count()
@@ -665,6 +674,17 @@ class Thread(models.Model):
     def has_answer_by_user(self, user):
         #use len to cache the queryset
         return len(self.get_answers_by_user(user)) > 0
+
+    def requires_response_moderation(self, author):
+        """true, if answers by a given author must be moderated
+        before publishing to the enquirers"""
+        author_groups = author.get_groups()
+        thread_groups = self.get_groups_shared_with()
+        for group in set(author_groups) & set(thread_groups):
+            if group.moderate_answers_to_enquirers:
+                return True
+
+        return False
 
     def tagname_meta_generator(self):
         return u','.join([unicode(tag) for tag in self.get_tag_names()])
@@ -909,13 +929,22 @@ class Thread(models.Model):
                         tag__id__in=group_ids
                     ).delete()
 
-    def add_to_groups(self, groups, recursive=False):
+    def add_to_groups(
+        self, groups, visibility=ThreadToGroup.SHOW_ALL_RESPONSES, recursive=False
+    ):
         """adds thread to a list of groups
         ``groups`` argument may be any iterable of groups
         """
         for group in groups:
             #todo: change to bulk create when django 1.3 goes out of use
-            ThreadToGroup.objects.get_or_create(thread=self, group=group)
+            thread_group, created = ThreadToGroup.objects.get_or_create(
+                                                    thread=self,
+                                                    group=group
+                                                )
+
+            if thread_group.visibility != visibility:
+                thread_group.visibility = visibility
+                thread_group.save()
 
         if recursive == True:
             #comments are taken care of automatically

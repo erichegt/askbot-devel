@@ -220,7 +220,11 @@ class PostManager(BaseQuerySetManager):
             post.last_edited_at = added_at
             post.wikified_at = added_at
 
-        post.parse_and_save(author=author, is_private = is_private)
+        #possibly modify the is_private, if one of the groups
+        #mandates explicit publishing of the posts
+        is_private = is_private or thread.requires_response_moderation(author)
+
+        post.parse_and_save(author=author, is_private=is_private)
 
         post.add_revision(
             author = author,
@@ -507,6 +511,10 @@ class Post(models.Model):
             self.add_to_groups(groups)
         elif is_private or group_id:
             self.make_private(author, group_id = group_id)
+        elif self.thread_id:#is connected to thread
+            #inherit privacy scope from thread
+            thread_groups = self.thread.groups.all()
+            self.add_to_groups(thread_groups)
         else:
             self.make_public()
 
@@ -647,7 +655,7 @@ class Post(models.Model):
                                 recipients=notify_sets['for_email'],
                             )
 
-    def make_private(self, user, group_id = None):
+    def make_private(self, user, group_id=None):
         """makes post private within user's groups
         todo: this is a copy-paste in thread and post
         """
