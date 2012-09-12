@@ -18,7 +18,7 @@
      height:520px;
      {%endif%}
      {%else%}
-     height:210px;
+     height:220px;
      {%endif%}
      margin: 100px auto;
      background-color: #fff;
