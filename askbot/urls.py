@@ -203,6 +203,11 @@ urlpatterns = patterns('',
         views.writers.answer_to_comment,
         name='answer_to_comment'
     ),
+    url(#post only
+        r'^answer/publish/$',
+        views.commands.publish_answer,
+        name='publish_answer'
+    ),
     url(
         r'^%s$' % _('tags/'),
         views.readers.tags,

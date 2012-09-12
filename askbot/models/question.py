@@ -654,7 +654,7 @@ class Thread(models.Model):
 
     def format_for_email(self, user=None):
         """experimental function: output entire thread for email"""
-        question, answers, junk = self.get_cached_post_data(user=user)
+        question, answers, junk, published_ans_ids = self.get_cached_post_data(user=user)
         output = question.format_for_email_as_subthread()
         if answers:
             answer_heading = ungettext(
@@ -740,9 +740,10 @@ class Thread(models.Model):
             cache.cache.set(key, post_data, const.LONG_TIME)
         return post_data
 
-    def get_post_data(self, sort_method = 'votes', user = None):
+    def get_post_data(self, sort_method='votes', user=None):
         """returns question, answers as list and a list of post ids
-        for the given thread
+        for the given thread, and the list of published post ids
+        (four values)
         the returned posts are pre-stuffed with the comments
         all (both posts and the comments sorted in the correct
         order)
@@ -809,7 +810,31 @@ class Thread(models.Model):
             answers.remove(accepted_answer)
             answers.insert(0, accepted_answer)
 
-        return (question_post, answers, post_to_author)
+        #if user is not an inquirer, and thread is moderated,
+        #put published answers first
+        #todo: there may be > 1 enquirers
+        published_answer_ids = list()
+        if self.is_moderated() and user != question_post.author:
+            #if moderated - then author is guaranteed to be the 
+            #limited visibility enquirer
+            published_answers = self.posts.get_answers(
+                                        user=self.author#todo: may be > 1
+                                    ).filter(
+                                        deleted=False
+                                    ).order_by(
+                                        {
+                                            'latest':'-added_at',
+                                            'oldest':'added_at',
+                                            'votes':'-score'
+                                        }[sort_method]
+                                    )
+            #now put those answers first
+            for answer in reversed(answers):
+                answers.remove(answer)
+                answers.insert(0, answer)
+                published_answer_ids.append(answer.id)
+
+        return (question_post, answers, post_to_author, published_answer_ids)
 
     def has_accepted_answer(self):
         return self.accepted_answer_id != None
@@ -908,6 +933,16 @@ class Thread(models.Model):
         """True if thread is followed by user"""
         if user and user.is_authenticated():
             return self.followed_by.filter(id = user.id).count() > 0
+        return False
+
+    def is_moderated(self):
+        """True, if tread has SHOW_PUBLISHED_RESPONSES
+        group memberships"""
+        if askbot_settings.GROUPS_ENABLED:
+            return ThreadToGroup.objects.filter(
+                            thread=self,
+                            visibility=ThreadToGroup.SHOW_PUBLISHED_RESPONSES
+                        )
         return False
 
     def add_child_posts_to_groups(self, groups):

@@ -1379,3 +1379,18 @@ def get_editor(request):
         'success': True
     }
     return HttpResponse(simplejson.dumps(data), mimetype='application/json')
+
+@decorators.post_only
+def publish_answer(request):
+    """will publish or unpublish answer, if
+    current thread is moderated
+    """
+    #todo: assert permission
+    answer_id = IntegerField().clean(request.POST['answer_id'])
+    answer = models.Post.objects.get(id=answer_id, post_type='answer')
+    enquirer = answer.thread._question_post().author
+    enquirer_group = enquirer.get_personal_group()
+    answer.add_to_groups([enquirer_group])
+    #todo: notify enquirer by email about the post
+    request.user.message_set.create(message='The answer is published, thank you.')
+    return HttpResponseRedirect(answer.get_absolute_url())

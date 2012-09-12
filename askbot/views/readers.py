@@ -444,7 +444,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
 
     #load answers and post id's->athor_id mapping
     #posts are pre-stuffed with the correctly ordered comments
-    updated_question_post, answers, post_to_author = thread.get_cached_post_data(
+    updated_question_post, answers, post_to_author, published_answer_ids = thread.get_cached_post_data(
                                 sort_method = answer_sort_method,
                                 user = request.user
                             )
@@ -572,6 +572,8 @@ def question(request, id):#refactor - long subroutine. display question body, an
         'active_tab': 'questions',
         'question' : question_post,
         'thread': thread,
+        'thread_is_moderated': thread.is_moderated(),
+        'published_answer_ids': published_answer_ids,
         'answer' : answer_form,
         'answers' : page_objects.object_list,
         'answer_count': thread.get_answer_count(request.user),

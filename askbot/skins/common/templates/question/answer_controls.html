@@ -8,6 +8,28 @@
         {% trans %}link{% endtrans %}
     </a>
 </span>
+<span 
+    class="action-link"
+    id="answer-publish-{{ answer.id }}"
+    {% if answer.id in published_answer_ids %}
+        title="{% trans %}unpublish{% endtrans %}"
+    {% else %}
+        title="{% trans %}publish{% endtrans %}"
+    {% endif %}
+>
+    <form action="{% url publish_answer %}">{% csrf_token %}
+        <input type="hidden" name="answer_id" id="id_answer_id" value="{{answer.id}}"/>
+        <input 
+            type="submit"
+            name=""
+            {% if answer.id in published_answer_ids %}
+                name="{% trans %}unpublish{% endtrans %}"
+            {% else %}
+                name="{% trans %}publish{% endtrans %}"
+            {% endif %}
+        />
+    </form>
+</span>
 <span id='post-{{answer.id}}-delete' class="action-link delete-post">
     <a class="question-delete"
     >{% if answer.deleted %}{% trans %}undelete{% endtrans %}{% else %}{% trans %}delete{% endtrans %}{% endif %}</a>
@@ -42,8 +64,8 @@
 <span id='post-{{answer.id}}-convert' class="action-link">
   <form class="answer-convert" action="{% url answer_to_comment %}" method="POST">
     {% csrf_token %}
-    <input type="hidden" name="answer_id" id="id_answer_id" value="{{answer.id}}">
-    <input type="submit" name="" value="{% trans %}convert to comment{% endtrans %}">
+    <input type="hidden" name="answer_id" id="id_answer_id" value="{{answer.id}}"/>
+    <input type="submit" name="" value="{% trans %}convert to comment{% endtrans %}"/>
   </form>
 </span>
 <script type="text/javascript">

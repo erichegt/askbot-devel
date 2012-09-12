@@ -3,6 +3,7 @@ from askbot.conf import settings as askbot_settings
 from askbot import models
 from askbot.models.tag import get_global_group
 import django.core.mail
+from django.core.urlresolvers import reverse
 
 class ThreadModelTestsWithGroupsEnabled(AskbotTestCase):
     
@@ -90,6 +91,17 @@ class ThreadModelTestsWithGroupsEnabled(AskbotTestCase):
         answer_groups = set(answer.groups.all())
         user_groups = set(self.user.get_groups())
         self.assertEqual(len(answer_groups & user_groups), 0)
+
+        #publish the answer
+        self.client.login(user_id=self.admin.id, method='force')
+        self.client.post(reverse('publish_answer'), data={'answer_id': answer.id})
+        #todo: test redirect
+
+        answer = self.reload_object(answer)
+        answer_groups = set(answer.groups.all())
+        self.assertEqual(len(answer_groups & user_groups), 1)
+
+
 
     def test_permissive_response_publishing(self):
         self.group.moderate_answers_to_enquirers = False
