@@ -175,7 +175,7 @@
 
             function hide_convert_links(){
               if (!askbot['data']['userIsAdminOrMod']){
-                var links = document.getElementsByClassName('convert');
+                var links = document.getElementsByClassName('convert-comment');
                 for (i=0; i<links.length; i++){
                   links[i].setAttribute('style', 'display:none;');
                 }

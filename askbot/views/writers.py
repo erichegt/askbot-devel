@@ -731,8 +731,19 @@ def comment_to_answer(request):
         comment = get_object_or_404(models.Post,
                 post_type='comment', id=comment_id)
         comment.post_type = 'answer'
+        old_parent = comment.parent
+
+        comment.parent =  comment.thread._question_post()
         comment.save()
+
         comment.thread.update_answer_count()
+
+        comment.parent.comment_count += 1
+        comment.parent.save()
+
+        old_parent.comment_count -= 1
+        old_parent.save()
+
         comment.thread.invalidate_cached_data()
 
         return HttpResponseRedirect(comment.get_absolute_url())
@@ -750,14 +761,19 @@ def answer_to_comment(request):
         if len(answer.text) <= 300:
             answer.post_type = 'comment'
             answer.parent =  answer.thread._question_post()
-            answer_comments = models.Post.objects.get_comments().filter(parent=answer)
+            #can we trust this?
+            old_comment_count = answer.comment_count
+            answer.comment_count = 0
 
-            for comment in answer_comments:
-                comment.parent = answer.parent
-                comment.save()
+            answer_comments = models.Post.objects.get_comments().filter(parent=answer)
+            answer_comments.update(parent=answer.parent)
 
             answer.parse_and_save(author=answer.author)
             answer.thread.update_answer_count()
+
+            answer.parent.comment_count = 1 + old_comment_count
+            answer.parent.save()
+
             answer.thread.invalidate_cached_data()
         else:
             request.user.message_set.create(message = _("the selected answer cannot be a comment"))
