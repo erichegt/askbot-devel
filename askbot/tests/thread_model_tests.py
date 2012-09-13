@@ -94,7 +94,11 @@ class ThreadModelTestsWithGroupsEnabled(AskbotTestCase):
 
         #publish the answer
         self.client.login(user_id=self.admin.id, method='force')
-        self.client.post(reverse('publish_answer'), data={'answer_id': answer.id})
+        self.client.post(
+            reverse('publish_answer'),
+            data={'answer_id': answer.id},
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest' 
+        )
         #todo: test redirect
 
         answer = self.reload_object(answer)

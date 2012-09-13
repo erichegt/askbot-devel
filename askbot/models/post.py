@@ -571,6 +571,10 @@ class Post(models.Model):
             user_filter = user_filter & models.Q(groups__in=self.groups.all())
         return User.objects.filter(user_filter)
 
+    def has_group(self, group):
+        """true if post belongs to the group"""
+        return self.groups.filter(id=group.id).exists()
+
     def add_to_groups(self, groups):
         #todo: use bulk-creation
         for group in groups:

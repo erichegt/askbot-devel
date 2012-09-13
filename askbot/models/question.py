@@ -675,6 +675,17 @@ class Thread(models.Model):
         #use len to cache the queryset
         return len(self.get_answers_by_user(user)) > 0
 
+    def has_moderator(self, user):
+        """true if ``user`` is also a thread moderator"""
+        if user.is_anonymous():
+            return False
+        elif askbot_settings.GROUPS_ENABLED:
+            if user.is_administrator_or_moderator():
+                user_groups = user.get_groups(private=True)
+                thread_groups = self.get_groups_shared_with()
+                return bool(set(user_groups) & set(thread_groups))
+        return False
+
     def requires_response_moderation(self, author):
         """true, if answers by a given author must be moderated
         before publishing to the enquirers"""
@@ -732,7 +743,7 @@ class Thread(models.Model):
         the method get_post_data()"""
         if askbot_settings.GROUPS_ENABLED:
             #temporary plug: bypass cache where groups are enabled
-            return self.get_post_data(sort_method = sort_method, user = user)
+            return self.get_post_data(sort_method=sort_method, user=user)
         key = self.get_post_data_cache_key(sort_method)
         post_data = cache.cache.get(key)
         if not post_data:
@@ -818,7 +829,7 @@ class Thread(models.Model):
             #if moderated - then author is guaranteed to be the 
             #limited visibility enquirer
             published_answers = self.posts.get_answers(
-                                        user=self.author#todo: may be > 1
+                                        user=question_post.author#todo: may be > 1
                                     ).filter(
                                         deleted=False
                                     ).order_by(
@@ -829,7 +840,7 @@ class Thread(models.Model):
                                         }[sort_method]
                                     )
             #now put those answers first
-            for answer in reversed(answers):
+            for answer in reversed(published_answers):
                 answers.remove(answer)
                 answers.insert(0, answer)
                 published_answer_ids.append(answer.id)

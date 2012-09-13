@@ -573,6 +573,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
         'question' : question_post,
         'thread': thread,
         'thread_is_moderated': thread.is_moderated(),
+        'user_is_thread_moderator': thread.has_moderator(request.user),
         'published_answer_ids': published_answer_ids,
         'answer' : answer_form,
         'answers' : page_objects.object_list,

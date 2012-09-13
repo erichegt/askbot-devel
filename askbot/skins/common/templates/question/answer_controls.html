@@ -9,26 +9,20 @@
     </a>
 </span>
 <span 
+    id="post-{{answer.id}}-publish"
     class="action-link"
-    id="answer-publish-{{ answer.id }}"
-    {% if answer.id in published_answer_ids %}
-        title="{% trans %}unpublish{% endtrans %}"
-    {% else %}
-        title="{% trans %}publish{% endtrans %}"
-    {% endif %}
 >
-    <form action="{% url publish_answer %}">{% csrf_token %}
-        <input type="hidden" name="answer_id" id="id_answer_id" value="{{answer.id}}"/>
-        <input 
-            type="submit"
-            name=""
-            {% if answer.id in published_answer_ids %}
-                name="{% trans %}unpublish{% endtrans %}"
-            {% else %}
-                name="{% trans %}publish{% endtrans %}"
-            {% endif %}
-        />
-    </form>
+    {% if answer.id in published_answer_ids %}
+        <a 
+            class="answer-unpublish"
+            data-answer-id="{{ answer.id }}"
+        >{% trans %}unpublish{% endtrans %}</a>
+    {% else %}
+        <a 
+            class="answer-publish"
+            data-answer-id="{{ answer.id}}"
+        >{% trans %}publish{% endtrans %}</a>
+    {% endif %}
 </span>
 <span id='post-{{answer.id}}-delete' class="action-link delete-post">
     <a class="question-delete"
@@ -69,6 +63,7 @@
   </form>
 </span>
 <script type="text/javascript">
-    askbot['functions']['hideConvertAnswerLinks']('{{answer.id}}');
-    askbot['functions']['renderPostControls']('{{answer.id}}');
+    askbot['functions']['hideConvertAnswerLinks']('{{ answer.id }}');
+    askbot['functions']['hidePublishAnswerLink']('{{ answer.id }}');
+    askbot['functions']['renderPostControls']('{{ answer.id }}');
 </script>
