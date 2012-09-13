@@ -473,7 +473,7 @@ class Post(models.Model):
         return data
 
     #todo: when models are merged, it would be great to remove author parameter
-    def parse_and_save(self, author = None, **kwargs):
+    def parse_and_save(self, author=None, **kwargs):
         """generic method to use with posts to be used prior to saving
         post edit or addition
         """
@@ -672,7 +672,15 @@ class Post(models.Model):
             if group != global_group:
                 self.remove_from_groups((global_group,))
         else:
-            groups = user.get_groups(private=True)
+            if self.thread_id and self.is_question() is False:
+                #for thread-related responses we base
+                #privacy scope on thread + add a personal group
+                personal_group = user.get_personal_group()
+                thread_groups = self.thread.get_groups_shared_with()
+                groups = set([personal_group]) | set(thread_groups)
+            else:
+                groups = user.get_groups(private=True)
+
             self.add_to_groups(groups)
             self.remove_from_groups((get_global_group(),))
 

@@ -82,6 +82,16 @@ class ThreadModelTestsWithGroupsEnabled(AskbotTestCase):
 
 
     def test_restrictive_response_publishing(self):
+        #restrictive model should work even with groups
+        #in common between the asker and the answerer
+        common_group = models.Group(
+                        name='common',
+                        openness=models.Group.OPEN
+                    )
+        common_group.save()
+        self.admin.join_group(common_group)
+        self.user.join_group(common_group)
+
         self.group.moderate_answers_to_enquirers = True
         self.group.save()
         question = self.post_question(user=self.user, group_id=self.group.id)
