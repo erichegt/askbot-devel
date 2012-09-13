@@ -741,7 +741,12 @@ def comment_to_answer(request):
         comment.parent.comment_count += 1
         comment.parent.save()
 
-        old_parent.comment_count -= 1
+        #to avoid db constraint error
+        if old_parent.comment_count >= 1:
+            old_parent.comment_count -= 1
+        else:
+            old_parent.comment_count = 0
+
         old_parent.save()
 
         comment.thread.invalidate_cached_data()
