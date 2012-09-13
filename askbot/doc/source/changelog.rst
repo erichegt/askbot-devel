@@ -3,6 +3,7 @@ Changes in Askbot
 
 Development version
 -------------------
+* Allow switching comment with answer and answer with question comment (Adolfo)
 * Allow user names longer than 30 characters (Evgeny)
 * Option to disable feedback form for the anonymos users (Evgeny)
 * Optional restriction to have confirmed email address to join forum (Evgeny)
