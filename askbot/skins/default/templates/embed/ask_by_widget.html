@@ -173,7 +173,7 @@
   {% csrf_token %}
   <label>{%trans%}Please enter a descriptive title for your question{%endtrans%}</label>
   <div class="input-title">
-    <input autocomplete="off" id="id_title" type="text" name="title" size="70" class='questionTitleInput'>
+    {{form.title}}
   </div>
   <div id='question-list'>
   </div>
@@ -216,9 +216,10 @@
     var minSearchWordLength = {{settings.MIN_SEARCH_WORD_LENGTH}};
     askbot['urls']['api_get_questions'] = '{% url api_get_questions %}';
     askbot['urls']['upload'] = '{% url upload %}';
-    liveSearchNewThreadInit(true);
     $(document).ready(function(){
       $("#id_title").focus();
+      $("#id_title").addClass('questionTitleInput');
+      liveSearchNewThreadInit(true);
     });
 </script>
 {% endblock %}
