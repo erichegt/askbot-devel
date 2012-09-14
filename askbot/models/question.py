@@ -555,18 +555,27 @@ class Thread(models.Model):
         """returns query set of users with whom
         this thread is shared
         """
-        groups = self.groups.filter(name__startswith='_internal_')
+        filter = models.Q(
+                        thread=self,
+                        visibility=ThreadToGroup.SHOW_ALL_RESPONSES
+                    ) & models.Q(
+                        group__name__startswith='_internal_'
+                    )
 
         if exclude_user:
-            exclude_user_group = exclude_user.get_personal_group()
-            groups = groups.exclude(name=exclude_user_group.name)
+            user_group = exclude_user.get_personal_group()
+            filter = filter & ~models.Q(group_id=user_group.id)
+
+        thread_groups = ThreadToGroup.objects.filter(filter)
 
         if max_count:
-            groups = groups[:max_count]
+            thread_groups = thread_groups[:max_count]
+
+        group_ids = thread_groups.values_list('group_id', flat=True)
 
         from askbot.models import GroupMembership
         user_ids = GroupMembership.objects.filter(
-                                    group__in=groups
+                                    group__id__in=group_ids
                                 ).values_list(
                                     'user__id', flat=True
                                 )
