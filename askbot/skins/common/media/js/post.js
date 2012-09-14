@@ -2242,7 +2242,7 @@ TinyMCE.prototype.start = function() {
 TinyMCE.prototype.setPreviewerEnabled = function() {};
 
 TinyMCE.prototype.setText = function(text) {
-    askbot['data']['editorContent'] = text;
+    this._text = text;
 };
 
 TinyMCE.prototype.getText = function() {
@@ -2264,6 +2264,7 @@ TinyMCE.prototype.loadEditor = function() {
         success: function(data) {
             if (data['success']) {
                 editorBox.html(data['html']);
+                editorBox.find('textarea').val(me._text);//@todo: fixme
                 $.each(data['scripts'], function(idx, scriptData) {
                     var scriptElement = me.makeElement('script');
                     scriptElement.attr('type', 'text/javascript');
@@ -2288,6 +2289,7 @@ TinyMCE.prototype.createDom = function() {
 
 /**
  * @constructor
+ * @todo: change this to generic object description editor
  */
 var TagWikiEditor = function(){
     WrappedElement.call(this);
@@ -2362,10 +2364,14 @@ TagWikiEditor.prototype.setEditorLoaded = function(){
 TagWikiEditor.prototype.startActivatingEditor = function(){
     var editor = this._editor;
     var me = this;
+    var data = {
+        object_id: me.getTagId(),
+        model_name: 'Group'
+    };
     $.ajax({
         type: 'GET',
-        url: askbot['urls']['load_tag_wiki_text'],
-        data: {tag_id: me.getTagId()},
+        url: askbot['urls']['load_object_description'],
+        data: data,
         cache: false,
         success: function(data){
             me.backupContent();
@@ -2383,11 +2389,16 @@ TagWikiEditor.prototype.startActivatingEditor = function(){
 TagWikiEditor.prototype.saveData = function(){
     var me = this;
     var text = this._editor.getText();
+    var data = {
+        object_id: me.getTagId(),
+        model_name: 'Group',//todo: fixme
+        text: text
+    };
     $.ajax({
         type: 'POST',
         dataType: 'json',
-        url: askbot['urls']['save_tag_wiki_text'],
-        data: {tag_id: me.getTagId(), text: text},
+        url: askbot['urls']['save_object_description'],
+        data: data,
         cache: false,
         success: function(data){
             if (data['success']){

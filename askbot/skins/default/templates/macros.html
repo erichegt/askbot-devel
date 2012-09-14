@@ -222,8 +222,8 @@ poor design of the data or methods on data objects #}
     {% endif %}
     <td>
     <span class="group-description">
-    {% if group.tag_wiki %}
-        {{ group.tag_wiki.summary }}
+    {% if group.description %}
+        {{ group.description.summary }}
     {% endif %}
     </span>
     {% if membership_info %}

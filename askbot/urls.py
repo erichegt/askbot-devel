@@ -264,14 +264,14 @@ urlpatterns = patterns('',
         name = 'get_tag_list'
     ),
     url(
-        r'^load-tag-wiki-text/',
-        views.commands.load_tag_wiki_text,
-        name = 'load_tag_wiki_text'
+        r'^load-object-description/',
+        views.commands.load_object_description,
+        name = 'load_object_description'
     ),
     url(#ajax only
-        r'^save-tag-wiki-text/',
-        views.commands.save_tag_wiki_text,
-        name = 'save_tag_wiki_text'
+        r'^save-object-description/',
+        views.commands.save_object_description,
+        name = 'save_object_description'
     ),
     url(#ajax only
         r'^add-tag-category/',

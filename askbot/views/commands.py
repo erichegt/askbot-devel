@@ -30,6 +30,7 @@ from askbot.models.tag import get_global_group
 from askbot.utils import category_tree
 from askbot.utils import decorators
 from askbot.utils import url_utils
+from askbot.utils.forms import get_db_object_or_404
 from askbot import mail
 from askbot.skins.loaders import render_into_skin, get_template
 from askbot.skins.loaders import render_into_skin_as_string
@@ -547,35 +548,27 @@ def get_tag_list(request):
     return HttpResponse(output, mimetype = 'text/plain')
 
 @decorators.get_only
-def load_tag_wiki_text(request):
-    """returns text of the tag wiki in markdown format"""
-    if 'tag_id' not in request.GET:
-        return HttpResponse('', status = 400)#bad request
-
-    tag = get_object_or_404(models.Tag, id = request.GET['tag_id'])
-    tag_wiki_text = getattr(tag.tag_wiki, 'text', '').strip()
-    return HttpResponse(tag_wiki_text, mimetype = 'text/plain')
+def load_object_description(request):
+    """returns text of the object description in text"""
+    obj = get_db_object_or_404(request.GET)#askbot forms utility
+    text = getattr(obj.description, 'text', '').strip()
+    return HttpResponse(text, mimetype = 'text/plain')
 
 @csrf.csrf_exempt
 @decorators.ajax_only
 @decorators.post_only
-def save_tag_wiki_text(request):
-    """if tag wiki text does not exist,
+@decorators.admins_only
+def save_object_description(request):
+    """if object description does not exist,
     creates a new record, otherwise edits an existing
-    tag wiki record"""
-    form = forms.EditTagWikiForm(request.POST)
-    if form.is_valid():
-        tag_id = form.cleaned_data['tag_id']
-        text = form.cleaned_data['text'] or ' '#a hack to save blank data
-        tag = models.Tag.objects.get(id = tag_id)
-        if tag.tag_wiki:
-            request.user.edit_post(tag.tag_wiki, body_text = text)
-            tag_wiki = tag.tag_wiki
-        else:
-            tag_wiki = request.user.post_tag_wiki(tag, body_text = text)
-        return {'html': tag_wiki.html}
+    one"""
+    obj = get_db_object_or_404(request.POST)
+    text = request.POST['text']
+    if obj.description:
+        request.user.edit_post(obj.description, body_text=text)
     else:
-        raise ValueError('invalid post data')
+        request.user.post_object_description(obj, body_text=text)
+    return {'html': obj.description.html}
 
 @csrf.csrf_exempt
 @decorators.ajax_only

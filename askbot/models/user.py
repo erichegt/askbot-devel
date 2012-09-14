@@ -442,6 +442,10 @@ class Group(AuthGroup):
         (CLOSED, 'closed'),
     )
     logo_url = models.URLField(null=True)
+    description = models.OneToOneField(
+                    'Post', related_name='described_group',
+                    null=True, blank=True
+                )
     moderate_email = models.BooleanField(default=True)
     moderate_answers_to_enquirers = models.BooleanField(
                         default=False,

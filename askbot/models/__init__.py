@@ -1209,21 +1209,21 @@ def user_post_comment(
     )
     return comment
 
-def user_post_tag_wiki(
+def user_post_object_description(
                     self,
-                    tag = None,
-                    body_text = None,
-                    timestamp = None
+                    obj=None,
+                    body_text=None,
+                    timestamp=None
                 ):
-    """Creates a tag wiki post and assigns it
-    to the given tag. Returns the newly created post"""
-    tag_wiki_post = Post.objects.create_new_tag_wiki(
-                                            author = self,
-                                            text = body_text
+    """Creates an object description post and assigns it
+    to the given object. Returns the newly created post"""
+    description_post = Post.objects.create_new_tag_wiki(
+                                            author=self,
+                                            text=body_text
                                         )
-    tag.tag_wiki = tag_wiki_post
-    tag.save()
-    return tag_wiki_post
+    obj.description = description_post
+    obj.save()
+    return description_post
 
 
 def user_post_anonymous_askbot_content(user, session_key):
@@ -2742,7 +2742,7 @@ User.add_to_class('edit_comment', user_edit_comment)
 User.add_to_class('create_post_reject_reason', user_create_post_reject_reason)
 User.add_to_class('edit_post_reject_reason', user_edit_post_reject_reason)
 User.add_to_class('delete_post', user_delete_post)
-User.add_to_class('post_tag_wiki', user_post_tag_wiki)
+User.add_to_class('post_object_description', user_post_object_description)
 User.add_to_class('visit_question', user_visit_question)
 User.add_to_class('upvote', upvote)
 User.add_to_class('downvote', downvote)

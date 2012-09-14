@@ -3,6 +3,8 @@ from django import forms
 from django.http import str_to_unicode
 from django.contrib.auth.models import User
 from django.conf import settings
+from django.http import Http404
+from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext as _
 from django.utils.safestring import mark_safe
 from askbot.conf import settings as askbot_settings
@@ -27,6 +29,23 @@ def clean_next(next, default = None):
 
 def get_next_url(request, default = None):
     return clean_next(request.REQUEST.get('next'), default)
+
+def get_db_object_or_404(params):
+    """a utility function that returns an object
+    in return to the model_name and object_id
+
+    only specific models are accessible
+    """
+    from askbot import models
+    try:
+        model_name = params['model_name']
+        assert(model_name=='Group')
+        model = models.get_model(model_name)
+        obj_id = forms.IntegerField().clean(params['object_id'])
+        return get_object_or_404(model, id=obj_id)
+    except Exception:
+        #need catch-all b/c of the nature of the function
+        raise Http404
 
 class StrippedNonEmptyCharField(forms.CharField):
     def clean(self, value):

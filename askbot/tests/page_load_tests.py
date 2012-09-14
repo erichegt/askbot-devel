@@ -651,16 +651,60 @@ class QuestionPageRedirectTests(AskbotTestCase):
         self.assertRedirects(resp, expected_url = self.q.get_absolute_url())
 
 class CommandViewTests(AskbotTestCase):
-    def test_get_tag_wiki_text_succeeds(self):
-        tag1 = self.create_tag('tag1')
+    def test_load_empty_object_description_works(self):
+        group = models.Group(name='somegroup')
+        group.save()
+
         response = self.client.get(
-            reverse('load_tag_wiki_text'),
-            data = {'tag_id': tag1.id}
+            reverse('load_object_description'),
+            data = {'object_id': group.id,'model_name': 'Group'},
         )
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.content, '')
 
-    def test_get_tag_wiki_text_fails(self):
-        tag1 = self.create_tag('tag1')
-        response = self.client.get(reverse('load_tag_wiki_text'))
-        self.assertEqual(response.status_code, 400)#bad request
+    def test_load_full_object_description_works(self):
+        group = models.Group(name='somegroup')
+        user = self.create_user('someuser')
+        post_params = {'author': user, 'text':'some text'}
+        post = models.Post.objects.create_new_tag_wiki(**post_params)
+        group.description = post
+        group.save()
 
+        response = self.client.get(
+            reverse('load_object_description'),
+            data = {'object_id': group.id,'model_name': 'Group'},
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.content, 'some text')
+
+    def test_save_object_description_works(self):
+        group = models.Group(name='somegroup')
+        group.save()
+        admin = self.create_user('admin', status='d')
+        self.client.login(user_id=admin.id, method='force')
+        post_data = {
+            'object_id': group.id,
+            'model_name': 'Group',
+            'text': 'some description'
+        }
+        self.client.post(#ajax post
+            reverse('save_object_description'),
+            data=post_data,
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest'
+        )
+        group = self.reload_object(group)
+        self.assertEqual(group.description.text, 'some description')
+
+        #test edit
+        post_data['text'] = 'edited description'
+        self.client.post(#second post to edit
+            reverse('save_object_description'),
+            data=post_data,
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest'
+        )
+        group = self.reload_object(group)
+        self.assertEqual(group.description.text, 'edited description')
+
+    def test_load_object_description_fails(self):
+        response = self.client.get(reverse('load_object_description'))
+        self.assertEqual(response.status_code, 404)#bad request
