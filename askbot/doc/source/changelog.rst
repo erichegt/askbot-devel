@@ -15,6 +15,7 @@ Development version
 * Editable optional three level category selector for the tags (Evgeny)
 * Tag editor adding tags as they are typed (Evgeny)
 * Added optional support for unicode slugs (Evgeny)
+* Allow switching comment with answer and answer with question comment (Adolfo)
 * Allow user names longer than 30 characters (Evgeny)
 * Option to disable feedback form for the anonymos users (Evgeny)
 * Optional restriction to have confirmed email address to join forum (Evgeny)
