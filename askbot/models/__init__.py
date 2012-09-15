@@ -14,6 +14,7 @@ import datetime
 import hashlib
 import logging
 import urllib
+import uuid
 from django.core.urlresolvers import reverse, NoReverseMatch
 from django.db.models import signals as django_signals
 from django.template import Context
@@ -3058,6 +3059,15 @@ def send_instant_notifications_about_activity_in_post(
                             origin_post,
                             update_activity.activity_type
                         )
+
+    logger = logging.getLogger()
+    if logger.getEffectiveLevel() <= logging.DEBUG:
+        log_id = uuid.uuid1()
+        message = 'email-alert %s, logId=%s' % (post.get_absolute_url(), log_id)
+        logger.debug(message)
+    else:
+        log_id = None
+
     #send email for all recipients
     for user in recipients:
 
@@ -3077,14 +3087,23 @@ def send_instant_notifications_about_activity_in_post(
                         )
 
         headers['Reply-To'] = reply_address
-        mail.send_mail(
-            subject_line = subject_line,
-            body_text = body_text,
-            recipient_list = [user.email],
-            related_object = origin_post,
-            activity_type = const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT,
-            headers = headers
-        )
+        try:
+            mail.send_mail(
+                subject_line=subject_line,
+                body_text=body_text,
+                recipient_list=[user.email],
+                related_object=origin_post,
+                activity_type=const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT,
+                headers=headers,
+                raise_on_failure=True
+            )
+        except askbot_exceptions.EmailNotSent, error:
+            logger.debug(
+                '%s, error=%s, logId=%s' % (user.email, error, log_id)
+            )
+        else:
+            logger.debug('success %s, logId=%s' % (user.email, log_id))
+
 
 def notify_author_of_published_revision(
     revision = None, was_approved = None, **kwargs

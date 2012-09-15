@@ -176,7 +176,7 @@ def ldap_create_user_default(user_info):
     """
     # create new user in local db
     user = User()
-    user.username = user_info['ldap_username']
+    user.username = user_info.get('django_username', user_info['ldap_username'])
     user.set_unusable_password()
     user.first_name = user_info['first_name']
     user.last_name = user_info['last_name']

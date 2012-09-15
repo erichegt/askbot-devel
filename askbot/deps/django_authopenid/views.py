@@ -920,7 +920,7 @@ def register(request, login_provider_name=None, user_identifier=None):
                 user_info = request.session['ldap_user_info']
                 #we take this info from the user input where
                 #they can override the default provided by LDAP
-                user_info['ldap_username'] = username
+                user_info['django_username'] = username
                 user_info['email'] = email
                 user = ldap_create_user(user_info).user
                 del request.session['ldap_user_info']

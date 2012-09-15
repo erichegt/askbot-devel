@@ -40,6 +40,7 @@ from askbot import exceptions
 from askbot.models.badges import award_badges_signal
 from askbot.models.tag import get_global_group
 from askbot.models.tag import get_groups
+from askbot.models.tag import format_personal_group_name
 from askbot.skins.loaders import render_into_skin
 from askbot.search.state_manager import SearchState
 from askbot.utils import url_utils
@@ -321,7 +322,12 @@ def edit_user(request, id):
             set_new_email(user, new_email)
 
             if askbot_settings.EDITABLE_SCREEN_NAME:
-                user.username = sanitize_html(form.cleaned_data['username'])
+                new_username = sanitize_html(form.cleaned_data['username'])
+                if user.username != new_username:
+                    group = user.get_personal_group()
+                    user.username = new_username
+                    group.name = format_personal_group_name(user)
+                    group.save()
 
             user.real_name = sanitize_html(form.cleaned_data['realname'])
             user.website = sanitize_html(form.cleaned_data['website'])

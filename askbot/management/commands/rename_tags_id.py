@@ -27,8 +27,8 @@ def get_similar_tags_from_strings(tag_strings, tag_name):
     """returns a list of tags, similar to tag_name from a set of questions"""
 
     grab_pattern = r'\b([%(ch)s]*%(nm)s[%(ch)s]*)\b' % \
-                {'ch': const.TAG_CHARS, 'nm': from_tag.name}
-    grab_re = re.compile(grab_pattern, RE.IGNORECASE)
+                {'ch': const.TAG_CHARS, 'nm': tag_name}
+    grab_re = re.compile(grab_pattern, re.IGNORECASE)
 
     similar_tags = set()
     for tag_string in tag_strings:
@@ -103,9 +103,9 @@ rename_tags, but using tag id's
         to_tags = get_tags_by_ids(to_tag_ids)
         admin = get_admin(options['user_id'])
 
-        questions = models.Question.objects.all()
+        questions = models.Thread.objects.all()
         for from_tag in from_tags:
-            questions = questions.filter(tags = from_tag)
+            questions = questions.filter(tags=from_tag)
 
         #print some feedback here and give a chance to bail out
         question_count = questions.count()
@@ -121,7 +121,7 @@ or repost a bug, if that does not help"""
             print "%d questions match." % question_count
             print "First 10 are:"
         for question in questions[:10]:
-            print '* %s' % question.thread.title.strip()
+            print '* %s' % question.title.strip()
 
         from_tag_names = format_tag_name_list(from_tags)
         to_tag_names = format_tag_name_list(to_tags)
@@ -145,7 +145,7 @@ or repost a bug, if that does not help"""
             tag_names.difference_update(from_tag_names)
 
             admin.retag_question(
-                question = question,
+                question = question._question_post(),
                 tags = u' '.join(tag_names),
                 #silent = True #do we want to timestamp activity on question
             )
@@ -159,8 +159,8 @@ or repost a bug, if that does not help"""
 
         #may need to run assertions on that there are
         #print 'Searching for similar tags...',
-        #leftover_questions = models.Question.objects.filter(
-        #                        icontains = from_tag.name
+        #leftover_questions = models.Thread.objects.filter(
+        #                        icontains=from_tag.name
         #                    )
         #if leftover_questions.count() > 0:
         #    tag_strings = leftover_questions.values_list('tagnames', flat=True)

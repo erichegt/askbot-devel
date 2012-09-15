@@ -48,3 +48,4 @@ recaptcha
 /.ve
 /db.sq3
 *.DS_Store
+htmlcov
