@@ -17,6 +17,8 @@ from askbot import const
 from askbot.conf import settings as askbot_settings
 from askbot.utils import url_utils
 from askbot.utils.file_utils import store_file
+
+from bs4 import BeautifulSoup
 #todo: maybe send_mail functions belong to models
 #or the future API
 def prefix_the_subject_line(subject):
@@ -78,6 +80,19 @@ def thread_headers(post, orig_post, update):
 
     return headers
 
+def clean_html_email(email_body):
+    '''needs more clenup might not work for other email templates
+       that does not use table layout'''
+
+    remove_linejump = lambda s: s.replace('\n', '')
+
+    soup = BeautifulSoup(email_body)
+    table_tds = soup.find('body')
+    phrases = map(lambda s: s.strip(),
+                  filter(bool, table_tds.get_text().split('\n')))
+
+    return '\n\n'.join(phrases)
+
 def send_mail(
             subject_line = None,
             body_text = None,
@@ -106,7 +121,7 @@ def send_mail(
         subject_line = prefix_the_subject_line(subject_line)
         msg = mail.EmailMultiAlternatives(
                         subject_line,
-                        strip_tags(body_text),
+                        clean_html_email(body_text),
                         from_email,
                         recipient_list,
                         headers = headers
