@@ -27,7 +27,7 @@ class Migration(SchemaMigration):
         db.delete_column('askbot_post_groups', 'tag_id')
 
         # Changing field 'PostToGroup.group'
-        db.alter_column('askbot_post_groups', 'group_id', self.gf('django.db.models.fields.related.ForeignKey')(default=None, to=orm['askbot.Group']))
+        db.alter_column('askbot_post_groups', 'group_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, blank=True, to=orm['askbot.Group']))
 
         # Adding unique constraint on 'PostToGroup', fields ['post', 'group']
         db.create_unique('askbot_post_groups', ['post_id', 'group_id'])
@@ -36,7 +36,7 @@ class Migration(SchemaMigration):
         db.delete_column('askbot_thread_groups', 'tag_id')
 
         # Changing field 'ThreadToGroup.group'
-        db.alter_column('askbot_thread_groups', 'group_id', self.gf('django.db.models.fields.related.ForeignKey')(default=None, to=orm['askbot.Group']))
+        db.alter_column('askbot_thread_groups', 'group_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, blank=True, to=orm['askbot.Group']))
 
         # Adding unique constraint on 'ThreadToGroup', fields ['group', 'thread']
         db.create_unique('askbot_thread_groups', ['group_id', 'thread_id'])
