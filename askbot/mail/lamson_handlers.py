@@ -6,7 +6,7 @@ from django.template import Context
 from django.utils.translation import ugettext as _
 from lamson.routing import route, stateless
 from lamson.server import Relay
-from askbot.models import ReplyAddress, Tag
+from askbot.models import ReplyAddress, Group, Tag
 from askbot import mail
 from askbot.conf import settings as askbot_settings
 from askbot.skins.loaders import get_template
@@ -195,18 +195,16 @@ def ASK(message, host = None, addr = None):
             from_address, subject, body_text, stored_files
         )
     else:
+        #this is the Ask the group branch
         if askbot_settings.GROUP_EMAIL_ADDRESSES_ENABLED == False:
             return
         try:
-            group_tag = Tag.group_tags.get(
-                deleted = False,
-                name__iexact = addr
-            )
+            group = Group.objects.get(name__iexact=addr)
             mail.process_emailed_question(
                 from_address, subject, body_text, stored_files,
-                tags = [group_tag.name, ]
+                group_id = group.id
             )
-        except Tag.DoesNotExist:
+        except Group.DoesNotExist:
             #do nothing because this handler will match all emails
             return
         except Tag.MultipleObjectsReturned:

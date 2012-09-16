@@ -8,10 +8,13 @@
 {% block forestyle %}
     <link rel="canonical" href="{{settings.APP_URL|strip_path}}{{question.get_absolute_url()}}" />
     <link rel="stylesheet" type="text/css" href="{{'/js/wmd/wmd.css'|media}}" />
+    <link href="{{'/bootstrap/css/bootstrap.css'|media}}" rel="stylesheet" type="text/css" />
 {% endblock %}
 {% block forejs %}
     <script type="text/javascript">
+        /*<![CDATA[*/
         //below is pure cross-browser javascript, no jQuery
+        askbot['data']['userIsThreadModerator'] = {% if user_is_thread_moderator %}true{% else %}false{% endif %};
         (function(){
             var data = askbot['data'];
             if (data['userIsAuthenticated']){
@@ -52,9 +55,37 @@
                     }
                 }
             }
+
+            function hide_convert_answer_links(post_id){
+                var answer_convert_id = 'post-' + post_id + '-convert';
+                var convert_answer = document.getElementById(answer_convert_id);
+                if (data['userIsAdminOrMod']){
+                    var answer_id = 'post-id-' + post_id;
+                    var answer_container = document.getElementById(answer_id);
+                    var answer_element= answer_container.getElementsByClassName('answer-body')[0].children[1];
+                    if (answer_element.textContent.length > 300){
+                        convert_answer.parentNode.removeChild(convert_answer);
+                    }
+                } else{
+                    convert_answer.parentNode.removeChild(convert_answer);
+                }
+            }
+
+            function hidePublishAnswerLink(postId) {
+                if (data['userIsThreadModerator'] === false) {
+                    //hide publish/unpublish answer links
+                    var answerId = 'post-' + postId + '-publish';
+                    var pubBtn = document.getElementById(answerId);
+                    pubBtn.parentNode.removeChild(pubBtn);
+                }
+            }
+
             function render_post_controls(post_id){
                 if (data['userIsAdminOrMod']){
-                    return;//all functions on
+                    return;//all remaining functions stay on
+                }
+                if (data['user_posts'] === undefined) {
+                    return;
                 }
                 if (post_id in data['user_posts']){
                     //todo: remove edit button from older comments
@@ -88,10 +119,13 @@
             }
             function render_add_comment_button(post_id, extra_comment_count){
                 var can_add = false;
+                if (data['user_posts'] === undefined) {
+                    return;
+                }
                 {% if user_can_post_comment %}
                     can_add = true;
                 {% else %}
-                    if (post_id in data['user_posts']){
+                    if (data['user_posts'] && post_id in data['user_posts']){
                         can_add = true;
                     }
                 {% endif %}
@@ -151,7 +185,7 @@
 
             function hide_convert_links(){
               if (!askbot['data']['userIsAdminOrMod']){
-                var links = document.getElementsByClassName('convert');
+                var links = document.getElementsByClassName('convert-comment');
                 for (i=0; i<links.length; i++){
                   links[i].setAttribute('style', 'display:none;');
                 }
@@ -164,7 +198,10 @@
             askbot['functions']['renderAddCommentButton'] = render_add_comment_button;
             askbot['functions']['renderAddAnswerButton'] = render_add_answer_button;
             askbot['functions']['hideConvertLinks'] = hide_convert_links;
+            askbot['functions']['hideConvertAnswerLinks'] = hide_convert_answer_links;
+            askbot['functions']['hidePublishAnswerLink'] = hidePublishAnswerLink;
         })();
+        /*]]>*/
     </script>
 {% endblock %}
 {% block content %}
@@ -184,6 +221,9 @@
 {% endblock %}
 {% block endjs %}
     {% include "question/javascript.html" %}
+    {% if settings.TAG_SOURCE == 'category-tree' %}
+        {% include "meta/category_tree_js.html" %}
+    {% endif %}
     {#
     <script type="text/javascript">
         var messages = askbot['messages'];

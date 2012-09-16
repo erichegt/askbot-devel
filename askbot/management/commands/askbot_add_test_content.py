@@ -2,6 +2,7 @@ from django.core.management.base import NoArgsCommand
 from askbot.models import User
 from optparse import make_option
 from askbot.utils.console import choice_dialog
+from askbot.conf import settings as askbot_settings
 
 
 NUM_USERS = 40
@@ -20,7 +21,8 @@ BAD_STUFF = "<script>alert('hohoho')</script>"
 USERNAME_TEMPLATE = BAD_STUFF + "test_user_%s"
 PASSWORD_TEMPLATE = "test_password_%s"
 EMAIL_TEMPLATE = "test_user_%s@askbot.org"
-TITLE_TEMPLATE = "Test question title No.%s" + BAD_STUFF
+TITLE_TEMPLATE = "Question No.%s" + BAD_STUFF
+LONG_TITLE_TEMPLATE = TITLE_TEMPLATE + 'a lot more text a lot more text a lot more text '*5
 TAGS_TEMPLATE = [BAD_STUFF + "tag-%s-0", BAD_STUFF + "tag-%s-1"] # len(TAGS_TEMPLATE) tags per question
 
 CONTENT_TEMPLATE = BAD_STUFF + """Lorem lean startup ipsum product market fit customer
@@ -33,12 +35,33 @@ ANSWER_TEMPLATE = BAD_STUFF + """Accelerator photo sharing business school drop 
 COMMENT_TEMPLATE = BAD_STUFF + """Main differentiators business model micro economics
                     marketplace equity augmented reality human computer"""
 
+ALERT_SETTINGS_KEYS = (
+    'DEFAULT_NOTIFICATION_DELIVERY_SCHEDULE_Q_ASK',
+    'DEFAULT_NOTIFICATION_DELIVERY_SCHEDULE_Q_ANS',
+    'DEFAULT_NOTIFICATION_DELIVERY_SCHEDULE_Q_ALL',
+    'DEFAULT_NOTIFICATION_DELIVERY_SCHEDULE_Q_SEL',
+    'DEFAULT_NOTIFICATION_DELIVERY_SCHEDULE_M_AND_C',
+)
 
 class Command(NoArgsCommand):
     option_list = NoArgsCommand.option_list + (
         make_option('--noinput', action='store_false', dest='interactive', default=True,
             help='Do not prompt the user for input of any kind.'),
     )
+
+    def save_alert_settings(self):
+        settings = {}
+        for key in ALERT_SETTINGS_KEYS:
+            settings[key] = getattr(askbot_settings, key)
+        self.alert_settings = settings
+
+    def stop_alerts(self):
+        for key in ALERT_SETTINGS_KEYS:
+            askbot_settings.update(key, 'n')
+
+    def restore_saved_alert_settings(self):
+        for key in ALERT_SETTINGS_KEYS:
+            askbot_settings.update(key, self.alert_settings[key])
 
     def print_if_verbose(self, text):
         "Only print if user chooses verbose output"
@@ -99,11 +122,18 @@ class Command(NoArgsCommand):
             tags = " ".join([t%user.id for t in TAGS_TEMPLATE])
             if i < NUM_QUESTIONS/2:
                 tags += ' one-tag'
+
+            if i % 2 == 0:
+                question_template = TITLE_TEMPLATE
+            else:
+                question_template = LONG_TITLE_TEMPLATE
+
             active_question = user.post_question(
-                        title = TITLE_TEMPLATE % user.id,
+                        title = question_template % user.id,
                         body_text = CONTENT_TEMPLATE,
                         tags = tags,
                     )
+
             self.print_if_verbose("Created Question '%s' with tags: '%s'" % (
                                                 active_question.thread.title, tags,)
                                             )
@@ -199,7 +229,8 @@ class Command(NoArgsCommand):
             if answer != "yes":
                 return
 
-
+        self.save_alert_settings()
+        self.stop_alerts()# saves time on running the command
 
         # Create Users
         users = self.create_users()
@@ -250,5 +281,7 @@ class Command(NoArgsCommand):
                             force = True,
                         )
         self.print_if_verbose("User has accepted a best answer")
+
+        self.restore_saved_alert_settings()
 
         self.print_if_verbose("DONE")

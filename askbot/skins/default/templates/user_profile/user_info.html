@@ -56,6 +56,22 @@
                     <td><b>{{view_user.real_name}}</b></td>
                 </tr>
                 {% endif %}
+                {% if settings.GROUPS_ENABLED %}
+                <tr>
+                    <td>{% if user_groups %}{% trans %}groups{% endtrans %}{% endif %}</td>
+                    <td>
+                        <table id="groups-list">
+                            {% for group in user_groups %}
+                            <tr>
+                                {{ macros.user_group(group, groups_membership_info[group.id]) }}
+                            </tr>
+                            {% endfor %}
+                        </table>
+                        <div class="clearfix"></div>
+                        <a id="add-group">{% trans %}add group{% endtrans %}</a>
+                    </td>
+                </div>
+                {% endif %}
                 <tr>
                     <td>{% trans %}member since{% endtrans %}</td>
                     <td><strong>{{ macros.timeago(view_user.date_joined) }}</strong></td>

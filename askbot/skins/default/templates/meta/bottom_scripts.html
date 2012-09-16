@@ -3,15 +3,15 @@
    main template "base.html"
 #}
 <div id="no-javascript">
-  <noscript class="noscript">
-    {% trans app_name = settings.APP_SHORT_NAME %}Please note: {{app_name}} requires javascript to work properly, please enable javascript in your browser, <a href="{{noscript_url}}">here is how</a>{% endtrans %}
-  </noscript>
-  <script type="text/javascript">
+    <noscript class="noscript">
+        {% trans app_name = settings.APP_SHORT_NAME %}Please note: {{app_name}} requires javascript to work properly, please enable javascript in your browser, <a href="{{noscript_url}}">here is how</a>{% endtrans %}
+    </noscript>
+    <script type="text/javascript">
         //IE fix to hide the red margin
-  	var noscript = document.getElementsByTagName('noscript')[0];
-	noscript.style.padding = '0px';
-	noscript.style.backgroundColor = 'transparent';
-  </script>
+        var noscript = document.getElementsByTagName('noscript')[0];
+        noscript.style.padding = '0px';
+        noscript.style.backgroundColor = 'transparent';
+    </script>
 </div>
 <script type="text/javascript">
     var i18nLang = '{{settings.LANGUAGE_CODE}}';
@@ -25,6 +25,7 @@
     askbot['urls']['unfollow_user'] = '/followit/unfollow/user/{{'{{'}}userId{{'}}'}}/';
     askbot['urls']['user_signin'] = '{{ settings.LOGIN_URL }}';
     askbot['settings']['static_url'] = '{{ settings.STATIC_URL }}';
+    askbot['urls']['getEditor'] = '{% url "get_editor" %}';
 </script>
 <script 
     type="text/javascript"
@@ -34,9 +35,9 @@
         src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"
     {% endif %}
 ></script>
+<script type="text/javascript" src='{{"/bootstrap/js/bootstrap.js"|media}}'></script>
 <!-- History.js --> 
 <script type='text/javascript' src="{{"/js/jquery.history.js"|media }}"></script>
-<script type="text/javascript" src="{% url django.views.i18n.javascript_catalog %}"></script>
 <script type='text/javascript' src="{{"/js/utils.js"|media }}"></script>
 {% if settings.ENABLE_MATHJAX %}
     <script type='text/javascript' src="{{settings.MATHJAX_BASE_URL}}/MathJax.js">
@@ -48,27 +49,8 @@
     </script>
 {% endif %}
 <script type="text/javascript">
+    /*<![CDATA[*/
     $(document).ready(function(){
-        {% if active_tab == 'questions' %}
-            if (Modernizr.history) {
-                // history management works!
-            } else {
-                // no history support :(
-                //hash = unescape(window.location.hash).replace('#','').split("?")[0]
-                {# todo: fix this evil code!!! #}
-                var hash = History.unescapeHash(window.location.hash).replace('#','').split("?")[0];
-                var questions_url = askbot['urls']['questions'];
-                if (hash.substring(0, questions_url.length) === questions_url) {
-                    var url = hash;
-                } else {
-                    var url = questions_url + hash;
-                }
-                if (hash !== '' && hash !== undefined && url !== undefined){
-                    {# was this causing strange redirects in IE??? #}
-                    window.location = 'http://' + window.location.host + url;
-                }
-            }
-        {% endif %}
         // focus input on the search bar endcomment
         {% if active_tab in ('users', 'questions', 'tags') %}
             $('#keywords').focus();
@@ -77,12 +59,24 @@
         {% else %}
             animateHashes();
         {% endif %}
+        if (askbot['data']['userIsAdminOrMod']) {
+            $('body').addClass('admin');
+        }
+        {%if settings.GROUPS_ENABLED %}
+        askbot['urls']['add_group'] = "{% url add_group %}";
+        var group_dropdown = new GroupDropdown({{group_list}});
+        $('.dropdown').append(group_dropdown.getElement());
+        {%if request.user.is_superuser%}
+        group_dropdown.enableAddGroups();
+        {%endif%}
+        {% endif %}
     });
 {% if user_messages %}
     $('#validate_email_alert').click(function(){notify.close(true)})
     notify.show();
 {% endif %}
     $('abbr.timeago').timeago();
+    /*]]>*/
 </script>
 {% if settings.USE_CUSTOM_JS %}
 <script 

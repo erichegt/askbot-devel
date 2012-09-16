@@ -55,6 +55,11 @@ def sanitize_html(html):
     output_generator = s.serialize(stream)
     return u''.join(output_generator)
 
+def site_url(url):
+    from askbot.conf import settings
+    base_url = urlparse(settings.APP_URL)
+    return base_url.scheme + '://' + base_url.netloc + url
+
 def site_link(url_name, title):
     """returns html for the link to the given url
     todo: may be improved to process url parameters, keyword
@@ -62,8 +67,8 @@ def site_link(url_name, title):
     """
     from askbot.conf import settings
     base_url = urlparse(settings.APP_URL)
-    url = base_url.scheme + '://' + base_url.netloc + reverse(url_name)
-    return '<a href="%s">%s</a>' % (url, escape(title))
+    url = site_url(reverse(url_name))
+    return '<a href="%s">%s</a>' % (url, title)
 
 def unescape(text):
     """source: http://effbot.org/zone/re-sub.htm#unescape-html

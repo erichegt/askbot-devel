@@ -1,5 +1,9 @@
 /*!
  * Bootstrap v2.0.2
+ * This file was modified for Askbot
+ * some styles were deleted, others added at the bottom
+ * of this file. Also some fixes to bootstrap are added
+ * at the bottom of askbot's style.less.
  *
  * Copyright 2012 Twitter, Inc
  * Licensed under the Apache License v2.0
@@ -92,14 +96,6 @@ img {
   vertical-align: middle;
 }
 button,
-input,
-select,
-textarea {
-  margin: 0;
-  font-size: 100%;
-  vertical-align: middle;
-}
-button,
 input {
   *overflow: visible;
   line-height: normal;
@@ -129,14 +125,6 @@ input[type="search"]::-webkit-search-cancel-button {
 textarea {
   overflow: auto;
   vertical-align: top;
-}
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  font-size: 13px;
-  line-height: 18px;
-  color: #333333;
-  background-color: #ffffff;
 }
 a {
   color: #0088cc;
@@ -894,25 +882,10 @@ legend small {
   font-size: 13.5px;
   color: #999999;
 }
-label,
-input,
-button,
-select,
-textarea {
-  font-size: 13px;
-  font-weight: normal;
-  line-height: 18px;
-}
-input,
-button,
-select,
-textarea {
-  font-family: Arial, sans-serif;
-}
 label {
-  display: block;
+  /*display: block;
   margin-bottom: 5px;
-  color: #333333;
+  color: #333333;*/
 }
 input,
 textarea,
@@ -927,25 +900,6 @@ label input,
 label textarea,
 label select {
   display: block;
-}
-input[type="image"],
-input[type="checkbox"],
-input[type="radio"] {
-  width: auto;
-  height: auto;
-  padding: 0;
-  margin: 3px 0;
-  *margin-top: 0;
-  /* IE7 */
-
-  line-height: normal;
-  cursor: pointer;
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  border-radius: 0;
-  border: 0 \9;
-  /* IE9 and down */
-
 }
 input[type="image"] {
   border: 0;
@@ -965,7 +919,7 @@ input[type="button"],
 input[type="reset"],
 input[type="submit"] {
   width: auto;
-  height: auto;
+  /*height: auto;*/
 }
 select,
 input[type="file"] {
@@ -998,26 +952,6 @@ textarea {
 }
 input[type="hidden"] {
   display: none;
-}
-.radio,
-.checkbox {
-  padding-left: 18px;
-}
-.radio input[type="radio"],
-.checkbox input[type="checkbox"] {
-  float: left;
-  margin-left: -18px;
-}
-.controls > .radio:first-child,
-.controls > .checkbox:first-child {
-  padding-top: 5px;
-}
-.radio.inline,
-.checkbox.inline {
-  display: inline-block;
-  padding-top: 5px;
-  margin-bottom: 0;
-  vertical-align: middle;
 }
 .radio.inline + .radio.inline,
 .checkbox.inline + .checkbox.inline {
@@ -1073,18 +1007,6 @@ select:focus {
 }
 .input-xxlarge {
   width: 530px;
-}
-input[class*="span"],
-select[class*="span"],
-textarea[class*="span"],
-.uneditable-input {
-  float: none;
-  margin-left: 0;
-}
-input,
-textarea,
-.uneditable-input {
-  margin-left: 0;
 }
 input.span12, textarea.span12, .uneditable-input.span12 {
   width: 930px;
@@ -1237,15 +1159,6 @@ select:focus:required:invalid:focus {
 .form-actions:after {
   clear: both;
 }
-.uneditable-input {
-  display: block;
-  background-color: #ffffff;
-  border-color: #eee;
-  -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.025);
-  -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.025);
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.025);
-  cursor: not-allowed;
-}
 :-moz-placeholder {
   color: #999999;
 }
@@ -1272,17 +1185,6 @@ select:focus:required:invalid:focus {
 .input-prepend,
 .input-append {
   margin-bottom: 5px;
-}
-.input-prepend input,
-.input-append input,
-.input-prepend select,
-.input-append select,
-.input-prepend .uneditable-input,
-.input-append .uneditable-input {
-  *margin-left: 0;
-  -webkit-border-radius: 0 3px 3px 0;
-  -moz-border-radius: 0 3px 3px 0;
-  border-radius: 0 3px 3px 0;
 }
 .input-prepend input:focus,
 .input-append input:focus,
@@ -4280,11 +4182,6 @@ a.thumbnail:hover {
   .row-fluid > .span1 {
     width: 5.801104972%;
   }
-  input,
-  textarea,
-  .uneditable-input {
-    margin-left: 0;
-  }
   input.span12, textarea.span12, .uneditable-input.span12 {
     width: 714px;
   }
@@ -4632,4 +4529,31 @@ a.thumbnail:hover {
   .thumbnails > li {
     margin-left: 30px;
   }
+}
+
+/* Modifications for askbot */
+.caret {
+    margin-bottom: 7px;
+}
+.btn-group {
+    text-align: left;
+}
+.btn-toolbar {
+    margin: 0;
+}
+.modal-footer {
+    text-align: left;
+}
+.modal p {
+    font-size: 14px;
+}
+.modal-body > textarea {
+    width: 515px;
+    margin-bottom: 0px;
+}
+.modal-backdrop {
+    z-index: 200000;
+}
+.modal {
+    z-index: 200001;
 }

@@ -30,6 +30,7 @@ import askbot
 from askbot import exceptions
 from askbot.utils.diff import textDiff as htmldiff
 from askbot.forms import AnswerForm, ShowQuestionForm
+from askbot import conf
 from askbot import models
 from askbot import schedules
 from askbot.models.tag import Tag
@@ -39,9 +40,9 @@ from askbot.utils.html import sanitize_html
 from askbot.utils.decorators import anonymous_forbidden, ajax_only, get_only
 from askbot.search.state_manager import SearchState, DummySearchState
 from askbot.templatetags import extra_tags
-import askbot.conf
 from askbot.conf import settings as askbot_settings
 from askbot.skins.loaders import render_into_skin, get_template #jinja2 template loading enviroment
+from askbot.views import context
 
 # used in index page
 #todo: - take these out of const or settings
@@ -75,11 +76,15 @@ def questions(request, **kwargs):
     if request.method != 'GET':
         return HttpResponseNotAllowed(['GET'])
 
-    search_state = SearchState(user_logged_in=request.user.is_authenticated(), **kwargs)
+    search_state = SearchState(
+                    user_logged_in=request.user.is_authenticated(),
+                    **kwargs
+                )
     page_size = int(askbot_settings.DEFAULT_QUESTIONS_PAGE_SIZE)
 
-    qs, meta_data = models.Thread.objects.run_advanced_search(request_user=request.user, search_state=search_state)
-
+    qs, meta_data = models.Thread.objects.run_advanced_search(
+                        request_user=request.user, search_state=search_state
+                    )
     if meta_data['non_existing_tags']:
         search_state = search_state.remove_tags(meta_data['non_existing_tags'])
 
@@ -87,19 +92,25 @@ def questions(request, **kwargs):
     if paginator.num_pages < search_state.page:
         search_state.page = 1
     page = paginator.page(search_state.page)
-
-    page.object_list = list(page.object_list) # evaluate queryset
+    page.object_list = list(page.object_list) # evaluate the queryset
 
     # INFO: Because for the time being we need question posts and thread authors
     #       down the pipeline, we have to precache them in thread objects
     models.Thread.objects.precache_view_data_hack(threads=page.object_list)
 
-    related_tags = Tag.objects.get_related_to_search(threads=page.object_list, ignored_tag_names=meta_data.get('ignored_tag_names', []))
+    related_tags = Tag.objects.get_related_to_search(
+                        threads=page.object_list,
+                        ignored_tag_names=meta_data.get('ignored_tag_names',[])
+                    )
     tag_list_type = askbot_settings.TAG_LIST_FORMAT
     if tag_list_type == 'cloud': #force cloud to sort by name
         related_tags = sorted(related_tags, key = operator.attrgetter('name'))
 
-    contributors = list(models.Thread.objects.get_thread_contributors(thread_list=page.object_list).only('id', 'username', 'gravatar'))
+    contributors = list(
+        models.Thread.objects.get_thread_contributors(
+                                        thread_list=page.object_list
+                                    ).only('id', 'username', 'gravatar')
+                        )
 
     paginator_context = {
         'is_paginated' : (paginator.count > page_size),
@@ -155,6 +166,7 @@ def questions(request, **kwargs):
             'threads': page,
             'search_state': search_state,
             'reset_method_count': reset_method_count,
+            'request': request
         }))
 
         ajax_data = {
@@ -199,14 +211,14 @@ def questions(request, **kwargs):
             'questions_count' : paginator.count,
             'reset_method_count': reset_method_count,
             'scope': search_state.scope,
-            'show_sort_by_relevance': askbot.conf.should_show_sort_by_relevance(),
+            'show_sort_by_relevance': conf.should_show_sort_by_relevance(),
             'search_tags' : search_state.tags,
             'sort': search_state.sort,
             'tab_id' : search_state.sort,
             'tags' : related_tags,
             'tag_list_type' : tag_list_type,
             'font_size' : extra_tags.get_tag_font_size(related_tags),
-            'display_tag_filter_strategy_choices': const.TAG_DISPLAY_FILTER_STRATEGY_CHOICES,
+            'display_tag_filter_strategy_choices': conf.get_tag_display_filter_strategy_choices(),
             'email_tag_filter_strategy_choices': const.TAG_EMAIL_FILTER_STRATEGY_CHOICES,
             'update_avatar_data': schedules.should_update_avatar_data(request),
             'query_string': search_state.query_string(),
@@ -231,23 +243,22 @@ def tags(request):#view showing a listing of available tags - plain list
         except ValueError:
             page = 1
 
-        if request.method == "GET":
-            stag = request.GET.get("query", "").strip()
-            if stag != '':
-                objects_list = Paginator(
-                                models.Tag.objects.filter(
-                                                    deleted=False,
-                                                    name__icontains=stag
-                                                ).exclude(
-                                                    used_count=0
-                                                ),
-                                DEFAULT_PAGE_SIZE
-                            )
+        stag = request.GET.get("query", "").strip()
+        if stag != '':
+            objects_list = Paginator(
+                            models.Tag.objects.filter(
+                                                deleted=False,
+                                                name__icontains=stag
+                                            ).exclude(
+                                                used_count=0
+                                            ),
+                            DEFAULT_PAGE_SIZE
+                        )
+        else:
+            if sortby == "name":
+                objects_list = Paginator(models.Tag.objects.all().filter(deleted=False).exclude(used_count=0).order_by("name"), DEFAULT_PAGE_SIZE)
             else:
-                if sortby == "name":
-                    objects_list = Paginator(models.Tag.objects.all().filter(deleted=False).exclude(used_count=0).order_by("name"), DEFAULT_PAGE_SIZE)
-                else:
-                    objects_list = Paginator(models.Tag.objects.all().filter(deleted=False).exclude(used_count=0).order_by("-used_count"), DEFAULT_PAGE_SIZE)
+                objects_list = Paginator(models.Tag.objects.all().filter(deleted=False).exclude(used_count=0).order_by("-used_count"), DEFAULT_PAGE_SIZE)
 
         try:
             tags = objects_list.page(page)
@@ -413,7 +424,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
             return HttpResponseRedirect(reverse('index'))
 
     elif show_answer:
-        #if the url calls to view a particular answer to 
+        #if the url calls to view a particular answer to
         #question - we must check whether the question exists
         #whether answer is actually corresponding to the current question
         #and that the visitor is allowed to see it
@@ -433,10 +444,13 @@ def question(request, id):#refactor - long subroutine. display question body, an
 
     #load answers and post id's->athor_id mapping
     #posts are pre-stuffed with the correctly ordered comments
-    updated_question_post, answers, post_to_author = thread.get_cached_post_data(
+    updated_question_post, answers, post_to_author, published_answer_ids = thread.get_cached_post_data(
                                 sort_method = answer_sort_method,
+                                user = request.user
                             )
-    question_post.set_cached_comments(updated_question_post.get_cached_comments())
+    question_post.set_cached_comments(
+        updated_question_post.get_cached_comments()
+    )
 
 
     #Post.objects.precache_comments(for_posts=[question_post] + answers, visitor=request.user)
@@ -521,12 +535,21 @@ def question(request, id):#refactor - long subroutine. display question body, an
     elif show_comment_position > askbot_settings.MAX_COMMENTS_TO_SHOW:
         is_cacheable = False
 
-    answer_form = AnswerForm(
-        initial = {
-            'wiki': question_post.wiki and askbot_settings.WIKI_ON,
-            'email_notify': thread.is_followed_by(request.user)
-        }
-    )
+    initial = {
+        'wiki': question_post.wiki and askbot_settings.WIKI_ON,
+        'email_notify': thread.is_followed_by(request.user)
+    }
+    #maybe load draft
+    if request.user.is_authenticated():
+        #todo: refactor into methor on thread
+        drafts = models.DraftAnswer.objects.filter(
+                                        author=request.user,
+                                        thread=thread
+                                    )
+        if drafts.count() > 0:
+            initial['text'] = drafts[0].text
+
+    answer_form = AnswerForm(initial)
 
     user_can_post_comment = (
         request.user.is_authenticated() and request.user.can_post_comment()
@@ -549,9 +572,13 @@ def question(request, id):#refactor - long subroutine. display question body, an
         'active_tab': 'questions',
         'question' : question_post,
         'thread': thread,
+        'thread_is_moderated': thread.is_moderated(),
+        'user_is_thread_moderator': thread.has_moderator(request.user),
+        'published_answer_ids': published_answer_ids,
         'answer' : answer_form,
         'answers' : page_objects.object_list,
-        'answer_count': len(answers),
+        'answer_count': thread.get_answer_count(request.user),
+        'category_tree_data': askbot_settings.CATEGORY_TREE,
         'user_votes': user_votes,
         'user_post_id_list': user_post_id_list,
         'user_can_post_comment': user_can_post_comment,#in general
@@ -566,6 +593,11 @@ def question(request, id):#refactor - long subroutine. display question body, an
         'show_comment': show_comment,
         'show_comment_position': show_comment_position,
     }
+    #shared with ...
+    if askbot_settings.GROUPS_ENABLED:
+        data['sharing_info'] = thread.get_sharing_info()
+
+    data.update(context.get_for_tag_editor())
 
     return render_into_skin('question.html', data, request)
 
@@ -605,20 +637,3 @@ def get_comment(request):
     comment = models.Post.objects.get(post_type='comment', id=id)
     request.user.assert_can_edit_comment(comment)
     return {'text': comment.text}
-
-def widget_questions(request):
-    """Returns the first x questions based on certain tags.
-    @returns template with those questions listed."""
-    # make sure this is a GET request with the correct parameters.
-    if request.method != 'GET':
-        raise Http404
-    threads = models.Thread.objects.all()
-    tags_input = request.GET.get('tags','').strip()
-    if len(tags_input) > 0:
-        tags = [tag.strip() for tag in tags_input.split(',')]
-        threads = threads.filter(tags__name__in=tags)
-    data = {
-        'threads': threads[:askbot_settings.QUESTIONS_WIDGET_MAX_QUESTIONS]
-    }
-    return render_into_skin('question_widget.html', data, request) 
-    

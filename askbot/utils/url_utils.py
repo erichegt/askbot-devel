@@ -1,3 +1,4 @@
+import os
 import urlparse
 from django.core.urlresolvers import reverse
 from django.conf import settings
@@ -12,6 +13,38 @@ def strip_path(url):
             '', '', '', ''
         )
     )
+
+def append_trailing_slash(urlpath):
+    """if path is empty - returns slash
+    if not and path does not end with the slash
+    appends it
+    """
+    if urlpath == '':
+        return '/'
+    elif not urlpath.endswith('/'):
+        return urlpath + '/'
+    return urlpath
+
+def urls_equal(url1, url2, ignore_trailing_slash=False):
+    """True, if urls are equal"""
+    purl1 = urlparse.urlparse(url1)
+    purl2 = urlparse.urlparse(url2)
+    if purl1.scheme != purl2.scheme:
+        return False
+
+    if purl1.netloc != purl2.netloc:
+        return False
+    
+    if ignore_trailing_slash is True:
+        normfunc = append_trailing_slash
+    else:
+        normfunc = lambda v: v
+
+    if normfunc(purl1.path) != normfunc(purl2.path):
+        return False
+
+    #test remaining items in the parsed url
+    return purl1[3:] == purl2[3:]
 
 def get_login_url():
     """returns internal login url if

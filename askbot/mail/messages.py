@@ -32,6 +32,17 @@ def ask_for_signature(user, footer_code = None):
         'footer_code': footer_code
     }
 
+@message(template = 'email/notify_admins_about_new_tags.html')
+def notify_admins_about_new_tags(
+    tags = None, thread = None, user = None
+):
+    thread_url = thread.get_absolute_url()
+    return {
+        'thread_url': html_utils.site_url(thread_url),
+        'tags': tags,
+        'user': user
+    }
+
 @message(template = 'email/insufficient_rep_to_post_by_email.html')
 def insufficient_reputation(user):
     """tells user that he does not have

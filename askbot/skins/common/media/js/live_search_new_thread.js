@@ -1,5 +1,5 @@
 
-var liveSearchNewThreadInit = function() {
+var liveSearchNewThreadInit = function(auto_focus_out) {
     var query = $('input#id_title.questionTitleInput');
     var prev_text = $.trim(query.val());
     var search_url = askbot['urls']['api_get_questions'];
@@ -15,16 +15,27 @@ var liveSearchNewThreadInit = function() {
         }
     });
 
+    query.focusout(function(){
+        if (auto_focus_out){
+            var restart_query_handle = setTimeout(restart_query, 500);
+            restart_query_handle();
+        }
+    });
+
+    var restart_query = function(){
+        /* restart query */
+        $('#' + q_list_sel).css('height',0).children().remove();
+        running = false;
+        prev_text = '';
+    }
+
     var eval_query = function(){
         cur_text = $.trim(query.val());
         if (cur_text !== prev_text && running === false){
             if (cur_text.length >= minSearchWordLength){
                 send_query(cur_text);
             } else if (cur_text.length === 0){
-                /* restart query */
-                $('#' + q_list_sel).css('height',0).children().remove();
-                running = false;
-                prev_text = '';
+                restart_query();
             }
         }
     };
@@ -43,6 +54,7 @@ var liveSearchNewThreadInit = function() {
                 list_item.append(count_element);
                 var link = $('<a></a>');
                 link.attr('href', url);
+                link.attr('target', '_blank');
                 list_item.append(link);
                 title_element = $('<span class="title"></span>');
                 title_element.html(title);
@@ -78,5 +90,4 @@ var liveSearchNewThreadInit = function() {
             cache: false
         });
     }
-
 };

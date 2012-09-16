@@ -32,7 +32,9 @@ REQUIREMENTS = {
     'openid': 'python-openid',
     'pystache': 'pystache==0.3.1',
     'pytz': 'pytz',
+    'tinymce': 'django-tinymce',
     'longerusername': 'longerusername',
+    'bs4': 'beautifulsoup4'
 }
 
 if platform.system() != 'Windows':

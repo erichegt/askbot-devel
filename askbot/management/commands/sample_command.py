@@ -1,7 +1,7 @@
 from django.core.management.base import NoArgsCommand
-from askbot.models import Comment
+from askbot.models import Post
 
 class Command(NoArgsCommand):
     def handle_noargs(self, **options):
-        objs = Comment.objects.all()
+        objs = Post.objects.all()
         print objs

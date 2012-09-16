@@ -10,22 +10,32 @@
     askbot['urls']['editComment'] = '{% url edit_comment %}';
     askbot['urls']['deleteComment'] = '{% url delete_comment %}';
     askbot['urls']['convertComment'] = '{% url comment_to_answer %}';
+    askbot['urls']['convertAnswer'] = '{% url answer_to_comment %}';
     askbot['urls']['getComment'] = '{% url get_comment %}';
+    askbot['urls']['saveDraftAnswer'] = '{% url save_draft_answer %}';
     askbot['urls']['question_url_template'] = scriptUrl + '{{ 'question/'|transurl }}{{ "{{QuestionID}}/{{questionSlug}}" }}';{# yes it needs to be that whacky #}
     askbot['urls']['vote_url_template'] = scriptUrl + '{{ 'questions/'|transurl }}{{ "{{QuestionID}}/" }}{{ 'vote/'|transurl }}';
     askbot['urls']['user_signin'] = '{{ settings.LOGIN_URL }}';
     askbot['urls']['swap_question_with_answer'] = '{% url swap_question_with_answer %}';
     askbot['urls']['upvote_comment'] = '{% url upvote_comment %}';
     askbot['urls']['delete_post'] = '{% url delete_post %}';
+    askbot['urls']['get_html_template'] = '{% url get_html_template %}';
+    askbot['urls']['getGroupsList'] = '{% url get_groups_list %}';
+    askbot['urls']['publishAnswer'] = '{% url publish_answer %}';
+    askbot['data']['userIsThreadModerator'] = {% if user_is_thread_moderator %}true{% else %}false{% endif %};
     askbot['messages']['addComment'] = '{% trans %}post a comment{% endtrans %}';
     {% if settings.SAVE_COMMENT_ON_ENTER %}
         askbot['settings']['saveCommentOnEnter'] = true;
     {% else %}
         askbot['settings']['saveCommentOnEnter'] = false;
     {% endif %}
+    askbot['settings']['tagSource'] = '{{ settings.TAG_SOURCE }}';
 </script>
-<script type='text/javascript' src='{{"/js/wmd/showdown.js"|media}}'></script>
-<script type='text/javascript' src='{{"/js/wmd/wmd.js"|media}}'></script>
+<script type="text/javascript" src='{{"/bootstrap/js/bootstrap.js"|media}}'></script>
+{% if settings.EDITOR_TYPE == 'markdown' %}
+    <script type='text/javascript' src='{{"/js/wmd/showdown.js"|media}}'></script>
+    <script type='text/javascript' src='{{"/js/wmd/wmd.js"|media}}'></script>
+{% endif %}
 <script type='text/javascript' src='{{"/js/jquery.validate.min.js"|media}}'></script>
 <script type='text/javascript' src='{{"/js/post.js"|media}}'></script>
 <script type="text/javascript">
@@ -53,7 +63,12 @@
                 $("#fmanswer_button").hide();
             });
         {%endif%}
-        askbot['functions']['hideConvertLinks']();
+
+        if (askbot['data']['userIsAuthenticated']) {
+            var draftHandler = new DraftAnswer();
+            draftHandler.setThreadId({{ thread.id }});
+            draftHandler.decorate($(document));
+        }
     });
 
     $(window).bind('hashchange', animate_hashes);

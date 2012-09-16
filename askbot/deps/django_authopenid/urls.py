@@ -7,13 +7,16 @@ urlpatterns = patterns('askbot.deps.django_authopenid.views',
     url(r'^yadis.xrdf$', 'xrdf', name='yadis_xrdf'),
      # manage account registration
     url(r'^%s$' % _('signin/'), 'signin', name='user_signin'),
+    url(r'^%s$' % _('widget/signin/'), 'signin',
+        {'template_name': 'authopenid/widget_signin.html'},
+        name='widget_signin'),
     url(r'^%s$' % _('signout/'), 'signout', name='user_signout'),
     #this view is "complete-openid" signin
-    url(r'^%s%s$' % (_('signin/'), _('complete/')), 'complete_signin', 
+    url(r'^%s%s$' % (_('signin/'), _('complete/')), 'complete_signin',
         name='user_complete_signin'),
     url(
         r'^%s%s$' % (_('signin/'), _('complete-oauth/')),
-        'complete_oauth_signin', 
+        'complete_oauth_signin',
         name='user_complete_oauth_signin'
     ),
     url(r'^%s$' % _('register/'), 'register', name='user_register'),

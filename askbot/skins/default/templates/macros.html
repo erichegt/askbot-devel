@@ -17,13 +17,13 @@
          {{ response.response_type }}
          ({{ timeago(response.timestamp) }}):<br/>
          {% if inbox_section != 'flags' %}
-             {{ response.response_snippet|escape }}
+             {{ response.response_snippet }}
          {% endif %}
     </a>
     {% if inbox_section == 'flags' %}
          <a class="re_expand" href="{{ response.response_url }}">
               <!--div class="re_snippet">{{ response.response_snippet|escape }}</div-->
-              <div class="re_content">{{ response.response_content|escape }}</div>
+              <div class="re_content">{{ response.response_content }}</div>
          </a>
     {% endif %}
 </div>
@@ -57,6 +57,7 @@
         {{ user_score_and_badge_summary(user, karma_mode = karma_mode, badges_mode = badges_mode) }}<br/>
         {{ user_website_link(user) }}
     {% endif %}
+    {{ user_primary_group(user) }}
 {%- endmacro -%}
 
 {%- macro post_last_updater_and_creator_info(
@@ -206,46 +207,80 @@ poor design of the data or methods on data objects #}
 </ul>
 {%- endmacro -%}
 
-{%- macro user_group(group, membership_info) -%}
+{%- macro user_group_link(group) -%}
+    <a class="group-name"
+        href="{% url users_by_group group.id, group.name|replace('-', ' ')|slugify %}"
+    >{{ group.name|escape }}</a>
+{%- endmacro -%}
+
+{%- macro user_group(group, membership_info, show_count=False) -%}
     <td>
-        <a class="group-name"
-            href="{% url users_by_group group.id, group.name|replace('-', ' ')|slugify %}"
-        >{{ group.name|escape }}</a>
+        {{ user_group_link(group) }}
     </td>
+    {% if show_count %}
+        <td>{{ group.users_count }}</td>
+    {% endif %}
     <td>
     <span class="group-description">
-    {% if group.tag_wiki %}
-        {{ group.tag_wiki.summary }}
+    {% if group.description %}
+        {{ group.description.summary }}
     {% endif %}
     </span>
-    </td>
-    <td>
     {% if membership_info %}
+        <br/>
         {{ group_join_button(
                 group_id = group.id,
-                can_join = membership_info['can_join'],
-                is_member = membership_info['is_member']
+                acceptance_level = membership_info['aceptance_level'],
+                membership_level = membership_info['membership_level']
             )
         }}
     {% endif %}
     </td>
 {%- endmacro -%}
 
-{%- macro group_join_button(group_id = None, can_join = False, is_member = False) -%}
-    {% if can_join or is_member %}
+{%- macro user_primary_group(user) -%}
+    {% set group=user.get_primary_group() %}
+    {% if group %}
+        <span class="primary-group-name"><a
+            class="primary-group-name"
+            href="{% url users_by_group group.id, group.name|replace('-', ' ')|slugify %}"
+        >{{ group.name|replace('-', ' ')|escape }}</a></span>
+    {% endif %}
+{%- endmacro -%}
+
+{%- macro group_join_button(
+    group_id=None, acceptance_level='closed', membership_level='none')
+-%}
+    {% if acceptance_level in ('open', 'moderated') %}
         <button 
-            class="group-join-btn follow-toggle {% if is_member %}on on-state{% endif %}"
+            class="group-join-btn follow-toggle {% if membership_level != 'none' %}on on-state{% endif %}"
             data-group-id="{{group_id}}"
-            data-off-prompt-text="{% trans %}Leave this group{% endtrans %}"
-            data-on-prompt-text="{% trans %}Join this group{% endtrans %}"
-            data-on-state-text="{% trans %}You are a member{% endtrans %}"
-            data-off-state-text="{% trans %}Join this group{% endtrans %}"
-        >
-            {% if is_member %}
-                {% trans %}You are a member{% endtrans %}
+            {% if acceptance_level == 'open' %}
+                data-off-prompt-text="{% trans %}Leave this group{% endtrans %}"
+                data-on-prompt-text="{% trans %}Join this group{% endtrans %}"
+                data-on-state-text="{% trans %}You are a member{% endtrans %}"
+                data-off-state-text="{% trans %}Join this group{% endtrans %}"
             {% else %}
-                {% if can_join %}
+                {% if membership_level == 'full' %}
+                    data-off-prompt-text="{% trans %}Leave this group{% endtrans %}"
+                    data-on-state-text="{% trans %}You are a member{% endtrans %}"
+                {% else %}
+                    data-off-prompt-text="{% trans %}Cancel application{% endtrans %}"
+                    data-on-state-text="{% trans %}Waiting approval{% endtrans %}"
+                {% endif %}
+                data-on-prompt-text="{% trans %}Ask to join{% endtrans %}"
+                data-off-state-text="{% trans %}Ask to join{% endtrans %}"
+            {% endif %}
+        >
+            {% if membership_level == 'full' %}
+                {% trans %}You are a member{% endtrans %}
+            {% elif membership_level == 'pending' %}
+                {% trans %}Waiting approval{% endtrans %}
+            {% else %}
+                {% if acceptance_level == 'open' %}
                     {% trans %}Join this group{% endtrans %}
+                {% else %}
+                    {% trans %}Ask to join{% endtrans %}
                 {% endif %}
             {% endif %}
         </button>
@@ -313,7 +348,7 @@ poor design of the data or methods on data objects #}
     {% endfor %}
 {%- endmacro -%}
 
-{%- macro question_summary(thread, question, extra_class=None, search_state=None) -%}
+{%- macro question_summary(thread, question, extra_class=None, search_state=None, visitor = None) -%}
 {%include "widgets/question_summary.html" %}
 {%- endmacro -%}
 
@@ -389,7 +424,7 @@ for the purposes of the AJAX comment editor #}
                         <span class="age">&nbsp;({{ timeago(comment.added_at) }})</span>
                         <a id="post-{{comment.id}}-edit"
                             class="edit">{% trans %}edit{% endtrans %}</a>
-                        <form action="{% url comment_to_answer %}" method="POST" accept-charset="utf-8" class='convert'>
+                        <form action="{% url comment_to_answer %}" method="POST" accept-charset="utf-8" class='convert-comment'>
                           {% csrf_token %}
                           <input type="hidden" value="{{comment.id}}" name="comment_id" id="id_comment_id">
                           <input type="submit" value="{% trans %}convert to answer{% endtrans %}">
@@ -397,6 +432,7 @@ for the purposes of the AJAX comment editor #}
                     </div>
                 </div>
                 <script type="text/javascript">
+                    askbot['functions']['hideConvertLinks']();
                     askbot['functions']['renderPostControls']('{{comment.id}}');
                 </script>
             {% endfor %}
@@ -483,8 +519,12 @@ for the purposes of the AJAX comment editor #}
 {%- macro edit_post(
                 post_form,
                 post_type = None,
+                post_html = None,
                 mandatory_tags = None,
                 edit_title = False,
+                use_category_selector = False,
+                tag_names = None,
+                editor_type = None,
                 user = None
             )
 -%}

@@ -45,9 +45,28 @@ settings.register(
 settings.register(
     livesettings.BooleanValue(
         USER_SETTINGS,
+        'AUTOFILL_USER_DATA',
+        default = True,
+        description = _('Auto-fill user name, email, etc on registration'),
+        help_text = _('Implemented only for LDAP logins at this point')
+    )
+)
+
+settings.register(
+    livesettings.BooleanValue(
+        USER_SETTINGS,
         'EDITABLE_EMAIL',
         default = True,
         description = _('Allow users change own email addresses')
+    )
+)
+
+settings.register(
+    livesettings.BooleanValue(
+        USER_SETTINGS,
+        'ALLOW_EMAIL_ADDRESS_IN_USERNAME',
+        default=True,
+        description=_('Allow email address in user name')
     )
 )
 

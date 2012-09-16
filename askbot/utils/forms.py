@@ -3,6 +3,8 @@ from django import forms
 from django.http import str_to_unicode
 from django.contrib.auth.models import User
 from django.conf import settings
+from django.http import Http404
+from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext as _
 from django.utils.safestring import mark_safe
 from askbot.conf import settings as askbot_settings
@@ -27,6 +29,23 @@ def clean_next(next, default = None):
 
 def get_next_url(request, default = None):
     return clean_next(request.REQUEST.get('next'), default)
+
+def get_db_object_or_404(params):
+    """a utility function that returns an object
+    in return to the model_name and object_id
+
+    only specific models are accessible
+    """
+    from askbot import models
+    try:
+        model_name = params['model_name']
+        assert(model_name=='Group')
+        model = models.get_model(model_name)
+        obj_id = forms.IntegerField().clean(params['object_id'])
+        return get_object_or_404(model, id=obj_id)
+    except Exception:
+        #need catch-all b/c of the nature of the function
+        raise Http404
 
 class StrippedNonEmptyCharField(forms.CharField):
     def clean(self, value):
@@ -60,6 +79,7 @@ class UserNameField(StrippedNonEmptyCharField):
         must_exist=False,
         skip_clean=False,
         label=_('Choose a screen name'),
+        widget_attrs=None,
         **kw
     ):
         self.must_exist = must_exist
@@ -75,18 +95,25 @@ class UserNameField(StrippedNonEmptyCharField):
             'multiple-taken': _('sorry, we have a serious error - user name is taken by several users'),
             'invalid': _('user name can only consist of letters, empty space and underscore'),
             'meaningless': _('please use at least some alphabetic characters in the user name'),
+            'noemail': _('symbol "@" is not allowed')
         }
         if 'error_messages' in kw:
             error_messages.update(kw['error_messages'])
             del kw['error_messages']
 
-        max_length = MAX_USERNAME_LENGTH
-        super(UserNameField,self).__init__(max_length=max_length,
+        if widget_attrs:
+            widget_attrs.update(login_form_widget_attrs)
+        else:
+            widget_attrs = login_form_widget_attrs
+
+        max_length = MAX_USERNAME_LENGTH()
+        super(UserNameField,self).__init__(
+                max_length=max_length,
                 widget=forms.TextInput(attrs=login_form_widget_attrs),
                 label=label,
                 error_messages=error_messages,
                 **kw
-                )
+            )
 
     def clean(self,username):
         """ validate username """
@@ -107,7 +134,16 @@ class UserNameField(StrippedNonEmptyCharField):
         except forms.ValidationError:
             raise forms.ValidationError(self.error_messages['required'])
 
-        username_regex = re.compile(const.USERNAME_REGEX_STRING, re.UNICODE)
+        username_re_string = const.USERNAME_REGEX_STRING
+        #attention: here we check @ symbol in two places: input and the regex
+        if askbot_settings.ALLOW_EMAIL_ADDRESS_IN_USERNAME is False:
+            if '@' in username:
+                raise forms.ValidationError(self.error_messages['noemail'])
+
+            username_re_string = username_re_string.replace('@', '')
+
+        username_regex = re.compile(username_re_string, re.UNICODE)
+
         if self.required and not username_regex.search(username):
             raise forms.ValidationError(self.error_messages['invalid'])
         if username in self.RESERVED_NAMES:

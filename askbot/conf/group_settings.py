@@ -19,6 +19,31 @@ settings.register(
     )
 )
 
+def group_name_update_callback(old_name, new_name):
+    from askbot.models.tag import get_global_group, clean_group_name
+    cleaned_new_name = clean_group_name(new_name.strip())
+
+    if new_name == '':
+        #name cannot be empty
+        return old_name
+
+    group = get_global_group()
+    group.name = cleaned_new_name
+    group.save()
+    return new_name
+
+
+settings.register(
+    livesettings.StringValue(
+        GROUP_SETTINGS,
+        'GLOBAL_GROUP_NAME',
+        default = _('everyone'),
+        description = _('Global user group name'),
+        help_text = _('All users belong to this group automatically'),
+        update_callback=group_name_update_callback
+    )
+)
+
 settings.register(
     livesettings.BooleanValue(
         GROUP_SETTINGS,

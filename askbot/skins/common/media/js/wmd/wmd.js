@@ -3,10 +3,10 @@
 Attacklab.wmdBase = function(){
 
 	// A few handy aliases for readability.
-	var wmd  = top.Attacklab;
-	var doc  = top.document;
-	var re   = top.RegExp;
-	var nav  = top.navigator;
+	var wmd  = self.Attacklab;
+	var doc  = self.document;
+	var re   = self.RegExp;
+	var nav  = self.navigator;
 	
 	// Some namespaces.
 	wmd.Util = {};
@@ -358,9 +358,26 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
             upload_input.attr('id', 'file-upload');
             upload_input.attr('size', 26);
 
+            var spinner = $('<img />');
+            spinner.attr('id', 'loading');
+            spinner.attr('src', mediaUrl("media/images/indicator.gif"));
+            spinner.css('display', 'none');
+
             var startUploadHandler = function(){
-                localUploadFileName = $(this).val();
-                return ajaxFileUpload($('#image-url'), startUploadHandler);
+                localUploadFileName = $(this).val();//this is a local var
+                /* 
+                 * startUploadHandler is passed into the ajaxFileUpload
+                 * in order to re-install the onchange handler
+                 * because the jquery extension ajaxFileUpload removes the handler
+                 */
+                var options = {
+                    spinner: spinner,
+                    uploadInputId: 'file-upload',
+                    urlInput: $(input),
+                    startUploadHandler: startUploadHandler
+                };
+                return ajaxFileUpload(options);
+                //$('#image-url'), startUploadHandler);
             };
 
             upload_input.change(startUploadHandler);
@@ -368,12 +385,8 @@ util.prompt = function(text, defaultInputText, makeLinkMarkdown, dialogType){
             upload_container.append(upload_input);
             upload_container.append($('<br/>'));
 
-            var spinner = $('<img />');
-            spinner.attr('id', 'loading');
-            spinner.attr('src', mediaUrl("media/images/indicator.gif"));
-            spinner.css('display', 'none');
-
             upload_container.append(spinner);
+
             upload_container.css('padding', '5px');
             $(form).append(upload_container);   
         }

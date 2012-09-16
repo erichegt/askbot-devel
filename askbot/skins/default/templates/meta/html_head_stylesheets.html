@@ -1,3 +1,6 @@
+{%if settings.GROUPS_ENABLED%}
+<link href="{{'/bootstrap/css/bootstrap.css'|media}}" rel="stylesheet" type="text/css" />
+{% endif %}
 {% if settings.ASKBOT_CSS_DEVEL == False %}
 
 <link href="{{"/style/style.css"|media }}" rel="stylesheet" type="text/css" />
@@ -5,9 +8,11 @@
 <link href="{{"/style/style.less"|media }}" rel="stylesheet/less" type="text/css" />
 <script type="text/javascript" src="{{"/js/less.min.js"|media}}"></script>
 {% endif %}
+<link href="{{'/bootstrap/css/bootstrap.css'|media}}" rel="stylesheet" type="text/css" />
 {% if settings.USE_LOCAL_FONTS %}
     {% include "meta/fonts.html" %}
 {% else %}
+    {# note: IE8 fix - a combined font link wont work so we have two #}
     <link href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed:700&amp;subset=latin-ext' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed:700&amp;subset=cyrillic-ext' rel='stylesheet' type='text/css'>
 {% endif %}

@@ -1,4 +1,4 @@
-{% from "macros.html" import user_country_flag, tag_list_widget, timeago %}
+{% from "macros.html" import user_country_flag, tag_list_widget, timeago, user_primary_group %}
 <div class="short-summary{% if extra_class %} {{extra_class}}{% endif %}" id="question-{{question.id}}">
     <div class="counts">
         <div class="views
@@ -12,8 +12,9 @@
             {% trans cnt=thread.view_count %}view{% pluralize %}views{% endtrans %}
             </div>
         </div>
+        {% set answer_count = thread.get_answer_count(visitor) %}
         <div class="answers
-                {% if thread.answer_count == 0 -%}
+                {% if answer_count == 0 -%}
                     no-answers
                 {% else -%}
                     {%- if thread.accepted_answer_id -%}  {# INFO: Use _id to not fetch the whole answer post #}
@@ -24,9 +25,9 @@
                 {%- endif -%}"> 
             <span 
                 class="item-count"
-            >{{thread.answer_count|humanize_counter}}{% if thread.accepted_answer_id %}{% endif %}</span>
+            >{{ answer_count|humanize_counter }}{% if thread.accepted_answer_id %}{% endif %}</span>
             <div>
-            {% trans cnt=thread.answer_count %}answer{% pluralize %}answers{% endtrans %}
+            {% trans cnt = answer_count %}answer{% pluralize %}answers{% endtrans %}
             </div>
         </div>
         <div class="votes 
@@ -49,9 +50,10 @@
                 <a href="{% url user_profile thread.last_activity_by.id, thread.last_activity_by.username|slugify %}">{{thread.last_activity_by.username|escape}}</a> {{ user_country_flag(thread.last_activity_by) }}
                 {#{user_score_and_badge_summary(thread.last_activity_by)}#}
             {% endif %}
+            {% if thread.last_activity_by.get_primary_group() %}-{% endif %}
+            {{ user_primary_group(thread.last_activity_by) }}
         </div>
     </div>
     <h2><a title="{{question.summary|escape}}" href="{{ question.get_absolute_url(thread=thread) }}">{{thread.get_title(question)|escape}}</a></h2>
     {{ tag_list_widget(thread.get_tag_names(), search_state=search_state) }}
 </div>
-

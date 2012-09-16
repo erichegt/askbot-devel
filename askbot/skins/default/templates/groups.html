@@ -26,11 +26,21 @@
     </p>
     {% endif %}
     <table id="groups-list">
-    {% for group in groups %}
-        <tr>
-            {{ macros.user_group(group, groups_membership_info[group.id]) }}
-        </tr>
-    {% endfor %}
+        <thead>
+            <th>{% trans %}Group{% endtrans %}</th>
+            <th>{% trans %}Number of members{% endtrans %}</th>
+            <th>{% trans %}Description{% endtrans %}</th>
+        </thead>
+        <tbody>
+        {% for group in groups %}
+            <tr>
+                {{ macros.user_group(
+                        group, groups_membership_info[group.id], show_count=True
+                    )
+                }}
+            </tr>
+        {% endfor %}
+        </tbody>
     </table>
 {% endblock %}
 {% block endjs %}

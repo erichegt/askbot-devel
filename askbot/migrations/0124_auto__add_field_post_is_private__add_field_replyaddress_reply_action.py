@@ -30,12 +30,10 @@ class Migration(SchemaMigration):
             db.commit_transaction()
         except:
             db.rollback_transaction()
-            pass
 
     def backwards(self, orm):
         db.delete_column('askbot_post', 'is_private')
         db.delete_column('askbot_replyaddress', 'reply_action')
-        db.delete_column('auth_user', 'email_signature')
         db.alter_column('askbot_replyaddress', 'post_id', self.gf('django.db.models.fields.related.ForeignKey')(default=None, to=orm['askbot.Post']))
 
     models = {
