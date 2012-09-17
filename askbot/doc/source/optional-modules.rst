@@ -287,23 +287,21 @@ The lamson daemon needs a folder to store it's mail queue files and a folder to 
 
     mkdir logs
 
-The minimum settings required to enable this feature are defining the port and binding address for the lamson SMTP daemon and the email handlers within askbot. Edit your settings.py file to include the following:
+The minimum settings required to enable this feature are defining the port and binding address for the lamson SMTP daemon and the email handlers within askbot. Edit your settings.py file to include the following::
 
     LAMSON_RECEIVER_CONFIG = {'host': 'your.ip.address', 'port': 25}
-    
     LAMSON_HANDLERS = ['askbot.mail.lamson_handlers']
-    
     LAMSON_ROUTER_DEFAULTS = {'host': '.+'}
 
-In the list of ``installed_apps`` add the app ``django-lamson``.
+In the list of ``installed_apps`` add the app ``django_lamson``.
 
 The ``LAMSON_RECEIVER_CONFIG`` parameter defines the binding address/port for the SMTP daemon. To recieve internet email you will need to bind to your external ip address and port 25. If you just want to test the feature by sending eamil from the same system you could bind to 127.0.0.1 and any higher port. 
 
-To run the lamson SMTP daemon you will need to execute the following management command:
+To run the lamson SMTP daemon you will need to execute the following management command::
     
     python manage.py lamson_start
 
-To stop the daemon issue the following command
+To stop the daemon issue the following command::
 
     python manage.py lamson_stop
 
@@ -316,7 +314,7 @@ Within the askbot admin interface there are 4 significant configuration points f
 * The last setting in this section controls the threshold for minimum length of the reply that is posted as an answer to a question. If the user is replying to a notification for a question and the reply  body is shorter than this threshold the reply will be posted as a comment to the question.
 * In the karma thresholds section the "Post answers and comments by email" defines the minimum karma for users to be able to post replies by email.
 
-If the system where lamson is hosted also acts as an email server or you simply want some of the emails to be ignored and sent to another server you can define forward rules. Any emails matching these rules will be sent to another smtp server, bypassing the reply by email function. As an example by adding the following in your settings.py file:
+If the system where lamson is hosted also acts as an email server or you simply want some of the emails to be ignored and sent to another server you can define forward rules. Any emails matching these rules will be sent to another smtp server, bypassing the reply by email function. As an example by adding the following in your settings.py file::
 
     LAMSON_FORWARD = (
         {
