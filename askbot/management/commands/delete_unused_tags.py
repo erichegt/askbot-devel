@@ -14,11 +14,6 @@ class Command(NoArgsCommand):
         tags = tags.iterator()
         deleted_tags = list()
         for tag in ProgressBar(tags, total, message):
-            if tag.name == askbot_settings.GLOBAL_GROUP_NAME:#todo: temporary
-                continue
-            if tag.name.startswith('_internal_'):
-                continue
-
             if not tag.threads.exists():
                 deleted_tags.append(tag.name)
                 tag.delete()
@@ -38,4 +33,3 @@ class Command(NoArgsCommand):
             print "Deleted."
         else:
             print "Did not find any."
-

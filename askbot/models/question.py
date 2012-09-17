@@ -25,7 +25,7 @@ from askbot.models.base import DraftContent, BaseQuerySetManager
 from askbot.models.tag import Tag, get_groups
 from askbot.models.post import Post, PostRevision
 from askbot.models.post import PostToGroup
-from askbot.models.user import Group
+from askbot.models.user import Group, PERSONAL_GROUP_NAME_PREFIX
 from askbot.models import signals
 from askbot import const
 from askbot.utils.lists import LazyList
@@ -540,8 +540,8 @@ class Thread(models.Model):
                                             exclude_user=visitor
                                         )
         groups = self.groups
-        ugroups = groups.filter(name__startswith='_internal_')
-        ggroups = groups.exclude(name__startswith='_internal_')
+        ugroups = groups.get_personal()
+        ggroups = groups.exclude_personal()
 
         sharing_info = {
             'users': shared_users,
@@ -559,7 +559,7 @@ class Thread(models.Model):
                         thread=self,
                         visibility=ThreadToGroup.SHOW_ALL_RESPONSES
                     ) & models.Q(
-                        group__name__startswith='_internal_'
+                        group__name__startswith=PERSONAL_GROUP_NAME_PREFIX
                     )
 
         if exclude_user:
@@ -585,13 +585,13 @@ class Thread(models.Model):
     def get_groups_shared_with(self, max_count=None):
         """returns query set of groups with whom thread is shared"""
         thread_groups = ThreadToGroup.objects.filter(
-                                        models.Q(
-                                            thread=self,
-                                            visibility=ThreadToGroup.SHOW_ALL_RESPONSES
-                                        ) & ~models.Q(
-                                            group__name__startswith='_internal_'
-                                        )
-                                    )
+                            models.Q(
+                                thread=self,
+                                visibility=ThreadToGroup.SHOW_ALL_RESPONSES
+                            ) & ~models.Q(
+                                group__name__startswith=PERSONAL_GROUP_NAME_PREFIX
+                            )
+                        )
         if max_count:
             thread_groups = thread_groups[:max_count]
 

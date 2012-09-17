@@ -952,7 +952,7 @@ class CreateAskWidgetForm(forms.Form, FormWithHideableFields):
         from askbot.models import Tag
         super(CreateAskWidgetForm, self).__init__(*args, **kwargs)
         self.fields['group'] = forms.ModelChoiceField(
-            queryset=get_groups().exclude(name__startswith='_internal_'),
+            queryset=get_groups().exclude_personal(),
             required=False
         )
         self.fields['tag'] = forms.ModelChoiceField(queryset=Tag.objects.get_content_tags(),

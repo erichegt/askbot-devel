@@ -59,9 +59,8 @@ def application_settings(request):
     }
 
     if askbot_settings.GROUPS_ENABLED:
-        groups = models.Group.objects.exclude(
-                                              name__startswith='_internal_'
-                                             ).values('id', 'name')
+        groups = models.Group.objects.exclude_personal()
+        groups = groups.values('id', 'name')
         group_list = []
         for group in groups:
             group_slug = slugify(group['name'])

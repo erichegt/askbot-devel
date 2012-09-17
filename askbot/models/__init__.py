@@ -2249,7 +2249,7 @@ def user_get_primary_group(self):
     """
     groups = self.get_groups(private=True)
     for group in groups:
-        if group.name.startswith('_internal_'):
+        if group.is_personal():
             continue
         return group
     return None
