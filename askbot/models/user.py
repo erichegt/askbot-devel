@@ -20,7 +20,7 @@ from askbot.models.tag import clean_group_name#todo - delete this
 from askbot.forms import DomainNameField
 from askbot.utils.forms import email_is_allowed
 
-PERSONAL_GROUP_NAME_PREFIX = '_internal_'
+PERSONAL_GROUP_NAME_PREFIX = '_personal_'
 
 class ResponseAndMentionActivityManager(models.Manager):
     def get_query_set(self):

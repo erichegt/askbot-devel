@@ -60,7 +60,7 @@ def format_personal_group_name(user):
     #todo: after migration of groups away from tags,
     #this function will be moved somewhere else
     from askbot.models.user import PERSONAL_GROUP_NAME_PREFIX as prefix
-    return '%s%s_%d' % (prefix, user.username, user.id)
+    return '%s%d' % (prefix, user.id)
 
 def is_preapproved_tag_name(tag_name):
     """true if tag name is in the category tree
