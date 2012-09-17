@@ -536,8 +536,6 @@ def get_tag_list(request):
     tags = models.Tag.objects.filter(
                         deleted = False,
                         status = models.Tag.STATUS_ACCEPTED
-                    ).exclude(
-                        name__startswith='_internal_'
                     )
 
     tag_names = tags.values_list(
@@ -652,13 +650,12 @@ def get_groups_list(request):
     """returns names of group tags
     for the autocomplete function"""
     global_group = get_global_group()
-    group_names = models.Group.objects.all().exclude(
-                                    name__startswith='_internal_'
-                                ).exclude(
-                                    name=global_group.name
-                                ).values_list(
-                                    'name', flat = True
-                                )
+    groups = models.Group.objects.exclude_personal()
+    group_names = groups.exclude(
+                        name=global_group.name
+                    ).values_list(
+                        'name', flat = True
+                    )
     output = '\n'.join(group_names)
     return HttpResponse(output, mimetype = 'text/plain')
 

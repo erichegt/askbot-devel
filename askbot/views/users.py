@@ -176,7 +176,7 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
     #extra context for the groups
     if askbot_settings.GROUPS_ENABLED:
         #todo: cleanup this branched code after groups are migrated to auth_group
-        user_groups = get_groups().exclude(name__startswith='_internal_')
+        user_groups = get_groups().exclude_personal()
         if len(user_groups) <= 1:
             assert(user_groups[0].name == askbot_settings.GLOBAL_GROUP_NAME)
             user_groups = None
@@ -482,7 +482,7 @@ def user_stats(request, user, context):
     badges.sort(key=operator.itemgetter(1), reverse=True)
 
     user_groups = models.Group.objects.get_for_user(user = user)
-    user_groups = user_groups.exclude(name__startswith='_internal_')
+    user_groups = user_groups.exclude_personal()
     global_group = get_global_group()
     user_groups = user_groups.exclude(name=global_group.name)
 
@@ -1073,7 +1073,7 @@ def groups(request, id = None, slug = None):
                                         user=request.user
                                     )
 
-    groups = groups.exclude(name__startswith='_internal_')
+    groups = groups.exclude_personal()
     groups = groups.annotate(users_count=Count('user'))
 
     user_can_add_groups = request.user.is_authenticated() and \

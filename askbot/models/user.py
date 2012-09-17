@@ -20,6 +20,8 @@ from askbot.models.tag import clean_group_name#todo - delete this
 from askbot.forms import DomainNameField
 from askbot.utils.forms import email_is_allowed
 
+PERSONAL_GROUP_NAME_PREFIX = '_personal_'
+
 class ResponseAndMentionActivityManager(models.Manager):
     def get_query_set(self):
         response_types = const.RESPONSE_ACTIVITY_TYPES_FOR_DISPLAY
@@ -388,6 +390,18 @@ class GroupMembership(AuthUserGroups):
 class GroupQuerySet(models.query.QuerySet):
     """Custom query set for the group"""
 
+    def exclude_personal(self):
+        """excludes the personal groups"""
+        return self.exclude(
+            name__startswith=PERSONAL_GROUP_NAME_PREFIX
+        )
+
+    def get_personal(self):
+        """filters for the personal groups"""
+        return self.filter(
+            name__startswith=PERSONAL_GROUP_NAME_PREFIX
+        )
+
     def get_for_user(self, user=None, private=False):
         if private:
             global_group = get_global_group()
@@ -523,6 +537,10 @@ class Group(AuthGroup):
             return 'moderated'
 
         return 'closed'
+
+    def is_personal(self):
+        """``True`` if the group is personal"""
+        return self.name.startswith(PERSONAL_GROUP_NAME_PREFIX)
 
     def clean(self):
         """called in `save()`
