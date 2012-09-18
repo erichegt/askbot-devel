@@ -1,6 +1,7 @@
 from django.utils.translation import ugettext as _
 from askbot.models import ReplyAddress
 from askbot.mail.lamson_handlers import PROCESS, VALIDATE_EMAIL, get_parts
+from askbot.mail import extract_user_signature
 from askbot import const
 
 
@@ -146,7 +147,6 @@ class EmailSignatureDetectionTests(AskbotTestCase):
     def setUp(self):
         self.u1 = self.create_user('user1', status = 'a')
         self.u2 = self.create_user('user2', status = 'a')
-        self.u3 = self.create_user('user3', status = 'a')
 
     def test_detect_signature_in_response(self):
         question = self.post_question(user = self.u1)
@@ -194,31 +194,130 @@ class EmailSignatureDetectionTests(AskbotTestCase):
         signature = self.reload_object(self.u2).email_signature
         self.assertEqual(signature, 'Yours Truly')
 
-    def test_detect_signature_in_html_welcome_response(self):
-        reply_token = ReplyAddress.objects.create_new(
-                                            user = self.u3,
-                                            reply_action = 'validate_email'
-                                        )
-        self.u3.email_signature = ''
-        self.u3.save()
-        signature = 'Yours Truly'
+class SignatureDetectionTests(AskbotTestCase):
+    '''Simple test to detect signature from text'''
 
-        msg = MockMessage(
-                'some text',
-                self.u3.email,
-                signature = signature,
-                response_code = reply_token.address
-            )
+    def setUp(self):
+        self.u1 = self.create_user('user1', status = 'a')
+        self.u1.email_signature = '''--\nFoo Bar'''
+        self.u1.save()
+        self.plain_text = '''welcome!
 
-        html_message = '<b>some text</b>' + signature
+On Mon, Sep 17, 2012 at 9:01 AM, <foo@bar.com> wrote:
 
-        msg.attach_alternative(html_message, 'text/html')
-        VALIDATE_EMAIL(
-            msg,
-            address = reply_token.address
-        )
+> **
+>         Welcome to Askbot!
+>
+> Important: *Please reply* to this message, without editing it. We need
+> this to determine your email signature and that the email address is valid
+> and was typed correctly.
+>
+> Until we receive the response from you, you will not be able ask or answer
+> questions on askbot by email.
+>   ------------------------------
+>
+> Sincerely,
+> askbot Administrator
+>
+> ofqssnfqkvlw
+>
 
-        signature = self.reload_object(self.u3).email_signature
-        self.assertEqual(signature, 'Yours Truly')
 
+
+--
+Foo Bar
+'''
+        self.html = '''welcome!<br><br><div class=3D"gmail_quote">On Mon, Sep 17, 2012 at 9:01 AM,=
+  <span dir=3D"ltr">&lt;<a href=3D"mailto:foo@bar.com" target=
+=3D"_blank">foo@bar.com</a>&gt;</span> wrote:<br><blockquote c=
+lass=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;=
+padding-left:1ex">
+<u></u>=20
+
+
+ =20
+ =20
+ =20
+ =20
+
+ =20
+    =20
+
+ =20
+
+ =20
+
+<div>
+<table cellpadding=3D"0" cellspacing=3D"0" border=3D"0">
+  <tbody><tr>
+    <td>
+      <table border=3D"0" align=3D"center" cellspacing=3D"0" cellpadding=3D=
+"0" style=3D"background-color:#e7e8e8">
+        <tbody><tr height=3D"20">
+          <td valign=3D"top">=20
+          </td>
+        </tr>
+        <tr>
+          <td valign=3D"top">=20
+            <table border=3D"0" align=3D"center" cellspacing=3D"0" cellpadd=
+ing=3D"0" style=3D"background-color:#fff" width=3D"80%">
+              <tbody><tr>
+                <td valign=3D"top">=20
+                  <table border=3D"0" align=3D"center" cellspacing=3D"0" ce=
+llpadding=3D"0" width=3D"80%">
+                    <tbody><tr>
+                      <td valign=3D"top">=20
+                        <h1>Welcome to KnowledgePoint!</h1>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td valign=3D"top">=20
+                       =20
+
+<p>
+    Important: <em>Please reply</em> to this message, without editing it. W=
+e need this to determine your email signature and that the email address is=
+ valid and was typed correctly.
+</p>
+<p>
+    Until we receive the response from you, you will not be able ask or ans=
+wer questions on KnowledgePoint by email.
+</p>
+
+                      </td>
+                    </tr>
+                    <tr>
+                      <td valign=3D"top">=20
+                        <hr>
+                         =20
+<p>Sincerely,<br>KnowledgePoint Administrator</p>
+<p style=3D"font-size:8px;color:#aaa;margin-bottom:0px">ofqssnfqkvlw</p>
+
+                      </td>
+                    </tr>
+                  </tbody></table>
+                </td>
+              </tr>
+            </tbody></table>
+          </td>
+        </tr>
+        <tr height=3D"20">
+          <td valign=3D"top">=20
+          </td>
+        </tr>
+      </tbody></table>
+    </td>
+  </tr>
+  </tbody></table> =20
+</div>
+</blockquote></div><br><br clear=3D"all"><div><br></div>-- <br> Foo Bar
+<br>'''
+
+    def test_plain_text_parse(self):
+        signature = extract_user_signature(self.plain_text, 'ofqssnfqkvlw')
+        self.assertEquals(signature, self.u1.email_signature)
+
+    def test_html_parse(self):
+        signature = extract_user_signature(self.html, 'ofqssnfqkvlw')
+        self.assertEquals(signature, self.u1.email_signature)
 
