@@ -1,5 +1,11 @@
+{% extends "email/base_mail.html"%}
 {% from "email/macros.html" import quoted_post %}
+{%block content %}
 {{ quoted_post(
         post, quote_level, is_leaf_post = is_leaf_post, format = format
     )
 }}
+{% endblock %}
+{%block footer %}
+{% include "email/footer.html" %}
+{% endblock %}

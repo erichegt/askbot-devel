@@ -1,3 +1,5 @@
+{% extends "email/base_mail.html"%}
+
 {#
     parameters:
     * reply_separator_line
@@ -6,6 +8,8 @@
     * post
     * reply_code (comma-separated list of emails to respond to this message)
 #}
+
+{%block content %}
 {{ reply_separator_line }}
 <p>{% trans 
         post_text = post.text|safe_urlquote,
@@ -18,4 +22,9 @@
     <p style="font-size:16px">{{ post.thread.title }}</p>
 {% endif %}
 {{ post.html }}
-<p style="font-size:8px;color:#aaa;">{{ reply_code }}</p>
+{% endblock %}
+
+{%block footer %}
+{% include "email/footer.html" %}
+<p style="{{ macros.fine_print_style() }}">{{ email_code }}</p>{# important #}
+{% endblock %}

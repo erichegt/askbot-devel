@@ -1,4 +1,11 @@
+{% extends "email/base_mail.html"%}
+{%block headline%}{% trans %}Oops, there was an error.{% endblock %}
+{%block content %}
 {% trans %}
 <p>The system was unable to process your message successfully, the reason being:<p>
 {% endtrans %}
 {{error}}
+{% endblock %}
+{%block footer %}
+{% include "email/footer.html" %}
+{% endblock %}
