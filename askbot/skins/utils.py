@@ -42,7 +42,6 @@ def get_available_skins(selected=None):
     stock_dir = os.path.normpath(os.path.dirname(__file__))
     stock_skins = get_skins_from_dir(stock_dir)
     default_dir = stock_skins.pop('default')
-    common_dir = stock_skins.pop('common')
 
     skins.update(stock_skins)
     if selected:
@@ -51,12 +50,11 @@ def get_available_skins(selected=None):
             skins.clear()
             skins[selected] = selected_dir
         else:
-            assert(selected == 'default' or selected == 'common')
+            assert(selected == 'default')
             skins = SortedDict()
 
     #re-insert default as a last item
     skins['default'] = default_dir
-    skins['common'] = common_dir
     return skins
 
 
@@ -74,7 +72,6 @@ def get_skin_choices():
     """returns a tuple for use as a set of
     choices in the form"""
     available_skins = get_available_skins().keys()
-    available_skins.remove('common')
     skin_names = list(reversed(available_skins))
     return zip(skin_names, skin_names)
 
@@ -183,7 +180,6 @@ def update_media_revision(skin = None):
 
     media_dirs = [
         os.path.join(skin_path, 'media'),
-        os.path.join(get_path_to_skin('common'), 'media')#we always use common
     ]
 
     if skin != 'default':
