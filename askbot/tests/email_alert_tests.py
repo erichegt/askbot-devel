@@ -1005,10 +1005,10 @@ class PostApprovalTests(utils.AskbotTestCase):
         u2.approve_post_revision(question.get_latest_revision())
 
         outbox = django.core.mail.outbox
-        self.assertEquals(len(outbox), 2)
+        self.assertEquals(len(outbox), 1)
         #moderation notification
         self.assertEquals(outbox[0].recipients(), [u1.email,])
-        self.assertEquals(outbox[1].recipients(), [u1.email,])#approval
+        #self.assertEquals(outbox[1].recipients(), [u1.email,])#approval
 
 
 class MailMessagesTests(utils.AskbotTestCase):
