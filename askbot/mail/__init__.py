@@ -288,8 +288,8 @@ def extract_user_signature(text, reply_code):
     """extracts email signature as text trailing
     the reply code"""
     #FIXME: buggy in html code
-    striped_text = clean_html_email(text.replace('<br>', '\n'))
-    #striped_text = strip_tags(text.replace('<br>', '\n'))
+    #striped_text = clean_html_email(text.replace('<br>', '\n'))
+    striped_text = strip_tags(text.replace('<br>', '\n'))
     if reply_code in striped_text:
         #extract the signature
         tail = list()
