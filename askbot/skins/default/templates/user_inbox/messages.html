@@ -1,0 +1,42 @@
+{% extends "user_inbox/base.html" %}
+{% import "macros.html" as macros %}
+{% block before_css %}
+    {{ super() }}
+    <style type="text/css">
+        .group-messaging {
+            padding-top: 5px;
+        }
+        .group-messaging li {
+            list-style-type: none;
+            list-style-position: outside;
+        }
+        li.empty {
+            line-height: 30px;
+            vertical-align: middle;
+            background: #eee;
+            padding-left: 320px;
+        }
+        button.compose {
+            width: 150px;
+        }
+        .first-col, .second-col {
+            float: left;
+            min-height: 45px;
+        }
+        .first-col {
+            width: 150px;
+        }
+        .second-col {
+            width: 810px;
+        }
+    </style>
+{% endblock %}
+{% block profilesection %}
+    {% trans %}inbox - messages{% endtrans %}
+{% endblock %}
+{% block inbox_content %}
+    {% include "group_messaging/home.html" %}
+{% endblock %}
+{% block userjs %}
+    <script type="text/javascript" src="{{ 'js/group_messaging.js'|media }}"></script>
+{% endblock %}

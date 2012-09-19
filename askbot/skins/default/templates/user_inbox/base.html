@@ -10,10 +10,13 @@
     {% set re_count = request.user.new_response_count +
             request.user.seen_response_count
     %}
-    {% if re_count + flags_count + group_join_requests_count > 0 %}
     <div id="re_sections">
         {% trans %}Sections:{% endtrans %}
         {% set sep = joiner('|') %}
+        {{ sep() }}
+        <a href="{{request.user.get_absolute_url()}}?sort=inbox&section=messages"
+            {% if inbox_section == 'messages' %}class="on"{% endif %}
+        >{% trans %}messages{% endtrans %}</a>
         {% if re_count > 0 %}{{ sep() }}
             <a href="{{request.user.get_absolute_url()}}?sort=inbox&section=forum"
                 {% if inbox_section == 'forum' %}class="on"{% endif %}
@@ -36,7 +39,6 @@
         </a>
         {% endif %}
     </div>
-    {% endif %}
     {% block inbox_content %}
     {% endblock %}
 </div>

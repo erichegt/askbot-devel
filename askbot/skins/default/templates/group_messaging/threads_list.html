@@ -1,0 +1,13 @@
+<ul id="threads-list">
+{% if threads %}
+    {% for thread in threads %}
+        <li>
+            <a data-thread-id="{{ thread.id }}">
+                {{ thread.headline|escape }}
+            </a>
+        </li>
+    {% endfor %}
+{% else %}
+    <li class="empty">{% trans %}there are no messages yet...{% endtrans %}</li>
+{% endif %}
+</ul>

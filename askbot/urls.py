@@ -513,6 +513,7 @@ urlpatterns = patterns('',
         {'domain': 'djangojs','packages': ('askbot',)},
         name = 'askbot_jsi18n'
     ),
+    url('^messages/', include('group_messaging.urls')),
 )
 
 #todo - this url below won't work, because it is defined above
