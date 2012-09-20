@@ -9,7 +9,7 @@
         {{ start_quote(quote_level) }}
             {% set author = post.author.username|escape %}
             {% if post.post_type == 'question' %}
-                <p>
+            <p style="font-size:10px; font-weight: bold;">
                     {% if format == 'parent_subthread' %}
                         {% if is_leaf_post %}
                             {% trans %}Question by {{ author }}:{% endtrans %}
@@ -22,21 +22,22 @@
                         {% trans %}Question :{% endtrans %}
                     {% endif %}
                     {{ post.thread.title }}
-                </p>
-                <p>
+            </p>
+            <p style="font-size:10px; font-weight: bold;">
                     {% if format != 'parent_subthread' %}
                         {% trans %}Asked by {{ author }}:{% endtrans %}
                     {% endif %}
-                </p>
+            </p>
+            </p>
                 {% set tag_names = post.get_tag_names() %}
                 {% if tag_names %}
-                <p>
+                <p style="font-size:10px; font-style:italic;">
                     {% trans %}Tags:{% endtrans %}
                     {{ tag_names|join(', ') }}.
                 </p>
                 {% endif %}
             {% elif post.post_type == 'answer' %}
-                <p>
+                <p style="font-size:10px; font-weight: bold;">
                     {% if format == 'parent_subthread' %}
                         {% if is_leaf_post %}
                             {% trans -%}
@@ -52,7 +53,7 @@
                     {% endif %}
                 </p>
             {% else %}
-                <p>
+                <p style="font-size:10px; font-weight: bold;">
                     {% if format == 'parent_subthread' %}
                         {% if is_leaf_post %}
                             {% trans -%}
