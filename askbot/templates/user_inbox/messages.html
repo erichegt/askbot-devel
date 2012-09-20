@@ -1,0 +1,67 @@
+{% extends "user_inbox/base.html" %}
+{% import "macros.html" as macros %}
+{% block before_css %}
+    {{ super() }}
+    <style type="text/css">
+        .group-messaging {
+            padding-top: 25px;
+        }
+        .group-messaging ul {
+            padding: 0px;
+        }
+        .group-messaging li {
+            list-style-type: none;
+            list-style-position: outside;
+        }
+        li.empty {
+            line-height: 30px;
+            vertical-align: middle;
+            background: #eee;
+            padding-left: 320px;
+            margin: 0px;
+        }
+        button.compose {
+            width: 150px;
+        }
+        .first-col, .second-col {
+            float: left;
+            min-height: 45px;
+        }
+        .first-col {
+            width: 150px;
+        }
+        .second-col {
+            width: 810px;
+        }
+        .message-composer {
+            padding: 0 0 10px 25px;
+            margin-top: -25px;
+        }
+        .message-composer input.recipients,
+        .message-composer textarea {
+            width: 400px;
+            display: block;
+        }
+        .message-composer input.recipients {
+            border: #CCE6EC 3px solid;
+            padding: 5px 0 5px 5px;
+            font-size: 14px;
+        }
+        .message-composer textarea {
+            height: 200px;
+            margin-bottom: 10px;
+        }
+        .message-composer label.errors {
+            padding-left: 5px;
+        }
+    </style>
+{% endblock %}
+{% block profilesection %}
+    {% trans %}inbox - messages{% endtrans %}
+{% endblock %}
+{% block inbox_content %}
+    {% include "group_messaging/home.html" %}
+{% endblock %}
+{% block userjs %}
+    <script type="text/javascript" src="{{ 'js/group_messaging.js'|media }}"></script>
+{% endblock %}

@@ -709,7 +709,7 @@ def show_group_join_requests(request, user, context):
     }
     context.update(data)
     return render_into_skin('user_inbox/group_join_requests.html', context, request)
-    
+
 
 @owner_or_moderator_required
 def user_responses(request, user, context):
@@ -746,6 +746,26 @@ def user_responses(request, user, context):
             )
     elif section == 'join_requests':
         return show_group_join_requests(request, user, context)
+    elif section == 'messages':
+        if request.user != user:
+            raise Http404
+        #here we take shortcut, because we don't care about
+        #all the extra context loaded below
+        from group_messaging.views import SendersList, ThreadsList
+        context.update(SendersList().get_context(request))
+        context.update(ThreadsList().get_context(request))
+        data = {
+            'active_tab':'users',
+            'page_class': 'user-profile-page',
+            'tab_name' : 'inbox',
+            'inbox_section': section,
+            'tab_description' : _('private messages'),
+            'page_title' : _('profile - messages')
+        }
+        context.update(data)
+        return render_into_skin(
+            'user_inbox/messages.html', context, request
+        )
     else:
         raise Http404
 

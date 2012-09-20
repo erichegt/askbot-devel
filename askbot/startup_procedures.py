@@ -368,17 +368,33 @@ def test_staticfiles():
             "    ADMIN_MEDIA_PREFIX = STATIC_URL + 'admin/'"
         )
 
-    askbot_root = os.path.dirname(askbot.__file__)
-    skin_dir = os.path.abspath(os.path.join(askbot_root, 'skins'))
-
     # django_settings.STATICFILES_DIRS can have strings or tuples
     staticfiles_dirs = [d[1] if isinstance(d, tuple) else d
                         for d in django_settings.STATICFILES_DIRS]
-    if skin_dir not in map(os.path.abspath, staticfiles_dirs):
-        errors.append(
-            'Add to STATICFILES_DIRS list of your settings.py file:\n'
-            "    '%s'," % skin_dir
-        )
+
+    default_skin_tuple = None
+    askbot_root = askbot.get_install_directory()
+    old_default_skin_dir = os.path.abspath(os.path.join(askbot_root, 'skins'))
+    for dir_entry in django_settings.STATICFILES_DIRS:
+        if isinstance(dir_entry, tuple):
+            if dir_entry[0] == 'default/media':
+                default_skin_tuple = dir_entry
+        elif isinstance(dir_entry, str):
+            if os.path.abspath(dir_entry) == old_default_skin_dir:
+                errors.append(
+                    'Remove from STATICFILES_DIRS in your settings.py file:\n' + dir_entry
+                )
+
+    askbot_root = os.path.dirname(askbot.__file__)
+    default_skin_media_dir = os.path.abspath(os.path.join(askbot_root, 'media'))
+    if default_skin_tuple:
+        media_dir = default_skin_tuple[1]
+        if default_skin_media_dir != os.path.abspath(media_dir):
+            errors.append(
+                'Add to STATICFILES_DIRS the following entry: '
+                "('default/media', os.path.join(ASKBOT_ROOT, 'media')),"
+            )
+
     extra_skins_dir = getattr(django_settings, 'ASKBOT_EXTRA_SKINS_DIR', None)
     if extra_skins_dir is not None:
         if not os.path.isdir(extra_skins_dir):
