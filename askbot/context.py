@@ -59,14 +59,22 @@ def application_settings(request):
     }
 
     if askbot_settings.GROUPS_ENABLED:
-        groups = models.Group.objects.exclude_personal()
-        groups = groups.values('id', 'name')
-        group_list = []
-        for group in groups:
+
+        def _get_group_url(group):
             group_slug = slugify(group['name'])
-            link = reverse('users_by_group',
-                    kwargs={'group_id': group['id'],
-                        'group_slug': group_slug})
+            return reverse('users_by_group',
+                            kwargs={'group_id': group['id'],
+                                    'group_slug': group_slug})
+
+
+        global_group = models.tag.get_global_group()
+        groups = models.Group.objects.exclude_personal().exclude(id=global_group.id).order_by('name')
+        groups = groups.values('id', 'name')
+        group_list = [{'link': _get_group_url({'name': global_group.name,
+                                               'id': global_group.id}),
+                       'name': global_group.name},]
+        for group in groups:
+            link = _get_group_url(group)
             group_list.append({'name': group['name'], 'link': link})
         context['group_list'] = simplejson.dumps(group_list)
 
