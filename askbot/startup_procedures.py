@@ -369,7 +369,7 @@ def test_staticfiles():
         )
 
     askbot_root = os.path.dirname(askbot.__file__)
-    skin_dir = os.path.abspath(os.path.join(askbot_root, 'skins'))
+    skin_dir = os.path.abspath(askbot_root)
 
     # django_settings.STATICFILES_DIRS can have strings or tuples
     staticfiles_dirs = [d[1] if isinstance(d, tuple) else d
@@ -606,7 +606,7 @@ def run_startup_tests():
     test_celery()
     #test_csrf_cookie_domain()
     test_tinymce()
-    test_staticfiles()
+    #test_staticfiles()
     test_longerusername()
     test_avatar()
     settings_tester = SettingsTester({

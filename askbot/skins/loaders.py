@@ -34,11 +34,11 @@ def filesystem_load_template_source(name, dirs=None):
 
     try:
         #todo: move this to top after splitting out get_skin_dirs()
-        tname = os.path.join(askbot_settings.ASKBOT_DEFAULT_SKIN,'templates',name)
-        return filesystem.load_template_source(tname,dirs)
+        tname = os.path.join(askbot_settings.ASKBOT_DEFAULT_SKIN, 'templates', name)
+        return filesystem.load_template_source(tname, dirs)
     except:
-        tname = os.path.join('default','templates',name)
-        return filesystem.load_template_source(tname,dirs)
+        tname = os.path.join('default', 'templates', name)
+        return filesystem.load_template_source(tname, dirs)
 filesystem_load_template_source.is_usable = True
 #added this for backward compatbility
 load_template_source = filesystem_load_template_source
