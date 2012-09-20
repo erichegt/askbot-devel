@@ -158,8 +158,8 @@ def mail_moderators(
 
     try:
         msg = mail.EmailMessage(
-                        subject_line, 
-                        body_text, 
+                        subject_line,
+                        body_text,
                         from_email,
                         recipient_list,
                         headers = headers or {}
@@ -287,10 +287,11 @@ def process_attachment(attachment):
 def extract_user_signature(text, reply_code):
     """extracts email signature as text trailing
     the reply code"""
-    if reply_code in text:
+    striped_text = strip_tags(text)
+    if reply_code in striped_text:
         #extract the signature
         tail = list()
-        for line in reversed(text.splitlines()):
+        for line in reversed(striped_text.splitlines()):
             #scan backwards from the end until the magic line
             if reply_code in line:
                 break

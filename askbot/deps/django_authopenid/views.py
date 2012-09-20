@@ -46,7 +46,7 @@ from django.utils.encoding import smart_unicode
 from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from django.utils.safestring import mark_safe
-from django.core.mail import send_mail
+from askbot.mail import send_mail
 from recaptcha_works.decorators import fix_recaptcha_remote_ip
 from askbot.skins.loaders import render_into_skin, get_template
 from askbot.deps.django_authopenid.ldap_auth import ldap_create_user
@@ -385,7 +385,7 @@ def signin(request, template_name='authopenid/signin.html'):
                         user_info = ldap_authenticate(username, password)
                         if user_info['success']:
                             if askbot_settings.LDAP_AUTOCREATE_USERS:
-                                #create new user or 
+                                #create new user or
                                 user = ldap_create_user(user_info).user
                                 user = authenticate(method='force', user_id=user.id)
                                 assert(user is not None)
@@ -404,7 +404,7 @@ def signin(request, template_name='authopenid/signin.html'):
                                         user_info['last_name']
                                 return finalize_generic_signin(
                                     request,
-                                    login_provider_name = 'ldap', 
+                                    login_provider_name = 'ldap',
                                     user_identifier = ldap_username + '@ldap',
                                     redirect_url = next_url
                                 )
@@ -1179,7 +1179,7 @@ def send_email_key(email, key, handler_url_name='user_account_recover'):
                             reverse(handler_url_name) +\
                             '?validation_code=' + key
     }
-    template = get_template('authopenid/email_validation.txt')
+    template = get_template('authopenid/email_validation.html')
     message = template.render(data)
     send_mail(subject, message, django_settings.DEFAULT_FROM_EMAIL, [email])
 

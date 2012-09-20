@@ -1,4 +1,5 @@
 {% from "email/macros.html" import quoted_post %}
+
 {% if post.post_type in ('question', 'answer') %}
     {{ quoted_post(post) }}
     {% set comments = post.get_cached_comments() %}

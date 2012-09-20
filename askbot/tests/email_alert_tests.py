@@ -39,7 +39,7 @@ def email_alert_test(test_func):
             test_object.check_results(test_name)
         else:
             raise ValueError('test method names must have prefix "test_"')
-    return wrapped_test 
+    return wrapped_test
 
 def setup_email_alert_tests(setup_func):
     @functools.wraps(setup_func)
@@ -107,7 +107,7 @@ class SubjectLineTests(TestCase):
         self.assertEquals(subj, 'hahah')
 
 class EmailAlertTests(TestCase):
-    """Base class for testing delayed Email notifications 
+    """Base class for testing delayed Email notifications
     that are triggered by the send_email_alerts
     command
 
@@ -145,7 +145,7 @@ class EmailAlertTests(TestCase):
     @setup_email_alert_tests
     def setUp(self):
         """generic pre-test setup method:
-        
+
         this function is empty - because it's intendend content is
         entirely defined by the decorator
 
@@ -157,7 +157,7 @@ class EmailAlertTests(TestCase):
 
     def setUpUsers(self):
         self.other_user = utils.create_user(
-            username = 'other', 
+            username = 'other',
             email = 'other@domain.com',
             date_joined = self.setup_timestamp,
             status = 'm'
@@ -177,8 +177,8 @@ class EmailAlertTests(TestCase):
                 body_text = 'dummy test comment',
                 timestamp = None
             ):
-        """posts and returns a comment to parent post, uses 
-        now timestamp if not given, dummy body_text 
+        """posts and returns a comment to parent post, uses
+        now timestamp if not given, dummy body_text
         author is required
         """
         if timestamp is None:
@@ -211,8 +211,8 @@ class EmailAlertTests(TestCase):
                 )
 
     def post_question(
-                self, 
-                author = None, 
+                self,
+                author = None,
                 timestamp = None,
                 title = 'test question title',
                 body_text = 'test question body',
@@ -234,7 +234,7 @@ class EmailAlertTests(TestCase):
         return self.question
 
     def maybe_visit_question(self, user = None):
-        """visits question on behalf of a given user and applies 
+        """visits question on behalf of a given user and applies
         a timestamp set in the class attribute ``visit_timestamp``
 
         if ``visit_timestamp`` is None, then visit is skipped
@@ -298,7 +298,7 @@ class EmailAlertTests(TestCase):
                     (self.target_user.email, outbox[0].recipients()[0])
                 #verify that target user receives the email
                 self.assertEqual(
-                            outbox[0].recipients()[0], 
+                            outbox[0].recipients()[0],
                             self.target_user.email,
                             error_message
                         )
@@ -806,7 +806,7 @@ class EmailReminderTestCase(utils.AskbotTestCase):
     #frequency_setting_name = 'UNANSWERED_REMINDER_FREQUENCY'
     #days_before_setting_name = 'DAYS_BEFORE_SENDING_UNANSWERED_REMINDER'
     #max_reminder_setting_name = 'MAX_UNANSWERED_REMINDERS'
-    
+
     def setUp(self):
         self.u1 = self.create_user(username = 'user1')
         self.u2 = self.create_user(username = 'user2')
@@ -871,7 +871,7 @@ class AcceptAnswerReminderTests(EmailReminderTestCase):
 
 
 class UnansweredReminderTests(EmailReminderTestCase):
-    
+
     enable_setting_name = 'ENABLE_UNANSWERED_REMINDERS'
     frequency_setting_name = 'UNANSWERED_REMINDER_FREQUENCY'
     days_before_setting_name = 'DAYS_BEFORE_SENDING_UNANSWERED_REMINDER'
@@ -980,7 +980,7 @@ class PostApprovalTests(utils.AskbotTestCase):
             self.enable_content_moderation
         )
         askbot_settings.update(
-            'SELF_NOTIFY_EMAILED_POST_AUTHOR_WHEN', 
+            'SELF_NOTIFY_EMAILED_POST_AUTHOR_WHEN',
             self.self_notify_when
         )
 
@@ -1005,10 +1005,10 @@ class PostApprovalTests(utils.AskbotTestCase):
         u2.approve_post_revision(question.get_latest_revision())
 
         outbox = django.core.mail.outbox
-        self.assertEquals(len(outbox), 2)
+        self.assertEquals(len(outbox), 1)
         #moderation notification
         self.assertEquals(outbox[0].recipients(), [u1.email,])
-        self.assertEquals(outbox[1].recipients(), [u1.email,])#approval
+        #self.assertEquals(outbox[1].recipients(), [u1.email,])#approval
 
 
 class MailMessagesTests(utils.AskbotTestCase):

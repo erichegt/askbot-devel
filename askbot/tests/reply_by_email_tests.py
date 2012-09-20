@@ -1,6 +1,7 @@
 from django.utils.translation import ugettext as _
 from askbot.models import ReplyAddress
 from askbot.mail.lamson_handlers import PROCESS, VALIDATE_EMAIL, get_parts
+from askbot.mail import extract_user_signature
 from askbot import const
 
 
@@ -146,7 +147,6 @@ class EmailSignatureDetectionTests(AskbotTestCase):
     def setUp(self):
         self.u1 = self.create_user('user1', status = 'a')
         self.u2 = self.create_user('user2', status = 'a')
-        self.u3 = self.create_user('user3', status = 'a')
 
     def test_detect_signature_in_response(self):
         question = self.post_question(user = self.u1)
@@ -193,32 +193,3 @@ class EmailSignatureDetectionTests(AskbotTestCase):
 
         signature = self.reload_object(self.u2).email_signature
         self.assertEqual(signature, 'Yours Truly')
-
-    def test_detect_signature_in_html_welcome_response(self):
-        reply_token = ReplyAddress.objects.create_new(
-                                            user = self.u3,
-                                            reply_action = 'validate_email'
-                                        )
-        self.u3.email_signature = ''
-        self.u3.save()
-        signature = 'Yours Truly'
-
-        msg = MockMessage(
-                'some text',
-                self.u3.email,
-                signature = signature,
-                response_code = reply_token.address
-            )
-
-        html_message = '<b>some text</b>' + signature
-
-        msg.attach_alternative(html_message, 'text/html')
-        VALIDATE_EMAIL(
-            msg,
-            address = reply_token.address
-        )
-
-        signature = self.reload_object(self.u3).email_signature
-        self.assertEqual(signature, 'Yours Truly')
-
-

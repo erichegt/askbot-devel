@@ -32,6 +32,7 @@ from askbot.utils import decorators
 from askbot.utils import url_utils
 from askbot.utils.forms import get_db_object_or_404
 from askbot import mail
+from django.template import Context
 from askbot.skins.loaders import render_into_skin, get_template
 from askbot.skins.loaders import render_into_skin_as_string
 from askbot.skins.loaders import render_text_into_skin
@@ -106,17 +107,12 @@ def manage_inbox(request):
                             reject_reason = models.PostFlagReason.objects.get(
                                                     id = post_data['reject_reason_id']
                                                 )
-                            body_text = string_concat(
-                                _('Your post (copied in the end),'),
-                                '<br/>',
-                                _('was rejected for the following reason:'),
-                                '<br/><br/>',
-                                reject_reason.details.html,
-                                '<br/><br/>',
-                                _('Here is your original post'),
-                                '<br/><br/>',
-                                post.text
-                            )
+                            template = get_template('email/rejected_post.html')
+                            data = {
+                                    'post': post.html,
+                                    'reject_reason': reject_reason.details.html
+                                   }
+                            body_text = template.render(Context(data))
                             mail.send_mail(
                                 subject_line = _('your post was not accepted'),
                                 body_text = unicode(body_text),
@@ -1355,7 +1351,7 @@ def get_editor(request):
     #parse out javascript and dom, and return them separately
     #we need that, because js needs to be added in a special way
     html_soup = BeautifulSoup(editor_html)
- 
+
     parsed_scripts = list()
     for script in html_soup.find_all('script'):
         parsed_scripts.append({

@@ -2266,7 +2266,7 @@ def user_get_group_membership(self, group):
         return GroupMembership.objects.get(user=self, group=group)
     except GroupMembership.DoesNotExist:
         return None
-    
+
 
 def user_get_groups_membership_info(self, groups):
     """returns a defaultdict with values that are
@@ -2973,14 +2973,12 @@ def format_instant_notification_email(
         'post_url': post_url,
         'origin_post_title': origin_post.thread.title,
         'user_subscriptions_url': user_subscriptions_url,
-        'reply_separator': reply_separator
+        'reply_separator': reply_separator,
+        'reply_address': reply_address
     }
     subject_line = _('"%(title)s"') % {'title': origin_post.thread.title}
 
     content = template.render(Context(update_data))
-    if can_reply:
-        content += '<p style="font-size:8px;color:#aaa">' + \
-                    reply_address + '</p>'
 
     return subject_line, content
 
@@ -3083,7 +3081,7 @@ def send_instant_notifications_about_activity_in_post(
                             reply_address = reply_address,
                             alt_reply_address = alt_reply_address,
                             update_type = update_type,
-                            template = get_template('instant_notification.html')
+                            template = get_template('email/instant_notification.html')
                         )
 
         headers['Reply-To'] = reply_address
