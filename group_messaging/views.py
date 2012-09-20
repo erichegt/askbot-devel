@@ -87,8 +87,9 @@ class NewThread(InboxView):
         need to go back to the thread listing view whose
         content should be cached in the client'
         """
-        recipient_id = IntegerField().clean(request.POST['recipient_id'])
-        recipient = get_personal_group_by_user_id(recipient_id)
+        username = IntegerField().clean(request.POST['to_username'])
+        user = User.objects.get(username=username)
+        recipient = get_personal_group_by_user_id(user.id)
         Message.objects.create_thread(
                         sender=request.user,
                         recipients=[recipient],
