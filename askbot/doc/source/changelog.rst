@@ -3,6 +3,7 @@ Changes in Askbot
 
 Development version
 -------------------
+* Moved default skin from `askbot/skins/default` to simply `askbot` (Evgeny)
 * Repost comment as answer (Adolfo)
 * Question list widget (Adolfo)
 * Ask a question widget (Adolfo)
