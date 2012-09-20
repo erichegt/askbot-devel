@@ -1689,14 +1689,29 @@ GroupDropdown.prototype.decorate = function(element){
   }
 };
 
-GroupDropdown.prototype.prependGroup = function(group_name, url){
-  new_group_li = this.makeElement('li');
+GroupDropdown.prototype.insertGroup = function(group_name, url){
+  var new_group_li = this.makeElement('li');
   new_group_a = this.makeElement('a');
   new_group_a.attr('href', url);
   new_group_a.attr('class', 'group-name');
   new_group_a.text(group_name);
   new_group_li.append(new_group_a);
-  this._element.prepend(new_group_li);
+  links_array = this._element.find('a')
+  for (i=1; i < links_array.length; i++){
+    var value = links_array[i];
+    if (value.text < group_name){
+      if (i == links_array.length - 1){
+        new_group_li.insertAfter(this._element.find('li')[i-1])
+        break;
+      } else{
+        continue;
+      }
+    } else {
+      new_group_li.insertAfter(this._element.find('li')[i-1])
+      break;
+    }
+     
+  }
 };
 
 GroupDropdown.prototype._add_group_handler = function(group_name){
@@ -1712,7 +1727,7 @@ GroupDropdown.prototype._add_group_handler = function(group_name){
     data: {group: group_name},
     success: function(data){
        if (data.success){
-         self.prependGroup(data.group_name, data.url);
+         self.insertGroup(data.group_name, data.url);
          self._input_box_element.hide();
          self._add_link.show();
          return true; 
