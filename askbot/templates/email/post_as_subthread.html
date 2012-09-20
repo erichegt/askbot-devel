@@ -1,7 +1,5 @@
-{% extends "email/base_mail.html"%}
 {% from "email/macros.html" import quoted_post %}
 
-{%block content %}
 {% if post.post_type in ('question', 'answer') %}
     {{ quoted_post(post) }}
     {% set comments = post.get_cached_comments() %}
@@ -18,7 +16,3 @@
         {% endfor %}
     {% endif %}
 {% endif %}
-{% endblock %}
-{%block footer%}
-{% include "email/footer.html" %}
-{% endblock %}
