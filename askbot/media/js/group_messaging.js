@@ -48,11 +48,27 @@ MessageComposer.prototype.onAfterCancel = function(handler) {
     }
 };
 
-MessageComposer.prototype.onAfterSend = function(handler) {
-    if (handler) {
-        this._onAfterSend = handler;
-    } else {
-        return this._onAfterSend();
+/** override these two 
+ * @param {object} data - the response data
+ * these functions will run after .send() receives
+ * the response
+ */
+MessageComposer.prototype.onSendSuccessInternal = function(data) {};
+MessageComposer.prototype.onSendErrorInternal = function(data) {};
+
+MessageComposer.prototype.onSendSuccess = function(callback) {
+    if (callback) {
+        this._onSendSuccess = callback;
+    } else if (this._onSendSuccess) {
+        this._onSendSuccess();
+    }
+};
+
+MessageComposer.prototype.onSendError = function(callback) {
+    if (callback) {
+        this._onSendError = callback;
+    } else if (this._onSendError) {
+        this._onSendError();
     }
 };
 
@@ -105,7 +121,15 @@ MessageComposer.prototype.send = function() {
         url: url,
         data: data,
         cache: false,
-        success: function() { me.onAfterSend(); }
+        success: function(data) {
+            if (data['success']) {
+                me.onSendSuccessInternal(data);
+                me.onSendSuccess();
+            } else {
+                me.onSendErrorInternal(data);
+                me.onSendError();
+            }
+        }
     });
 };
 
@@ -130,7 +154,6 @@ MessageComposer.prototype.createDom = function() {
     var sendBtn = this.makeButton(
                         gettext('send'),
                         function() {
-                            debugger;
                             if (me.dataIsValid()){
                                 me.send();
                             }
@@ -167,21 +190,33 @@ NewThreadComposer.prototype.onAfterShow = function() {
     this._toInput.focus();
 };
 
+NewThreadComposer.prototype.onSendErrorInternal = function(data) {
+    var missingUsers = data['missing_users']
+    if (missingUsers) {
+        var errorTpl = ngettext(
+                            'user {{str}} does not exist',
+                            'users {{str}} do not exist',
+                            missingUsers.length
+                        )
+        error = errorTpl.replace('{{str}}', joinAsPhrase(missingUsers));
+        this._toInputError.html(error);
+    }
+};
+
 NewThreadComposer.prototype.getInputData = function() {
     var data = NewThreadComposer.superClass_.getInputData.call(this);
-    data['to_username'] = $.trim(this._toInput.val());
+    data['to_usernames'] = $.trim(this._toInput.val());
     return data;
 };
 
 NewThreadComposer.prototype.dataIsValid = function() {
     var superIsValid = NewThreadComposer.superClass_.dataIsValid.call(this);
     var to = $.trim(this._toInput.val());
-    var meIsValid = true;
     if (to === '') {
-        meIsValid = false;
         this._toInputError.html(gettext('required'));
+        return false;
     }
-    return superIsValid && meIsValid;
+    return superIsValid;
 };
 
 NewThreadComposer.prototype.createDom = function() {
@@ -283,7 +318,7 @@ MessageCenter.prototype.decorate = function(element) {
     this._secondCol.append(editor.getElement());
     editor.setSendUrl(element.data('createThreadUrl'));
     editor.onAfterCancel(function() { me.setState('show-list') });
-    editor.onAfterSend(function() { 
+    editor.onSendSuccess(function() {
         me.setState('show-list');
         notify.show(gettext('message sent'), true);
     });

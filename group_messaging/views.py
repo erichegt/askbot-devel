@@ -8,7 +8,10 @@ in order to render messages within the page.
 Notice that :mod:`urls` module decorates all these functions
 and turns them into complete views
 """
+import copy
+import datetime
 from coffin.template.loader import get_template
+from django.contrib.auth.models import User
 from django.forms import IntegerField
 from django.http import HttpResponse
 from django.http import HttpResponseNotAllowed
@@ -16,7 +19,9 @@ from django.http import HttpResponseForbidden
 from django.utils import simplejson
 from group_messaging.models import Message
 from group_messaging.models import SenderList
+from group_messaging.models import LastVisitTime
 from group_messaging.models import get_personal_group_by_user_id
+from group_messaging.models import get_personal_groups_for_users
 
 class InboxView(object):
     """custom class-based view
@@ -78,8 +83,7 @@ class InboxView(object):
 
 class NewThread(InboxView):
     """view for creation of new thread"""
-    template_name = 'create_thread.html'# contains new thread form
-    http_method_list = ('GET', 'POST')
+    http_method_list = ('POST',)
 
     def post(self, request):
         """creates a new thread on behalf of the user
@@ -87,15 +91,29 @@ class NewThread(InboxView):
         need to go back to the thread listing view whose
         content should be cached in the client'
         """
-        username = IntegerField().clean(request.POST['to_username'])
-        user = User.objects.get(username=username)
-        recipient = get_personal_group_by_user_id(user.id)
-        Message.objects.create_thread(
-                        sender=request.user,
-                        recipients=[recipient],
-                        text=request.POST['text']
-                    )
-        return HttpResponse('', mimetype='application/json')
+        usernames = request.POST['to_usernames']
+        usernames = map(lambda v: v.strip(), usernames.split(','))
+        users = User.objects.filter(username__in=usernames)
+
+        missing = copy.copy(usernames)
+        for user in users:
+            if user.username in missing:
+                missing.remove(user.username)
+
+        result = dict()
+        if missing:
+            result['success'] = False
+            result['missing_users'] = missing
+        else:
+            recipients = get_personal_groups_for_users(users)
+            message = Message.objects.create_thread(
+                            sender=request.user,
+                            recipients=recipients,
+                            text=request.POST['text']
+                        )
+            result['success'] = True
+            result['message_id'] = message.id
+        return HttpResponse(simplejson.dumps(result), mimetype='application/json')
 
 
 class NewResponse(InboxView):
@@ -121,9 +139,37 @@ class ThreadsList(InboxView):
 
     def get_context(self, request):
         """returns thread list data"""
+        #get threads and the last visit time
         threads = Message.objects.get_threads_for_user(request.user)
-        threads = threads.values('id', 'headline')
-        return {'threads': threads}
+        try:
+            last_visit = LastVisitTime.objects.get(user=request.user)
+        except LastVisitTime.DoesNotExist:
+            timestamp = datetime.datetime(2010, 3, 24)#day of askbot
+            last_visit = LastVisitTime(user=request.user, at=timestamp)
+
+
+        #for each thread we need to know if there is something
+        #unread for the user - to mark "new" threads as bold
+        threads_data = dict()
+        for thread in threads:
+            thread_data = dict()
+            #determine status
+            status = 'seen'
+            if thread.last_active_at > last_visit.at:
+                status = 'new'
+            thread_data['status'] = status
+            #determine the senders info
+            senders_names = thread.senders_info.split(',')
+            if request.user.username in senders_names:
+                senders_names.remove(request.user.username)
+            thread_data['senders_info'] = ', '.join(senders_names)
+            threads_data[thread.id] = thread_data
+
+        #after we have all the data - update the last visit time
+        last_visit.at = datetime.datetime.now()
+        last_visit.save()
+            
+        return {'threads': threads, 'threads_data': threads_data}
 
 
 class SendersList(InboxView):
