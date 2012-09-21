@@ -840,15 +840,12 @@ class Post(models.Model):
         if quote_level > 0, the post will be indented that number of times
         todo: move to views?
         """
-        from askbot.templatetags.extra_filters_jinja \
-            import absolutize_urls_func
         from askbot.skins.loaders import get_template
         from django.template import Context
         template = get_template('email/quoted_post.html')
         data = {
             'post': self,
             'quote_level': quote_level,
-            #'html': absolutize_urls_func(self.html),
             'is_leaf_post': is_leaf_post,
             'format': format
         }
