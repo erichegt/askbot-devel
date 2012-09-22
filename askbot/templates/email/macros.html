@@ -1,4 +1,3 @@
-{% load extra_filters_jinja %}
 {% macro quoted_post(
         post = None,
         quote_level = 0,
@@ -28,7 +27,6 @@
                     {% if format != 'parent_subthread' %}
                         {% trans %}Asked by {{ author }}:{% endtrans %}
                     {% endif %}
-            </p>
             </p>
                 {% set tag_names = post.get_tag_names() %}
                 {% if tag_names %}
@@ -72,7 +70,7 @@
                     {% endif %}
                 </p>
             {% endif %}
-            {{ post.html | absolutize_urls}}
+            {{ post.html|absolutize_urls }}
         {{ end_quote(quote_level) }}
     {% endspaceless %}
 {% endmacro %}

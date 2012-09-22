@@ -2941,7 +2941,7 @@ def format_instant_notification_email(
     user_url = strip_path(site_url) + from_user.get_absolute_url()
     user_action = user_action % {
         'user': '<a href="%s">%s</a>' % (user_url, from_user.username),
-        'post_link': '<a href="%s">%s<a>' % (post_url, _(post.post_type))
+        'post_link': '<a href="%s">%s</a>' % (post_url, _(post.post_type))
         #'post_link': '%s <a href="%s">>>></a>' % (_(post.post_type), post_url)
     }
 
