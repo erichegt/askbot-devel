@@ -68,7 +68,13 @@ def application_settings(request):
 
 
         global_group = models.tag.get_global_group()
-        groups = models.Group.objects.exclude_personal().exclude(id=global_group.id).order_by('name')
+
+        if 'postgresql_psycopg2' in askbot.get_database_engine_name():
+            groups = models.Group.objects.exclude_personal().exclude(id=global_group.id).extra(
+                                        select={'lower_name': 'lower(name)'}).order_by('name')
+        else:
+            groups = models.Group.objects.exclude_personal().exclude(id=global_group.id).order_by('name')
+
         groups = groups.values('id', 'name')
         group_list = [{'link': _get_group_url({'name': global_group.name,
                                                'id': global_group.id}),
