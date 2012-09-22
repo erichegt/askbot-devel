@@ -47,6 +47,18 @@ def get_db_object_or_404(params):
         #need catch-all b/c of the nature of the function
         raise Http404
 
+def format_errors(error_list):
+    """If there is only one error - returns a string
+    corresponding to that error, to remove the <ul> tag.
+
+    If there is > 1 error - then convert the error_list into
+    a string.
+    """
+    if len(error_list) == 1:
+        return unicode(error_list[0])
+    else:
+        return unicode(error_list)
+
 class StrippedNonEmptyCharField(forms.CharField):
     def clean(self, value):
         value = value.strip()

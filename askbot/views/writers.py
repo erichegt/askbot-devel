@@ -31,6 +31,7 @@ from askbot import models
 from askbot.conf import settings as askbot_settings
 from askbot.skins.loaders import render_into_skin
 from askbot.utils import decorators
+from askbot.utils.forms import format_errors
 from askbot.utils.functions import diff_date
 from askbot.utils import url_utils
 from askbot.utils.file_utils import store_file
@@ -314,6 +315,7 @@ def retag_question(request, id):
         request.user.assert_can_retag_question(question)
         if request.method == 'POST':
             form = forms.RetagQuestionForm(question, request.POST)
+
             if form.is_valid():
                 if form.has_changed():
                     request.user.retag_question(question=question, tags=form.cleaned_data['tags'])
@@ -334,7 +336,7 @@ def retag_question(request, id):
                     return HttpResponseRedirect(question.get_absolute_url())
             elif request.is_ajax():
                 response_data = {
-                    'message': unicode(form.errors['tags']),
+                    'message': format_errors(form.errors['tags']),
                     'success': False
                 }
                 data = simplejson.dumps(response_data)

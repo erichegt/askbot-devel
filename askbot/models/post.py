@@ -1944,11 +1944,11 @@ class PostRevision(models.Model):
     )
 
     post = models.ForeignKey('askbot.Post', related_name='revisions', null=True, blank=True)
-    revision   = models.PositiveIntegerField()
-    author     = models.ForeignKey('auth.User', related_name='%(class)ss')
+    revision = models.PositiveIntegerField()
+    author = models.ForeignKey('auth.User', related_name='%(class)ss')
     revised_at = models.DateTimeField()
-    summary    = models.CharField(max_length=300, blank=True)
-    text       = models.TextField()
+    summary = models.CharField(max_length=300, blank=True)
+    text = models.TextField()
 
     approved = models.BooleanField(default=False, db_index=True)
     approved_by = models.ForeignKey(User, null = True, blank = True)
@@ -1958,8 +1958,8 @@ class PostRevision(models.Model):
     email_address = models.EmailField(null = True, blank = True)
 
     # Question-specific fields
-    title      = models.CharField(max_length=300, blank=True, default='')
-    tagnames   = models.CharField(max_length=125, blank=True, default='')
+    title = models.CharField(max_length=300, blank=True, default='')
+    tagnames = models.CharField(max_length=125, blank=True, default='')
     is_anonymous = models.BooleanField(default=False)
 
     objects = PostRevisionManager()
@@ -2102,10 +2102,10 @@ class PostRevision(models.Model):
         # Determine the revision number, if not set
         if not self.revision:
             # TODO: Maybe use Max() aggregation? Or `revisions.count() + 1`
-            self.revision = self.parent().revisions.values_list('revision', flat=True)[0] + 1
-
+            self.revision = self.parent().revisions.values_list(
+                                                'revision', flat=True
+                                            )[0] + 1
         self.full_clean()
-
         super(PostRevision, self).save(**kwargs)
 
     def get_absolute_url(self):

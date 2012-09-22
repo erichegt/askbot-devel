@@ -10,6 +10,7 @@ from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django import forms
 from askbot.tests.utils import AskbotTestCase
+from askbot.tests.utils import with_settings
 from askbot import models
 from askbot import const
 from askbot.conf import settings as askbot_settings
@@ -164,6 +165,19 @@ class DBApiTests(AskbotTestCase):
 
         count = models.Tag.objects.filter(name='one-tag').count()
         self.assertEquals(count, 0)
+    
+    @with_settings({
+        'MAX_TAG_LENGTH': 200,
+        'MAX_TAGS_PER_POST': 50
+    })
+    def test_retag_tags_too_long_raises(self):
+        tags = "aoaoesuouooeueooeuoaeuoeou aostoeuoaethoeastn oasoeoa nuhoasut oaeeots aoshootuheotuoehao asaoetoeatuoasu o  aoeuethut aoaoe uou uoetu uouuou ao aouosutoeh"
+        question = self.post_question(user=self.user)
+        self.assertRaises(
+            exceptions.ValidationError, 
+            self.user.retag_question,
+            question=question, tags=tags
+        )
 
     def test_search_with_apostrophe_works(self):
         self.post_question(

@@ -313,6 +313,19 @@ class SettingsTester(object):
                 '\n\n* '.join(self.messages)
             )
 
+
+def test_new_skins():
+    """tests that there are no directories in the `askbot/skins`
+    because we've moved skin files a few levels up"""
+    askbot_root = askbot.get_install_directory()
+    for item in os.listdir(os.path.join(askbot_root, 'skins')):
+        item_path = os.path.join(askbot_root, 'skins', item)
+        if os.path.isdir(item_path):
+            raise AskbotConfigError(
+                ('Time to move skin files from %s.\n'
+                'Now we have `askbot/templates` and `askbot/media`') % item_path
+            )
+
 def test_staticfiles():
     """tests configuration of the staticfiles app"""
     errors = list()
@@ -623,6 +636,7 @@ def run_startup_tests():
     #test_csrf_cookie_domain()
     test_tinymce()
     test_staticfiles()
+    test_new_skins()
     test_longerusername()
     test_avatar()
     settings_tester = SettingsTester({
