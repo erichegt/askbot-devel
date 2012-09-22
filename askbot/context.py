@@ -59,21 +59,33 @@ def application_settings(request):
     }
 
     if askbot_settings.GROUPS_ENABLED:
-
+        #calculate context needed to list all the groups
         def _get_group_url(group):
+            """calculates url to the group based on its id and name"""
             group_slug = slugify(group['name'])
-            return reverse('users_by_group',
-                            kwargs={'group_id': group['id'],
-                                    'group_slug': group_slug})
+            return reverse(
+                'users_by_group',
+                kwargs={'group_id': group['id'], 'group_slug': group_slug}
+            )
 
-
+        #load id's and names of all groups
         global_group = models.tag.get_global_group()
-        groups = models.Group.objects.exclude_personal().exclude(id=global_group.id).order_by('name')
-        groups = groups.values('id', 'name')
-        group_list = [{'link': _get_group_url({'name': global_group.name,
-                                               'id': global_group.id}),
-                       'name': global_group.name},]
-        for group in groups:
+        groups = models.Group.objects.exclude_personal()
+        groups = groups.exclude(id=global_group.id)
+        groups_data = list(groups.values('id', 'name'))
+
+        #sort groups_data alphanumerically, but case-insensitive
+        groups_data = sorted(
+                        groups_data,
+                        lambda x, y: cmp(x['name'].lower(), y['name'].lower())
+                    )
+
+        #insert data for the global group at the first position
+        groups_data.insert(0, {'id': global_group.id, 'name': global_group.name})
+
+        #build group_list for the context
+        group_list = list()
+        for group in groups_data:
             link = _get_group_url(group)
             group_list.append({'name': group['name'], 'link': link})
         context['group_list'] = simplejson.dumps(group_list)
