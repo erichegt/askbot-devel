@@ -246,16 +246,19 @@ class ThreadManager(BaseQuerySetManager):
             if askbot_settings.TAG_SEARCH_INPUT_ENABLED:
                 #todo: this may be gone or disabled per option
                 #"tag_search_box_enabled"
-                existing_tags = set(
-                    Tag.objects.filter(
-                        name__in = tags
-                    ).values_list(
-                        'name',
-                        flat = True
-                    )
-                )
-
-                non_existing_tags = set(tags) - existing_tags
+                existing_tags = set()
+                non_existing_tags = set()
+                #we're using a one-by-one tag retreival, b/c
+                #we want to take advantage of case-insensitive search indexes
+                #in postgresql, plus it is most likely that there will be
+                #only one or two search tags anyway
+                for tag in tags:
+                    try:
+                        tag_record = Tag.objects.get(name__iexact=tag)
+                        existing_tags.add(tag_record.name)
+                    except Tag.DoesNotExist:
+                        non_existing_tags.add(tag)
+                        
                 meta_data['non_existing_tags'] = list(non_existing_tags)
                 tags = existing_tags
             else:
