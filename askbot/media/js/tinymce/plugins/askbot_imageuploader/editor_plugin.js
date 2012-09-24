@@ -18,6 +18,7 @@
 
         tinyMCE.activeEditor.focus();
         if (document.selection) {
+            //this branch is a work around the IE "this" quirk
             var sel = document.selection.createRange(); 
             sel.pasteHTML(content);
         } else {       
