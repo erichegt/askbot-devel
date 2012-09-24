@@ -365,6 +365,10 @@ class TagNamesField(forms.CharField):
             attrs={'size': 50, 'autocomplete': 'off'}
         )
         self.max_length = 255
+        self.error_messages['max_length'] = _(
+                            'We ran out of space for recording the tags. '
+                            'Please shorten or delete some of them.'
+                        )
         self.label = _('tags')
         self.help_text = ungettext_lazy(
             'Tags are short keywords, with no spaces within. '
@@ -411,6 +415,11 @@ class TagNamesField(forms.CharField):
             cleaned_tag = clean_tag(tag)
             if cleaned_tag not in cleaned_entered_tags:
                 cleaned_entered_tags.append(clean_tag(tag))
+
+        result = u' '.join(cleaned_entered_tags)
+
+        if len(result) > 125:#magic number!, the same as max_length in db
+            raise forms.ValidationError(self.error_messages['max_length'])
 
         return u' '.join(cleaned_entered_tags)
 

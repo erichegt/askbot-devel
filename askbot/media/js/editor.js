@@ -69,7 +69,6 @@ function ajaxFileUpload(options) {
             $('#' + uploadInputId).unbind('change').change(startUploadHandler);
         },
         error: function (data, status, e) {
-            alert(e);
             if (startUploadHandler){
                 /* re-install this as the upload extension
                 * will remove the handler to prevent double uploading */

@@ -10,15 +10,21 @@
 
 (function() {
     var insertIntoDom = function(url, description) {
-        var sel = tinyMCE.activeEditor.selection;
-
         var content = '<img src="' + url;
         if (description) {
             content = content + '" alt="' + description;
         }
         content = content + '"/>';
 
-        sel.setContent(content);
+        tinyMCE.activeEditor.focus();
+        if (document.selection) {
+            //this branch is a work around the IE "this" quirk
+            var sel = document.selection.createRange(); 
+            sel.pasteHTML(content);
+        } else {       
+            var sel = tinyMCE.activeEditor.selection;
+            sel.setContent(content);
+        }
     };
 
     var modalMenuHeadline = gettext('Upload an image');

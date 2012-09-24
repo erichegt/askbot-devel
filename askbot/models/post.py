@@ -225,7 +225,18 @@ class PostManager(BaseQuerySetManager):
         is_private = is_private or \
             (thread and thread.requires_response_moderation(author))
 
-        post.parse_and_save(author=author, is_private=is_private)
+        parse_results = post.parse_and_save(author=author, is_private=is_private)
+
+        from askbot.models import signals
+        signals.post_updated.send(
+            post=post,
+            updated_by=author,
+            newly_mentioned_users=parse_results['newly_mentioned_users'],
+            timestamp=added_at,
+            created=True,
+            diff=parse_results['diff'],
+            sender=post.__class__
+        )
 
         post.add_revision(
             author = author,
@@ -529,25 +540,14 @@ class Post(models.Model):
 
         timestamp = self.get_time_of_last_edit()
 
-        #todo: this is handled in signal because models for posts
-        #are too spread out
-        from askbot.models import signals
-        signals.post_updated.send(
-            post = self,
-            updated_by = author,
-            newly_mentioned_users = newly_mentioned_users,
-            timestamp = timestamp,
-            created = created,
-            diff = diff,
-            sender = self.__class__
-        )
-
         try:
             from askbot.conf import settings as askbot_settings
             if askbot_settings.GOOGLE_SITEMAP_CODE != '':
                 ping_google()
         except Exception:
             logging.debug('cannot ping google - did you register with them?')
+
+        return {'diff': diff, 'newly_mentioned_users': newly_mentioned_users}
 
     def is_question(self):
         return self.post_type == 'question'
@@ -840,15 +840,12 @@ class Post(models.Model):
         if quote_level > 0, the post will be indented that number of times
         todo: move to views?
         """
-        from askbot.templatetags.extra_filters_jinja \
-            import absolutize_urls_func
         from askbot.skins.loaders import get_template
         from django.template import Context
         template = get_template('email/quoted_post.html')
         data = {
             'post': self,
             'quote_level': quote_level,
-            #'html': absolutize_urls_func(self.html),
             'is_leaf_post': is_leaf_post,
             'format': format
         }
@@ -1629,7 +1626,19 @@ class Post(models.Model):
             by_email = by_email
         )
 
-        self.parse_and_save(author=edited_by, is_private=is_private)
+        parse_results = self.parse_and_save(author=edited_by, is_private=is_private)
+
+        from askbot.models import signals
+        signals.post_updated.send(
+            post=self,
+            updated_by=edited_by,
+            newly_mentioned_users=parse_results['newly_mentioned_users'],
+            timestamp=edited_at,
+            created=False,
+            diff=parse_results['diff'],
+            sender=self.__class__
+        )
+
 
     def _answer__apply_edit(
                         self,
@@ -1947,11 +1956,11 @@ class PostRevision(models.Model):
     )
 
     post = models.ForeignKey('askbot.Post', related_name='revisions', null=True, blank=True)
-    revision   = models.PositiveIntegerField()
-    author     = models.ForeignKey('auth.User', related_name='%(class)ss')
+    revision = models.PositiveIntegerField()
+    author = models.ForeignKey('auth.User', related_name='%(class)ss')
     revised_at = models.DateTimeField()
-    summary    = models.CharField(max_length=300, blank=True)
-    text       = models.TextField()
+    summary = models.CharField(max_length=300, blank=True)
+    text = models.TextField()
 
     approved = models.BooleanField(default=False, db_index=True)
     approved_by = models.ForeignKey(User, null = True, blank = True)
@@ -1961,8 +1970,8 @@ class PostRevision(models.Model):
     email_address = models.EmailField(null = True, blank = True)
 
     # Question-specific fields
-    title      = models.CharField(max_length=300, blank=True, default='')
-    tagnames   = models.CharField(max_length=125, blank=True, default='')
+    title = models.CharField(max_length=300, blank=True, default='')
+    tagnames = models.CharField(max_length=125, blank=True, default='')
     is_anonymous = models.BooleanField(default=False)
 
     objects = PostRevisionManager()
@@ -2105,10 +2114,10 @@ class PostRevision(models.Model):
         # Determine the revision number, if not set
         if not self.revision:
             # TODO: Maybe use Max() aggregation? Or `revisions.count() + 1`
-            self.revision = self.parent().revisions.values_list('revision', flat=True)[0] + 1
-
+            self.revision = self.parent().revisions.values_list(
+                                                'revision', flat=True
+                                            )[0] + 1
         self.full_clean()
-
         super(PostRevision, self).save(**kwargs)
 
     def get_absolute_url(self):

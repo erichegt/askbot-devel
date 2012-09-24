@@ -10,15 +10,21 @@
 
 (function() {
     var insertIntoDom = function(url, description) {
-        var sel = tinyMCE.activeEditor.selection;
-
         var content = '<a href="' + url;
         if (description) {
             content = content + '" title="' + description;
         }
-        content = content + '">see attachment</a>';
+        content = content + '"/>';
 
-        sel.setContent(content);
+        tinyMCE.activeEditor.focus();
+        if (document.selection) {
+            //this branch is a work around the IE's "this" quirk
+            var sel = document.selection.createRange(); 
+            sel.pasteHTML(content);
+        } else {       
+            var sel = tinyMCE.activeEditor.selection;
+            sel.setContent(content);
+        }
     };
 
     var modalMenuHeadline = gettext('Insert a file');

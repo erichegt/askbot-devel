@@ -230,7 +230,7 @@ CSRF_COOKIE_NAME = 'askbot_csrf'
 #CSRF_COOKIE_DOMAIN = ''
 
 STATICFILES_DIRS = (
-    ('default/media', os.path.join(ASKBOT_ROOT, 'media'),
+    ('default/media', os.path.join(ASKBOT_ROOT, 'media')),
 )
 
 RECAPTCHA_USE_SSL = True

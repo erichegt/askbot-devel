@@ -10,6 +10,7 @@ from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.test.client import Client
 from askbot.tests import utils
+from askbot.tests.utils import with_settings
 from askbot import models
 from askbot import mail
 from askbot.conf import settings as askbot_settings
@@ -953,6 +954,29 @@ class EmailFeedSettingTests(utils.AskbotTestCase):
         new_user.add_missing_askbot_subscriptions()
         data_after = TO_JSON(self.get_user_feeds())
         self.assertEquals(data_before, data_after)
+
+
+class EmailAlertTestsWithGroupsEnabled(utils.AskbotTestCase):
+
+    def setUp(self):
+        self.backup = askbot_settings.GROUPS_ENABLED
+        askbot_settings.update('GROUPS_ENABLED', True)
+
+    def tearDown(self):
+        askbot_settings.update('GROUPS_ENABLED', self.backup)
+
+    @with_settings({'MIN_REP_TO_TRIGGER_EMAIL': 1})
+    def test_notification_for_global_group_works(self):
+        sender = self.create_user('sender')
+        recipient = self.create_user(
+            'recipient',
+            notification_schedule=models.EmailFeedSetting.MAX_EMAIL_SCHEDULE
+        )
+        self.post_question(user=sender)
+        outbox = django.core.mail.outbox
+        self.assertEqual(len(outbox), 1)
+        self.assertEqual(outbox[0].recipients(), [recipient.email])
+
 
 class PostApprovalTests(utils.AskbotTestCase):
     """test notifications sent to authors when their posts

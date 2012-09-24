@@ -1241,7 +1241,6 @@ var questionRetagger = function(){
         var div = $('<form method="post"></form>');
         tagInput = $('<input id="retag_tags" type="text" autocomplete="off" name="tags" size="30"/>');
         //var tagLabel = $('<label for="retag_tags" class="error"></label>');
-        tagInput.val(old_tags_string);
         //populate input
         var tagAc = new AutoCompleter({
             url: askbot['urls']['get_tag_list'],
@@ -1253,6 +1252,7 @@ var questionRetagger = function(){
             delay: 10
         });
         tagAc.decorate(tagInput);
+        tagInput.val(old_tags_string);
         div.append(tagInput);
         //div.append(tagLabel);
         setupInputEventHandlers(tagInput);

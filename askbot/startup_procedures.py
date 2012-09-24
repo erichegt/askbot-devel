@@ -313,6 +313,19 @@ class SettingsTester(object):
                 '\n\n* '.join(self.messages)
             )
 
+
+def test_new_skins():
+    """tests that there are no directories in the `askbot/skins`
+    because we've moved skin files a few levels up"""
+    askbot_root = askbot.get_install_directory()
+    for item in os.listdir(os.path.join(askbot_root, 'skins')):
+        item_path = os.path.join(askbot_root, 'skins', item)
+        if os.path.isdir(item_path):
+            raise AskbotConfigError(
+                ('Time to move skin files from %s.\n'
+                'Now we have `askbot/templates` and `askbot/media`') % item_path
+            )
+
 def test_staticfiles():
     """tests configuration of the staticfiles app"""
     errors = list()
@@ -567,20 +580,28 @@ def test_tinymce():
     if compressor_on is False:
         errors.append('add line: TINYMCE_COMPRESSOR = True')
 
-    #check js root setting
+    #check js root setting - before version 0.7.44 we used to have
+    #"common" skin and after we combined it into the default
     js_root = getattr(django_settings, 'TINYMCE_JS_ROOT', '')
-    relative_js_path = 'common/media/js/tinymce/'
+    old_relative_js_path = 'common/media/js/tinymce/'
+    relative_js_path = 'default/media/js/tinymce/'
     expected_js_root = os.path.join(django_settings.STATIC_ROOT, relative_js_path)
+    old_expected_js_root = os.path.join(django_settings.STATIC_ROOT, old_relative_js_path)
     if os.path.normpath(js_root) != os.path.normpath(expected_js_root):
-        js_root_template = "add line: TINYMCE_JS_ROOT = os.path.join(STATIC_ROOT, '%s')"
-        errors.append(js_root_template % relative_js_path)
+        error_tpl = "add line: TINYMCE_JS_ROOT = os.path.join(STATIC_ROOT, '%s')"
+        if os.path.normpath(js_root) == os.path.normpath(old_expected_js_root):
+            error_tpl += '\nNote: we have moved files from "common" into "default"'
+        errors.append(error_tpl % relative_js_path)
 
     #check url setting
     url = getattr(django_settings, 'TINYMCE_URL', '')
     expected_url = django_settings.STATIC_URL + relative_js_path
+    old_expected_url = django_settings.STATIC_URL + old_relative_js_path
     if urls_equal(url, expected_url) is False:
-        js_url_template = "add line: TINYMCE_URL = STATIC_URL + '%s'"
-        errors.append(js_url_template % relative_js_path)
+        error_tpl = "add line: TINYMCE_URL = STATIC_URL + '%s'"
+        if urls_equal(url, old_expected_url):
+            error_tpl += '\nNote: we have moved files from "common" into "default"'
+        errors.append(error_tpl % relative_js_path)
 
     if errors:
         header = 'Please add the tynymce editor configuration ' + \
@@ -623,6 +644,7 @@ def run_startup_tests():
     #test_csrf_cookie_domain()
     test_tinymce()
     test_staticfiles()
+    test_new_skins()
     test_longerusername()
     test_avatar()
     settings_tester = SettingsTester({
