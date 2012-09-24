@@ -225,7 +225,18 @@ class PostManager(BaseQuerySetManager):
         is_private = is_private or \
             (thread and thread.requires_response_moderation(author))
 
-        post.parse_and_save(author=author, is_private=is_private)
+        parse_results = post.parse_and_save(author=author, is_private=is_private)
+
+        from askbot.models import signals
+        signals.post_updated.send(
+            post=post,
+            updated_by=author,
+            newly_mentioned_users=parse_results['newly_mentioned_users'],
+            timestamp=added_at,
+            created=True,
+            diff=parse_results['diff'],
+            sender=post.__class__
+        )
 
         post.add_revision(
             author = author,
@@ -529,25 +540,14 @@ class Post(models.Model):
 
         timestamp = self.get_time_of_last_edit()
 
-        #todo: this is handled in signal because models for posts
-        #are too spread out
-        from askbot.models import signals
-        signals.post_updated.send(
-            post = self,
-            updated_by = author,
-            newly_mentioned_users = newly_mentioned_users,
-            timestamp = timestamp,
-            created = created,
-            diff = diff,
-            sender = self.__class__
-        )
-
         try:
             from askbot.conf import settings as askbot_settings
             if askbot_settings.GOOGLE_SITEMAP_CODE != '':
                 ping_google()
         except Exception:
             logging.debug('cannot ping google - did you register with them?')
+
+        return {'diff': diff, 'newly_mentioned_users': newly_mentioned_users}
 
     def is_question(self):
         return self.post_type == 'question'
@@ -1626,7 +1626,19 @@ class Post(models.Model):
             by_email = by_email
         )
 
-        self.parse_and_save(author=edited_by, is_private=is_private)
+        parse_results = self.parse_and_save(author=edited_by, is_private=is_private)
+
+        from askbot.models import signals
+        signals.post_updated.send(
+            post=self,
+            updated_by=edited_by,
+            newly_mentioned_users=parse_results['newly_mentioned_users'],
+            timestamp=edited_at,
+            created=False,
+            diff=parse_results['diff'],
+            sender=self.__class__
+        )
+
 
     def _answer__apply_edit(
                         self,

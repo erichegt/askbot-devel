@@ -271,6 +271,13 @@ class EmailFeedSetting(models.Model):
         'q_sel': 'n',
         'm_and_c': 'n'
     }
+    MAX_EMAIL_SCHEDULE = {
+        'q_ask': 'i',
+        'q_ans': 'i',
+        'q_all': 'i',
+        'q_sel': 'i',
+        'm_and_c': 'i'
+    }
     FEED_TYPE_CHOICES = (
                     ('q_all',_('Entire forum')),
                     ('q_ask',_('Questions that I asked')),

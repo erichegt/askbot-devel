@@ -133,7 +133,8 @@ class ThreadManager(BaseQuerySetManager):
             question.wikified_at = added_at
 
         #this is kind of bad, but we save assign privacy groups to posts and thread
-        question.parse_and_save(author = author, is_private = is_private)
+        #this call is rather heavy, we should split into several functions
+        parse_results = question.parse_and_save(author=author, is_private=is_private)
 
         revision = question.add_revision(
             author=author,
@@ -155,7 +156,19 @@ class ThreadManager(BaseQuerySetManager):
             thread.make_public()
 
         # INFO: Question has to be saved before update_tags() is called
-        thread.update_tags(tagnames = tagnames, user = author, timestamp = added_at)
+        thread.update_tags(tagnames=tagnames, user=author, timestamp=added_at)
+
+        #todo: this is handled in signal because models for posts
+        #are too spread out
+        signals.post_updated.send(
+            post=question,
+            updated_by=author,
+            newly_mentioned_users=parse_results['newly_mentioned_users'],
+            timestamp=added_at,
+            created=True,
+            diff=parse_results['diff'],
+            sender=question.__class__
+        )
 
         return thread
 
