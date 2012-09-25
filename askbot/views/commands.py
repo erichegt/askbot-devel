@@ -13,7 +13,11 @@ from django.core import exceptions
 #from django.core.management import call_command
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseRedirect, Http404, HttpResponseBadRequest
+from django.http import Http404
+from django.http import HttpResponse
+from django.http import HttpResponseBadRequest
+from django.http import HttpResponseRedirect
+from django.http import HttpResponseForbidden
 from django.forms import ValidationError, IntegerField, CharField
 from django.shortcuts import get_object_or_404
 from django.views.decorators import csrf
@@ -1196,30 +1200,26 @@ def save_draft_answer(request):
         draft.save()
 
 @decorators.get_only
-@decorators.admins_only
 def get_users_info(request):
     """retuns list of user names and email addresses
     of "fake" users - so that admins can post on their
     behalf"""
-    #user_info_list = models.User.objects.filter(
-    #                    is_fake=True
-    #                ).values_list(
-    #                    'username',
-    #                    'email'
-    #                )
-    user_info_list = models.User.objects.values_list(
-                                                'username',
-                                                'email'
-                                            )
+    if request.user.is_anonymous():
+        return HttpResponseForbidden()
 
-    result_list = list()
-    for user_info in user_info_list:
-        username = user_info[0]
-        email = user_info[1]
-        result_list.append('%s|%s' % (username, email))
+    query = request.GET['q']
+    limit = IntegerField().clean(request.GET['limit'])
 
-    output = '\n'.join(result_list)
-    return HttpResponse(output, mimetype = 'text/plain')
+    users = models.User.objects
+    user_info_list = users.filter(username__istartswith=query)
+
+    if request.user.is_administrator_or_moderator():
+        user_info_list = user_info_list.values_list('username', 'email')
+    else:
+        user_info_list = user_info_list.values_list('username')
+
+    result_list = ['|'.join(info) for info in user_info_list[:limit]]
+    return HttpResponse('\n'.join(result_list), mimetype = 'text/plain')
 
 @csrf.csrf_protect
 def share_question_with_group(request):

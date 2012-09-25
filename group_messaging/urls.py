@@ -10,6 +10,11 @@ urlpatterns = patterns('',
         name='get_threads'
     ),
     url(
+        '^threads/(?P<thread_id>\d+)/$',
+        views.ThreadDetails().as_view(),
+        name='thread_details'
+    ),
+    url(
         '^threads/create/$',
         views.NewThread().as_view(),
         name='create_thread'

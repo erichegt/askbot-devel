@@ -1,9 +1,9 @@
 {% if senders %}
 <ul class="senders-list">
-{% for sender in senders %}
-    <li>{% trans %}Senders:{% endtrans %}</li>
-    <li><a data-sender-id="-1">{% trans %}all{% endtrans %}</a></li>
-    <li><a data-sender-id="{{ sender.id }}">{{ sender.username|escape }}</a></li>
-{% endfor %}
+    <li>{% trans %}Messages by sender:{% endtrans %}</li>
+    <li><a class="selected" data-sender-id="-1">{% trans %}all users{% endtrans %}</a></li>
+    {% for sender in senders %}
+        <li><a data-sender-id="{{ sender.id }}">{{ sender.username|escape }}</a></li>
+    {% endfor %}
 </ul>
 {% endif %}

@@ -42,7 +42,7 @@ class InboxView(object):
             template_name = self.template_name
         template = get_template(self.template_name)
         html = template.render(context)
-        json = simplejson.dumps({'html': html})
+        json = simplejson.dumps({'html': html, 'success': True})
         return HttpResponse(json, mimetype='application/json')
             
 
@@ -134,13 +134,17 @@ class NewResponse(InboxView):
 
 class ThreadsList(InboxView):
     """shows list of threads for a given user"""  
-    template_name = 'threads_list.html'
+    template_name = 'group_messaging/threads_list.html'
     http_method_list = ('GET',)
 
     def get_context(self, request):
         """returns thread list data"""
         #get threads and the last visit time
         threads = Message.objects.get_threads_for_user(request.user)
+
+        sender_id = IntegerField().clean(request.GET.get('sender_id', '-1'))
+        if sender_id != -1:
+            threads = threads.filter(sender__id=sender_id)
 
         #for each thread we need to know if there is something
         #unread for the user - to mark "new" threads as bold
@@ -154,15 +158,15 @@ class ThreadsList(InboxView):
             if request.user.username in senders_names:
                 senders_names.remove(request.user.username)
             thread_data['senders_info'] = ', '.join(senders_names)
+            thread_data['thread'] = thread
             threads_data[thread.id] = thread_data
-            threads_data[thread] = thread
 
         last_visit_times = LastVisitTime.objects.filter(
                                             user=request.user,
                                             message__in=threads
                                         )
         for last_visit in last_visit_times:
-            thread_data = threads_data[last_visit.thread_id]
+            thread_data = threads_data[last_visit.message_id]
             if thread_data['thread'].last_active_at <= last_visit.at:
                 thread_data['status'] = 'seen'
 
@@ -173,7 +177,7 @@ class ThreadsList(InboxView):
 
 class SendersList(InboxView):
     """shows list of senders for a user"""
-    template_name = 'senders_list.html'
+    template_name = 'group_messaging/senders_list.html'
     http_method_names = ('GET',)
 
     def get_context(self, request):
@@ -185,13 +189,19 @@ class SendersList(InboxView):
 
 class ThreadDetails(InboxView):
     """shows entire thread in the unfolded form"""
-    template_name = 'thread_details.html'
+    template_name = 'group_messaging/thread_details.html'
     http_method_names = ('GET',)
 
-    def get_context(self, request):
+    def get_context(self, request, thread_id=None):
         """shows individual thread"""
-        thread_id = IntegerField().clean(request.GET['thread_id'])
         #todo: assert that current thread is the root
-        messages = Message.objects.filter(root__id=thread_id)
-        messages = messages.values('html')
-        return {'messages': messages}
+        root = Message.objects.get(id=thread_id)
+        responses = Message.objects.filter(root__id=thread_id)
+        last_visit, created = LastVisitTime.objects.get_or_create(
+                                                            message=root,
+                                                            user=request.user
+                                                        )
+        if created is False:
+            last_visit.at = datetime.datetime.now()
+            last_visit.save()
+        return {'root_message': root, 'responses': responses, 'request': request}

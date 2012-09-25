@@ -253,6 +253,19 @@ NewThreadComposer.prototype.createDom = function() {
     label.after(error);
 };
 
+var ThreadHeading = function() {
+    SimpleControl.call(this);
+};
+inherits(ThreadHeading, SimpleControl);
+
+ThreadHeading.prototype.getId = function() {
+    return this._id;
+};
+
+ThreadHeading.prototype.decorate = function(element) {
+    this._element = element;
+    this._id = element.data('threadId');
+};
 
 /**
  * @constructor
@@ -261,6 +274,40 @@ var ThreadsList = function() {
     HideableWidget.call(this);
 };
 inherits(ThreadsList, HideableWidget);
+
+ThreadsList.prototype.setMessageCenter = function(ctr) {
+    this._messageCenter = ctr;
+};
+
+ThreadsList.prototype.getOpenThreadHandler = function(threadId) {
+    var messageCenter = this._messageCenter;
+    return function() {
+        messageCenter.openThread(threadId);
+    };
+};
+
+ThreadsList.prototype.setHTML = function(html) {
+    $.each(this._threads, function(idx, thread) {
+        thread.dispose();
+    });
+    this._element.html(html);
+    this.decorate(this._element);
+};
+
+ThreadsList.prototype.decorate = function(element) {
+    this._element = element;
+    var headingElements = element.find('tr.thread-heading');
+    var me = this;
+    var threads = [];
+    $.each(headingElements, function(idx, headingElement) {
+        var heading = new ThreadHeading();
+        heading.decorate($(headingElement));
+        var threadId = heading.getId();
+        heading.setHandler(me.getOpenThreadHandler(threadId));
+        threads.push(heading);
+    });
+    this._threads = threads;
+}
 
 
 /**
@@ -275,10 +322,91 @@ inherits(Message, Widget);
 /**
  * @constructor
  */
-var Thread = function() {
+var ThreadContainer = function() {
     HideableWidget.call(this);
 };
-inherits(Thread, HideableWidget);
+inherits(ThreadContainer, HideableWidget);
+
+
+/**
+ * @constructor
+ */
+var Thread = function() {
+    WrappedElement.call(this);
+};
+inherits(Thread, WrappedElement);
+
+
+/**
+ * @constructor
+ */
+var Sender = function() {
+    SimpleControl.call(this);
+};
+inherits(Sender, SimpleControl);
+
+Sender.prototype.getId = function() {
+    return this._id;
+};
+
+Sender.prototype.select = function() {
+    this._element.addClass('selected');
+};
+
+Sender.prototype.unselect = function() {
+    this._element.removeClass('selected');
+};
+
+Sender.prototype.decorate = function(element) {
+    Sender.superClass_.decorate.call(this, element);
+    this._id = element.data('senderId');
+};
+
+
+/**
+ * @constructor
+ * list of senders in the first column of inbox
+ */
+var SendersList = function() {
+    WrappedElement.call(this);
+    this._messageCenter = undefined;
+};
+inherits(SendersList, WrappedElement);
+
+SendersList.prototype.setMessageCenter = function(ctr) {
+    this._messageCenter = ctr;
+};
+
+SendersList.prototype.getSenders = function() {
+    return this._senders;
+};
+
+SendersList.prototype.getSenderSelectHandler = function(sender) {
+    var messageCenter = this._messageCenter;
+    var me = this;
+    return function() {
+        $.map(me.getSenders(), function(s){ s.unselect() });
+        sender.select();
+        messageCenter.loadThreadsForSender(sender.getId());
+    };
+};
+
+SendersList.prototype.decorate = function(element) {
+    this._element = element;
+    var senders = [];
+    $.each(element.find('a'), function(idx, item) {
+        var sender = new Sender();
+        sender.decorate($(item));
+        senders.push(sender);
+    });
+
+    this._senders = senders;
+
+    var me = this;
+    $.each(senders, function(idx, sender) {
+        sender.setHandler(me.getSenderSelectHandler(sender));
+    });
+};
 
 
 /**
@@ -292,25 +420,91 @@ inherits(MessageCenter, Widget);
 MessageCenter.prototype.setState = function(state) {
     this._editor.hide();
     this._threadsList.hide();
-    //this._thread.hide();
+    this._threadContainer.hide();
     if (state === 'compose') {
         this._editor.show();
     } else if (state === 'show-list') {
         this._threadsList.show();
     } else if (state === 'show-thread') {
-        this._thread.show();
+        this._threadContainer.show();
     }
+};
+
+MessageCenter.prototype.clearThread = function() {
+    if (this._thread) {
+        this._thread.dispose();
+    }
+    this._threadContainer.html('');
+};
+
+MessageCenter.prototype.setThreadHTML = function(html) {
+    this._threadContainer.html(html);
+    var thread = new Thread();
+    thread.decorate($(this._threadContainer.children()[0]));
+    this._thread = thread;
+};
+
+MessageCenter.prototype.openThread = function(threadId) {
+    var url = this._urls['getThreads'] + threadId + '/';
+    var me = this;
+    $.ajax({
+        type: 'GET',
+        dataType: 'json',
+        url: url,
+        cache: false,
+        success: function(data) {
+            if (data['success']) {
+                me.clearThread();
+                me.setThreadHTML(data['html']);
+                me.setState('show-thread');
+            }
+        }
+    });
+};
+
+MessageCenter.prototype.loadThreadsForSender = function(senderId) {
+    var threadsList = this._threadsList;
+    var url = this._urls['getThreads'];
+    me = this;
+    $.ajax({
+        type: 'GET',
+        dataType: 'json',
+        url: url,
+        cache: false,
+        data: {sender_id: senderId},
+        success: function(data) {
+            if (data['success']) {
+                threadsList.setHTML(data['html']);
+                me.setState('show-list');
+            }
+        }
+    });
 };
 
 MessageCenter.prototype.decorate = function(element) {
     this._element = element;
     this._firstCol = element.find('.first-col');
     this._secondCol = element.find('.second-col');
+
+    this._urls = {
+        getThreads: element.data('getThreadsUrl'),
+        getThreadDetails: element.data('getThreadDetailsUrl')
+    };
+
     //read sender list
+    var senders = new SendersList();
+    senders.setMessageCenter(this);
+    senders.decorate($('.senders-list'));
+    this._sendersList = senders;
     //read message list
     var threads = new ThreadsList();
+    threads.setMessageCenter(this);
     threads.decorate($('.threads-list'));
     this._threadsList = threads;
+    //add empty thread container
+    var threadContainer = new ThreadContainer();
+    this._secondCol.append(threadContainer.getElement());
+    this._threadContainer = threadContainer.getElement();
 
     var me = this;
     //create editor
@@ -319,7 +513,7 @@ MessageCenter.prototype.decorate = function(element) {
     editor.setSendUrl(element.data('createThreadUrl'));
     editor.onAfterCancel(function() { me.setState('show-list') });
     editor.onSendSuccess(function() {
-        me.setState('show-list');
+        editor.cancel();
         notify.show(gettext('message sent'), true);
     });
     this._editor = editor;
