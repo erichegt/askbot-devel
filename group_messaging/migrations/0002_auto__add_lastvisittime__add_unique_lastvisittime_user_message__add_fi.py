@@ -11,10 +11,14 @@ class Migration(SchemaMigration):
         # Adding model 'LastVisitTime'
         db.create_table('group_messaging_lastvisittime', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('user', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['auth.User'], unique=True)),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
+            ('message', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['group_messaging.Message'])),
             ('at', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
         ))
         db.send_create_signal('group_messaging', ['LastVisitTime'])
+
+        # Adding unique constraint on 'LastVisitTime', fields ['user', 'message']
+        db.create_unique('group_messaging_lastvisittime', ['user_id', 'message_id'])
 
         # Adding field 'Message.senders_info'
         db.add_column('group_messaging_message', 'senders_info',
@@ -22,6 +26,9 @@ class Migration(SchemaMigration):
                       keep_default=False)
 
     def backwards(self, orm):
+        # Removing unique constraint on 'LastVisitTime', fields ['user', 'message']
+        db.delete_unique('group_messaging_lastvisittime', ['user_id', 'message_id'])
+
         # Deleting model 'LastVisitTime'
         db.delete_table('group_messaging_lastvisittime')
 
@@ -95,10 +102,11 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         'group_messaging.lastvisittime': {
-            'Meta': {'object_name': 'LastVisitTime'},
+            'Meta': {'unique_together': "(('user', 'message'),)", 'object_name': 'LastVisitTime'},
             'at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'user': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['auth.User']", 'unique': 'True'})
+            'message': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['group_messaging.Message']"}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"})
         },
         'group_messaging.message': {
             'Meta': {'object_name': 'Message'},

@@ -141,12 +141,6 @@ class ThreadsList(InboxView):
         """returns thread list data"""
         #get threads and the last visit time
         threads = Message.objects.get_threads_for_user(request.user)
-        try:
-            last_visit = LastVisitTime.objects.get(user=request.user)
-        except LastVisitTime.DoesNotExist:
-            timestamp = datetime.datetime(2010, 3, 24)#day of askbot
-            last_visit = LastVisitTime(user=request.user, at=timestamp)
-
 
         #for each thread we need to know if there is something
         #unread for the user - to mark "new" threads as bold
@@ -154,21 +148,26 @@ class ThreadsList(InboxView):
         for thread in threads:
             thread_data = dict()
             #determine status
-            status = 'seen'
-            if thread.last_active_at > last_visit.at:
-                status = 'new'
-            thread_data['status'] = status
+            thread_data['status'] = 'new'
             #determine the senders info
             senders_names = thread.senders_info.split(',')
             if request.user.username in senders_names:
                 senders_names.remove(request.user.username)
             thread_data['senders_info'] = ', '.join(senders_names)
             threads_data[thread.id] = thread_data
+            threads_data[thread] = thread
+
+        last_visit_times = LastVisitTime.objects.filter(
+                                            user=request.user,
+                                            message__in=threads
+                                        )
+        for last_visit in last_visit_times:
+            thread_data = threads_data[last_visit.thread_id]
+            if thread_data['thread'].last_active_at <= last_visit.at:
+                thread_data['status'] = 'seen'
 
         #after we have all the data - update the last visit time
-        last_visit.at = datetime.datetime.now()
-        last_visit.save()
-            
+        last_visit_times.update(at=datetime.datetime.now())
         return {'threads': threads, 'threads_data': threads_data}
 
 

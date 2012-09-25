@@ -36,15 +36,15 @@ def create_personal_group(user):
 
 
 class LastVisitTime(models.Model):
-    """just remembers when each user last
-    visited his/her messages inbox
-    updated any time when inbox is visited by the user.
-
-    there is only one value per user - it is necessary
-    for the quick determination of which threads are "new"
+    """just remembers when a user has 
+    last visited a given thread
     """
-    user = models.OneToOneField(User)
+    user = models.ForeignKey(User)
+    message = models.ForeignKey('Message')
     at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'message')
 
 
 class SenderListManager(models.Manager):
