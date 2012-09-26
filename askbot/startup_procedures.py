@@ -598,6 +598,28 @@ def test_tinymce():
     compressor_on = getattr(django_settings, 'TINYMCE_COMPRESSOR', False)
     if compressor_on is False:
         errors.append('add line: TINYMCE_COMPRESSOR = True')
+        #todo: add pointer to instructions on how to debug tinymce:
+        #1) add ('tiny_mce', os.path.join(ASKBOT_ROOT, 'media/js/tinymce')),
+        #   to STATIFILES_DIRS
+        #2) add this to the main urlconf:
+        #    (
+        #        r'^m/(?P<path>.*)$',
+        #        'django.views.static.serve',
+        #        {'document_root': static_root}
+        #    ),
+        #3) disable `compressor_on` check above
+        #then - tinymce compressing will be disabled and it will
+        #be possible to debug custom tinymce plugins that are used with askbot
+
+
+    default_config = getattr(django_settings, 'TINYMCE_DEFAULT_CONFIG', None)
+    if default_config:
+        if 'convert_urls' in default_config:
+            message = "set 'convert_urls':False in TINYMCE_DEFAULT_CONFIG"
+        else:
+            message = "add to TINYMCE_DEFAULT_CONFIG\n'convert_urls': False,"
+        errors.append(message)
+
 
     #check js root setting - before version 0.7.44 we used to have
     #"common" skin and after we combined it into the default
