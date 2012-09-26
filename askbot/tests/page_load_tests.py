@@ -9,6 +9,7 @@ from django.utils import simplejson
 
 import coffin
 import coffin.template
+from bs4 import BeautifulSoup
 
 from askbot import models
 from askbot.utils.slug import slugify
@@ -566,6 +567,17 @@ class AvatarTests(AskbotTestCase):
                                 'avatar_render_primary',
                                 kwargs = {'user': 'john doe', 'size': 48}
                             )
+
+
+class QuestionViewTests(AskbotTestCase):
+    def test_meta_description_has_question_summary(self):
+        user = self.create_user('user')
+        text = 'this is a question'
+        question = self.post_question(user=user, body_text=text)
+        response = self.client.get(question.get_absolute_url())
+        soup = BeautifulSoup(response.content)
+        meta_descr = soup.find_all('meta', attrs={'name': 'description'})[0]
+        self.assertTrue(text in meta_descr.attrs['content'])
 
 
 class QuestionPageRedirectTests(AskbotTestCase):
