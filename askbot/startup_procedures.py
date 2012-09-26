@@ -227,6 +227,25 @@ def test_celery():
     """
     broker_backend = getattr(django_settings, 'BROKER_BACKEND', None)
     broker_transport = getattr(django_settings, 'BROKER_TRANSPORT', None)
+    delay_time = getattr(django_settings, 'NOTIFICATION_DELAY_TIME', None)
+    delay_setting_info = 'The delay is in seconds - used to throttle ' + \
+                    'instant notifications note that this delay will work only if ' + \
+                    'celery daemon is running Please search about ' + \
+                    '"celery daemon setup" for details'
+
+    if delay_time is None:
+        raise AskbotConfigError(
+            '\nPlease add to your settings.py\n' + \
+            'NOTIFICATION_DELAY_TIME = 60*15\n' + \
+            delay_setting_info
+        )
+    else:
+        if not isinstance(delay_time, int):
+            raise AskbotConfigError(
+                '\nNOTIFICATION_DELAY_TIME setting must have a numeric value\n' + \
+                delay_setting_info
+            )
+
 
     if broker_backend is None:
         if broker_transport is None:

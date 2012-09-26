@@ -54,7 +54,7 @@ class Migration(DataMigration):
             from django.db import connection
             cursor = connection.cursor()
             cursor.execute(
-                'DROP TRIGGER group_membership_tsv_update_trigger '
+                'DROP TRIGGER IF EXISTS group_membership_tsv_update_trigger '
                 'ON askbot_groupmembership'
             )
 

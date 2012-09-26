@@ -26,16 +26,19 @@ register = coffin_template.Library()
 
 @register.filter
 def absolutize_urls(text):
-    url_re1 = re.compile(r'(?P<prefix><img[^<]+src=)"(?P<url>/[^"]+)"', re.I)
-    url_re2 = re.compile(r"(?P<prefix><img[^<]+src=)'(?P<url>/[^']+)'", re.I)
+    #temporal fix for bad regex with wysiwyg editor
+    url_re1 = re.compile(r'(?P<prefix><img[^<]+src=)"(?P<url>[/\..][^"]+)"', re.I)
+    url_re2 = re.compile(r"(?P<prefix><img[^<]+src=)'(?P<url>[/\..][^']+)'", re.I)
     url_re3 = re.compile(r'(?P<prefix><a[^<]+href=)"(?P<url>/[^"]+)"', re.I)
     url_re4 = re.compile(r"(?P<prefix><a[^<]+href=)'(?P<url>/[^']+)'", re.I)
-    img_replacement = '\g<prefix>"%s\g<url>" style="max-width:500px;"' % askbot_settings.APP_URL
+    img_replacement = '\g<prefix>"%s/\g<url>" style="max-width:500px;"' % askbot_settings.APP_URL
     replacement = '\g<prefix>"%s\g<url>"' % askbot_settings.APP_URL
     text = url_re1.sub(img_replacement, text)
     text = url_re2.sub(img_replacement, text)
     text = url_re3.sub(replacement, text)
-    return url_re4.sub(replacement, text)
+    #temporal fix for bad regex with wysiwyg editor
+    return url_re4.sub(replacement, text).replace('%s//' % askbot_settings.APP_URL,
+                                                  '%s/' % askbot_settings.APP_URL)
 
 
 TIMEZONE_STR = pytz.timezone(

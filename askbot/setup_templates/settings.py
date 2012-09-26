@@ -260,3 +260,6 @@ TINYMCE_DEFAULT_CONFIG = {
     'theme_advanced_statusbar_location': 'bottom',
     'height': '250'
 }
+
+#delayed notifications, time in seconds, 15 mins by default
+NOTIFICATION_DELAY_TIME = 60 * 15

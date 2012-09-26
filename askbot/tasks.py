@@ -19,6 +19,8 @@ That is the reason for having two types of methods here:
 """
 import sys
 import traceback
+import logging
+import uuid
 
 from django.contrib.contenttypes.models import ContentType
 from django.template import Context
@@ -29,6 +31,8 @@ from askbot import const
 from askbot import mail
 from askbot.models import Post, Thread, User, ReplyAddress
 from askbot.models.badges import award_badges_signal
+from askbot.models import get_reply_to_addresses, format_instant_notification_email
+from askbot import exceptions as askbot_exceptions
 
 # TODO: Make exceptions raised inside record_post_update_celery_task() ...
 #       ... propagate upwards to test runner, if only CELERY_ALWAYS_EAGER = True
@@ -94,7 +98,7 @@ def notify_author_of_published_revision_celery_task(revision):
 def record_post_update_celery_task(
         post_id,
         post_content_type_id,
-        newly_mentioned_user_id_list = None, 
+        newly_mentioned_user_id_list = None,
         updated_by_id = None,
         timestamp = None,
         created = False,
@@ -138,7 +142,7 @@ def record_question_visit(
     update_view_count = False):
     """celery task which records question visit by a person
     updates view counter, if necessary,
-    and awards the badges associated with the 
+    and awards the badges associated with the
     question visit
     """
     #1) maybe update the view count
@@ -164,3 +168,72 @@ def record_question_visit(
                     actor = user,
                     context_object = question_post,
                 )
+
+@task()
+def send_instant_nofications(update_activity=None,
+                             post=None, recipients=None):
+
+    if post.is_approved() is False:
+        return
+
+    if recipients is None:
+        return
+
+    acceptable_types = const.RESPONSE_ACTIVITY_TYPES_FOR_INSTANT_NOTIFICATIONS
+
+    if update_activity.activity_type not in acceptable_types:
+        return
+
+    #calculate some variables used in the loop below
+    from askbot.skins.loaders import get_template
+    update_type_map = const.RESPONSE_ACTIVITY_TYPE_MAP_FOR_TEMPLATES
+    update_type = update_type_map[update_activity.activity_type]
+    origin_post = post.get_origin_post()
+    headers = mail.thread_headers(
+                            post,
+                            origin_post,
+                            update_activity.activity_type
+                        )
+
+    logger = logging.getLogger()
+    if logger.getEffectiveLevel() <= logging.DEBUG:
+        log_id = uuid.uuid1()
+        message = 'email-alert %s, logId=%s' % (post.get_absolute_url(), log_id)
+        logger.debug(message)
+    else:
+        log_id = None
+
+
+    for user in recipients:
+        if user.is_blocked():
+            continue
+
+        reply_address, alt_reply_address = get_reply_to_addresses(user, post)
+
+        subject_line, body_text = format_instant_notification_email(
+                            to_user = user,
+                            from_user = update_activity.user,
+                            post = post,
+                            reply_address = reply_address,
+                            alt_reply_address = alt_reply_address,
+                            update_type = update_type,
+                            template = get_template('email/instant_notification.html')
+                        )
+
+        headers['Reply-To'] = reply_address
+        try:
+            mail.send_mail(
+                subject_line=subject_line,
+                body_text=body_text,
+                recipient_list=[user.email],
+                related_object=origin_post,
+                activity_type=const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT,
+                headers=headers,
+                raise_on_failure=True
+            )
+        except askbot_exceptions.EmailNotSent, error:
+            logger.debug(
+                '%s, error=%s, logId=%s' % (user.email, error, log_id)
+            )
+        else:
+            logger.debug('success %s, logId=%s' % (user.email, log_id))

@@ -3036,77 +3036,19 @@ def send_instant_notifications_about_activity_in_post(
                                                 post = None,
                                                 recipients = None,
                                             ):
-    """
-    function called when posts are updated
-    newly mentioned users are carried through to reduce
-    database hits
-    """
-    if post.is_approved() is False:
-        return
+    if not django_settings.CELERY_ALWAYS_EAGER:
+        cache_key = 'instant-notification-%d' % post.thread.id
+        old_task_id = cache.cache.get(cache_key)
+        if old_task_id:
+            from celery.task.control import revoke
+            revoke(old_task_id, terminate=True)
 
-    if recipients is None:
-        return
-
-    acceptable_types = const.RESPONSE_ACTIVITY_TYPES_FOR_INSTANT_NOTIFICATIONS
-
-    if update_activity.activity_type not in acceptable_types:
-        return
-
-    #calculate some variables used in the loop below
-    from askbot.skins.loaders import get_template
-    update_type_map = const.RESPONSE_ACTIVITY_TYPE_MAP_FOR_TEMPLATES
-    update_type = update_type_map[update_activity.activity_type]
-    origin_post = post.get_origin_post()
-    headers = mail.thread_headers(
-                            post,
-                            origin_post,
-                            update_activity.activity_type
-                        )
-
-    logger = logging.getLogger()
-    if logger.getEffectiveLevel() <= logging.DEBUG:
-        log_id = uuid.uuid1()
-        message = 'email-alert %s, logId=%s' % (post.get_absolute_url(), log_id)
-        logger.debug(message)
-    else:
-        log_id = None
-
-    #send email for all recipients
-    for user in recipients:
-
-        if user.is_blocked():
-            continue
-
-        reply_address, alt_reply_address = get_reply_to_addresses(user, post)
-
-        subject_line, body_text = format_instant_notification_email(
-                            to_user = user,
-                            from_user = update_activity.user,
-                            post = post,
-                            reply_address = reply_address,
-                            alt_reply_address = alt_reply_address,
-                            update_type = update_type,
-                            template = get_template('email/instant_notification.html')
-                        )
-
-        headers['Reply-To'] = reply_address
-        try:
-            mail.send_mail(
-                subject_line=subject_line,
-                body_text=body_text,
-                recipient_list=[user.email],
-                related_object=origin_post,
-                activity_type=const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT,
-                headers=headers,
-                raise_on_failure=True
-            )
-        except askbot_exceptions.EmailNotSent, error:
-            logger.debug(
-                '%s, error=%s, logId=%s' % (user.email, error, log_id)
-            )
-        else:
-            logger.debug('success %s, logId=%s' % (user.email, log_id))
-
+    from askbot import tasks
+    result = tasks.send_instant_nofications.apply_async((update_activity,
+                                                         post, recipients),
+                                                         countdown = django_settings.NOTIFICATION_DELAY_TIME)
+    if not django_settings.CELERY_ALWAYS_EAGER:
+        cache.cache.set(cache_key, result.task_id, django_settings.NOTIFICATION_DELAY_TIME)
 
 def notify_author_of_published_revision(
     revision = None, was_approved = None, **kwargs
