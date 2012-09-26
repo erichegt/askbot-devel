@@ -3,6 +3,7 @@ Changes in Askbot
 
 Development version
 -------------------
+* Added setting `NOTIFICATION_DELAY_TIME` to use with enabled celery daemon (Adolfo)
 * Added setting `ASKBOT_INTERNAL_IPS` - to allow anonymous access to 
   closed sites from dedicated IP addresses (Evgeny)
 * Moved default skin from `askbot/skins/default` to simply `askbot` (Evgeny)
