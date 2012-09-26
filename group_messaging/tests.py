@@ -51,11 +51,19 @@ class ModelTests(TestCase):
         #sender_group = get_personal_group(self.sender) #maybe add this too
         expected_recipients = set([recipient_group])
         self.assertEqual(recipients, expected_recipients)
-        self.assertRaises(
-            MessageMemo.DoesNotExist,
-            MessageMemo.objects.get,
-            message=message
-        )
+        #self.assertRaises(
+        #    MessageMemo.DoesNotExist,
+        #    MessageMemo.objects.get,
+        #    message=message
+        #)
+        #make sure that the original senders memo to the root
+        #message is marke ad seen
+        memos = MessageMemo.objects.filter(
+                                message=message,
+                                user=self.sender
+                            )
+        self.assertEquals(memos.count(), 1)
+        self.assertEqual(memos[0].status, MessageMemo.SEEN)
 
     def test_get_senders_for_user(self):
         """this time send thread to a real group test that
@@ -77,11 +85,13 @@ class ModelTests(TestCase):
                                         parent=root_message
                                     )
         self.assertEqual(response.message_type, Message.STORED)
+
         #assert that there is only one "seen" memo for the response
         memos = MessageMemo.objects.filter(message=response)
         self.assertEqual(memos.count(), 1)
         self.assertEqual(memos[0].user, self.recipient)
         self.assertEqual(memos[0].status, MessageMemo.SEEN)
+
         #assert that recipients are the two people who are part of
         #this conversation
         recipients = set(response.recipients.all())

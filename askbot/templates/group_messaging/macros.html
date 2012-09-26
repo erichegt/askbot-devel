@@ -1,0 +1,16 @@
+{%- macro message(post, visitor) -%}
+<div class="message">
+    <p class="header">
+        {% if post.sender == visitor %}
+            {% trans date=post.sent_at %}You wrote on {{ date }}:{% endtrans %}
+        {% else %}
+            {% trans user=post.sender.username,
+                date=post.sent_at
+            %}{{ user }} wrote on {{ date }}:{% endtrans %}
+        {% endif %}
+    </p>
+    <div class="content">
+    {{ post.html|safe }}
+    </div>
+</div>
+{%- endmacro -%}

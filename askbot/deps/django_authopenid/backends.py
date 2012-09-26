@@ -119,15 +119,17 @@ class AuthBackend(object):
             assoc.openid_url = username + '@' + provider_name#has to be this way for external pw logins
 
         elif method == 'openid':
-            provider_name = util.get_provider_name(openid_url)
             try:
-                assoc = UserAssociation.objects.get(
-                                            openid_url = openid_url,
-                                            provider_name = provider_name
-                                        )
+                assoc = UserAssociation.objects.get(openid_url=openid_url)
                 user = assoc.user
             except UserAssociation.DoesNotExist:
                 return None
+            except UserAssociation.MultipleObjectsReturned:
+                logging.critical(
+                    'duplicate openid url in the database!!! %s' % openid_url
+                )
+                return None
+                
 
         elif method == 'email':
             #with this method we do no use user association

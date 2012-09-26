@@ -810,14 +810,34 @@ def finalize_generic_signin(
     if request.user.is_authenticated():
         #this branch is for adding a new association
         if user is None:
-            #register new association
-            UserAssociation(
-                user = request.user,
-                provider_name = login_provider_name,
-                openid_url = user_identifier,
-                last_used_timestamp = datetime.datetime.now()
-            ).save()
-            return HttpResponseRedirect(redirect_url)
+            try:
+                #see if currently logged in user has login with the given provider
+                assoc = UserAssociation.objects.get(
+                                    user=request.user,
+                                    provider_name=login_provider_name
+                                )
+                logging.critical('switching account or open id changed???')
+                #did openid url change? or we are dealing with a brand new open id?
+                message1 = _(
+                    'If you are trying to sign in to another account, '
+                    'please sign out first.'
+                )
+                request.user.message_set.create(message=message1)
+                message2 = _(
+                    'Otherwise, please report the incident '
+                    'to the site administrator.'
+                )
+                request.user.message_set.create(message=message2)
+                return HttpResponseRedirect(redirect_url)
+            except UserAssociation.DoesNotExist:
+                #register new association
+                UserAssociation(
+                    user=request.user,
+                    provider_name=login_provider_name,
+                    openid_url=user_identifier,
+                    last_used_timestamp=datetime.datetime.now()
+                ).save()
+                return HttpResponseRedirect(redirect_url)
 
         elif user != request.user:
             #prevent theft of account by another pre-existing user
