@@ -612,13 +612,15 @@ def test_tinymce():
         #be possible to debug custom tinymce plugins that are used with askbot
 
 
-    default_config = getattr(django_settings, 'TINYMCE_DEFAULT_CONFIG', None)
-    if default_config:
-        if 'convert_urls' in default_config:
-            message = "set 'convert_urls':False in TINYMCE_DEFAULT_CONFIG"
+    config = getattr(django_settings, 'TINYMCE_DEFAULT_CONFIG', None)
+    if config:
+        if 'convert_urls' in config:
+            if config['convert_urls'] is not False:
+                message = "set 'convert_urls':False in TINYMCE_DEFAULT_CONFIG"
+                errors.append(message)
         else:
             message = "add to TINYMCE_DEFAULT_CONFIG\n'convert_urls': False,"
-        errors.append(message)
+            errors.append(message)
 
 
     #check js root setting - before version 0.7.44 we used to have
