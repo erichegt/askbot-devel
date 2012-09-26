@@ -1754,7 +1754,7 @@ def user_create_post_reject_reason(
         added_at = timestamp,
         text = details
     )
-    details.parse_and_save(author = self)
+    details.parse_and_save(author=self)
     details.add_revision(
         author = self,
         revised_at = timestamp,
