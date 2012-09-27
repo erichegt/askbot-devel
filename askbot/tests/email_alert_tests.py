@@ -965,7 +965,7 @@ class EmailAlertTestsWithGroupsEnabled(utils.AskbotTestCase):
     def tearDown(self):
         askbot_settings.update('GROUPS_ENABLED', self.backup)
 
-    @with_settings({'MIN_REP_TO_TRIGGER_EMAIL': 1})
+    @with_settings(MIN_REP_TO_TRIGGER_EMAIL=1)
     def test_notification_for_global_group_works(self):
         sender = self.create_user('sender')
         recipient = self.create_user(
