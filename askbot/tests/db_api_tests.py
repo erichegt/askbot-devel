@@ -166,10 +166,7 @@ class DBApiTests(AskbotTestCase):
         count = models.Tag.objects.filter(name='one-tag').count()
         self.assertEquals(count, 0)
     
-    @with_settings({
-        'MAX_TAG_LENGTH': 200,
-        'MAX_TAGS_PER_POST': 50
-    })
+    @with_settings(MAX_TAG_LENGTH=200, MAX_TAGS_PER_POST=50)
     def test_retag_tags_too_long_raises(self):
         tags = "aoaoesuouooeueooeuoaeuoeou aostoeuoaethoeastn oasoeoa nuhoasut oaeeots aoshootuheotuoehao asaoetoeatuoasu o  aoeuethut aoaoe uou uoetu uouuou ao aouosutoeh"
         question = self.post_question(user=self.user)

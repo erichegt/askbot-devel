@@ -834,7 +834,7 @@ class Post(models.Model):
             return filtered_candidates
 
     def format_for_email(
-        self, quote_level = 0, is_leaf_post = False, format = None
+        self, quote_level=0, is_leaf_post=False, format=None
     ):
         """format post for the output in email,
         if quote_level > 0, the post will be indented that number of times

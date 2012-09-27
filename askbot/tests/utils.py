@@ -4,7 +4,7 @@ from django.test import TestCase
 from functools import wraps
 from askbot import models
 
-def with_settings(settings_dict):
+def with_settings(**settings_dict):
     """a decorator that will run function with settings
     then apply previous settings and return the result
     of the function.
