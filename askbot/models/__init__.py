@@ -3044,11 +3044,16 @@ def send_instant_notifications_about_activity_in_post(
             revoke(old_task_id, terminate=True)
 
     from askbot import tasks
-    result = tasks.send_instant_nofications.apply_async((update_activity,
-                                                         post, recipients),
-                                                         countdown = django_settings.NOTIFICATION_DELAY_TIME)
+    result = tasks.send_instant_nofications.apply_async(
+            (update_activity, post, recipients),
+            countdown = django_settings.NOTIFICATION_DELAY_TIME
+        )
     if not django_settings.CELERY_ALWAYS_EAGER:
-        cache.cache.set(cache_key, result.task_id, django_settings.NOTIFICATION_DELAY_TIME)
+        cache.cache.set(
+                    cache_key,
+                    result.task_id,
+                    django_settings.NOTIFICATION_DELAY_TIME
+                )
 
 def notify_author_of_published_revision(
     revision = None, was_approved = None, **kwargs
