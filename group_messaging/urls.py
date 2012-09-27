@@ -23,5 +23,10 @@ urlpatterns = patterns('',
         '^senders/$',
         views.SendersList().as_view(),
         name='get_senders'
+    ),
+    url(
+        '^post-reply/$',
+        views.PostReply().as_view(),
+        name='post_reply'
     )
 )

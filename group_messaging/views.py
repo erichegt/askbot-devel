@@ -40,7 +40,7 @@ class InboxView(object):
         """
         if template_name is None:
             template_name = self.template_name
-        template = get_template(self.template_name)
+        template = get_template(template_name)
         html = template.render(context)
         json = simplejson.dumps({'html': html, 'success': True})
         return HttpResponse(json, mimetype='application/json')
@@ -116,7 +116,7 @@ class NewThread(InboxView):
         return HttpResponse(simplejson.dumps(result), mimetype='application/json')
 
 
-class NewResponse(InboxView):
+class PostReply(InboxView):
     """view to create a new response"""
     http_method_list = ('POST',)
 
@@ -128,8 +128,15 @@ class NewResponse(InboxView):
                                         text=request.POST['text'],
                                         parent=parent
                                     )
+        last_visit = LastVisitTime.objects.get(
+                                        message=message.root,
+                                        user=request.user
+                                    )
+        last_visit.at = datetime.datetime.now()
+        last_visit.save()
         return self.render_to_response(
-            {'message': message}, template_name='stored_message.htmtl'
+            {'post': message, 'user': request.user},
+            template_name='group_messaging/stored_message.html'
         )
 
 class ThreadsList(InboxView):

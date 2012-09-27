@@ -1,5 +1,5 @@
 {%- macro message(post, visitor) -%}
-<div class="message">
+<div class="message" data-message-id="{{ post.id }}">
     <p class="header">
         {% if post.sender == visitor %}
             {% trans date=post.sent_at %}You wrote on {{ date }}:{% endtrans %}
