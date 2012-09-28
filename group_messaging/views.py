@@ -18,6 +18,7 @@ from django.http import HttpResponseNotAllowed
 from django.http import HttpResponseForbidden
 from django.utils import simplejson
 from group_messaging.models import Message
+from group_messaging.models import MessageMemo
 from group_messaging.models import SenderList
 from group_messaging.models import LastVisitTime
 from group_messaging.models import get_personal_group_by_user_id
@@ -139,6 +140,7 @@ class PostReply(InboxView):
             template_name='group_messaging/stored_message.html'
         )
 
+
 class ThreadsList(InboxView):
     """shows list of threads for a given user"""  
     template_name = 'group_messaging/threads_list.html'
@@ -147,11 +149,13 @@ class ThreadsList(InboxView):
     def get_context(self, request):
         """returns thread list data"""
         #get threads and the last visit time
-        threads = Message.objects.get_threads_for_user(request.user)
-
-        sender_id = IntegerField().clean(request.GET.get('sender_id', '-1'))
-        if sender_id != -1:
-            threads = threads.filter(sender__id=sender_id)
+        sender_id = IntegerField().clean(request.REQUEST.get('sender_id', '-1'))
+        if sender_id == -2:
+            threads = Message.objects.get_threads_for_user(request.user, deleted=True)
+        else:
+            threads = Message.objects.get_threads_for_user(request.user)
+            if sender_id != -1:
+                threads = threads.filter(sender__id=sender_id)
 
         #for each thread we need to know if there is something
         #unread for the user - to mark "new" threads as bold
@@ -179,7 +183,48 @@ class ThreadsList(InboxView):
 
         #after we have all the data - update the last visit time
         last_visit_times.update(at=datetime.datetime.now())
-        return {'threads': threads, 'threads_data': threads_data}
+        return {
+            'threads': threads,
+            'threads_data': threads_data,
+            'sender_id': sender_id
+        }
+
+
+class DeleteOrRestoreThread(ThreadsList):
+    """subclassing :class:`ThreadsList`, because deletion
+    or restoring of thread needs subsequent refreshing
+    of the threads list"""
+
+    http_method_list = ('POST',)
+
+    def post(self, request, thread_id=None):
+        """process the post request:
+        * delete or restore thread
+        * recalculate the threads list and return it for display
+          by reusing the threads list "get" function
+        """
+        #part of the threads list context
+        sender_id = IntegerField().clean(request.POST['sender_id'])
+
+        #a little cryptic, but works - sender_id==-2 means deleted post
+        if sender_id == -2:
+            action = 'restore'
+        else:
+            action = 'delete'
+
+        thread = Message.objects.get(id=thread_id)
+        memo, created = MessageMemo.objects.get_or_create(
+                                    user=request.user,
+                                    message=thread
+                                )
+        if action == 'delete':
+            memo.status = MessageMemo.ARCHIVED
+        else:
+            memo.status = MessageMemo.SEEN
+        memo.save()
+
+        context = self.get_context(request)
+        return self.render_to_response(context)
 
 
 class SendersList(InboxView):

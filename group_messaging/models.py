@@ -87,7 +87,7 @@ class MessageMemo(models.Model):
         (ARCHIVED, 'archived')
     )
     user = models.ForeignKey(User)
-    message = models.ForeignKey('Message')
+    message = models.ForeignKey('Message', related_name='memos')
     status = models.SmallIntegerField(
             choices=STATUS_CHOICES, default=SEEN
         )
@@ -99,13 +99,21 @@ class MessageMemo(models.Model):
 class MessageManager(models.Manager):
     """model manager for the :class:`Message`"""
 
-    def get_threads_for_user(self, user):
+    def get_threads_for_user(self, user, deleted=False):
         user_groups = user.groups.all()
-        return self.filter(
-            root=None,
-            message_type=Message.STORED,
-            recipients__in=user_groups
-        )
+        user_thread_filter = models.Q(
+                root=None,
+                message_type=Message.STORED,
+                recipients__in=user_groups
+            )
+        deleted_filter = models.Q(
+                memos__status=MessageMemo.ARCHIVED,
+                memos__user=user
+            )
+        if deleted:
+            return self.filter(user_thread_filter & deleted_filter)
+        else:
+            return self.filter(user_thread_filter & ~deleted_filter)
 
     def create(self, **kwargs):
         """creates a message"""

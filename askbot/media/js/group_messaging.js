@@ -331,6 +331,14 @@ var ThreadHeading = function() {
 };
 inherits(ThreadHeading, SimpleControl);
 
+ThreadHeading.prototype.setParent = function(elem) {
+    this._threadsList = elem;
+};
+
+ThreadHeading.prototype.getParent = function() {
+    return this._threadsList;
+};
+
 ThreadHeading.prototype.getId = function() {
     return this._id;
 };
@@ -338,6 +346,12 @@ ThreadHeading.prototype.getId = function() {
 ThreadHeading.prototype.decorate = function(element) {
     this._element = element;
     this._id = element.data('threadId');
+    var deleter = element.find('.delete-or-restore');
+    var me = this;
+    setupButtonEventHandlers($(deleter), function() {
+        me.getParent().deleteOrRestoreThread(me.getId());
+        return false;
+    });
 };
 
 /**
@@ -359,12 +373,9 @@ ThreadsList.prototype.getOpenThreadHandler = function(threadId) {
     };
 };
 
-ThreadsList.prototype.setHTML = function(html) {
-    $.each(this._threads, function(idx, thread) {
-        thread.dispose();
-    });
-    this._element.html(html);
-    this.decorate(this._element);
+ThreadsList.prototype.deleteOrRestoreThread = function(threadId) {
+    var ctr = this._messageCenter;
+    ctr.deleteOrRestoreThread(threadId, this._senderId);
 };
 
 ThreadsList.prototype.decorate = function(element) {
@@ -374,12 +385,14 @@ ThreadsList.prototype.decorate = function(element) {
     var threads = [];
     $.each(headingElements, function(idx, headingElement) {
         var heading = new ThreadHeading();
+        heading.setParent(me);
         heading.decorate($(headingElement));
         var threadId = heading.getId();
         heading.setHandler(me.getOpenThreadHandler(threadId));
         threads.push(heading);
     });
     this._threads = threads;
+    this._senderId = element.data('senderId');
 }
 
 
@@ -604,23 +617,41 @@ MessageCenter.prototype.openThread = function(threadId) {
     });
 };
 
-MessageCenter.prototype.loadThreadsForSender = function(senderId) {
+MessageCenter.prototype.setThreadsList = function(list) {
+    this._threadsList = list;
+    this._secondCol.prepend(list.getElement());
+};
+
+MessageCenter.prototype.hitThreadsList = function(url, senderId, requestMethod) {
     var threadsList = this._threadsList;
-    var url = this._urls['getThreads'];
-    me = this;
+    var me = this;
     $.ajax({
-        type: 'GET',
+        type: requestMethod,
         dataType: 'json',
         url: url,
         cache: false,
         data: {sender_id: senderId},
         success: function(data) {
             if (data['success']) {
-                threadsList.setHTML(data['html']);
+                threadsList.dispose();
+                var threads = new ThreadsList();
+                threads.setMessageCenter(me);
+                threads.decorate($(data['html']));
+                me.setThreadsList(threads);
                 me.setState('show-list');
             }
         }
     });
+};
+
+MessageCenter.prototype.deleteOrRestoreThread = function(threadId, senderId) {
+    var url = this._urls['getThreads'] + threadId + '/delete-or-restore/';
+    this.hitThreadsList(url, senderId, 'POST');
+};
+
+MessageCenter.prototype.loadThreadsForSender = function(senderId) {
+    var url = this._urls['getThreads'];
+    this.hitThreadsList(url, senderId, 'GET');
 };
 
 MessageCenter.prototype.decorate = function(element) {
