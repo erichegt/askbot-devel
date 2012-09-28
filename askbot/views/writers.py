@@ -212,9 +212,6 @@ def ask(request):#view used to ask a new question
     must login/register in order for the question go be shown
     """
     form = forms.AskForm(request.REQUEST)
-    print '====================================='
-    print request.REQUEST.get('text', '')
-    print '====================================='
     if request.method == 'POST':
         if form.is_valid():
             timestamp = datetime.datetime.now()
