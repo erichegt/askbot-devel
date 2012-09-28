@@ -17,6 +17,7 @@ from askbot import const
 from askbot.conf import settings as askbot_settings
 from askbot.utils import url_utils
 from askbot.utils.file_utils import store_file
+from askbot.utils.html import absolutize_urls
 
 from bs4 import BeautifulSoup
 #todo: maybe send_mail functions belong to models
@@ -116,6 +117,7 @@ def send_mail(
 
     if raise_on_failure is True, exceptions.EmailNotSent is raised
     """
+    body_text = absolutize_urls(body_text)
     try:
         assert(subject_line is not None)
         subject_line = prefix_the_subject_line(subject_line)
@@ -143,6 +145,7 @@ def mail_moderators(
         ):
     """sends email to forum moderators and admins
     """
+    body_text = absolutize_urls(body_text)
     from django.db.models import Q
     from askbot.models import User
     recipient_list = User.objects.filter(

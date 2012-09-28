@@ -1,6 +1,7 @@
+import bs4
+import copy
 import datetime
 import functools
-import copy
 import time
 from django.conf import settings as django_settings
 from django.core import management
@@ -1033,6 +1034,38 @@ class PostApprovalTests(utils.AskbotTestCase):
         #moderation notification
         self.assertEquals(outbox[0].recipients(), [u1.email,])
         #self.assertEquals(outbox[1].recipients(), [u1.email,])#approval
+
+
+class AbsolutizeUrlsInEmailsTests(utils.AskbotTestCase):
+    @with_settings(MIN_REP_TO_TRIGGER_EMAIL=1, APP_URL='http://example.com/')
+    def test_urls_are_absolute(self):
+        u1 = self.create_user('u1')
+        max_email = models.EmailFeedSetting.MAX_EMAIL_SCHEDULE
+        u2 = self.create_user('u2', notification_schedule=max_email)
+        text = '<a href="/index.html">home</a>' + \
+        '<img alt="an image" src=\'/img.png\'><a href="https://example.com"><img src="/img.png"/></a>'
+        question = self.post_question(user=u1, body_text=text)
+        outbox = django.core.mail.outbox
+        html_message = outbox[0].alternatives[0][0]
+        content_type = outbox[0].alternatives[0][1]
+        self.assertEqual(content_type, 'text/html')
+
+        soup = bs4.BeautifulSoup(html_message)
+        links = soup.find_all('a')
+        url_bits = {}
+        for link in links:
+            url_bits[link.attrs['href'][:4]] = 1
+
+        self.assertEqual(len(url_bits.keys()), 1)
+        self.assertEqual(url_bits.keys()[0], 'http')
+
+        images = soup.find_all('img')
+        url_bits = {}
+        for img in images:
+            url_bits[img.attrs['src'][:4]] = 1
+
+        self.assertEqual(len(url_bits.keys()), 1)
+        self.assertEqual(url_bits.keys()[0], 'http')
 
 
 class MailMessagesTests(utils.AskbotTestCase):
