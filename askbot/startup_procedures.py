@@ -607,7 +607,8 @@ def test_tinymce():
         #        'django.views.static.serve',
         #        {'document_root': static_root}
         #    ),
-        #3) disable `compressor_on` check above
+        #3) set `TINYMCE_COMPRESSOR = False`
+        #4) set DEBUG = False
         #then - tinymce compressing will be disabled and it will
         #be possible to debug custom tinymce plugins that are used with askbot
 
@@ -685,7 +686,7 @@ def run_startup_tests():
     test_middleware()
     test_celery()
     #test_csrf_cookie_domain()
-    test_tinymce()
+    #test_tinymce()
     test_staticfiles()
     test_new_skins()
     test_longerusername()
