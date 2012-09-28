@@ -11,6 +11,8 @@ from askbot import mail
 from askbot.conf import settings as askbot_settings
 from askbot.skins.loaders import get_template
 
+import logging
+
 
 #we might end up needing to use something like this
 #to distinguish the reply text from the quoted original message
@@ -66,7 +68,7 @@ def is_inline_attachment(part):
 
 def format_attachment(part):
     """takes message part and turns it into SimpleUploadedFile object"""
-    att_info = get_attachment_info(part) 
+    att_info = get_attachment_info(part)
     name = att_info.get('filename', None)
     content_type = get_content_type(part)
     return SimpleUploadedFile(name, part.body, content_type)
@@ -127,10 +129,13 @@ def process_reply(func):
         """processes forwarding rules, and run the handler
         in the case of error, send a bounce email
         """
+
+        logging.info("logged-message: %s", message.split('\n')[:5])
+
         try:
             for rule in django_settings.LAMSON_FORWARD:
                 if re.match(rule['pattern'], message.base['to']):
-                    relay = Relay(host=rule['host'], 
+                    relay = Relay(host=rule['host'],
                                port=rule['port'], debug=1)
                     relay.deliver(message)
                     return
@@ -138,6 +143,7 @@ def process_reply(func):
             pass
 
         error = None
+
         try:
             reply_address = ReplyAddress.objects.get(
                                             address = address,
@@ -169,7 +175,7 @@ def process_reply(func):
                 subject_line = "Error posting your reply",
                 body_text = body_text,
                 recipient_list = [message.From],
-            )        
+            )
 
     return wrapped
 
@@ -265,7 +271,7 @@ def PROCESS(
     """handler to process the emailed message
     and make a post to askbot based on the contents of
     the email, including the text body and the file attachments"""
-    #1) get actual email content 
+    #1) get actual email content
     #   todo: factor this out into the process_reply decorator
     reply_code = reply_address_object.address
     body_text, stored_files, signature = mail.process_parts(parts, reply_code)
