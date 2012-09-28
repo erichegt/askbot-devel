@@ -11,9 +11,6 @@ from askbot import mail
 from askbot.conf import settings as askbot_settings
 from askbot.skins.loaders import get_template
 
-import logging
-
-
 #we might end up needing to use something like this
 #to distinguish the reply text from the quoted original message
 """
@@ -130,8 +127,6 @@ def process_reply(func):
         in the case of error, send a bounce email
         """
 
-        logging.info("logged-message: %s", message.split('\n')[:5])
-
         try:
             for rule in django_settings.LAMSON_FORWARD:
                 if re.match(rule['pattern'], message.base['to']):
@@ -151,10 +146,17 @@ def process_reply(func):
                                         )
 
             #here is the business part of this function
+            parts = get_parts(message),
+            for part_type, content in parts:
+                if part_type == 'body':
+                    print 'message :', content.split('\n')[:10]
+                    break
+                else:
+                    continue
             func(
                 from_address = message.From,
                 subject_line = message['Subject'],
-                parts = get_parts(message),
+                parts = parts,
                 reply_address_object = reply_address
             )
 
