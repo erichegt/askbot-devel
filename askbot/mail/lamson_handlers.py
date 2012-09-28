@@ -146,9 +146,10 @@ def process_reply(func):
                                         )
 
             #here is the business part of this function
-            parts = get_parts(message),
+            parts = get_parts(message)
             for part_type, content in parts:
                 if part_type == 'body':
+                    print '==============================='
                     print 'message :', content.split('\n')[:10]
                     break
                 else:
