@@ -14,7 +14,7 @@
         if (description) {
             content = content + '" title="' + description;
         }
-        content = content + '"/>';
+        content = content + '">file attached</a>';
 
         tinyMCE.activeEditor.focus();
         if (document.selection) {
