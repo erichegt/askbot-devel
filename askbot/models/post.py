@@ -655,8 +655,11 @@ class Post(models.Model):
                         [u for u in notify_sets['for_email'] if u.is_administrator()]
 
         if not settings.CELERY_ALWAYS_EAGER:
-            cache_key = 'instant-notification-%d' % self.thread.id
+            cache_key = 'instant-notification-%d-%d' % (self.thread.id, updated_by.id)
+            if cache.cache.get(cache_key):
+                return
             cache.cache.set(cache_key, True, settings.NOTIFICATION_DELAY_TIME)
+
         from askbot.models import send_instant_notifications_about_activity_in_post
         send_instant_notifications_about_activity_in_post.apply_async((
                                 update_activity,

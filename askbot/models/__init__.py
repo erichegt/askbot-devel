@@ -3039,15 +3039,8 @@ def send_instant_notifications_about_activity_in_post(
                                                 post = None,
                                                 recipients = None,
                                             ):
-    if not django_settings.CELERY_ALWAYS_EAGER:
-        cache_key = 'instant-notification-%d' % post.thread.id
-        old_task_id = cache.cache.get(cache_key)
-        if old_task_id:
-            if not send_instant_notifications_about_activity_in_post.ignore_result:
-                send_instant_notifications_about_activity_in_post.update_state(state=states.REVOKED)
-                return
-
-
+    #reload object from the database
+    post = Post.objects.get(id=post.id)
     if post.is_approved() is False:
         return
 
