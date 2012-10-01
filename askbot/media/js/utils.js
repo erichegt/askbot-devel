@@ -2309,14 +2309,10 @@ AutoCompleter.prototype.activateNow = function() {
 };
 
 AutoCompleter.prototype.fetchData = function(value) {
-    if (this.options.data) {
-        this.filterAndShowResults(this.options.data, value);
-    } else {
-        var self = this;
-        this.fetchRemoteData(value, function(remoteData) {
-            self.filterAndShowResults(remoteData, value);
-        });
-    }
+    var self = this;
+    this.fetchRemoteData(value, function(remoteData) {
+        self.filterAndShowResults(remoteData, value);
+    });
 };
 
 AutoCompleter.prototype.fetchRemoteData = function(filter, callback) {
