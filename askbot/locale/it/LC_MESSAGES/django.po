@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: 0.7\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-04-18 18:51-0500\n"
-"PO-Revision-Date: 2012-09-24 10:37\n"
+"PO-Revision-Date: 2012-10-02 07:53\n"
 "Last-Translator:   <stefano.mancini@devinterface.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -58,21 +58,23 @@ msgid "please enter a descriptive title for your question"
 msgstr "per favore inserisci un titolo descrittivo per la tua domanda"
 
 #: forms.py:113
-#, fuzzy, python-format
+#, python-format
 msgid "title must be > %d character"
 msgid_plural "title must be > %d characters"
-msgstr[0] "il titolo deve essere più lungo di 10 caratteri"
-msgstr[1] "il titolo deve essere più lungo di 10 caratteri"
+msgstr[0] "il titolo deve essere più lungo di %d caratteri"
+msgstr[1] "il titolo deve essere più lungo di %d caratteri"
 
 #: forms.py:123
 #, python-format
 msgid "The title is too long, maximum allowed size is %d characters"
 msgstr ""
+"Il titolo è troppo lungo, la massima lunghezza consentita è di %d caratteri "
 
 #: forms.py:130
 #, python-format
 msgid "The title is too long, maximum allowed size is %d bytes"
 msgstr ""
+"Il titolo è troppo lungo, la massima lunghezza consentita è di %d byte "
 
 #: forms.py:149
 msgid "content"
@@ -84,7 +86,7 @@ msgid "tags"
 msgstr "tag"
 
 #: forms.py:188
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Tags are short keywords, with no spaces within. Up to %(max_tags)d tag can "
 "be used."
@@ -93,10 +95,10 @@ msgid_plural ""
 "be used."
 msgstr[0] ""
 "I tag sono brevi parole chiave, senza spaziature tra una e l'altra. Possono "
-"essere inseriti fino a 5 tags."
+"essere inseriti fino a %(max_tags)d tags."
 msgstr[1] ""
 "I tag sono brevi parole chiave, senza spaziature tra una e l'altra. Possono "
-"essere inseriti fino a 5 tags."
+"essere inseriti fino a %(max_tags)d tags."
 
 #: forms.py:222 skins/default/templates/question_retag.html:58
 msgid "tags are required"
@@ -123,7 +125,7 @@ msgstr[1] "ogni tag deve essere più corto di %(max_chars)d caratteri"
 
 #: forms.py:258
 msgid "In tags, please use letters, numbers and characters \"-+.#\""
-msgstr ""
+msgstr "Nei tag devi usare letter numeri ed i caratteri \"-+.#\""
 
 #: forms.py:294
 msgid "community wiki (karma is not awarded & many others can edit wiki post)"
@@ -221,12 +223,10 @@ msgid "Message text"
 msgstr "Messaggio"
 
 #: forms.py:530
-#, fuzzy
 msgid "Your name (optional):"
-msgstr "Il tuo nome:"
+msgstr "Il tuo nome (opzionale):"
 
 #: forms.py:531
-#, fuzzy
 msgid "Email:"
 msgstr "e-mail:"
 
@@ -240,7 +240,7 @@ msgstr "Non aggiungo la mia mail o ricevo una risposta"
 
 #: forms.py:560
 msgid "Please mark \"I dont want to give my mail\" field."
-msgstr ""
+msgstr "Sei pregato di selezionare il campo \"Non voglio fornire la mia email\""
 
 #: forms.py:599
 msgid "ask anonymously"
@@ -254,7 +254,7 @@ msgstr "Controlla se non vuoi rivelare il tuo nome quando fai questa domanda"
 msgid ""
 "Subject line is expected in the format: [tag1, tag2, tag3,...] question "
 "title"
-msgstr ""
+msgstr "Il soggeto è atteso nel formato: [tag1, tag2, tag3,...]"
 
 #: forms.py:769
 msgid ""
@@ -356,19 +356,21 @@ msgid "okay, let's try!"
 msgstr "okay, proviamo!"
 
 #: forms.py:1118
-#, fuzzy, python-format
+#, python-format
 msgid "no %(sitename)s email please, thanks"
-msgstr "no askbot email please, thanks"
+msgstr "no %(sitename)s email please, thanks"
 
 #: lamson_handlers.py:126 tests/reply_by_email_tests.py:49
 msgid "======= Reply above this line. ====-=-="
-msgstr ""
+msgstr "======= Rispondi sopra questa linea. ====-=-="
 
 #: lamson_handlers.py:130
 msgid ""
 "Your message was malformed. Please make sure to qoute                 the "
 "original notification you received at the end of your reply."
 msgstr ""
+"La tua domanda è mal formata. Assicurati di citare la notifica originale che"
+" hai ricevuto alla fine della tua risposta."
 
 #: lamson_handlers.py:147
 msgid ""
@@ -376,6 +378,9 @@ msgid ""
 "were replying from a different address from the one where you         "
 "received the notification."
 msgstr ""
+"Stai rispondendo ad un indirizzo email sconosciuto al sistema o stai "
+"rispondendo da un indirizzo email differente da quello indicato nella "
+"notifica."
 
 #: urls.py:41
 msgid "about/"
@@ -391,7 +396,7 @@ msgstr "privacy/"
 
 #: urls.py:44
 msgid "help/"
-msgstr ""
+msgstr "aiuto/"
 
 #: urls.py:46 urls.py:51
 msgid "answers/"
@@ -440,7 +445,7 @@ msgstr "vota/"
 
 #: urls.py:123
 msgid "widgets/"
-msgstr ""
+msgstr "widgets/"
 
 #: urls.py:158
 msgid "tags/"
@@ -498,7 +503,7 @@ msgstr "Impostazioni base"
 
 #: conf/access_control.py:17
 msgid "Allow only registered user to access the forum"
-msgstr ""
+msgstr "Solo gli utenti registrati possono accedere al forum"
 
 #: conf/badges.py:13
 msgid "Badge settings"
@@ -2312,7 +2317,7 @@ msgstr "lista"
 
 #: const/__init__.py:71
 msgid "cloud"
-msgstr ""
+msgstr "cloud"
 
 #: const/__init__.py:79
 msgid "Question has no answers"
@@ -2435,7 +2440,7 @@ msgstr "ritaggata"
 
 #: const/__init__.py:220
 msgid "off"
-msgstr ""
+msgstr "off"
 
 #: const/__init__.py:221
 msgid "exclude ignored"
@@ -2463,7 +2468,7 @@ msgstr "mai"
 
 #: const/__init__.py:236
 msgid "identicon"
-msgstr ""
+msgstr "identicon"
 
 #: const/__init__.py:237
 msgid "mystery-man"
@@ -2471,7 +2476,7 @@ msgstr "mystery-man"
 
 #: const/__init__.py:238
 msgid "monsterid"
-msgstr ""
+msgstr "monsterid"
 
 #: const/__init__.py:239
 msgid "wavatar"
@@ -2479,7 +2484,7 @@ msgstr "wavatar"
 
 #: const/__init__.py:240
 msgid "retro"
-msgstr ""
+msgstr "retro"
 
 #: const/__init__.py:287 skins/default/templates/badges.html:38
 msgid "gold"
@@ -2495,15 +2500,15 @@ msgstr "bronzo"
 
 #: const/__init__.py:301
 msgid "None"
-msgstr ""
+msgstr "Nessuno"
 
 #: const/__init__.py:302
 msgid "Gravatar"
-msgstr ""
+msgstr "Gravatar"
 
 #: const/__init__.py:303
 msgid "Uploaded Avatar"
-msgstr ""
+msgstr "Avatar caricato"
 
 #: const/message_keys.py:21
 msgid "most relevant questions"
@@ -2571,6 +2576,9 @@ msgid ""
 "until this issue is resolved. Please contact the forum administrator to "
 "reach a resolution."
 msgstr ""
+"Siamo spiacenti ma il tua account sembra essere bloccato e non puoi creare "
+"nuovi post fintanto che il problema non è stato risolto. Sei pregato di "
+"contattare l'amministratore del forum per trovare una soluzione. "
 
 #: const/message_keys.py:45 models/__init__.py:788
 msgid ""
@@ -2578,12 +2586,18 @@ msgid ""
 "until this issue is resolved. You can, however edit your existing posts. "
 "Please contact the forum administrator to reach a resolution."
 msgstr ""
+"Siamo spiacenti ma il tua account sembra essere stato sospeso e non puoi "
+"creare nuovi post fintanto che il problema non è stato risolto. Puoi "
+"comunque modificare i tuoi post esistenti. Sei pregato di contattare "
+"l'amministratore per trovare una soluzione."
 
 #: deps/django_authopenid/backends.py:166
 msgid ""
 "Welcome! Please set email address (important!) in your profile and adjust "
 "screen name, if necessary."
 msgstr ""
+"Benvenuto! Se pregato di impostare un indirizzo email (importante!) nel tuo "
+"profilo e si impostare se necessario il tuo nome che apparirà a video."
 
 #: deps/django_authopenid/forms.py:110 deps/django_authopenid/views.py:142
 msgid "i-names are not supported"
@@ -2613,7 +2627,7 @@ msgstr "Le password non corrispondono"
 #: deps/django_authopenid/forms.py:297
 #, python-format
 msgid "Please choose password > %(len)s characters"
-msgstr ""
+msgstr "Prego scegliere una password > %(len)s caratteri"
 
 #: deps/django_authopenid/forms.py:335
 msgid "Current password"
@@ -2629,7 +2643,7 @@ msgstr ""
 
 #: deps/django_authopenid/forms.py:399
 msgid "Sorry, we don't have this email address in the database"
-msgstr ""
+msgstr "Siamo spiacenti ma non abbiamo questa mail nel database"
 
 #: deps/django_authopenid/forms.py:435
 msgid "Your user name (<i>required</i>)"
@@ -2681,7 +2695,7 @@ msgstr "Per favore inserisci username e password di %(site)s"
 #: deps/django_authopenid/util.py:384
 #: skins/common/templates/authopenid/signin.html:115
 msgid "Create a password-protected account"
-msgstr ""
+msgstr "Crea un account protetto da password"
 
 #: deps/django_authopenid/util.py:385
 msgid "Change your password"
@@ -2689,7 +2703,7 @@ msgstr "Cambia password"
 
 #: deps/django_authopenid/util.py:473
 msgid "Sign in with Yahoo"
-msgstr ""
+msgstr "Accedi con Yahoo"
 
 #: deps/django_authopenid/util.py:480
 msgid "AOL screen name"
@@ -2709,15 +2723,15 @@ msgstr "nome utente di Technorati"
 
 #: deps/django_authopenid/util.py:533
 msgid "WordPress blog name"
-msgstr ""
+msgstr "Nome blog WordPress"
 
 #: deps/django_authopenid/util.py:541
 msgid "Blogger blog name"
-msgstr ""
+msgstr "Nome blog di Blogger"
 
 #: deps/django_authopenid/util.py:549
 msgid "LiveJournal blog name"
-msgstr ""
+msgstr "Nome blog di LiveJournal"
 
 #: deps/django_authopenid/util.py:557
 msgid "ClaimID user name"
@@ -2740,11 +2754,13 @@ msgstr "Cambia password di %(provider)s"
 #, python-format
 msgid "Click to see if your %(provider)s signin still works for %(site_name)s"
 msgstr ""
+"Clicca per vedere se la tua autenticazione con %(provider)s funziona ancora "
+"per %(site_name)s"
 
 #: deps/django_authopenid/util.py:621
 #, python-format
 msgid "Create password for %(provider)s"
-msgstr ""
+msgstr "Crea una password per %(provider)s"
 
 #: deps/django_authopenid/util.py:625
 #, python-format
@@ -2759,7 +2775,7 @@ msgstr "Per favore inserisci username e password"
 #: deps/django_authopenid/util.py:641
 #, python-format
 msgid "Sign in with your %(provider)s account"
-msgstr ""
+msgstr "Accedi con il tuo account di %(provider)s"
 
 #: deps/django_authopenid/views.py:149
 #, python-format
@@ -2773,6 +2789,8 @@ msgid ""
 "Unfortunately, there was some problem when connecting to %(provider)s, "
 "please try again or use another provider"
 msgstr ""
+"Sfortunatamente, ci sono stati alcuni problemi nella connessione con "
+"%(provider)s; sei pregato di riprovare o di usare un altro provider"
 
 #: deps/django_authopenid/views.py:358
 msgid "Your new password saved"
