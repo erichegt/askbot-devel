@@ -133,7 +133,8 @@ class ThreadManager(BaseQuerySetManager):
             question.wikified_at = added_at
 
         #this is kind of bad, but we save assign privacy groups to posts and thread
-        question.parse_and_save(author = author, is_private = is_private)
+        #this call is rather heavy, we should split into several functions
+        parse_results = question.parse_and_save(author=author, is_private=is_private)
 
         revision = question.add_revision(
             author=author,
@@ -155,7 +156,19 @@ class ThreadManager(BaseQuerySetManager):
             thread.make_public()
 
         # INFO: Question has to be saved before update_tags() is called
-        thread.update_tags(tagnames = tagnames, user = author, timestamp = added_at)
+        thread.update_tags(tagnames=tagnames, user=author, timestamp=added_at)
+
+        #todo: this is handled in signal because models for posts
+        #are too spread out
+        signals.post_updated.send(
+            post=question,
+            updated_by=author,
+            newly_mentioned_users=parse_results['newly_mentioned_users'],
+            timestamp=added_at,
+            created=True,
+            diff=parse_results['diff'],
+            sender=question.__class__
+        )
 
         return thread
 
@@ -246,16 +259,19 @@ class ThreadManager(BaseQuerySetManager):
             if askbot_settings.TAG_SEARCH_INPUT_ENABLED:
                 #todo: this may be gone or disabled per option
                 #"tag_search_box_enabled"
-                existing_tags = set(
-                    Tag.objects.filter(
-                        name__in = tags
-                    ).values_list(
-                        'name',
-                        flat = True
-                    )
-                )
-
-                non_existing_tags = set(tags) - existing_tags
+                existing_tags = set()
+                non_existing_tags = set()
+                #we're using a one-by-one tag retreival, b/c
+                #we want to take advantage of case-insensitive search indexes
+                #in postgresql, plus it is most likely that there will be
+                #only one or two search tags anyway
+                for tag in tags:
+                    try:
+                        tag_record = Tag.objects.get(name__iexact=tag)
+                        existing_tags.add(tag_record.name)
+                    except Tag.DoesNotExist:
+                        non_existing_tags.add(tag)
+                        
                 meta_data['non_existing_tags'] = list(non_existing_tags)
                 tags = existing_tags
             else:

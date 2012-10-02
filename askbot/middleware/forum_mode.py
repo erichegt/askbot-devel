@@ -45,6 +45,10 @@ class ForumModeMiddleware(object):
                 and request.user.is_anonymous()):
             resolver_match = ResolverMatch(resolve(request.path))
 
+            internal_ips = getattr(settings, 'ASKBOT_INTERNAL_IPS', None)
+            if internal_ips and request.META['REMOTE_ADDR'] in internal_ips:
+                return None
+
             if is_view_allowed(resolver_match.func):
                 return
             

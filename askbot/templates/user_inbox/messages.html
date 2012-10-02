@@ -6,19 +6,48 @@
         .group-messaging {
             padding-top: 25px;
         }
-        .group-messaging ul {
+        ul.senders-list {
             padding: 0px;
+            margin-left: 1em;
+            margin-top: 0.5em;
         }
-        .group-messaging li {
+        .senders-list li {
+            height: 1.5em;
+            vertical-align: center;
             list-style-type: none;
             list-style-position: outside;
         }
-        li.empty {
+        .senders-list .selected {
+            font-weight: bold;
+        }
+        table.threads-list {
+            width: 100%;
+        }
+        .threads-list tr {
+            height: 2em;
+        }
+        .threads-list td {
+            vertical-align: center;
+        }
+        .threads-list tr.new {
+            font-weight: bold;
+            color: #777;
+        }
+        .threads-list tr:hover {
+            background-color: #eff5f6;
+        }
+        td.empty {
             line-height: 30px;
             vertical-align: middle;
             background: #eee;
             padding-left: 320px;
             margin: 0px;
+        }
+        td.senders {
+            padding-left: 10px;
+        }
+        td.timestamp {
+            width: 180px;
         }
         button.compose {
             width: 150px;
@@ -31,11 +60,15 @@
             width: 150px;
         }
         .second-col {
-            width: 810px;
+            width: 790px;
+            margin-left: 20px;
         }
         .message-composer {
-            padding: 0 0 10px 25px;
+            padding-bottom: 10px;
             margin-top: -25px;
+        }
+        .reply-composer .message-composer {
+            margin-top: 0;
         }
         .message-composer input.recipients,
         .message-composer textarea {

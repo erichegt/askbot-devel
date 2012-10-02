@@ -29,17 +29,40 @@ var animateHashes = function(){
     }
 };
 
-var getUniqueWords = function(value){
-    var words = $.trim(value).split(/\s+/);
+var getUniqueValues = function(values) {
     var uniques = new Object();
     var out = new Array();
-    $.each(words, function(idx, item){
-        if (!(item in uniques)){
-            uniques[item] = 1;
-            out.push(item);
+    $.each(values, function(idx, value){
+        if (!(value in uniques)){
+            uniques[value] = 1;
+            out.push(value);
         };
     });
     return out;
+}
+
+var getUniqueWords = function(value){
+    var words = $.trim(value).split(/\s+/);
+    return getUniqueValues(words);
+};
+
+/**
+ * comma-joins items and uses "and'
+ * between the last and penultimate items
+ * @param {Array<string>} values
+ * @return {string}
+ */
+var joinAsPhrase = function(values) {
+    var count = values.length;
+    if (count === 0) {
+        return '';
+    } else if (count === 1) {
+        return values[0];
+    } else {
+        var last = values.pop();
+        var prev = values.pop();
+        return values.join(', ') + prev + gettext('and') + last;
+    }
 };
 
 var showMessage = function(element, msg, where) {
@@ -2286,14 +2309,10 @@ AutoCompleter.prototype.activateNow = function() {
 };
 
 AutoCompleter.prototype.fetchData = function(value) {
-    if (this.options.data) {
-        this.filterAndShowResults(this.options.data, value);
-    } else {
-        var self = this;
-        this.fetchRemoteData(value, function(remoteData) {
-            self.filterAndShowResults(remoteData, value);
-        });
-    }
+    var self = this;
+    this.fetchRemoteData(value, function(remoteData) {
+        self.filterAndShowResults(remoteData, value);
+    });
 };
 
 AutoCompleter.prototype.fetchRemoteData = function(filter, callback) {

@@ -15,6 +15,8 @@ import hashlib
 import logging
 import urllib
 import uuid
+from celery import states
+from celery.task import task
 from django.core.urlresolvers import reverse, NoReverseMatch
 from django.db.models import signals as django_signals
 from django.template import Context
@@ -1754,7 +1756,7 @@ def user_create_post_reject_reason(
         added_at = timestamp,
         text = details
     )
-    details.parse_and_save(author = self)
+    details.parse_and_save(author=self)
     details.add_revision(
         author = self,
         revised_at = timestamp,
@@ -3031,16 +3033,14 @@ def get_reply_to_addresses(user, post):
     return primary_addr, secondary_addr
 
 #todo: action
+@task()
 def send_instant_notifications_about_activity_in_post(
                                                 update_activity = None,
                                                 post = None,
                                                 recipients = None,
                                             ):
-    """
-    function called when posts are updated
-    newly mentioned users are carried through to reduce
-    database hits
-    """
+    #reload object from the database
+    post = Post.objects.get(id=post.id)
     if post.is_approved() is False:
         return
 
@@ -3071,9 +3071,8 @@ def send_instant_notifications_about_activity_in_post(
     else:
         log_id = None
 
-    #send email for all recipients
-    for user in recipients:
 
+    for user in recipients:
         if user.is_blocked():
             continue
 

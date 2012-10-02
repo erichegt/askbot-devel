@@ -9,6 +9,7 @@ from django.utils import simplejson
 
 import coffin
 import coffin.template
+from bs4 import BeautifulSoup
 
 from askbot import models
 from askbot.utils.slug import slugify
@@ -151,14 +152,14 @@ class PageLoadTestCase(AskbotTestCase):
     def test_ask_page_allowed_anonymous(self):
         self.proto_test_ask_page(True, 200)
 
-    @with_settings({'GROUPS_ENABLED': False})
+    @with_settings(GROUPS_ENABLED=False)
     def test_api_get_questions_groups_disabled(self):
         data = {'query': 'Question'}
         response = self.client.get(reverse('api_get_questions'), data)
         data = simplejson.loads(response.content)
         self.assertTrue(len(data) > 1)
 
-    @with_settings({'GROUPS_ENABLED': True})
+    @with_settings(GROUPS_ENABLED=True)
     def test_api_get_questions_groups_enabled(self):
 
         group = models.Group(name='secret group', openness=models.Group.OPEN)
@@ -442,7 +443,7 @@ class PageLoadTestCase(AskbotTestCase):
     @skipIf('askbot.middleware.forum_mode.ForumModeMiddleware' \
         not in settings.MIDDLEWARE_CLASSES,
         'no ForumModeMiddleware set')
-    @with_settings({'ASKBOT_CLOSED_FORUM_MODE': True})
+    @with_settings(ASKBOT_CLOSED_FORUM_MODE=True)
     def test_non_user_urls_in_closed_forum_mode(self):
         self.proto_test_non_user_urls(status_code=302)
 
@@ -513,7 +514,7 @@ class PageLoadTestCase(AskbotTestCase):
     @skipIf('askbot.middleware.forum_mode.ForumModeMiddleware' \
         not in settings.MIDDLEWARE_CLASSES,
         'no ForumModeMiddleware set')
-    @with_settings({'ASKBOT_CLOSED_FORUM_MODE': True})
+    @with_settings(ASKBOT_CLOSED_FORUM_MODE=True)
     def test_user_urls_in_closed_forum_mode(self):
         self.proto_test_user_urls(status_code=302)
 
@@ -549,11 +550,11 @@ class PageLoadTestCase(AskbotTestCase):
             template='user_inbox/responses_and_flags.html',
         )
 
-    @with_settings({'GROUPS_ENABLED': True})
+    @with_settings(GROUPS_ENABLED=True)
     def test_user_page_with_groups_enabled(self):
         self.try_url('users', status_code=302)
 
-    @with_settings({'GROUPS_ENABLED': False})
+    @with_settings(GROUPS_ENABLED=False)
     def test_user_page_with_groups_disabled(self):
         self.try_url('users', status_code=200)
 
@@ -566,6 +567,17 @@ class AvatarTests(AskbotTestCase):
                                 'avatar_render_primary',
                                 kwargs = {'user': 'john doe', 'size': 48}
                             )
+
+
+class QuestionViewTests(AskbotTestCase):
+    def test_meta_description_has_question_summary(self):
+        user = self.create_user('user')
+        text = 'this is a question'
+        question = self.post_question(user=user, body_text=text)
+        response = self.client.get(question.get_absolute_url())
+        soup = BeautifulSoup(response.content)
+        meta_descr = soup.find_all('meta', attrs={'name': 'description'})[0]
+        self.assertTrue(text in meta_descr.attrs['content'])
 
 
 class QuestionPageRedirectTests(AskbotTestCase):

@@ -227,6 +227,25 @@ def test_celery():
     """
     broker_backend = getattr(django_settings, 'BROKER_BACKEND', None)
     broker_transport = getattr(django_settings, 'BROKER_TRANSPORT', None)
+    delay_time = getattr(django_settings, 'NOTIFICATION_DELAY_TIME', None)
+    delay_setting_info = 'The delay is in seconds - used to throttle ' + \
+                    'instant notifications note that this delay will work only if ' + \
+                    'celery daemon is running Please search about ' + \
+                    '"celery daemon setup" for details'
+
+    if delay_time is None:
+        raise AskbotConfigError(
+            '\nPlease add to your settings.py\n' + \
+            'NOTIFICATION_DELAY_TIME = 60*15\n' + \
+            delay_setting_info
+        )
+    else:
+        if not isinstance(delay_time, int):
+            raise AskbotConfigError(
+                '\nNOTIFICATION_DELAY_TIME setting must have a numeric value\n' + \
+                delay_setting_info
+            )
+
 
     if broker_backend is None:
         if broker_transport is None:
@@ -579,6 +598,31 @@ def test_tinymce():
     compressor_on = getattr(django_settings, 'TINYMCE_COMPRESSOR', False)
     if compressor_on is False:
         errors.append('add line: TINYMCE_COMPRESSOR = True')
+        #todo: add pointer to instructions on how to debug tinymce:
+        #1) add ('tiny_mce', os.path.join(ASKBOT_ROOT, 'media/js/tinymce')),
+        #   to STATIFILES_DIRS
+        #2) add this to the main urlconf:
+        #    (
+        #        r'^m/(?P<path>.*)$',
+        #        'django.views.static.serve',
+        #        {'document_root': static_root}
+        #    ),
+        #3) set `TINYMCE_COMPRESSOR = False`
+        #4) set DEBUG = False
+        #then - tinymce compressing will be disabled and it will
+        #be possible to debug custom tinymce plugins that are used with askbot
+
+
+    config = getattr(django_settings, 'TINYMCE_DEFAULT_CONFIG', None)
+    if config:
+        if 'convert_urls' in config:
+            if config['convert_urls'] is not False:
+                message = "set 'convert_urls':False in TINYMCE_DEFAULT_CONFIG"
+                errors.append(message)
+        else:
+            message = "add to TINYMCE_DEFAULT_CONFIG\n'convert_urls': False,"
+            errors.append(message)
+
 
     #check js root setting - before version 0.7.44 we used to have
     #"common" skin and after we combined it into the default
@@ -642,7 +686,7 @@ def run_startup_tests():
     test_middleware()
     test_celery()
     #test_csrf_cookie_domain()
-    test_tinymce()
+    #test_tinymce()
     test_staticfiles()
     test_new_skins()
     test_longerusername()
