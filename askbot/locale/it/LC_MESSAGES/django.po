@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: 0.7\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-04-18 18:51-0500\n"
-"PO-Revision-Date: 2012-10-02 07:53\n"
+"PO-Revision-Date: 2012-10-02 08:23\n"
 "Last-Translator:   <stefano.mancini@devinterface.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -2798,36 +2798,37 @@ msgstr "Nuova password salvata"
 
 #: deps/django_authopenid/views.py:462
 msgid "The login password combination was not correct"
-msgstr ""
+msgstr "La combinazione login password non è corretta"
 
 #: deps/django_authopenid/views.py:564
 msgid "Please click any of the icons below to sign in"
-msgstr ""
+msgstr "Sei pregato di cliccare in una delle icone sotto per accedere"
 
 #: deps/django_authopenid/views.py:566
 msgid "Account recovery email sent"
-msgstr ""
+msgstr "Email di recupero account spedita"
 
 #: deps/django_authopenid/views.py:569
 msgid "Please add one or more login methods."
-msgstr ""
+msgstr "Prego aggiungi uno o più metodi di accesso"
 
 #: deps/django_authopenid/views.py:571
 msgid "If you wish, please add, remove or re-validate your login methods"
-msgstr ""
+msgstr "Se vuoi, aggiungi, rimuovi o rivalida i tuoi metodi di accesso"
 
 #: deps/django_authopenid/views.py:573
 msgid "Please wait a second! Your account is recovered, but ..."
-msgstr ""
+msgstr "Prego attendi un secondo! Il tuo account è stato recuperato ma..."
 
 #: deps/django_authopenid/views.py:575
 msgid "Sorry, this account recovery key has expired or is invalid"
 msgstr ""
+"Siamo spiacenti ma la tua chiave di recupero account è scaduta o invalida"
 
 #: deps/django_authopenid/views.py:648
 #, python-format
 msgid "Login method %(provider_name)s does not exist"
-msgstr ""
+msgstr "Il metodo di accesso %(provider_name)s non esiste"
 
 #: deps/django_authopenid/views.py:654
 msgid "Oops, sorry - there was some error - please try again"
@@ -2836,7 +2837,7 @@ msgstr "Oops! C'è stato un errore, per favore riprova"
 #: deps/django_authopenid/views.py:745
 #, python-format
 msgid "Your %(provider)s login works fine"
-msgstr ""
+msgstr "Il tuo metodo di accesso con %(provider)s funziona"
 
 #: deps/django_authopenid/views.py:1056 deps/django_authopenid/views.py:1062
 #, python-format
@@ -2851,7 +2852,7 @@ msgstr "Recupera la password su %(site)s"
 
 #: deps/django_authopenid/views.py:1155
 msgid "Please check your email and visit the enclosed link."
-msgstr ""
+msgstr "Prego controlla la tua email e visita l'indirizzo ivi contenuto"
 
 #: deps/livesettings/models.py:101 deps/livesettings/models.py:140
 msgid "Site"
@@ -2959,7 +2960,7 @@ msgstr "Congratulazioni, ora sei un Amministratore"
 #: management/commands/send_accept_answer_reminders.py:58
 #, python-format
 msgid "Accept the best answer for %(question_count)d of your questions"
-msgstr ""
+msgstr "Accetta la migliore risposta per %(question_count)d delle tue domande"
 
 #: management/commands/send_accept_answer_reminders.py:63
 msgid "Please accept the best answer for this question:"
@@ -2973,8 +2974,8 @@ msgstr "Per favore accetta la migliore risposta per queste domande:"
 #, python-format
 msgid "%(question_count)d updated question about %(topics)s"
 msgid_plural "%(question_count)d updated questions about %(topics)s"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(question_count)d domande aggiornate riguardanti %(topics)s"
+msgstr[1] "%(question_count)d domanda aggiornata riguardante %(topics)s"
 
 #: management/commands/send_email_alerts.py:425
 #, python-format
@@ -2985,7 +2986,11 @@ msgid_plural ""
 "<p>Dear %(name)s,</p><p>The following %(num)d questions have been updated on"
 " %(sitename)s:</p>"
 msgstr[0] ""
+"<p>Caro %(name)s,</p><p>La seguenti  %(num)d domande sono state aggiornate "
+"in %(sitename)s:</p>"
 msgstr[1] ""
+"<p>Caro %(name)s,</p><p>La seguente domanda è stata aggiornata in "
+"%(sitename)s</p>"
 
 #: management/commands/send_email_alerts.py:449
 msgid "new question"
@@ -3001,13 +3006,15 @@ msgid ""
 "%(admin_email)s.</p><p>Sincerely,</p><p>Your friendly %(sitename)s "
 "server.</p>"
 msgstr ""
+"<p>Ricorda che puoi sempre <a href=\"%(email_settings_link)s\">aggiornare</a> la frequenza degli aggiornamenti via mail o disattivarli completamente. <br/> Se pensi che questa email ti sia arrivata per errore, prego contatta l'amministratore del forum all'indirizzo %(admin_email)s.</p>\n"
+"<p>Saluti,</p><p>Il server %(sitename)s.</p>"
 
 #: management/commands/send_unanswered_question_reminders.py:60
 #, python-format
 msgid "%(question_count)d unanswered question about %(topics)s"
 msgid_plural "%(question_count)d unanswered questions about %(topics)s"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(question_count)d domande non risposte riguardo %(topics)s"
+msgstr[1] "%(question_count)d domanda non risposta riguardo %(topics)s"
 
 #: middleware/forum_mode.py:53
 #, fuzzy, python-format
@@ -3043,6 +3050,8 @@ msgstr ""
 msgid ""
 "Sorry, you will be able to accept this answer only after %(will_be_able_at)s"
 msgstr ""
+"Siamo spiacenti, sarai in grado di accettare questa risposta solo dopo "
+"%(will_be_able_at)s"
 
 #: models/__init__.py:367
 #, python-format
@@ -3089,7 +3098,7 @@ msgstr "Mi spiace, gli utenti sospesi non possono caricare files"
 #: models/__init__.py:433
 #, python-format
 msgid "sorry, file uploading requires karma >%(min_rep)s"
-msgstr ""
+msgstr "siamo spiacenti, l'upload dei file richiede un karma >%(min_rep)s"
 
 #: models/__init__.py:482
 #, python-format
@@ -3100,7 +3109,11 @@ msgid_plural ""
 "Sorry, comments (except the last one) are editable only within %(minutes)s "
 "minutes from posting"
 msgstr[0] ""
+"Siamo spiacenti, i commenti (eccetto l'ultimo) sono editabili solo dopo "
+"%(minutes)s minuti  dalla pubblicazione "
 msgstr[1] ""
+"Siamo spiacenti, i commenti (eccetto l'ultimo) sono editabili solo dopo "
+"%(minutes)s minuto  dalla pubblicazione "
 
 #: models/__init__.py:494
 msgid "Sorry, but only post owners or moderators can edit comments"
@@ -3250,6 +3263,7 @@ msgstr ""
 #: models/__init__.py:775
 msgid "You have flagged this question before and cannot do it more than once"
 msgstr ""
+"Hai selezionato la domanda in precedenza e non puoi farlo più di una volta"
 
 #: models/__init__.py:783
 #, fuzzy
@@ -3272,10 +3286,12 @@ msgid ""
 "Sorry, you have exhausted the maximum number of %(max_flags_per_day)s "
 "offensive flags per day."
 msgstr ""
+"siamo spiacenti, hai esaurito il massimo numero di %(max_flags_per_day)s "
+"flag offensivi al giorno"
 
 #: models/__init__.py:827
 msgid "cannot remove non-existing flag"
-msgstr ""
+msgstr "Non è possibile rimuovere un flag non esistente"
 
 #: models/__init__.py:833
 #, fuzzy
@@ -3287,6 +3303,9 @@ msgid ""
 "Sorry, your account appears to be suspended and you cannot remove flags. "
 "Please contact the forum administrator to reach a resolution."
 msgstr ""
+"Siamo spiacenti, il tuo account sembra essere stato sospeso e non puoi "
+"rimuovere i flag. Prego contatta un amministratore per risolvere il "
+"problema."
 
 #: models/__init__.py:843
 #, fuzzy, python-format
@@ -3307,7 +3326,7 @@ msgstr "Non hai i permessi per modificare i valori."
 
 #: models/__init__.py:863
 msgid "no flags for this entry"
-msgstr ""
+msgstr "nessun flag per questo elemento"
 
 #: models/__init__.py:887
 msgid ""
@@ -3359,7 +3378,7 @@ msgstr ""
 
 #: models/__init__.py:953
 msgid "sorry, but older votes cannot be revoked"
-msgstr ""
+msgstr "siamo spiacenti, ma i vecchi voti non possono essere tolti"
 
 #: models/__init__.py:1469 utils/functions.py:78
 #, python-format
@@ -3368,11 +3387,11 @@ msgstr "il %(date)s"
 
 #: models/__init__.py:1471
 msgid "in two days"
-msgstr ""
+msgstr "in due giorni"
 
 #: models/__init__.py:1473
 msgid "tomorrow"
-msgstr ""
+msgstr "domani"
 
 #: models/__init__.py:1475
 #, python-format
@@ -3392,8 +3411,8 @@ msgstr[1] "%(min)d minuti fa"
 #, python-format
 msgid "%(days)d day"
 msgid_plural "%(days)d days"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(days)d giorni"
+msgstr[1] "%(days)d giorno"
 
 #: models/__init__.py:1480
 #, python-format
@@ -3401,6 +3420,8 @@ msgid ""
 "New users must wait %(days)s before answering their own question.  You can "
 "post an answer %(left)s"
 msgstr ""
+"I nuovi utenti devono aspettare %(days)s prima di poter rispondere alle "
+"proprie domande.  Puoi pubblicare una risposta %(left)s"
 
 #: models/__init__.py:1653 skins/default/templates/feedback_email.txt:9
 msgid "Anonymous"
@@ -3443,8 +3464,8 @@ msgstr "%(username)s ha %(reputation)s punti reputazione"
 #, python-format
 msgid "one gold badge"
 msgid_plural "%(count)d gold badges"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(count)d medaglie d'oro"
+msgstr[1] "una medaglia d'oro"
 
 #: models/__init__.py:1887
 #, python-format
@@ -3463,12 +3484,12 @@ msgstr[1] "%(count)d medaglie di bronzo"
 #: models/__init__.py:1905
 #, python-format
 msgid "%(item1)s and %(item2)s"
-msgstr ""
+msgstr "%(item1)s e %(item2)s"
 
 #: models/__init__.py:1909
 #, python-format
 msgid "%(user)s has %(badges)s"
-msgstr ""
+msgstr "%(user)s ha %(badges)s"
 
 #: models/__init__.py:2389
 #, fuzzy, python-format
@@ -3486,7 +3507,7 @@ msgstr ""
 
 #: models/__init__.py:2745 views/commands.py:460
 msgid "Your tag subscription was saved, thanks!"
-msgstr ""
+msgstr "La tua sottoscrizione al tag è stata salvata."
 
 #: models/badges.py:129
 #, python-format
@@ -3509,7 +3530,7 @@ msgstr "Sotto pressione"
 #: models/badges.py:174
 #, python-format
 msgid "Received at least %(votes)s upvote for an answer for the first time"
-msgstr ""
+msgstr "Ricevi almeno %(votes)s voti positivi per una risposta la prima volta"
 
 #: models/badges.py:178
 msgid "Teacher"
@@ -3681,7 +3702,7 @@ msgstr "Prima revisione"
 
 #: models/badges.py:623
 msgid "Associate Editor"
-msgstr ""
+msgstr "Pubblicatore Associato"
 
 #: models/badges.py:627
 #, fuzzy, python-format
@@ -3719,12 +3740,12 @@ msgstr "Domanda apprezzata"
 
 #: models/badges.py:710
 msgid "Enthusiast"
-msgstr ""
+msgstr "Entusiasta"
 
 #: models/badges.py:714
 #, python-format
 msgid "Visited site every day for %(num)s days in a row"
-msgstr ""
+msgstr "Sito visitato ogni giorno per %(num)s giorni di fila"
 
 #: models/badges.py:732
 msgid "Commentator"
@@ -3761,6 +3782,8 @@ msgid ""
 "Sorry, the answer you are looking for is no longer available, because the "
 "parent question has been removed"
 msgstr ""
+"Siamo spiacenti, la risposta che cercavi non è più disponibile perchè la "
+"domanda originale è stata rimossa"
 
 #: models/post.py:1094
 msgid "Sorry, this answer has been removed and is no longer accessible"
@@ -3771,17 +3794,21 @@ msgid ""
 "Sorry, the comment you are looking for is no longer accessible, because the "
 "parent question has been removed"
 msgstr ""
+"Siamo spiacenti, il commento che cercavi non è più disponibile perchè la "
+"domanda originale è stata rimossa"
 
 #: models/post.py:1117
 msgid ""
 "Sorry, the comment you are looking for is no longer accessible, because the "
 "parent answer has been removed"
 msgstr ""
+"Siamo spiacenti, la risposta che cercavi non è più disponibile perchè la "
+"domanda originale è stata rimossa"
 
 #: models/question.py:54
 #, python-format
 msgid "\" and \"%s\""
-msgstr ""
+msgstr "\" e \"%s\""
 
 #: models/question.py:57
 msgid "\" and more"
