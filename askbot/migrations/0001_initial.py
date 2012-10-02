@@ -4,39 +4,25 @@ import datetime
 from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
+from askbot.migrations_api import safe_add_column
 
 app_dir_name = os.path.basename(os.path.dirname(os.path.dirname(__file__)))
-
-def safe_add_column(table, column, column_data, keep_default = False):
-    """when user calls syncdb with askbot the first time
-    the auth_user table will be created together with the patched columns
-    so, we need to add these columns here in separate transactions
-    and roll back if they fail, if we want we could also record - which columns clash
-    """
-    try:
-        db.start_transaction()
-        db.add_column(table, column, column_data, keep_default = keep_default)
-        db.commit_transaction()
-        return True
-    except:
-        db.rollback_transaction()
-        return False
 
 class Migration(SchemaMigration):
     
     def forwards(self, orm):
         #1) patch the existing auth_user table
-        safe_add_column('auth_user', 'website', self.gf('django.db.models.fields.URLField')(max_length=200, blank=True), keep_default = False)
-        safe_add_column('auth_user', 'about', self.gf('django.db.models.fields.TextField')(blank=True), keep_default = False)
+        safe_add_column('auth_user', 'website', self.gf('django.db.models.fields.URLField')(max_length=200, blank=True, null=True), keep_default = False)
+        safe_add_column('auth_user', 'about', self.gf('django.db.models.fields.TextField')(blank=True, null=True), keep_default = False)
         safe_add_column('auth_user', 'hide_ignored_questions', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True), keep_default = False)
         safe_add_column('auth_user', 'gold', self.gf('django.db.models.fields.SmallIntegerField')(default=0), keep_default = False)
         safe_add_column('auth_user', 'email_isvalid', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True), keep_default = False)
-        safe_add_column('auth_user', 'real_name', self.gf('django.db.models.fields.CharField')(max_length=100, blank=True), keep_default = False)
-        safe_add_column('auth_user', 'location', self.gf('django.db.models.fields.CharField')(max_length=100, blank=True), keep_default = False)
+        safe_add_column('auth_user', 'real_name', self.gf('django.db.models.fields.CharField')(max_length=100, blank=True, null=True), keep_default = False)
+        safe_add_column('auth_user', 'location', self.gf('django.db.models.fields.CharField')(max_length=100, blank=True, null=True), keep_default = False)
         safe_add_column('auth_user', 'email_key', self.gf('django.db.models.fields.CharField')(max_length=32, null=True), keep_default = False)
         safe_add_column('auth_user', 'date_of_birth', self.gf('django.db.models.fields.DateField')(null=True, blank=True), keep_default = False)
         safe_add_column('auth_user', 'reputation', self.gf('django.db.models.fields.PositiveIntegerField')(default=1), keep_default = False)
-        safe_add_column('auth_user', 'gravatar', self.gf('django.db.models.fields.CharField')(max_length=32), keep_default = False)
+        safe_add_column('auth_user', 'gravatar', self.gf('django.db.models.fields.CharField')(max_length=32, null=True), keep_default = False)
         safe_add_column('auth_user', 'bronze', self.gf('django.db.models.fields.SmallIntegerField')(default=0), keep_default = False)
         safe_add_column('auth_user', 'tag_filter_setting', self.gf('django.db.models.fields.CharField')(default='ignored', max_length=16), keep_default = False)
         safe_add_column('auth_user', 'last_seen', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now), keep_default = False)

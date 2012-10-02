@@ -3,7 +3,6 @@ from django.core import exceptions
 from django.conf import settings
 from django.contrib.auth.models import User
 from askbot.tests.utils import AskbotTestCase, skipIf
-from askbot.search.haystack import AskbotSearchQuerySet
 from askbot import models
 import datetime
 
@@ -86,6 +85,7 @@ class HaystackSearchTests(AskbotTestCase):
         '''makes a query that can return multiple models and test
         get_django_queryset() method from AskbotSearchQuerySet'''
         #gepeto is present in profile and in question
+        from askbot.search.haystack import AskbotSearchQuerySet
         qs = AskbotSearchQuerySet().filter(content='gepeto').get_django_queryset(User)
         for instance in qs:
            self.assertTrue(isinstance(instance, User))

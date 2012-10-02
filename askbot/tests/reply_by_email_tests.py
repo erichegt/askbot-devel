@@ -1,6 +1,7 @@
 from django.utils.translation import ugettext as _
 from askbot.models import ReplyAddress
 from askbot.mail.lamson_handlers import PROCESS, VALIDATE_EMAIL, get_parts
+from askbot.mail import extract_user_signature
 from askbot import const
 
 
@@ -11,9 +12,9 @@ TEST_CONTENT = 'Test content'
 TEST_LONG_CONTENT = 'Test content' * 10
 
 class MockPart(object):
-    def __init__(self, body):
+    def __init__(self, body, content_type='text/plain'):
         self.body = body
-        self.content_encoding = {'Content-Type':('text/plain',)}
+        self.content_encoding = {'Content-Type':(content_type,)}
 
 class MockMessage(dict):
 
@@ -34,13 +35,19 @@ class MockMessage(dict):
 
         self._body = content
         self._part = MockPart(content)
+        self._alternatives = []
 
     def body(self):
         return self._body
 
+    def attach_alternative(self, content, content_type):
+        assert content is not None
+        assert content_type is not None
+        self._alternatives.append(MockPart(content, content_type))
+
     def walk(self):
         """todo: add real file attachment"""
-        return [self._part]
+        return [self._part] + self._alternatives
 
 class ReplyAddressModelTests(AskbotTestCase):
 
@@ -115,7 +122,7 @@ class ReplyAddressModelTests(AskbotTestCase):
         self.assertEquals(post.post_type, "comment")
         self.assertEquals(post.text, TEST_CONTENT)
         self.assertEquals(self.answer.comments.count(), 2)
-        
+
 
     def test_create_question_comment_reply(self):
         result = ReplyAddress.objects.create_new(
@@ -136,7 +143,7 @@ class ReplyAddressModelTests(AskbotTestCase):
         self.assertEquals(post.text, TEST_LONG_CONTENT)
 
 class EmailSignatureDetectionTests(AskbotTestCase):
-    
+
     def setUp(self):
         self.u1 = self.create_user('user1', status = 'a')
         self.u2 = self.create_user('user2', status = 'a')
@@ -162,7 +169,7 @@ class EmailSignatureDetectionTests(AskbotTestCase):
             )
         PROCESS(msg, address = reply_token.address)
 
-        signature = self.reload_object(self.u2).email_signature 
+        signature = self.reload_object(self.u2).email_signature
         self.assertEqual(signature, 'Yours Truly')
 
     def test_detect_signature_in_welcome_response(self):
@@ -184,5 +191,5 @@ class EmailSignatureDetectionTests(AskbotTestCase):
             address = reply_token.address
         )
 
-        signature = self.reload_object(self.u2).email_signature 
+        signature = self.reload_object(self.u2).email_signature
         self.assertEqual(signature, 'Yours Truly')

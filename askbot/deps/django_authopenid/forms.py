@@ -308,14 +308,14 @@ class LoginForm(forms.Form):
 class OpenidRegisterForm(forms.Form):
     """ openid signin form """
     next = NextUrlField()
-    username = UserNameField()
+    username = UserNameField(widget_attrs={'tabindex': 0})
     email = UserEmailField()
 
 class ClassicRegisterForm(SetPasswordForm):
     """ legacy registration form """
 
     next = NextUrlField()
-    username = UserNameField()
+    username = UserNameField(widget_attrs={'tabindex': 0})
     email = UserEmailField()
     login_provider = PasswordLoginProviderField()
     #fields password1 and password2 are inherited

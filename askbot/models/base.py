@@ -41,7 +41,7 @@ class BaseQuerySetManager(models.Manager):
             return getattr(self.get_query_set(), attr, *args)
 
 
-class AnonymousContent(models.Model):
+class DraftContent(models.Model):
     """Base class for AnonymousQuestion and AnonymousAnswer"""
     session_key = models.CharField(max_length=40)  #session id for anonymous questions
     wiki = models.BooleanField(default=False)

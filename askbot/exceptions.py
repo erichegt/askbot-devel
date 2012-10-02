@@ -19,6 +19,11 @@ class InsufficientReputation(exceptions.PermissionDenied):
     """
     pass
 
+class AnswerAlreadyGiven(exceptions.PermissionDenied):
+    """Raised when user attempts to post a second answer
+    to the same question"""
+    pass
+
 class DuplicateCommand(exceptions.PermissionDenied):
     """exception class to indicate that something
     that can happen only once was attempted for the second time

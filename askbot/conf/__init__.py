@@ -26,7 +26,6 @@ import askbot.conf.badges
 import askbot.conf.login_providers
 import askbot.conf.access_control
 import askbot.conf.site_modes
-import askbot.conf.widgets
 
 #import main settings object
 from askbot.conf.settings_wrapper import settings
@@ -37,3 +36,11 @@ def should_show_sort_by_relevance():
     questions by search relevance
     """
     return ('postgresql_psycopg2' in askbot.get_database_engine_name())
+
+def get_tag_display_filter_strategy_choices():
+    from askbot import const
+    from askbot.conf import settings as askbot_settings
+    if askbot_settings.SUBSCRIBED_TAG_SELECTOR_ENABLED:
+        return const.TAG_DISPLAY_FILTER_STRATEGY_CHOICES
+    else:
+        return const.TAG_DISPLAY_FILTER_STRATEGY_MINIMAL_CHOICES

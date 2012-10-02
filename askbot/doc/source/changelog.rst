@@ -3,6 +3,31 @@ Changes in Askbot
 
 Development version
 -------------------
+* Added setting `NOTIFICATION_DELAY_TIME` to use with enabled celery daemon (Adolfo)
+* Added setting `ASKBOT_INTERNAL_IPS` - to allow anonymous access to 
+  closed sites from dedicated IP addresses (Evgeny)
+* Moved default skin from `askbot/skins/default` to simply `askbot` (Evgeny)
+* Repost comment as answer (Adolfo)
+* Question list widget (Adolfo)
+* Ask a question widget (Adolfo)
+* Embeddable widget generator (Adolfo)
+* Groups are shown in the dropdown menu in the header (Adolfo)
+* Added group moderation requests to the moderators inboxes (Evgeny)
+* Group joining may be open/closed or moderated (Evgeny)
+* Adding "extra options" to the ldap session (Evgeny)
+* Tag moderation (Evgeny)
+* Editable optional three level category selector for the tags (Evgeny)
+* Tag editor adding tags as they are typed (Evgeny)
+* Added optional support for unicode slugs (Evgeny)
+* Allow switching comment with answer and answer with question comment (Adolfo)
+* Allow user names longer than 30 characters (Evgeny)
+* Option to disable feedback form for the anonymos users (Evgeny)
+* Optional restriction to have confirmed email address to join forum (Evgeny)
+* Optional list of allowed email addresses and email domain name for the new users (Evgeny)
+* Optional support for unicode slugs (Evgeny)
+* Optionally allow limiting one answer per question per person (Evgeny)
+* Added management command `build_livesettings_cache` (Adolfo)
+* Administrators can post under fictional user accounts without logging out (jtrain, Evgeny)
 * Welcome email for the case when replying by email is enabled (Evgeny)
 * Detection of email signature based on the response to the welcome email (Evgeny)
 * Hide "website" and "about" section of the blocked user profiles

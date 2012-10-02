@@ -46,6 +46,8 @@ class ManagementCommandTests(AskbotTestCase):
         # Explicitly check that the values assigned to user_one are now user_two's
         self.assertEqual(user_two.posts.get_questions().filter(pk=question.id).count(), 1)
         self.assertEqual(user_two.posts.get_comments().filter(pk=comment.id).count(), 1)
+        #todo: change groups to django groups
+        #then replace to 3 back to 2 in the line below
         user_two = models.User.objects.get(pk=2)
         self.assertEqual(user_two.gold, number_of_gold) 
         self.assertEqual(user_two.reputation, reputation)

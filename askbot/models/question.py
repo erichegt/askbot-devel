@@ -12,10 +12,20 @@ from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 
 import askbot
-import askbot.conf
+from askbot.conf import settings as askbot_settings
+from askbot import mail
+from askbot.mail import messages
 from askbot.models.tag import Tag
-from askbot.models.base import AnonymousContent
+from askbot.models.tag import get_groups
+from askbot.models.tag import get_global_group
+from askbot.models.tag import get_tags_by_names
+from askbot.models.tag import filter_accepted_tags, filter_suggested_tags
+from askbot.models.tag import delete_tags, separate_unused_tags
+from askbot.models.base import DraftContent, BaseQuerySetManager
+from askbot.models.tag import Tag, get_groups
 from askbot.models.post import Post, PostRevision
+from askbot.models.post import PostToGroup
+from askbot.models.user import Group, PERSONAL_GROUP_NAME_PREFIX
 from askbot.models import signals
 from askbot import const
 from askbot.utils.lists import LazyList
@@ -24,8 +34,20 @@ from askbot.utils.slug import slugify
 from askbot.skins.loaders import get_template #jinja2 template loading enviroment
 from askbot.search.state_manager import DummySearchState
 
+class ThreadQuerySet(models.query.QuerySet):
+    def get_visible(self, user):
+        """filters out threads not belonging to the user groups"""
+        if user.is_authenticated():
+            groups = user.get_groups()
+        else:
+            groups = [get_global_group()]
+        return self.filter(groups__in=groups).distinct()
 
-class ThreadManager(models.Manager):
+class ThreadManager(BaseQuerySetManager):
+
+    def get_query_set(self):
+        return ThreadQuerySet(self.model)
+
     def get_tag_summary_from_threads(self, threads):
         """returns a humanized string containing up to
         five most frequently used
@@ -71,6 +93,8 @@ class ThreadManager(models.Manager):
                 text,
                 tagnames = None,
                 is_anonymous = False,
+                is_private = False,
+                group_id = None,
                 by_email = False,
                 email_address = None
             ):
@@ -108,20 +132,43 @@ class ThreadManager(models.Manager):
             question.last_edited_at = added_at
             question.wikified_at = added_at
 
-        question.parse_and_save(author = author)
+        #this is kind of bad, but we save assign privacy groups to posts and thread
+        #this call is rather heavy, we should split into several functions
+        parse_results = question.parse_and_save(author=author, is_private=is_private)
 
-        question.add_revision(
-            author = author,
-            is_anonymous = is_anonymous,
-            text = text,
-            comment = const.POST_STATUS['default_version'],
-            revised_at = added_at,
-            by_email = by_email,
-            email_address = email_address
+        revision = question.add_revision(
+            author=author,
+            is_anonymous=is_anonymous,
+            text=text,
+            comment=const.POST_STATUS['default_version'],
+            revised_at=added_at,
+            by_email=by_email,
+            email_address=email_address
         )
 
+        author_group = author.get_personal_group()
+        thread.add_to_groups([author_group], visibility=ThreadToGroup.SHOW_PUBLISHED_RESPONSES)
+        question.add_to_groups([author_group])
+
+        if is_private or group_id:#add groups to thread and question
+            thread.make_private(author, group_id=group_id)
+        else:
+            thread.make_public()
+
         # INFO: Question has to be saved before update_tags() is called
-        thread.update_tags(tagnames = tagnames, user = author, timestamp = added_at)
+        thread.update_tags(tagnames=tagnames, user=author, timestamp=added_at)
+
+        #todo: this is handled in signal because models for posts
+        #are too spread out
+        signals.post_updated.send(
+            post=question,
+            updated_by=author,
+            newly_mentioned_users=parse_results['newly_mentioned_users'],
+            timestamp=added_at,
+            created=True,
+            diff=parse_results['diff'],
+            sender=question.__class__
+        )
 
         return thread
 
@@ -176,33 +223,60 @@ class ThreadManager(models.Manager):
         if askbot_settings.ENABLE_CONTENT_MODERATION:
             qs = qs.filter(approved = True)
 
-        meta_data = {}
+        #if groups feature is enabled, filter out threads
+        #that are private in groups to which current user does not belong
+        if askbot_settings.GROUPS_ENABLED:
+            #get group names
+            qs = qs.get_visible(user=request_user)
 
+
+        #run text search while excluding any modifier in the search string
+        #like #tag [title: something] @user
         if search_state.stripped_query:
             qs = self.get_for_query(search_query=search_state.stripped_query, qs=qs)
+
+        #we run other things after full text search, because
+        #FTS may break the chain of the query set calls,
+        #since it might go into an external asset, like Solr
+
+        #search in titles, if necessary
         if search_state.query_title:
             qs = qs.filter(title__icontains = search_state.query_title)
+
+        #search user names if @user is added to search string
+        #or if user name exists in the search state
         if search_state.query_users:
             query_users = User.objects.filter(username__in=search_state.query_users)
             if query_users:
-                qs = qs.filter(posts__post_type='question', posts__author__in=query_users) # TODO: unify with search_state.author ?
+                qs = qs.filter(
+                    posts__post_type='question',
+                    posts__author__in=query_users
+                ) # TODO: unify with search_state.author ?
 
+        #unified tags - is list of tags taken from the tag selection
+        #plus any tags added to the query string with #tag or [tag:something]
+        #syntax.
+        #run tag search in addition to these unified tags
+        meta_data = {}
         tags = search_state.unified_tags()
         if len(tags) > 0:
 
             if askbot_settings.TAG_SEARCH_INPUT_ENABLED:
                 #todo: this may be gone or disabled per option
                 #"tag_search_box_enabled"
-                existing_tags = set(
-                    Tag.objects.filter(
-                        name__in = tags
-                    ).values_list(
-                        'name',
-                        flat = True
-                    )
-                )
+                existing_tags = set()
+                non_existing_tags = set()
+                #we're using a one-by-one tag retreival, b/c
+                #we want to take advantage of case-insensitive search indexes
+                #in postgresql, plus it is most likely that there will be
+                #only one or two search tags anyway
+                for tag in tags:
+                    try:
+                        tag_record = Tag.objects.get(name__iexact=tag)
+                        existing_tags.add(tag_record.name)
+                    except Tag.DoesNotExist:
+                        non_existing_tags.add(tag)
 
-                non_existing_tags = set(tags) - existing_tags
                 meta_data['non_existing_tags'] = list(non_existing_tags)
                 tags = existing_tags
             else:
@@ -217,6 +291,8 @@ class ThreadManager(models.Manager):
         if search_state.scope == 'unanswered':
             qs = qs.filter(closed = False) # Do not show closed questions in unanswered section
             if askbot_settings.UNANSWERED_QUESTION_MEANING == 'NO_ANSWERS':
+                # todo: this will introduce a problem if there are private answers
+                # which are counted here
                 qs = qs.filter(answer_count=0) # TODO: expand for different meanings of this
             elif askbot_settings.UNANSWERED_QUESTION_MEANING == 'NO_ACCEPTED_ANSWERS':
                 qs = qs.filter(accepted_answer__isnull=True)
@@ -255,11 +331,13 @@ class ThreadManager(models.Manager):
                 user_selections__user = request_user,
                 user_selections__reason = 'bad'
             )
+            subscribed_tags = Tag.objects.none()
             if askbot_settings.SUBSCRIBED_TAG_SELECTOR_ENABLED:
-                meta_data['subscribed_tag_names'] = Tag.objects.filter(
+                subscribed_tags = Tag.objects.filter(
                     user_selections__user = request_user,
                     user_selections__reason = 'subscribed'
-                ).values_list('name', flat = True)
+                )
+                meta_data['subscribed_tag_names'] = [tag.name for tag in subscribed_tags]
 
             meta_data['interesting_tag_names'] = [tag.name for tag in interesting_tags]
             meta_data['ignored_tag_names'] = [tag.name for tag in ignored_tags]
@@ -281,6 +359,10 @@ class ThreadManager(models.Manager):
                     ignored_wildcards = request_user.ignored_tags.split()
                     extra_ignored_tags = Tag.objects.get_by_wildcards(ignored_wildcards)
                     qs = qs.exclude(tags__in = extra_ignored_tags)
+
+            if request_user.display_tag_filter_strategy == const.INCLUDE_SUBSCRIBED \
+                and subscribed_tags:
+                qs = qs.filter(tags__in = subscribed_tags)
 
             if askbot_settings.USE_WILDCARD_TAGS:
                 meta_data['interesting_tag_names'].extend(request_user.interesting_tags.split())
@@ -327,8 +409,13 @@ class ThreadManager(models.Manager):
         # Precache data only for non-cached threads - only those will be rendered
         #threads = [thread for thread in threads if not thread.summary_html_cached()]
 
-        page_questions = Post.objects.filter(post_type='question', thread__in=[obj.id for obj in threads])\
-                            .only('id', 'thread', 'points', 'is_anonymous', 'summary', 'post_type', 'deleted') # pick only the used fields
+        thread_ids = [obj.id for obj in threads]
+        page_questions = Post.objects.filter(
+            post_type='question', thread__id__in = thread_ids
+        ).only(# pick only the used fields
+            'id', 'thread', 'points', 'is_anonymous',
+            'summary', 'post_type', 'deleted'
+        )
         page_question_map = {}
         for pq in page_questions:
             page_question_map[pq.thread_id] = pq
@@ -375,6 +462,30 @@ class ThreadManager(models.Manager):
         return self.filter(id__in = thread_ids)
 
 
+class ThreadToGroup(models.Model):
+    """the "through" many-to-many relation between
+    threads and groups - to distinguish full and "what's published"
+    visibility of threads to various groups
+    """
+    SHOW_PUBLISHED_RESPONSES = 0
+    SHOW_ALL_RESPONSES = 1
+    VISIBILITY_CHOICES = (
+        (SHOW_PUBLISHED_RESPONSES, 'show only published responses'),
+        (SHOW_ALL_RESPONSES, 'show all responses')
+    )
+    thread = models.ForeignKey('Thread')
+    group = models.ForeignKey(Group)
+    visibility = models.SmallIntegerField(
+                        choices=VISIBILITY_CHOICES,
+                        default=SHOW_ALL_RESPONSES
+                    )
+
+    class Meta:
+        unique_together = ('thread', 'group')
+        db_table = 'askbot_thread_groups'
+        app_label = 'askbot'
+
+
 class Thread(models.Model):
     SUMMARY_CACHE_KEY_TPL = 'thread-question-summary-%d'
     ANSWER_LIST_KEY_TPL = 'thread-answer-list-%d'
@@ -382,6 +493,7 @@ class Thread(models.Model):
     title = models.CharField(max_length=300)
 
     tags = models.ManyToManyField('Tag', related_name='threads')
+    groups = models.ManyToManyField(Group, through=ThreadToGroup, related_name='group_threads')
 
     # Denormalised data, transplanted from Question
     tagnames = models.CharField(max_length=125)
@@ -443,6 +555,85 @@ class Thread(models.Model):
         #question_id = self._question_post().id
         #return reverse('question', args = [question_id]) + slugify(self.title)
 
+    def get_answer_count(self, user = None):
+        """returns answer count depending on who the user is.
+        When user groups are enabled and some answers are hidden,
+        the answer count to show must be reflected accordingly"""
+        if askbot_settings.GROUPS_ENABLED == False:
+            return self.answer_count
+        else:
+            return self.get_answers(user).count()
+
+    def get_sharing_info(self, visitor=None):
+        """returns a dictionary with abbreviated thread sharing info:
+        * users - up to a certain number of users, excluding the visitor
+        * groups - up to a certain number of groups
+        * more_users_count - remaining count of shared-with users
+        * more_groups_count - remaining count of shared-with groups
+        """
+        shared_users = self.get_users_shared_with(
+                                            max_count=2,#"visitor" is implicit
+                                            exclude_user=visitor
+                                        )
+        groups = self.groups
+        ugroups = groups.get_personal()
+        ggroups = groups.exclude_personal()
+
+        sharing_info = {
+            'users': shared_users,
+            'groups': self.get_groups_shared_with(max_count=3),
+            'more_users_count': max(0, ugroups.count() - 3),
+            'more_groups_count': max(0, ggroups.count() - 3)
+        }
+        return sharing_info
+
+    def get_users_shared_with(self, max_count=None, exclude_user=None):
+        """returns query set of users with whom
+        this thread is shared
+        """
+        filter = models.Q(
+                        thread=self,
+                        visibility=ThreadToGroup.SHOW_ALL_RESPONSES
+                    ) & models.Q(
+                        group__name__startswith=PERSONAL_GROUP_NAME_PREFIX
+                    )
+
+        if exclude_user:
+            user_group = exclude_user.get_personal_group()
+            filter = filter & ~models.Q(group_id=user_group.id)
+
+        thread_groups = ThreadToGroup.objects.filter(filter)
+
+        if max_count:
+            thread_groups = thread_groups[:max_count]
+
+        group_ids = thread_groups.values_list('group_id', flat=True)
+
+        from askbot.models import GroupMembership
+        user_ids = GroupMembership.objects.filter(
+                                    group__id__in=group_ids
+                                ).values_list(
+                                    'user__id', flat=True
+                                )
+
+        return User.objects.filter(id__in=user_ids)
+
+    def get_groups_shared_with(self, max_count=None):
+        """returns query set of groups with whom thread is shared"""
+        thread_groups = ThreadToGroup.objects.filter(
+                            models.Q(
+                                thread=self,
+                                visibility=ThreadToGroup.SHOW_ALL_RESPONSES
+                            ) & ~models.Q(
+                                group__name__startswith=PERSONAL_GROUP_NAME_PREFIX
+                            )
+                        )
+        if max_count:
+            thread_groups = thread_groups[:max_count]
+
+        group_ids = thread_groups.values_list('group_id', flat=True)
+        return Group.objects.filter(id__in=group_ids)
+
     def update_favorite_count(self):
         self.favourite_count = FavoriteQuestion.objects.filter(thread=self).count()
         self.save()
@@ -492,10 +683,13 @@ class Thread(models.Model):
     def get_title(self, question=None):
         if not question:
             question = self._question_post() # allow for optimization if the caller has already fetched the question post for this thread
-        if self.closed:
+        if self.is_private():
+            attr = const.POST_STATUS['private']
+        elif self.closed:
             attr = const.POST_STATUS['closed']
         elif question.deleted:
             attr = const.POST_STATUS['deleted']
+
         else:
             attr = None
         if attr is not None:
@@ -503,9 +697,9 @@ class Thread(models.Model):
         else:
             return self.title
 
-    def format_for_email(self):
+    def format_for_email(self, user=None):
         """experimental function: output entire thread for email"""
-        question, answers, junk = self.get_cached_post_data()
+        question, answers, junk, published_ans_ids = self.get_cached_post_data(user=user)
         output = question.format_for_email_as_subthread()
         if answers:
             answer_heading = ungettext(
@@ -517,6 +711,36 @@ class Thread(models.Model):
             for answer in answers:
                 output += answer.format_for_email_as_subthread()
         return output
+
+    def get_answers_by_user(self, user):
+        """regardless - deleted or not"""
+        return self.posts.filter(post_type = 'answer', author = user)
+
+    def has_answer_by_user(self, user):
+        #use len to cache the queryset
+        return len(self.get_answers_by_user(user)) > 0
+
+    def has_moderator(self, user):
+        """true if ``user`` is also a thread moderator"""
+        if user.is_anonymous():
+            return False
+        elif askbot_settings.GROUPS_ENABLED:
+            if user.is_administrator_or_moderator():
+                user_groups = user.get_groups(private=True)
+                thread_groups = self.get_groups_shared_with()
+                return bool(set(user_groups) & set(thread_groups))
+        return False
+
+    def requires_response_moderation(self, author):
+        """true, if answers by a given author must be moderated
+        before publishing to the enquirers"""
+        author_groups = author.get_groups()
+        thread_groups = self.get_groups_shared_with()
+        for group in set(author_groups) & set(thread_groups):
+            if group.moderate_answers_to_enquirers:
+                return True
+
+        return False
 
     def tagname_meta_generator(self):
         return u','.join([unicode(tag) for tag in self.get_tag_names()])
@@ -532,12 +756,13 @@ class Thread(models.Model):
             return self.posts.get_answers().filter(deleted=False)
         else:
             if user.is_administrator() or user.is_moderator():
-                return self.posts.get_answers()
+                return self.posts.get_answers(user = user)
             else:
-                return self.posts.get_answers().filter(
-                                models.Q(deleted = False) | models.Q(author = user) \
-                                | models.Q(deleted_by = user)
-                            )
+                return self.posts.get_answers(user = user).filter(
+                            models.Q(deleted = False) \
+                            | models.Q(author = user) \
+                            | models.Q(deleted_by = user)
+                        )
 
     def invalidate_cached_thread_content_fragment(self):
         cache.cache.delete(self.SUMMARY_CACHE_KEY_TPL % self.id)
@@ -558,9 +783,12 @@ class Thread(models.Model):
         #self.invalidate_cached_thread_content_fragment()
         self.update_summary_html()
 
-    def get_cached_post_data(self, sort_method = 'votes'):
+    def get_cached_post_data(self, user = None, sort_method = 'votes'):
         """returns cached post data, as calculated by
         the method get_post_data()"""
+        if askbot_settings.GROUPS_ENABLED:
+            #temporary plug: bypass cache where groups are enabled
+            return self.get_post_data(sort_method=sort_method, user=user)
         key = self.get_post_data_cache_key(sort_method)
         post_data = cache.cache.get(key)
         if not post_data:
@@ -568,14 +796,25 @@ class Thread(models.Model):
             cache.cache.set(key, post_data, const.LONG_TIME)
         return post_data
 
-    def get_post_data(self, sort_method = 'votes'):
+    def get_post_data(self, sort_method='votes', user=None):
         """returns question, answers as list and a list of post ids
-        for the given thread
+        for the given thread, and the list of published post ids
+        (four values)
         the returned posts are pre-stuffed with the comments
         all (both posts and the comments sorted in the correct
         order)
         """
-        thread_posts = self.posts.all().order_by(
+        thread_posts = self.posts.all()
+        if askbot_settings.GROUPS_ENABLED:
+            if user is None or user.is_anonymous():
+                groups = (get_global_group(),)
+            else:
+                groups = user.get_groups()
+
+            thread_posts = thread_posts.filter(groups__in=groups)
+            thread_posts = thread_posts.distinct()#important for >1 group
+
+        thread_posts = thread_posts.order_by(
                     {
                         'latest':'-added_at',
                         'oldest':'added_at',
@@ -592,7 +831,7 @@ class Thread(models.Model):
             #pass through only deleted question posts
             if post.deleted and post.post_type != 'question':
                 continue
-            if post.approved == False:#hide posts on the moderation queue
+            if post.is_approved() is False:#hide posts on the moderation queue
                 continue
 
             post_to_author[post.id] = post.author_id
@@ -623,11 +862,36 @@ class Thread(models.Model):
         if self.has_accepted_answer() and self.accepted_answer.deleted == False:
             #Put the accepted answer to front
             #the second check is for the case when accepted answer is deleted
-            accepted_answer = post_map[self.accepted_answer_id]
-            answers.remove(accepted_answer)
-            answers.insert(0, accepted_answer)
+            if self.accepted_answer_id in post_map:
+                accepted_answer = post_map[self.accepted_answer_id]
+                answers.remove(accepted_answer)
+                answers.insert(0, accepted_answer)
 
-        return (question_post, answers, post_to_author)
+        #if user is not an inquirer, and thread is moderated,
+        #put published answers first
+        #todo: there may be > 1 enquirers
+        published_answer_ids = list()
+        if self.is_moderated() and user != question_post.author:
+            #if moderated - then author is guaranteed to be the
+            #limited visibility enquirer
+            published_answers = self.posts.get_answers(
+                                        user=question_post.author#todo: may be > 1
+                                    ).filter(
+                                        deleted=False
+                                    ).order_by(
+                                        {
+                                            'latest':'-added_at',
+                                            'oldest':'added_at',
+                                            'votes':'-score'
+                                        }[sort_method]
+                                    )
+            #now put those answers first
+            for answer in reversed(published_answers):
+                answers.remove(answer)
+                answers.insert(0, answer)
+                published_answer_ids.append(answer.id)
+
+        return (question_post, answers, post_to_author, published_answer_ids)
 
     def has_accepted_answer(self):
         return self.accepted_answer_id != None
@@ -653,6 +917,8 @@ class Thread(models.Model):
         """
 
         def get_data():
+            # todo: code in this function would be simpler if
+            # we had question post id denormalized on the thread
             tags_list = self.get_tag_names()
             similar_threads = Thread.objects.filter(
                                         tags__name__in=tags_list
@@ -671,20 +937,28 @@ class Thread(models.Model):
             similar_threads = similar_threads[:10]
 
             # Denormalize questions to speed up template rendering
+            # todo: just denormalize question_post_id on the thread!
             thread_map = dict([(thread.id, thread) for thread in similar_threads])
             questions = Post.objects.get_questions()
             questions = questions.select_related('thread').filter(thread__in=similar_threads)
             for q in questions:
                 thread_map[q.thread_id].question_denorm = q
 
-            # Postprocess data
-            similar_threads = [
-                {
-                    'url': thread.question_denorm.get_absolute_url(),
-                    'title': thread.get_title(thread.question_denorm)
-                } for thread in similar_threads
-            ]
-            return similar_threads
+            # Postprocess data for the final output
+            result = list()
+            for thread in similar_threads:
+                question_post = getattr(thread, 'question_denorm', None)
+                # unfortunately the if statement below is necessary due to
+                # a possible bug
+                # all this proves that it's wrong to reference threads by
+                # the question post id in the question page urls!!!
+                # this is a "legacy" problem inherited from the old models
+                if question_post:
+                    url = question_post.get_absolute_url()
+                    title = thread.get_title(question_post)
+                    result.append({'url': url, 'title': title})
+
+            return result
 
         def get_cached_data():
             """similar thread data will expire
@@ -718,76 +992,203 @@ class Thread(models.Model):
             return self.followed_by.filter(id = user.id).count() > 0
         return False
 
-    def update_tags(self, tagnames = None, user = None, timestamp = None):
+    def is_moderated(self):
+        """True, if tread has SHOW_PUBLISHED_RESPONSES
+        group memberships"""
+        if askbot_settings.GROUPS_ENABLED:
+            return ThreadToGroup.objects.filter(
+                            thread=self,
+                            visibility=ThreadToGroup.SHOW_PUBLISHED_RESPONSES
+                        )
+        return False
+
+    def add_child_posts_to_groups(self, groups):
+        """adds questions and answers of the thread to
+        given groups, comments are taken care of implicitly
+        by the underlying ``Post`` methods
+        """
+        post_types = ('question', 'answer')
+        posts = self.posts.filter(post_type__in=post_types)
+        for post in posts:
+            post.add_to_groups(groups)
+
+    def remove_child_posts_from_groups(self, groups):
+        """removes child posts from given groups"""
+        post_ids = self.posts.all().values_list('id', flat=True)
+        group_ids = [group.id for group in groups]
+        PostToGroup.objects.filter(
+                        post__id__in=post_ids,
+                        tag__id__in=group_ids
+                    ).delete()
+
+    def add_to_groups(
+        self, groups, visibility=ThreadToGroup.SHOW_ALL_RESPONSES, recursive=False
+    ):
+        """adds thread to a list of groups
+        ``groups`` argument may be any iterable of groups
+        """
+        for group in groups:
+            #todo: change to bulk create when django 1.3 goes out of use
+            thread_group, created = ThreadToGroup.objects.get_or_create(
+                                                    thread=self,
+                                                    group=group
+                                                )
+
+            if thread_group.visibility != visibility:
+                thread_group.visibility = visibility
+                thread_group.save()
+
+        if recursive == True:
+            #comments are taken care of automatically
+            self.add_child_posts_to_groups(groups)
+
+    def remove_from_groups(self, groups, recursive=False):
+        thread_groups =  ThreadToGroup.objects.filter(
+                                        thread=self, group__in=groups
+                                    )
+        thread_groups.delete()
+        if recursive == True:
+            self.remove_child_posts_from_groups(groups)
+
+    def make_public(self, recursive=False):
+        """adds the global group to the thread"""
+        groups = (get_global_group(), )
+        self.add_to_groups(groups, recursive=recursive)
+        if recursive == False:
+            self._question_post().make_public()
+
+    def make_private(self, user, group_id = None):
+        """adds thread to all user's groups, excluding
+        the global, or to a group given by id.
+        The add by ID now only works if user belongs to that group
+        """
+        if group_id:
+            group = Group.objects.get(id=group_id)
+            groups = [group]
+            self.add_to_groups(groups)
+
+            global_group = get_global_group()
+            if group != global_group:
+                self.remove_from_groups((global_group,))
+        else:
+            groups = user.get_groups(private=True)
+            self.add_to_groups(groups)
+            self.remove_from_groups((get_global_group(),))
+
+        self._question_post().make_private(user, group_id)
+
+        if len(groups) == 0:
+            message = 'Sharing did not work, because group is unknown'
+            user.message_set.create(message=message)
+
+    def is_private(self):
+        """true, if thread belongs to the global group"""
+        if askbot_settings.GROUPS_ENABLED:
+            group = get_global_group()
+            return not self.groups.filter(id=group.id).exists()
+        return False
+
+
+    def remove_tags_by_names(self, tagnames):
+        """removes tags from thread by names"""
+        removed_tags = list()
+        for tag in self.tags.all():
+            if tag.name in tagnames:
+                tag.used_count -= 1
+                removed_tags.append(tag)
+        self.tags.remove(*removed_tags)
+        return removed_tags
+
+
+    def update_tags(
+        self, tagnames = None, user = None, timestamp = None
+    ):
         """
         Updates Tag associations for a thread to match the given
         tagname string.
-
         When tags are removed and their use count hits 0 - the tag is
         automatically deleted.
-
         When an added tag does not exist - it is created
+        If tag moderation is on - new tags are placed on the queue
 
         Tag use counts are recalculated
-
         A signal tags updated is sent
 
-        *IMPORTANT*: self._question_post() has to exist when update_tags() is called!
+        *IMPORTANT*: self._question_post() has to
+        exist when update_tags() is called!
         """
-        previous_tags = list(self.tags.all())
+        if tagnames.strip() == '':
+            return
+
+        previous_tags = list(self.tags.filter(status = Tag.STATUS_ACCEPTED))
+
+        ordered_updated_tagnames = [t for t in tagnames.strip().split(' ')]
 
         previous_tagnames = set([tag.name for tag in previous_tags])
-        updated_tagnames = set(t for t in tagnames.strip().split(' '))
-
+        updated_tagnames = set(ordered_updated_tagnames)
         removed_tagnames = previous_tagnames - updated_tagnames
-        added_tagnames = updated_tagnames - previous_tagnames
 
-        modified_tags = list()
         #remove tags from the question's tags many2many relation
-        if removed_tagnames:
-            removed_tags = [tag for tag in previous_tags if tag.name in removed_tagnames]
-            self.tags.remove(*removed_tags)
+        #used_count values are decremented on all tags
+        removed_tags = self.remove_tags_by_names(removed_tagnames)
 
-            #if any of the removed tags reached use count == 1 that means they must be deleted
-            for tag in removed_tags:
-                if tag.used_count == 1:
-                    #we won't modify used count b/c it's done below anyway
-                    removed_tags.remove(tag)
-                    #todo - do we need to use fields deleted_by and deleted_at?
-                    tag.delete()#auto-delete tags whose use count dwindled
+        #modified tags go on to recounting their use
+        #todo - this can actually be done asynchronously - not so important
+        modified_tags, unused_tags = separate_unused_tags(removed_tags)
+        delete_tags(unused_tags)#tags with used_count == 0 are deleted
 
-            #remember modified tags, we'll need to update use counts on them
-            modified_tags = removed_tags
+        modified_tags = removed_tags
 
         #add new tags to the relation
+        added_tagnames = updated_tagnames - previous_tagnames
+
         if added_tagnames:
             #find reused tags
-            reused_tags = Tag.objects.filter(name__in = added_tagnames)
-            #undelete them, because we are using them
-            reused_count = reused_tags.update(
-                                    deleted = False,
-                                    deleted_by = None,
-                                    deleted_at = None
-                                )
-            #if there are brand new tags, create them and finalize the added tag list
-            if reused_count < len(added_tagnames):
-                added_tags = list(reused_tags)
+            reused_tags, new_tagnames = get_tags_by_names(added_tagnames)
+            reused_tags.mark_undeleted()
 
-                reused_tagnames = set([tag.name for tag in reused_tags])
-                new_tagnames = added_tagnames - reused_tagnames
-                for name in new_tagnames:
-                    new_tag = Tag.objects.create(
-                                            name = name,
-                                            created_by = user,
-                                            used_count = 1
+            added_tags = list(reused_tags)
+            #tag moderation is in the call below
+            created_tags = Tag.objects.create_in_bulk(
+                                            tag_names = new_tagnames, user = user
                                         )
-                    added_tags.append(new_tag)
-            else:
-                added_tags = reused_tags
 
-            #finally add tags to the relation and extend the modified list
+            added_tags.extend(created_tags)
+            #todo: not nice that assignment of added_tags is way above
             self.tags.add(*added_tags)
             modified_tags.extend(added_tags)
+        else:
+            added_tags = Tag.objects.none()
+
+        #Save denormalized tag names on thread. Preserve order from user input.
+        accepted_added_tags = filter_accepted_tags(added_tags)
+        added_tagnames = set([tag.name for tag in accepted_added_tags])
+        final_tagnames = (previous_tagnames - removed_tagnames) | added_tagnames
+        ordered_final_tagnames = list()
+        for tagname in ordered_updated_tagnames:
+            if tagname in final_tagnames:
+                ordered_final_tagnames.append(tagname)
+
+        self.tagnames = ' '.join(ordered_final_tagnames)
+        self.save()#need to save here?
+
+        #todo: factor out - tell author about suggested tags
+        suggested_tags = filter_suggested_tags(added_tags)
+        if len(suggested_tags) > 0:
+            #1) notify author that the tag is going to be moderated
+            #todo: factor this out
+            if len(suggested_tags) == 1:
+                msg = _(
+                    'Tag %s is new and will be submitted for the '
+                    'moderators approval'
+                ) % suggested_tags[0].name
+            else:
+                msg = _(
+                    'Tags %s are new and will be submitted for the '
+                    'moderators approval'
+                ) % ', '.join([tag.name for tag in suggested_tags])
+            user.message_set.create(message = msg)
+            #2) todo: notify moderators about newly suggested tags
 
         ####################################################################
         self.update_summary_html() # regenerate question/thread summary html
@@ -805,6 +1206,22 @@ class Thread(models.Model):
             return True
 
         return False
+
+    def add_tag(
+        self, user = None, timestamp = None, tag_name = None, silent = False
+    ):
+        """adds one tag to thread"""
+        tag_names = self.get_tag_names()
+        if tag_name in tag_names:
+            return
+        tag_names.append(tag_name)
+
+        self.retag(
+            retagged_by = user,
+            retagged_at = timestamp,
+            tagnames = ' '.join(tag_names),
+            silent = silent
+        )
 
     def retag(self, retagged_by=None, retagged_at=None, tagnames=None, silent=False):
         """changes thread tags"""
@@ -829,7 +1246,7 @@ class Thread(models.Model):
 
         # Create a new revision
         latest_revision = thread_question.get_latest_revision()
-        PostRevision.objects.create_question_revision(
+        PostRevision.objects.create(
             post = thread_question,
             title      = latest_revision.title,
             author     = retagged_by,
@@ -858,11 +1275,13 @@ class Thread(models.Model):
 
         return last_updated_at, last_updated_by
 
-    def get_summary_html(self, search_state):
-        html = self.get_cached_summary_html()
+    def get_summary_html(self, search_state, visitor = None):
+        html = self.get_cached_summary_html(visitor)
         if not html:
-            html = self.update_summary_html()
+            html = self.update_summary_html(visitor)
 
+        # todo: this work may be pushed onto javascript we post-process tag names
+        # in the snippet so that tag urls match the search state
         # use `<<<` and `>>>` because they cannot be confused with user input
         # - if user accidentialy types <<<tag-name>>> into question title or body,
         # then in html it'll become escaped like this: &lt;&lt;&lt;tag-name&gt;&gt;&gt;
@@ -882,14 +1301,21 @@ class Thread(models.Model):
 
         return html
 
-    def get_cached_summary_html(self):
+    def get_cached_summary_html(self, visitor = None):
+        #todo: remove this plug by adding cached foreign user group
+        #parameter to the key. Now with groups on caching is turned off
+        #parameter visitor is there to get summary out by the user groups
+        if askbot_settings.GROUPS_ENABLED:
+            return None
         return cache.cache.get(self.SUMMARY_CACHE_KEY_TPL % self.id)
 
-    def update_summary_html(self):
+    def update_summary_html(self, visitor = None):
         context = {
             'thread': self,
-            'question': self._question_post(refresh=True),  # fetch new question post to make sure we're up-to-date
+            #fetch new question post to make sure we're up-to-date
+            'question': self._question_post(refresh=True),
             'search_state': DummySearchState(),
+            'visitor': visitor
         }
         html = get_template('widgets/question_summary.html').render(context)
         # INFO: Timeout is set to 30 days:
@@ -928,7 +1354,20 @@ class FavoriteQuestion(models.Model):
         return '[%s] favorited at %s' %(self.user, self.added_at)
 
 
-class AnonymousQuestion(AnonymousContent):
+class DraftQuestion(models.Model):
+    """Provides space to solve unpublished draft
+    questions. Contents is used to populate the Ask form.
+    """
+    author = models.ForeignKey(User)
+    title = models.CharField(max_length=300, null=True)
+    text = models.TextField(null=True)
+    tagnames = models.CharField(max_length=125, null=True)
+
+    class Meta:
+        app_label = 'askbot'
+
+
+class AnonymousQuestion(DraftContent):
     """question that was asked before logging in
     maybe the name is a little misleading, the user still
     may or may not want to stay anonymous after the question
@@ -940,6 +1379,7 @@ class AnonymousQuestion(AnonymousContent):
 
     def publish(self,user):
         added_at = datetime.datetime.now()
+        #todo: wrong - use User.post_question() instead
         Thread.objects.create_new(
             title = self.title,
             added_at = added_at,

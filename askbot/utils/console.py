@@ -2,7 +2,15 @@
 """
 import sys
 import time
+import logging
 from askbot.utils import path
+
+def start_printing_db_queries():
+    """starts logging database queries into console,
+    should be used for debugging only"""
+    logger = logging.getLogger('django.db.backends')
+    logger.setLevel(logging.DEBUG)
+    logger.addHandler(logging.StreamHandler())
 
 def choice_dialog(prompt_phrase, choices = None, invalid_phrase = None):
     """prints a prompt, accepts keyboard input
@@ -92,14 +100,8 @@ class ProgressBar(object):
     def __iter__(self):
         return self
 
-    def next(self):
-
-        try:
-            result = self.iterable.next()
-        except StopIteration:
-            if self.length > 0:
-                sys.stdout.write('\n')
-            raise
+    def print_progress_bar(self):
+        """prints the progress bar"""
 
         sys.stdout.write('\b'*len(self.progress))
 
@@ -112,5 +114,17 @@ class ProgressBar(object):
         sys.stdout.write(self.progress)
         sys.stdout.flush()
 
+
+    def next(self):
+
+        try:
+            result = self.iterable.next()
+        except StopIteration:
+            if self.length > 0:
+                self.print_progress_bar()
+                sys.stdout.write('\n')
+            raise
+
+        self.print_progress_bar()
         self.counter += 1
         return result

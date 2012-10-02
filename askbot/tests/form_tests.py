@@ -334,3 +334,52 @@ class AnswerEditorFieldTests(AskbotTestCase):
             self.field.clean(10*'a'),
             10*'a'
         )
+
+
+class PostAsSomeoneFormTests(AskbotTestCase):
+
+    form = forms.PostAsSomeoneForm
+
+    def setUp(self):
+        self.good_data = {
+            'username': 'me',
+            'email': 'me@example.com'
+        }
+
+    def test_blank_form_validates(self):
+        form = forms.PostAsSomeoneForm({})
+        self.assertEqual(form.is_valid(), True)
+
+    def test_complete_form_validates(self):
+        form = forms.PostAsSomeoneForm(self.good_data)
+        self.assertEqual(form.is_valid(), True)
+
+    def test_missing_email_fails(self):
+        form = forms.PostAsSomeoneForm({'post_author_username': 'me'})
+        self.assertEqual(form.is_valid(), False)
+
+    def test_missing_username_fails(self):
+        form = forms.PostAsSomeoneForm({'post_author_email': 'me@example.com'})
+        self.assertEqual(form.is_valid(), False)
+
+class AskWidgetFormTests(AskbotTestCase):
+
+    form = forms.AskWidgetForm
+
+    def setUp(self):
+        self.good_data = {'title': "What's the price of a house in london?"}
+        self.good_data_anon = {'title': "What's the price of a house in london?",
+                                'ask_anonymously': True}
+
+        self.bad_data = {'title': ''}
+
+    def test_valid_input(self):
+        form_object = self.form(include_text=False, data=self.good_data)
+        print form_object.errors
+        self.assertTrue(form_object.is_valid())
+        form_object = self.form(include_text=False, data=self.good_data_anon)
+        self.assertTrue(form_object.is_valid())
+
+    def test_invalid_input(self):
+        form_object = self.form(False, data=self.bad_data)
+        self.assertFalse(form_object.is_valid())

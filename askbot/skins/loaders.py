@@ -34,11 +34,11 @@ def filesystem_load_template_source(name, dirs=None):
 
     try:
         #todo: move this to top after splitting out get_skin_dirs()
-        tname = os.path.join(askbot_settings.ASKBOT_DEFAULT_SKIN,'templates',name)
-        return filesystem.load_template_source(tname,dirs)
+        tname = os.path.join(askbot_settings.ASKBOT_DEFAULT_SKIN, 'templates', name)
+        return filesystem.load_template_source(tname, dirs)
     except:
-        tname = os.path.join('default','templates',name)
-        return filesystem.load_template_source(tname,dirs)
+        tname = os.path.join('default', 'templates', name)
+        return filesystem.load_template_source(tname, dirs)
 filesystem_load_template_source.is_usable = True
 #added this for backward compatbility
 load_template_source = filesystem_load_template_source
@@ -115,14 +115,20 @@ def get_template(template, request = None):
         skin.set_language(request.LANGUAGE_CODE)
     return skin.get_template(template)
 
+def render_into_skin_as_string(template, data, request):
+    context = RequestContext(request, data)
+    template = get_template(template, request)
+    return template.render(context)
+
 def render_into_skin(template, data, request, mimetype = 'text/html'):
     """in the future this function will be able to
     switch skin depending on the site administrator/user selection
     right now only admins can switch
     """
-    context = RequestContext(request, data)
-    template = get_template(template, request)
-    return HttpResponse(template.render(context), mimetype = mimetype)
+    return HttpResponse(
+                render_into_skin_as_string(template, data, request),
+                mimetype=mimetype
+            )
 
 def render_text_into_skin(text, data, request):
     context = RequestContext(request, data)
