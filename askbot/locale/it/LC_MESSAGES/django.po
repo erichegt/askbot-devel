@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: 0.7\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-10-03 06:29-0500\n"
-"PO-Revision-Date: 2012-10-03 07:25\n"
+"PO-Revision-Date: 2012-10-03 08:07\n"
 "Last-Translator:   <stefano.mancini@devinterface.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -43,11 +43,11 @@ msgid "Country field is required"
 msgstr "Il campo Stato è obbligatorio"
 
 #: forms.py:185
-#, fuzzy, python-format
+#, python-format
 msgid "must be > %d word"
 msgid_plural "must be > %d words"
-msgstr[0] "il titolo deve essere più lungo di %d caratteri"
-msgstr[1] "il titolo deve essere più lungo di %d caratteri"
+msgstr[0] "deve essere > %d parole"
+msgstr[1] "deve essere > %d parola"
 
 #: forms.py:196
 #, python-format
@@ -255,7 +255,6 @@ msgid "keep private within your groups"
 msgstr "tenere privati all'interno dei vostri gruppi"
 
 #: forms.py:804
-#, fuzzy
 msgid "User name:"
 msgstr "Nome utente:"
 
@@ -266,16 +265,12 @@ msgstr ""
 "nuovi account."
 
 #: forms.py:813
-#, fuzzy
 msgid "Email address:"
-msgstr ""
-"<strong>Indirizzo e-mail</strong> (<i><strong>non</strong> verrà mostrato "
-"agli altri utenti, dev'essere valido</i>)"
+msgstr "Indirizzo Email:"
 
 #: forms.py:863
-#, fuzzy
 msgid "User name is required with the email"
-msgstr "il nome utente è obbligatorio"
+msgstr "il nome utente è obbligatorio assieme alla mail"
 
 #: forms.py:868
 msgid "Email is required if user name is added"
@@ -408,14 +403,12 @@ msgid "Title"
 msgstr "Titolo"
 
 #: forms.py:1613 templates/groups.html:32
-#, fuzzy
 msgid "Description"
-msgstr "%(description)s"
+msgstr "Descrizione"
 
 #: tasks.py:67
-#, fuzzy
 msgid "An edit for my answer"
-msgstr "modificare ogni risposta"
+msgstr "Modifica per la mia risposta"
 
 #: tasks.py:70
 msgid "To add to your post EDIT ABOVE THIS LINE"
@@ -492,9 +485,8 @@ msgid "tags/"
 msgstr "tag/"
 
 #: urls.py:217
-#, fuzzy
 msgid "suggested-tags/"
-msgstr "vedi i tag"
+msgstr "tag-suggeriti/"
 
 #: urls.py:332
 msgid "subscribe-for-tags/"
@@ -575,23 +567,20 @@ msgid "Allow only registered user to access the forum"
 msgstr "Solo gli utenti registrati possono accedere al forum"
 
 #: conf/access_control.py:22
-#, fuzzy
 msgid "nothing - not required"
-msgstr "campo obbligatorio"
+msgstr "nulla - non necessaria"
 
 #: conf/access_control.py:23
-#, fuzzy
 msgid "access to content"
-msgstr "Impostazioni base"
+msgstr "accedere al contenuto"
 
 #: conf/access_control.py:34
 msgid "Require valid email for"
 msgstr "Richiede una email valida per"
 
 #: conf/access_control.py:44
-#, fuzzy
 msgid "Allowed email addresses"
-msgstr "la tua e-mail <i>(resterà privata)</i>"
+msgstr "Indirizzi email consentiti"
 
 #: conf/access_control.py:45
 msgid "Please use space to separate the entries"
@@ -1167,18 +1156,16 @@ msgid "Minimum length of answer body (number of characters)"
 msgstr "Massima lunghezza di un tag (numero di caratteri)"
 
 #: conf/forum_data_rules.py:143
-#, fuzzy
 msgid "Limit one answer per question per user"
-msgstr "commenti e risposte a domande"
+msgstr "Limita una sola risposta per ogni domanda per utente"
 
 #: conf/forum_data_rules.py:152
 msgid "Are tags required?"
 msgstr "I tag sono obbligatori?"
 
 #: conf/forum_data_rules.py:162
-#, fuzzy
 msgid "Enable tag moderation"
-msgstr "modera"
+msgstr "Abilitare la moderazione in tag"
 
 #: conf/forum_data_rules.py:164
 msgid ""
@@ -1191,14 +1178,12 @@ msgid "category tree"
 msgstr ""
 
 #: conf/forum_data_rules.py:173
-#, fuzzy
 msgid "user input"
-msgstr "sito personale"
+msgstr "input dell'utente"
 
 #: conf/forum_data_rules.py:180
-#, fuzzy
 msgid "Source of tags"
-msgstr "Iscriviti per i tag"
+msgstr "Fonte di tag"
 
 #: conf/forum_data_rules.py:191
 msgid "Mandatory tags"
@@ -1347,9 +1332,8 @@ msgid "What should \"unanswered question\" mean?"
 msgstr "Cosa dovrebbe significare \"domande senza risposta\"?"
 
 #: conf/group_settings.py:9
-#, fuzzy
 msgid "Group settings"
-msgstr "Modifica le impostazioni dei gruppi"
+msgstr "Impostazioni del gruppo"
 
 #: conf/group_settings.py:18
 msgid "Enable user groups"
@@ -1360,18 +1344,16 @@ msgid "everyone"
 msgstr ""
 
 #: conf/group_settings.py:41
-#, fuzzy
 msgid "Global user group name"
-msgstr "nome utente di ClaimID"
+msgstr "Nome utente globale del gruppo"
 
 #: conf/group_settings.py:42
 msgid "All users belong to this group automatically"
 msgstr ""
 
 #: conf/group_settings.py:52
-#, fuzzy
 msgid "Enable group email adddresses"
-msgstr "Salva il tuo indirizzo e-mail"
+msgstr "Abilitare il gruppo di indirizzi email"
 
 #: conf/group_settings.py:54
 msgid "If selected, users can post to groups by email \"group-name@domain.com\""
@@ -1472,9 +1454,8 @@ msgid ""
 msgstr ""
 
 #: conf/ldap.py:113
-#, fuzzy
 msgid "UserID/login field"
-msgstr "Accesso utente"
+msgstr "Campo UserID/login"
 
 #: conf/ldap.py:116
 msgid ""
@@ -1525,9 +1506,8 @@ msgid "LDAP Server EMAIL field name"
 msgstr "Nome utente del provider LDAP"
 
 #: conf/ldap.py:180
-#, fuzzy
 msgid "This field is required"
-msgstr "campo obbligatorio"
+msgstr "Questo campo è obbligatorio"
 
 #: conf/leading_sidebar.py:12
 msgid "Common left sidebar"
@@ -1818,9 +1798,8 @@ msgid ""
 msgstr ""
 
 #: conf/moderation.py:19
-#, fuzzy
 msgid "Content moderation"
-msgstr "modera"
+msgstr "Moderazione di contenuti"
 
 #: conf/moderation.py:28
 msgid "Enable content moderation"
@@ -1963,7 +1942,6 @@ msgid "User profile sidebar"
 msgstr "Profilo utente"
 
 #: conf/sidebar_question.py:11
-#, fuzzy
 msgid "Question page banners and sidebar"
 msgstr "Pagina delle domande nella barra laterale"
 
@@ -2408,14 +2386,12 @@ msgid "User settings"
 msgstr "Impostazioni degli utenti"
 
 #: conf/user_settings.py:23
-#, fuzzy
 msgid "On-screen greeting shown to the new users"
 msgstr "Testo mostrato nel benvenuto agli utenti anonimi"
 
 #: conf/user_settings.py:32
-#, fuzzy
 msgid "Allow anonymous users send feedback"
-msgstr "mi spiace, devi essere registrato per votare"
+msgstr "Permettere agli utenti anonimi di inviare feedback"
 
 #: conf/user_settings.py:41
 msgid "Allow editing user screen name"
@@ -2434,9 +2410,8 @@ msgid "Allow users change own email addresses"
 msgstr "Consentire agli utenti di modificare il proprio indirizzo email"
 
 #: conf/user_settings.py:69
-#, fuzzy
 msgid "Allow email address in user name"
-msgstr "l'indirizzo e-mail è obbligatorio"
+msgstr "Permettere indirizzi email nel nome utente"
 
 #: conf/user_settings.py:78
 msgid "Allow account recovery by email"
@@ -2750,28 +2725,20 @@ msgid "mentioned in the post"
 msgstr "menzionato nel post"
 
 #: const/__init__.py:216
-#, fuzzy
 msgid "created tag description"
-msgstr ""
-"Se partecipi regolarmente a questa comunità, verrai sicuramente premiato con"
-" delle medaglie di bronzo."
+msgstr "descrizione tag creato"
 
 #: const/__init__.py:220
-#, fuzzy
 msgid "updated tag description"
-msgstr ""
-"Le medaglie d'oro sono le più pregiate. Per ottenerle, non basta partecipare"
-" attivamente, ma servono anche conoscenze e abilità."
+msgstr "descrizione aggiornata tag"
 
 #: const/__init__.py:222
-#, fuzzy
 msgid "made a new post"
-msgstr "cancella"
+msgstr "creato un nuovo post"
 
 #: const/__init__.py:225
-#, fuzzy
 msgid "made an edit"
-msgstr "Salva modifica"
+msgstr "ha effettuato una modifica"
 
 #: const/__init__.py:229
 msgid "created post reject reason"
@@ -2806,34 +2773,28 @@ msgid "retagged"
 msgstr "ritaggata"
 
 #: const/__init__.py:302
-#, fuzzy
 msgid "[private]"
-msgstr "[prezzo]"
+msgstr "[privato]"
 
 #: const/__init__.py:311
-#, fuzzy
 msgid "show all tags"
 msgstr "vedi tutti i tag"
 
 #: const/__init__.py:312 const/__init__.py:322
-#, fuzzy
 msgid "exclude ignored tags"
 msgstr "escludi gli ignorati"
 
 #: const/__init__.py:313
-#, fuzzy
 msgid "only interesting tags"
-msgstr "Tag preferiti"
+msgstr "solo tag interessanti"
 
 #: const/__init__.py:317 const/__init__.py:323
-#, fuzzy
 msgid "only subscribed tags"
-msgstr "Iscriviti per i tag"
+msgstr "solo tag sottoscritti"
 
 #: const/__init__.py:321
-#, fuzzy
 msgid "email for all tags"
-msgstr "vedi tutti i tag"
+msgstr "e-mail per tutti i tag"
 
 #: const/__init__.py:327
 msgid "instantly"
@@ -2908,29 +2869,24 @@ msgid "activity descendant"
 msgstr "attività discendente"
 
 #: const/__init__.py:411
-#, fuzzy
 msgid "activity ascendant"
-msgstr "attività"
+msgstr "attività ascendenti"
 
 #: const/__init__.py:412
-#, fuzzy
 msgid "answers descendant"
-msgstr "risposto il"
+msgstr "risposte discendenti"
 
 #: const/__init__.py:413
-#, fuzzy
 msgid "answers ascendant"
-msgstr "risposto il"
+msgstr "risposte ascendenti"
 
 #: const/__init__.py:414
-#, fuzzy
 msgid "votes descendant"
-msgstr "voti rimanenti"
+msgstr "voti discendenti"
 
 #: const/__init__.py:415
-#, fuzzy
 msgid "votes ascendant"
-msgstr "voti rimanenti"
+msgstr "voti ascendenti"
 
 #: const/message_keys.py:21
 msgid "most relevant questions"
@@ -3001,18 +2957,16 @@ msgid "ignored"
 msgstr "ignorate"
 
 #: const/message_keys.py:38 models/tag.py:326
-#, fuzzy
 msgid "subscribed"
-msgstr "Iscriviti"
+msgstr "sottoscritto"
 
 #: const/message_keys.py:39 templates/question_retag.html:58
 msgid "tags are required"
 msgstr "i tag sono obbligatori"
 
 #: const/message_keys.py:41
-#, fuzzy
 msgid "please use letters, numbers and characters \"-+.#\""
-msgstr "Nei tag devi usare letter numeri ed i caratteri \"-+.#\""
+msgstr "prego usa lettere numeri ed i caratteri \"-+.#\""
 
 #: const/message_keys.py:47
 msgid ""
@@ -3103,9 +3057,8 @@ msgid "signin/"
 msgstr "signin/"
 
 #: deps/django_authopenid/urls.py:10
-#, fuzzy
 msgid "widget/signin/"
-msgstr "widgets/"
+msgstr "widget/signin/"
 
 #: deps/django_authopenid/urls.py:13
 msgid "signout/"
@@ -3132,9 +3085,8 @@ msgid "recover/"
 msgstr "recupera/"
 
 #: deps/django_authopenid/urls.py:35
-#, fuzzy
 msgid "verify-email/"
-msgstr "verifica/"
+msgstr "verifica-email/"
 
 #: deps/django_authopenid/util.py:380
 #, python-format
@@ -3291,9 +3243,10 @@ msgstr ""
 "prima."
 
 #: deps/django_authopenid/views.py:827
-#, fuzzy
 msgid "Otherwise, please report the incident to the site administrator."
-msgstr "puoi segnalare tu stesso questo errore agli amministratori del sito"
+msgstr ""
+"Altrimenti, puoi segnalare tu stesso questo errore agli amministratori del "
+"sito"
 
 #: deps/django_authopenid/views.py:858
 #, python-format
@@ -3301,10 +3254,9 @@ msgid "Your %(provider)s login works fine"
 msgstr "Il tuo metodo di accesso con %(provider)s funziona"
 
 #: deps/django_authopenid/views.py:1047
-#, fuzzy
 msgid ""
 "Sorry, registration failed. Please ask the site administrator for help."
-msgstr "Errore nel caricamento del file. Contatta un amministratore."
+msgstr "Siamo spiacenti, registrazione non riuscita."
 
 #: deps/django_authopenid/views.py:1193
 #, python-format
@@ -3483,7 +3435,6 @@ msgstr ""
 "insufficienza di privilegi del tuo account utente</p>"
 
 #: mail/lamson_handlers.py:165
-#, fuzzy
 msgid ""
 "You were replying to an email address             unknown to the system or "
 "you were replying from a different address from the one where you"
@@ -3494,9 +3445,9 @@ msgstr ""
 "notifica."
 
 #: mail/lamson_handlers.py:252
-#, fuzzy, python-format
+#, python-format
 msgid "Re: Welcome to %(site_name)s"
-msgstr "Benvenuto %(username)s,"
+msgstr "Re: Benvenuto in %(site_name)s"
 
 #: mail/lamson_handlers.py:259
 msgid "Please reply to the welcome email without editing it"
@@ -3547,7 +3498,7 @@ msgid "new question"
 msgstr "nuova domanda"
 
 #: management/commands/send_email_alerts.py:474
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "<p>Please remember that you can always <a "
 "href=\"%(email_settings_link)s\">adjust</a> frequency of the email updates "
@@ -3815,17 +3766,13 @@ msgstr ""
 "reputazione."
 
 #: models/__init__.py:953
-#, fuzzy
 msgid "Sorry, you cannot reopen questions because your account is blocked"
 msgstr ""
-"Mi spiace, non puoi accettare risposte perché il tuo account è stato "
-"bloccato"
+"Mi spiace, non puoi riaprire domande perché il tuo account è stato bloccato"
 
 #: models/__init__.py:958
-#, fuzzy
 msgid "Sorry, you cannot reopen questions because your account is suspended"
-msgstr ""
-"Mi spiace, non puoi accettare risposte perché il tuo account è sospeso"
+msgstr "Mi spiace, non puoi riaprire domande perché il tuo account è sospeso"
 
 #: models/__init__.py:981
 msgid "You have flagged this question before and cannot do it more than once"
@@ -4056,14 +4003,14 @@ msgid "%(user)s has %(badges)s"
 msgstr "%(user)s ha %(badges)s"
 
 #: models/__init__.py:2923
-#, fuzzy, python-format
+#, python-format
 msgid "%(user)s shared a %(post_link)s."
-msgstr "%(user)s ha %(badges)s"
+msgstr "%(user)s ha condiviso %(post_link)s."
 
 #: models/__init__.py:2926 models/__init__.py:2936
-#, fuzzy, python-format
+#, python-format
 msgid "%(user)s edited a %(post_link)s."
-msgstr "il sito web di %(username)s è %(url)s"
+msgstr "%(user)s ha modificato %(post_link)s."
 
 #: models/__init__.py:2928
 #, python-format
@@ -4071,9 +4018,9 @@ msgid "%(user)s posted a %(post_link)s"
 msgstr "%(user)s ha pubblicato un %(post_link)s"
 
 #: models/__init__.py:2931
-#, fuzzy, python-format
+#, python-format
 msgid "%(user)s edited an %(post_link)s."
-msgstr "il sito web di %(username)s è %(url)s"
+msgstr "%(user)s ha modificato %(post_link)s."
 
 #: models/__init__.py:2933
 #, python-format
@@ -4104,9 +4051,9 @@ msgstr ""
 "href=\"%(user_profile)s\">tuo profilo</a>."
 
 #: models/__init__.py:3482
-#, fuzzy, python-format
+#, python-format
 msgid "Welcome to %(site_name)s"
-msgstr "Benvenuto %(username)s,"
+msgstr "Benvenuto in %(site_name)s"
 
 #: models/__init__.py:3503 views/commands.py:678
 msgid "Your tag subscription was saved, thanks!"
@@ -4422,9 +4369,9 @@ msgstr ""
 "moderatori."
 
 #: models/post.py:2052
-#, fuzzy, python-format
+#, python-format
 msgid "your post to %(site)s"
-msgstr "Riguardo %(site)s"
+msgstr "il tuo post in  %(site)s"
 
 #: models/post.py:2059
 msgid ""
@@ -4444,11 +4391,11 @@ msgid "\" and more"
 msgstr "\" ed altro ancora"
 
 #: models/question.py:686
-#, fuzzy, python-format
+#, python-format
 msgid "%(count)d answer:"
 msgid_plural "%(count)d answers:"
-msgstr[0] "ha commentato una risposta"
-msgstr[1] "ha commentato una risposta"
+msgstr[0] "%(count)d risposte"
+msgstr[1] "%(count)d risposta"
 
 #: models/question.py:1162
 #, python-format
@@ -4462,19 +4409,16 @@ msgstr ""
 "I tag %s sono nuovi e saranno presentati per l'approvazione dei moderatori"
 
 #: models/reply_by_email.py:37
-#, fuzzy
 msgid "Post an answer"
-msgstr "modificare ogni risposta"
+msgstr "Inviare una risposta"
 
 #: models/reply_by_email.py:38
-#, fuzzy
 msgid "Post a comment"
-msgstr "aggiungi commento"
+msgstr "Posta un commento"
 
 #: models/reply_by_email.py:39
-#, fuzzy
 msgid "Edit post"
-msgstr "cancella"
+msgstr "Modifica il post"
 
 #: models/reply_by_email.py:40
 msgid "Append to post"
@@ -4485,14 +4429,12 @@ msgid "Answer or comment, depending on the size of post"
 msgstr "Risposta o commento, a seconda delle dimensioni del post"
 
 #: models/reply_by_email.py:42
-#, fuzzy
 msgid "Validate email and record signature"
-msgstr "Verifica email non spedita"
+msgstr "Convalidare l'email e salva la firma"
 
 #: models/reply_by_email.py:105
-#, fuzzy
 msgid "added content by email"
-msgstr "modificato via email"
+msgstr "aggiunto contenuto via e-mail"
 
 #: models/reply_by_email.py:108
 msgid "edited by email"
@@ -4571,24 +4513,20 @@ msgid "Users ask permission"
 msgstr "Utenti chiedono il permesso"
 
 #: models/user.py:512
-#, fuzzy
 msgid "Moderator adds users"
-msgstr "modera questo utente"
+msgstr "Moderatore aggiunge utenti"
 
 #: models/user.py:561
-#, fuzzy
 msgid "Please give a list of valid email addresses."
 msgstr "inserisci un indirizzo e-mail valido"
 
 #: models/user.py:571
-#, fuzzy
 msgid "Please give a list of valid email domain names."
-msgstr "inserisci un indirizzo e-mail valido"
+msgstr "inserisci un dominio e-mail valido"
 
 #: models/widgets.py:34
-#, fuzzy
 msgid "css for the widget"
-msgstr "CSS per il widget di domande"
+msgstr "CSS per il widget"
 
 #: templates/404.jinja.html:3 templates/404.jinja.html.py:10
 msgid "Page not found"
@@ -4749,7 +4687,7 @@ msgstr ""
 "viene premiato con delle medaglie."
 
 #: templates/badges.html:8
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Below is the list of available badges and number \n"
 "    of times each type of badge has been awarded. Have ideas about fun \n"
@@ -4768,7 +4706,6 @@ msgid "gold badge: the highest honor and is very rare"
 msgstr "Medaglia d'oro: il più alto onore ed è molto rara"
 
 #: templates/badges.html:41
-#, fuzzy
 msgid ""
 "Gold badge is the highest award in this community. To obtain it you have to show \n"
 "profound knowledge and ability in addition to your active participation."
@@ -4819,7 +4756,6 @@ msgid "What kinds of questions can I ask here?"
 msgstr "Che tipo di domande posso porre qui?"
 
 #: templates/faq_static.html:7
-#, fuzzy
 msgid ""
 "Most importantly - questions should be <strong>relevant</strong> to this "
 "community."
@@ -5002,7 +4938,6 @@ msgid "To register, do I need to create new password?"
 msgstr "Devo scegliere una password per registrarmi?"
 
 #: templates/faq_static.html:72
-#, fuzzy
 msgid ""
 "No, you don't have to. You can login through any service that supports "
 "OpenID, e.g. Google, Yahoo, AOL, etc."
@@ -5043,7 +4978,7 @@ msgid "Still have questions?"
 msgstr "Hai altre domande?"
 
 #: templates/faq_static.html:80
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Please <a href='%(ask_question_url)s'>ask</a> your question, help make our "
 "community better!"
@@ -5108,19 +5043,16 @@ msgid "All groups"
 msgstr "Tutti i gruppi"
 
 #: templates/groups.html:13
-#, fuzzy
 msgid "all groups"
-msgstr "all badges"
+msgstr "tutti i gruppi"
 
 #: templates/groups.html:15
-#, fuzzy
 msgid "My groups"
-msgstr "Gruppi di impostazioni"
+msgstr "I miei gruppi"
 
 #: templates/groups.html:17
-#, fuzzy
 msgid "my groups"
-msgstr "Gruppi di impostazioni"
+msgstr "i miei gruppi"
 
 #: templates/groups.html:25
 msgid ""
@@ -5135,9 +5067,8 @@ msgid "Group"
 msgstr "Gruppo"
 
 #: templates/groups.html:31
-#, fuzzy
 msgid "Number of members"
-msgstr "volte"
+msgstr "Numero di membri"
 
 #: templates/help.html:2 templates/help.html.py:4
 msgid "Help"
@@ -5158,9 +5089,8 @@ msgid "Thank you for using %(app_name)s, here is how it works."
 msgstr "Grazie per aver utilizzato %(app_name)s, ecco come funziona."
 
 #: templates/help.html:16
-#, fuzzy
 msgid "How questions, answers and comments work"
-msgstr "Consenti di inviare domande per email"
+msgstr "Come funzionano domande, risposte e commenti"
 
 #: templates/help.html:18
 msgid ""
@@ -5187,9 +5117,8 @@ msgstr ""
 "commenti sono buoni per le discussioni limitate."
 
 #: templates/help.html:26
-#, fuzzy
 msgid "Please search before asking your questions"
-msgstr "Ricorda, puoi sempre porre tu stesso una domanda!"
+msgstr "Si prega di ricercare prima di fare una domanda"
 
 #: templates/help.html:27
 msgid ""
@@ -5269,7 +5198,6 @@ msgid "Other topics"
 msgstr "Altri argomenti"
 
 #: templates/help.html:53
-#, fuzzy
 msgid ""
 "You can @mention users anywhere in the text to point their attention,\n"
 "    follow users and conversations and report inappropriate content by flagging it."
@@ -5319,23 +5247,20 @@ msgstr ""
 "<code>python manage.py load_stackexchange path/to/your-data.zip</code>"
 
 #: templates/list_suggested_tags.html:11
-#, fuzzy
 msgid "Tag"
-msgstr "Tags"
+msgstr "Tag"
 
 #: templates/list_suggested_tags.html:12
 msgid "Suggested by"
 msgstr "Suggerito da"
 
 #: templates/list_suggested_tags.html:13
-#, fuzzy
 msgid "Your decision"
-msgstr "revisione"
+msgstr "Tua decisione"
 
 #: templates/list_suggested_tags.html:14
-#, fuzzy
 msgid "Suggested tag was used for questions"
-msgstr "Ha creato un tag usato da almeno %(num)s domande"
+msgstr "Il tag suggerito è stato utilizzato per le domande"
 
 #: templates/list_suggested_tags.html:34
 msgid "Accept"
@@ -5351,9 +5276,8 @@ msgid "Apply tag \"%(name)s\" to all above questions"
 msgstr "Applicare il tag \"%(name)s \" a tutte le domande sopra"
 
 #: templates/list_suggested_tags.html:51
-#, fuzzy
 msgid "Reject tag"
-msgstr "azzera i tag"
+msgstr "Rifiutare il tag"
 
 #: templates/list_suggested_tags.html:59 templates/tags.html:10
 #: templates/tags.html.py:36
@@ -5403,9 +5327,8 @@ msgid "updated"
 msgstr "modificato"
 
 #: templates/macros.html:259 templates/macros.html.py:265
-#, fuzzy
 msgid "Leave this group"
-msgstr "Gruppi di impostazioni"
+msgstr "Lascia questo gruppo"
 
 #: templates/macros.html:260 templates/macros.html.py:262
 #: templates/macros.html:281
@@ -5446,9 +5369,8 @@ msgid "edit"
 msgstr "modifica"
 
 #: templates/macros.html:430
-#, fuzzy
 msgid "convert to answer"
-msgstr "Accetta la tua riposta"
+msgstr "convertire in risposta"
 
 #: templates/macros.html:566
 #, python-format
@@ -5587,13 +5509,13 @@ msgid "Reopen question"
 msgstr "Riapri domanda"
 
 #: templates/reopen.html:12
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "This question has been closed by \n"
 "    <a href=\"%(closed_by_profile_url)s\">%(username)s</a>\n"
 msgstr ""
 "Questa domanda è stata chiusa da\n"
-"<a href=\"%(closed_by_profile_url)s\">%(closed_by_username)s</a>\n"
+"<a href=\"%(closed_by_profile_url)s\">%(username)s</a>\n"
 
 #: templates/reopen.html:17
 msgid "Close reason:"
@@ -5652,14 +5574,13 @@ msgid "Users in group %(name)s"
 msgstr "Utenti nel gruppo %(name)s"
 
 #: templates/users.html:20
-#, fuzzy
 msgid "Select/Sort by &raquo;"
 msgstr "Ordina per:"
 
 #: templates/users.html:25
-#, fuzzy, python-format
+#, python-format
 msgid "people in group %(name)s"
-msgstr "Impostazioni per i gruppi: %(name)s"
+msgstr "persone nel gruppo %(name)s"
 
 #: templates/users.html:29 templates/main_page/tab_bar.html:15
 #: templates/tags/header.html:13
@@ -5697,9 +5618,9 @@ msgid "by username"
 msgstr "per nome"
 
 #: templates/users.html:62
-#, fuzzy, python-format
+#, python-format
 msgid "users matching query %(search_query)s:"
-msgstr "utenti contenenti %(suser)s:"
+msgstr "utenti corrispondenti alla ricerca %(search_query)s:"
 
 #: templates/users.html:65
 msgid "Nothing found."
@@ -6171,9 +6092,8 @@ msgstr "torna al login OpenID"
 
 #: templates/authopenid/verify_email.html:2
 #: templates/authopenid/verify_email.html:4
-#, fuzzy
 msgid "Confirm email address"
-msgstr "la tua e-mail <i>(resterà privata)</i>"
+msgstr "Conferma indirizzo email"
 
 #: templates/authopenid/verify_email.html:6
 msgid ""
@@ -6184,9 +6104,8 @@ msgstr ""
 "Se il link non funziona - Inserisci il codice qui sotto:"
 
 #: templates/authopenid/verify_email.html:11
-#, fuzzy
 msgid "Confirm email"
-msgstr "mai"
+msgstr "Conferma l'email"
 
 #: templates/authopenid/widget_signin.html:33
 msgid ""
@@ -6295,12 +6214,12 @@ msgstr ""
 "Salve, questo è un messaggio di notifica del forum  %(site_title)s.\n"
 
 #: templates/email/footer.html:1
-#, fuzzy, python-format
+#, python-format
 msgid "Sincerely,<br>%(site_name)s Administrator"
-msgstr "<p>Cordialmente,<br/>l'amministratore</p>"
+msgstr "<p>Cordialmente,<br/>l'amministratore di %(site_name)s</p>"
 
 #: templates/email/instant_notification.html:6
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "\n"
 "<p style=\"font-size:10px; font-style:italic;\">\n"
@@ -6308,8 +6227,8 @@ msgid ""
 "how often you receive these notifications or unsubscribe. Thank you for your interest in our forum!</p>\n"
 msgstr ""
 "\n"
-"<div>%(content_preview)s</div>\n"
-"<p>Puoi <a href=\"%(user_subscriptions_url)s\">configurare</a> la frequenza con cui ti vengono inviati questi aggiornamenti o eliminarli. Grazie per la tua partecipazione a questo forum!</p>\n"
+"<p style=\"font-size:10px; font-style:italic;\">\n"
+"Puoi <a href=\"%(user_subscriptions_url)s\">configurare</a> la frequenza con cui ti vengono inviati questi aggiornamenti o eliminarli. Grazie per la tua partecipazione a questo forum!</p>\n"
 
 #: templates/email/insufficient_rep_to_post_by_email.html:10
 #, python-format
@@ -6325,33 +6244,28 @@ msgstr ""
 "voti positivi."
 
 #: templates/email/insufficient_rep_to_post_by_email.html:15
-#, fuzzy, python-format
+#, python-format
 msgid "At this time, please post your question at %(link)s"
-msgstr "Poni tu stesso la domanda!"
+msgstr "A questo punto, poni la domanda a %(link)s"
 
 #: templates/email/macros.html:15
-#, fuzzy, python-format
+#, python-format
 msgid "Question by %(author)s:"
-msgstr "Strumenti per le domande"
+msgstr "Domanda da %(author)s:"
 
 #: templates/email/macros.html:17
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "\n"
 "                                In reply to %(author)s's question:\n"
 "                            "
 msgstr ""
-"<span class='strong big'>Il tuo indirizzo e-mail %(email)s non è stato "
-"ancora verificato</span> Prima di pubblicare messaggi devi verificare il tuo"
-" indirizzo; maggiori dettagli <a "
-"href='%(email_validation_faq_url)s'>qui</a>.<br>Puoi porre la tua domanda "
-"ora e verificare la tua e-mail in un secondo momento; la tua domanda nel "
-"frattempo rimarrà in attesa."
+"\n"
+"In risposta alla domanda di %(author)s:"
 
 #: templates/email/macros.html:22
-#, fuzzy
 msgid "Question :"
-msgstr "Domande"
+msgstr "Domanda:"
 
 #: templates/email/macros.html:28
 #, python-format
@@ -6359,91 +6273,71 @@ msgid "Asked by %(author)s:"
 msgstr "Chiesto da %(author)s:"
 
 #: templates/email/macros.html:34
-#, fuzzy
 msgid "Tags:"
 msgstr "Tags"
 
 #: templates/email/macros.html:42
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "\n"
 "                                %(author)s's answer:\n"
 "                            "
 msgstr ""
-"<span class='strong big'>Il tuo indirizzo e-mail %(email)s non è stato "
-"ancora verificato</span> Prima di pubblicare messaggi devi verificare il tuo"
-" indirizzo; maggiori dettagli <a "
-"href='%(email_validation_faq_url)s'>qui</a>.<br>Puoi porre la tua domanda "
-"ora e verificare la tua e-mail in un secondo momento; la tua domanda nel "
-"frattempo rimarrà in attesa."
+"\n"
+"risposta di %(author)s:\n"
+" "
 
 #: templates/email/macros.html:46
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "\n"
 "                                In reply to %(author)s's answer:\n"
 "                            "
 msgstr ""
-"<span class='strong big'>Il tuo indirizzo e-mail %(email)s non è stato "
-"ancora verificato</span> Prima di pubblicare messaggi devi verificare il tuo"
-" indirizzo; maggiori dettagli <a "
-"href='%(email_validation_faq_url)s'>qui</a>.<br>Puoi porre la tua domanda "
-"ora e verificare la tua e-mail in un secondo momento; la tua domanda nel "
-"frattempo rimarrà in attesa."
+"\n"
+"In risposta alla risposta di %(author)s:"
 
 #: templates/email/macros.html:51
-#, fuzzy, python-format
+#, python-format
 msgid "Answered by %(author)s:"
-msgstr "Risposta fornita da me"
+msgstr "Risposta da %(author)s:"
 
 #: templates/email/macros.html:58
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "\n"
 "                                %(author)s's comment:\n"
 "                            "
 msgstr ""
-"<span class='strong big'>Il tuo indirizzo e-mail %(email)s non è stato "
-"ancora verificato</span> Prima di pubblicare messaggi devi verificare il tuo"
-" indirizzo; maggiori dettagli <a "
-"href='%(email_validation_faq_url)s'>qui</a>.<br>Puoi porre la tua domanda "
-"ora e verificare la tua e-mail in un secondo momento; la tua domanda nel "
-"frattempo rimarrà in attesa."
+"\n"
+"Commento di %(author)s:"
 
 #: templates/email/macros.html:62
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "\n"
 "                                In reply to %(author)s's comment:\n"
 "                            "
 msgstr ""
-"<span class='strong big'>Il tuo indirizzo e-mail %(email)s non è stato "
-"ancora verificato</span> Prima di pubblicare messaggi devi verificare il tuo"
-" indirizzo; maggiori dettagli <a "
-"href='%(email_validation_faq_url)s'>qui</a>.<br>Puoi porre la tua domanda "
-"ora e verificare la tua e-mail in un secondo momento; la tua domanda nel "
-"frattempo rimarrà in attesa."
+"\n"
+"In risposta al commento di %(author)s:"
 
 #: templates/email/macros.html:67
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "\n"
 "                            Commented by %(author)s:\n"
 "                        "
 msgstr ""
-"<span class='strong big'>Il tuo indirizzo e-mail %(email)s non è stato "
-"ancora verificato</span> Prima di pubblicare messaggi devi verificare il tuo"
-" indirizzo; maggiori dettagli <a "
-"href='%(email_validation_faq_url)s'>qui</a>.<br>Puoi porre la tua domanda "
-"ora e verificare la tua e-mail in un secondo momento; la tua domanda nel "
-"frattempo rimarrà in attesa."
+"\n"
+"Commentato da %(author)s:"
 
 #: templates/email/notify_author_about_approved_post.html:20
 msgid "Below is a copy of your post:"
 msgstr "Di seguito è una copia del tuo post:"
 
 #: templates/email/post_as_subthread.html:8
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "\n"
 "                %(comment)s comment:\n"
@@ -6454,16 +6348,16 @@ msgid_plural ""
 "            "
 msgstr[0] ""
 "\n"
-"%(q_num)s domanda trovata"
+"%(comment)s commenti:"
 msgstr[1] ""
 "\n"
-"%(q_num)s domande trovate"
+"%(comment)s commento:"
 
 #: templates/email/re_welcome_lamson_on.html:2
 #: templates/email/re_welcome_lamson_on.html:3
-#, fuzzy, python-format
+#, python-format
 msgid "Great, you are ready to use %(site_name)s!"
-msgstr "Collega il tuo account %(provider)s per %(site_name)s"
+msgstr "Grande, sei pronto per l'uso  di %(site_name)s !"
 
 #: templates/email/re_welcome_lamson_on.html:6
 #, python-format
@@ -6492,9 +6386,9 @@ msgid " Your post was rejected. "
 msgstr " Il tuo post è stato respinto. "
 
 #: templates/email/rejected_post.html:5
-#, fuzzy
 msgid "Your post (copied in the end), was rejected for the following reason:"
-msgstr "Possibili motivi:"
+msgstr ""
+"Il tuo post (copiato alla fine), è stata respinto per il seguente motivo:"
 
 #: templates/email/rejected_post.html:7
 msgid "Here is your original post"
@@ -6512,9 +6406,9 @@ msgstr ""
 #: templates/email/welcome_lamson_off.html:7
 #: templates/email/welcome_lamson_on.html:3
 #: templates/email/welcome_lamson_on.html:4
-#, fuzzy, python-format
+#, python-format
 msgid "Welcome to %(site_name)s!"
-msgstr "Benvenuto %(username)s,"
+msgstr "Benvenuti in %(site_name)s !"
 
 #: templates/email/welcome_lamson_off.html:10
 msgid "We look forward to your Questions!"
@@ -6540,9 +6434,8 @@ msgstr ""
 "rispondere a domande su  %(site_name)s  via email."
 
 #: templates/embed/ask_by_widget.html:174
-#, fuzzy
 msgid "Please enter a descriptive title for your question"
-msgstr "per favore inserisci un titolo descrittivo per la tua domanda"
+msgstr "Inserisci un titolo descrittivo per la tua domanda"
 
 #: templates/embed/list_widgets.html:39
 msgid "How to use?"
@@ -6569,9 +6462,8 @@ msgid "Save"
 msgstr "Salva"
 
 #: templates/embed/widgets.html:3 templates/embed/widgets.html.py:5
-#, fuzzy
 msgid "Widgets"
-msgstr "widgets/"
+msgstr "Widget"
 
 #: templates/embed/widgets.html:11
 msgid ""
@@ -6585,34 +6477,29 @@ msgid "Ask a question"
 msgstr "Chiedi"
 
 #: templates/embed/widgets.html:17 templates/embed/widgets.html.py:26
-#, fuzzy
 msgid "create"
-msgstr "registrati"
+msgstr "crea"
 
 #: templates/embed/widgets.html:20 templates/embed/widgets.html.py:29
-#, fuzzy
 msgid "view list"
 msgstr "consultazioni"
 
 #: templates/embed/widgets.html:25
-#, fuzzy
 msgid "List of questions"
-msgstr "Modifica domanda"
+msgstr "Elenco delle domande"
 
 #: templates/group_messaging/home.html:7
-#, fuzzy
 msgid "compose"
-msgstr "complete/"
+msgstr "componi"
 
 #: templates/group_messaging/macros.html:5
-#, fuzzy, python-format
+#, python-format
 msgid "You wrote on %(date)s:"
-msgstr "il %(date)s"
+msgstr "Hai scritto il %(date)s:"
 
 #: templates/group_messaging/senders_list.html:2
-#, fuzzy
 msgid "Inbox"
-msgstr "posta in arrivo"
+msgstr "Posta in arrivo"
 
 #: templates/group_messaging/senders_list.html:3
 msgid "Sent"
@@ -6623,14 +6510,12 @@ msgid "Trash"
 msgstr "Cestino"
 
 #: templates/group_messaging/senders_list.html:8
-#, fuzzy
 msgid "Messages by sender:"
-msgstr "Messaggio spedito"
+msgstr "Messaggio per autore"
 
 #: templates/group_messaging/senders_list.html:9
-#, fuzzy
 msgid "all users"
-msgstr "utenti"
+msgstr "tutti gli utenti"
 
 #: templates/group_messaging/threads_list.html:15
 msgid "there are no messages yet..."
@@ -6740,9 +6625,8 @@ msgid "RSS"
 msgstr "RSS"
 
 #: templates/main_page/tag_search.html:2
-#, fuzzy
 msgid "Tag search"
-msgstr "cerca"
+msgstr "Ricerca per tag"
 
 #: templates/main_page/tag_search.html:5
 msgid "search"
@@ -6798,14 +6682,12 @@ msgid "link"
 msgstr "collegamento"
 
 #: templates/question/answer_controls.html:19
-#, fuzzy
 msgid "unpublish"
-msgstr "[editore]"
+msgstr "annulla la pubblicazione"
 
 #: templates/question/answer_controls.html:24
-#, fuzzy
 msgid "publish"
-msgstr "[editore]"
+msgstr "pubblica"
 
 #: templates/question/answer_controls.html:29
 #: templates/question/question_controls.html:4
@@ -6839,9 +6721,8 @@ msgid "flag offensive"
 msgstr "segnala come offensivo"
 
 #: templates/question/answer_controls.html:62
-#, fuzzy
 msgid "convert to comment"
-msgstr "aggiungi commento"
+msgstr "converti in commento"
 
 #: templates/question/answer_tab_bar.html:3
 #, python-format
@@ -6902,9 +6783,8 @@ msgid "close date %(closed_at)s"
 msgstr "data di chiusura %(closed_at)s"
 
 #: templates/question/content.html:37
-#, fuzzy
 msgid "Edit Your Previous Answer"
-msgstr "La tua risposta"
+msgstr "Modifica la tua risposta precedente"
 
 #: templates/question/content.html:38
 msgid "(only one answer per question is allowed)"
@@ -7062,37 +6942,33 @@ msgid "add"
 msgstr "aggiungi"
 
 #: templates/question/sidebar.html:63 templates/question/sidebar.html.py:69
-#, fuzzy
 msgid "- or -"
 msgstr "oppure"
 
 #: templates/question/sidebar.html:81
-#, fuzzy
 msgid "share with everyone"
-msgstr "Email (non condivisa con altri):"
+msgstr "condividi con tutti"
 
 #: templates/question/sidebar.html:92
 msgid "This question is currently shared only with:"
 msgstr "Questa domanda è attualmente condiviso solo con:"
 
 #: templates/question/sidebar.html:94
-#, fuzzy
 msgid "Individual users"
-msgstr "Selezionato individualmente"
+msgstr "Singoli utenti"
 
 #: templates/question/sidebar.html:99
 msgid "You"
 msgstr "Si"
 
 #: templates/question/sidebar.html:106 templates/question/sidebar.html:126
-#, fuzzy
 msgid "and"
-msgstr "aggiungi"
+msgstr "e"
 
 #: templates/question/sidebar.html:131
-#, fuzzy, python-format
+#, python-format
 msgid "%(more_count)s more"
-msgstr "%(rev_count)s revisione"
+msgstr "%(more_count)s ancora"
 
 #: templates/question/sidebar.html:137
 msgid "Public thread"
@@ -7176,7 +7052,6 @@ msgid "Sections:"
 msgstr "Sezioni:"
 
 #: templates/user_inbox/base.html:19
-#, fuzzy
 msgid "messages"
 msgstr "messaggi/"
 
@@ -7186,37 +7061,33 @@ msgid "forum responses (%(re_count)s)"
 msgstr "risposte forum (%(re_count)s)"
 
 #: templates/user_inbox/base.html:31
-#, fuzzy, python-format
+#, python-format
 msgid "flagged items (%(flags_count)s)"
 msgstr "elementi contrassegnati (%(flag_count)s)"
 
 #: templates/user_inbox/base.html:38
-#, fuzzy
 msgid "group join requests"
-msgstr "Riaprire le proprie domande"
+msgstr "richieste di partecipazione al gruppo"
 
 #: templates/user_inbox/group_join_requests.html:4
 msgid "inbox - group join requests"
 msgstr "posta in arrivo - richieste di partecipazione al gruppo"
 
 #: templates/user_inbox/group_join_requests.html:27
-#, fuzzy
 msgid "Approve"
-msgstr "approvato"
+msgstr "Approva"
 
 #: templates/user_inbox/group_join_requests.html:43
 msgid "Deny"
 msgstr "Negare"
 
 #: templates/user_inbox/messages.html:93
-#, fuzzy
 msgid "inbox - messages"
-msgstr "Spedisci messaggio"
+msgstr "posta in arrivo - messaggi"
 
 #: templates/user_inbox/responses_and_flags.html:4
-#, fuzzy
 msgid "inbox - responses"
-msgstr "profilo utente &mdash; risposte"
+msgstr "posta in arrivo - risposte"
 
 #: templates/user_inbox/responses_and_flags.html:8
 msgid "select:"
@@ -7247,18 +7118,16 @@ msgid "dismiss"
 msgstr "allontana"
 
 #: templates/user_inbox/responses_and_flags.html:19
-#, fuzzy
 msgid "remove flags/approve"
-msgstr "rimuovi i flag"
+msgstr "rimuovi i flag/approvali"
 
 #: templates/user_inbox/responses_and_flags.html:23
 msgid "delete post"
 msgstr "cancella"
 
 #: templates/user_profile/reject_post_dialog.html:4
-#, fuzzy
 msgid "Reject the post(s)?"
-msgstr "cancella"
+msgstr "Rifiutare il post?"
 
 #: templates/user_profile/reject_post_dialog.html:11
 msgid "1) Enter a brief description of why you are rejecting the post."
@@ -7276,28 +7145,24 @@ msgstr "Utilizza questo motivo per rifiutare"
 
 #: templates/user_profile/reject_post_dialog.html:27
 #: templates/user_profile/reject_post_dialog.html:95
-#, fuzzy
 msgid "Use other reason"
-msgstr "Motivo della chiusura:"
+msgstr "Utilizza un altro motivo"
 
 #: templates/user_profile/reject_post_dialog.html:33
 msgid "Save reason, but do not reject"
 msgstr "Salvare il motivo, ma non rifiutare"
 
 #: templates/user_profile/reject_post_dialog.html:43
-#, fuzzy
 msgid "Please, choose a reason for the rejection."
-msgstr "per favore scegli una delle opzioni soprariportate"
+msgstr "Scegliere un motivo per il rifiuto."
 
 #: templates/user_profile/reject_post_dialog.html:58
-#, fuzzy
 msgid "Select this reason"
-msgstr "scegli revisione"
+msgstr "Seleziona questo motivo"
 
 #: templates/user_profile/reject_post_dialog.html:65
-#, fuzzy
 msgid "Delete this reason"
-msgstr "cancella questo commento"
+msgstr "Elimina questo motivo"
 
 #: templates/user_profile/reject_post_dialog.html:71
 msgid "Add a new reason"
@@ -7314,9 +7179,8 @@ msgstr ""
 "all'utente e verranno cancellati i post:"
 
 #: templates/user_profile/reject_post_dialog.html:101
-#, fuzzy
 msgid "Edit this reason"
-msgstr "Modifica domanda"
+msgstr "Modifica questo motivo"
 
 #: templates/user_profile/user.html:12
 #, python-format
@@ -7404,9 +7268,8 @@ msgid "real name"
 msgstr "nome vero"
 
 #: templates/user_profile/user_info.html:61
-#, fuzzy
 msgid "groups"
-msgstr "Gruppi di impostazioni"
+msgstr "gruppi"
 
 #: templates/user_profile/user_info.html:71
 msgid "add group"
@@ -7529,7 +7392,6 @@ msgstr ""
 "Utenti sospesi possono solo modificare o cancellare i propri messaggi."
 
 #: templates/user_profile/user_moderate.html:86
-#, fuzzy
 msgid ""
 "Blocked users can only login and send feedback to the site administrators, "
 "their url and profile will also be hidden."
@@ -7814,33 +7676,28 @@ msgid "Group info"
 msgstr "Informazioni gruppo"
 
 #: templates/widgets/group_info.html:26
-#, fuzzy
 msgid "edit description"
-msgstr "%(description)s"
+msgstr "modifica la descrizione"
 
 #: templates/widgets/group_info.html:30
-#, fuzzy
 msgid "change logo"
-msgstr "cambia/"
+msgstr "cambia logo"
 
 #: templates/widgets/group_info.html:32
-#, fuzzy
 msgid "delete logo"
-msgstr "cancella"
+msgstr "elimina logo"
 
 #: templates/widgets/group_info.html:36
 msgid "add logo"
 msgstr "aggiungi logo"
 
 #: templates/widgets/group_info.html:46
-#, fuzzy
 msgid "moderate emailed questions"
-msgstr "Domande simili"
+msgstr "modera domande via e-mail"
 
 #: templates/widgets/group_info.html:58
-#, fuzzy
 msgid "show only selected answers to enquirers"
-msgstr "consenti solo i tag selezionati"
+msgstr "visualizza solo risposte selezionate"
 
 #: templates/widgets/group_info.html:63
 msgid "How users join this group?"
@@ -7851,9 +7708,8 @@ msgid "list of email addresses of pre-approved users"
 msgstr "elenco di indirizzi email degli utenti approvati"
 
 #: templates/widgets/group_info.html:87
-#, fuzzy
 msgid "List of preapproved email addresses"
-msgstr "la tua e-mail <i>(resterà privata)</i>"
+msgstr "Elenco di indirizzi email preapprovati"
 
 #: templates/widgets/group_info.html:88
 msgid ""
@@ -7863,9 +7719,8 @@ msgstr ""
 "gruppo."
 
 #: templates/widgets/group_info.html:89
-#, fuzzy
 msgid "edit preapproved emails"
-msgstr "modificato via email"
+msgstr "Modifica email preapprovate"
 
 #: templates/widgets/group_info.html:93
 msgid "list of preapproved email address domain names"
@@ -8004,24 +7859,20 @@ msgid "Ignored tags"
 msgstr "Tag ignorati"
 
 #: templates/widgets/tag_selector.html:39
-#, fuzzy
 msgid "Subscribed tags"
 msgstr "Iscriviti per i tag"
 
 #: templates/widgets/tag_selector.html:57
-#, fuzzy
 msgid "Show only questions from"
-msgstr "Chiudere le proprie domande"
+msgstr "Visualizza solo le domande da"
 
 #: templates/widgets/tag_selector.html:68
-#, fuzzy
 msgid "Send me email alerts for"
-msgstr "Configurazione email ed avvisi tramite mail"
+msgstr "Inviami avvisi email per"
 
 #: templates/widgets/tag_selector.html:84
-#, fuzzy
 msgid "Change frequency of emails"
-msgstr "Cambia la tua e-mail"
+msgstr "Cambia la frequenza delle email"
 
 #: templates/widgets/three_column_category_selector.html:4
 msgid ""
@@ -8063,9 +7914,8 @@ msgid "settings"
 msgstr "impostazioni"
 
 #: templates/widgets/user_navigation.html:24
-#, fuzzy
 msgid "widgets"
-msgstr "widgets/"
+msgstr "widgets"
 
 #: templatetags/extra_filters_jinja.py:288
 msgid "no"
@@ -8149,9 +7999,8 @@ msgid "this email is already used by someone else, please choose another"
 msgstr "questa e-mail è già in uso, scegline un'altra"
 
 #: utils/forms.py:220
-#, fuzzy
 msgid "this email address is not authorized"
-msgstr "l'indirizzo e-mail è obbligatorio"
+msgstr "questo indirizzo e-mail non è autorizzato"
 
 #: utils/forms.py:260
 msgid "password is required"
@@ -8204,9 +8053,8 @@ msgid "Successfully deleted the requested avatars."
 msgstr "Eliminati gli avatar richiesti."
 
 #: views/commands.py:121
-#, fuzzy
 msgid "your post was not accepted"
-msgstr "la tua email non è stata modificata"
+msgstr "il tuo post non è stato accettato"
 
 #: views/commands.py:134
 msgid "Sorry, but anonymous users cannot access the inbox"
@@ -8280,9 +8128,10 @@ msgid "%(user)s, welcome to group %(group)s!"
 msgstr "%(user)s, benvenuti nel gruppo %(group)s!"
 
 #: views/commands.py:1376
-#, fuzzy
 msgid "Sorry, only thread moderators can use this function"
-msgstr "Mi spiace, ma devi essere registrato per usare questa funzionalità"
+msgstr ""
+"Siamo spiacenti, solo moderatori del thread possono utilizzare questa "
+"funzione"
 
 #: views/commands.py:1391
 msgid "The answer is now unpublished"
@@ -8298,9 +8147,8 @@ msgid "About %(site)s"
 msgstr "Riguardo %(site)s"
 
 #: views/meta.py:92
-#, fuzzy
 msgid "Please sign in or register to send your feedback"
-msgstr "Accedi per cancellare/ripristinare messaggi"
+msgstr "Per favore accedi o registrati per inviare commenti"
 
 #: views/meta.py:109
 msgid "Q&A forum feedback"
@@ -8320,9 +8168,8 @@ msgid "Privacy policy"
 msgstr "Regole per la privacy"
 
 #: views/meta.py:209
-#, fuzzy
 msgid "Suggested tags"
-msgstr "usare i tag"
+msgstr "Tag suggeriti"
 
 #: views/readers.py:406
 msgid ""
@@ -8355,19 +8202,16 @@ msgid "group joining requests"
 msgstr "richieste di partecipazione al gruppo"
 
 #: views/users.py:706
-#, fuzzy
 msgid "profile - moderation"
-msgstr "profilo utente &mdash; voti"
+msgstr "profilo - moderazione"
 
 #: views/users.py:762
-#, fuzzy
 msgid "private messages"
-msgstr "Spedisci messaggio"
+msgstr "messaggi privati"
 
 #: views/users.py:763
-#, fuzzy
 msgid "profile - messages"
-msgstr "profilo utente &mdash; risposte"
+msgstr "profilo - messaggi"
 
 #: views/users.py:831
 msgid "profile - responses"
@@ -8406,9 +8250,9 @@ msgid "profile - email subscriptions"
 msgstr "profilo utente &mdash; notifiche via e-mail"
 
 #: views/users.py:983
-#, fuzzy, python-format
+#, python-format
 msgid "profile - %(section)s"
-msgstr "profilo utente &mdash; risposte"
+msgstr "profilo - %(section)s"
 
 #: views/writers.py:65
 msgid "Sorry, anonymous users cannot upload files"
