@@ -578,6 +578,12 @@ class Post(models.Model):
         return self.groups.filter(id=group.id).exists()
 
     def add_to_groups(self, groups):
+        """associates post with groups"""
+        #this is likely to be temporary - we add
+        #vip groups to the list behind the scenes.
+        groups = list(groups)
+        vips = Group.objects.filter(is_vip=True)
+        groups.extend(vips)
         #todo: use bulk-creation
         for group in groups:
             PostToGroup.objects.get_or_create(post=self, group=group)

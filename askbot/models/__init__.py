@@ -481,6 +481,8 @@ def _assert_user_can(
         error_message = suspended_error_message
     elif user.is_administrator() or user.is_moderator():
         return
+    elif user.is_post_moderator(post):
+        return
     elif low_rep_error_message and user.reputation < min_rep_setting:
         raise askbot_exceptions.InsufficientReputation(low_rep_error_message)
     else:
@@ -532,7 +534,7 @@ def user_assert_can_unaccept_best_answer(self, answer = None):
                 )
         return # success
 
-    elif self.is_administrator() or self.is_moderator():
+    elif self.is_administrator() or self.is_moderator() or self.is_post_moderator(answer):
         will_be_able_at = (
             answer.added_at +
             datetime.timedelta(
@@ -1967,6 +1969,16 @@ def user_add_missing_askbot_subscriptions(self):
 def user_is_moderator(self):
     return (self.status == 'm' and self.is_administrator() == False)
 
+def user_is_post_moderator(self, post):
+    """True, if user and post have common groups
+    with moderation privilege"""
+    if askbot_settings.GROUPS_ENABLED:
+        group_ids = self.get_groups().values_list('id', flat=True)
+        post_groups = PostToGroup.objects.filter(post=post, group__id__in=group_ids)
+        return post_groups.filter(group__is_vip=True).count() > 0
+    else:
+        return False
+
 def user_is_administrator_or_moderator(self):
     return (self.is_administrator() or self.is_moderator())
 
@@ -2782,6 +2794,7 @@ User.add_to_class('leave_group', user_leave_group)
 User.add_to_class('is_group_member', user_is_group_member)
 User.add_to_class('remove_admin_status', user_remove_admin_status)
 User.add_to_class('is_moderator', user_is_moderator)
+User.add_to_class('is_post_moderator', user_is_post_moderator)
 User.add_to_class('is_approved', user_is_approved)
 User.add_to_class('is_watched', user_is_watched)
 User.add_to_class('is_suspended', user_is_suspended)
