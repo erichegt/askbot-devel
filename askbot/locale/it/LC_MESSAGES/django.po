@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: 0.7\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-04-18 18:51-0500\n"
-"PO-Revision-Date: 2012-10-03 03:03\n"
+"PO-Revision-Date: 2012-10-03 03:56\n"
 "Last-Translator:   <stefano.mancini@devinterface.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -701,6 +701,9 @@ msgid ""
 "command \"send_unanswered_question_reminders\" (for example, via a cron job "
 "- with an appropriate frequency) "
 msgstr ""
+"Nota: per utilizzare questa funzione, è necessario eseguire la gestione "
+"comando \"send_unanswered_question_reminders\" (per esempio, tramite un job "
+"di cron - con una frequenza adeguata) "
 
 #: conf/email.py:143
 msgid "Days before starting to send reminders about unanswered questions"
@@ -729,6 +732,9 @@ msgid ""
 "command \"send_accept_answer_reminders\" (for example, via a cron job - with"
 " an appropriate frequency) "
 msgstr ""
+"Nota: per utilizzare questa funzione, è necessario eseguire la gestione "
+"comando \"send_accept_answer_reminders\" (per esempio, tramite un job di "
+"cron - con una frequenza adeguata) "
 
 #: conf/email.py:192
 msgid "Days before starting to send reminders to accept an answer"
@@ -802,6 +808,7 @@ msgstr "Consenti di inviare domande per email"
 #: conf/email.py:287
 msgid "To enable this feature make sure lamson is running"
 msgstr ""
+"Per abilitare questa funzione essere sicuri che lamson sia in esecuzione"
 
 #: conf/email.py:298
 msgid "Reply by email hostname"
@@ -2666,7 +2673,7 @@ msgstr "recupera/"
 #: deps/django_authopenid/util.py:378
 #, python-format
 msgid "%(site)s user name and password"
-msgstr "Per favore inserisci username e password di %(site)s"
+msgstr "username e password di %(site)s"
 
 #: deps/django_authopenid/util.py:384
 #: skins/common/templates/authopenid/signin.html:115
@@ -4200,7 +4207,7 @@ msgstr "Accesso non riuscito, riprovare"
 
 #: skins/common/templates/authopenid/signin.html:104
 msgid "Login or email"
-msgstr "login o email"
+msgstr "Login o Email"
 
 #: skins/common/templates/authopenid/signin.html:108 utils/forms.py:169
 msgid "Password"
@@ -6980,6 +6987,9 @@ msgstr ""
 #: views/writers.py:640
 msgid "sorry, we seem to have some technical difficulties"
 msgstr "Mi spiace, ci sono dei problemi tecnici"
+
+msgid "Hi there! Please sign in"
+msgstr "Ciao! Loggati"
 
 #~ msgid "use-these-chars-in-tags"
 #~ msgstr "usa-questi-caratteri-nei-tag"
