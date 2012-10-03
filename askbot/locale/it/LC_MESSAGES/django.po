@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: 0.7\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-10-03 06:29-0500\n"
-"PO-Revision-Date: 2012-10-03 07:06\n"
+"PO-Revision-Date: 2012-10-03 07:25\n"
 "Last-Translator:   <stefano.mancini@devinterface.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -6440,7 +6440,7 @@ msgstr ""
 
 #: templates/email/notify_author_about_approved_post.html:20
 msgid "Below is a copy of your post:"
-msgstr ""
+msgstr "Di seguito è una copia del tuo post:"
 
 #: templates/email/post_as_subthread.html:8
 #, fuzzy, python-format
@@ -6468,13 +6468,15 @@ msgstr "Collega il tuo account %(provider)s per %(site_name)s"
 #: templates/email/re_welcome_lamson_on.html:6
 #, python-format
 msgid "You can post questions by emailing them at %(ask_address)s."
-msgstr ""
+msgstr "È possibile inviare domande inviando una mail a %(ask_address)s."
 
 #: templates/email/re_welcome_lamson_on.html:7
 msgid ""
 "When you receive update notifications, you will be able to respond to them, "
 "also by email."
 msgstr ""
+"Quando ricevi le notifiche di aggiornamento, sarai in grado di rispondere "
+"anche via email."
 
 #: templates/email/re_welcome_lamson_on.html:8
 #, python-format
@@ -6482,10 +6484,12 @@ msgid ""
 "Of course, you can always visit the %(site_name)s at <a "
 "href=\"%(site_url)s\">%(site_url)s</a>"
 msgstr ""
+"Naturalmente, si può sempre visitare %(site_name)s  a <a "
+"href=\"%(site_url)s\">%(site_url)s</a>"
 
 #: templates/email/rejected_post.html:2 templates/email/rejected_post.html:3
 msgid " Your post was rejected. "
-msgstr ""
+msgstr " Il tuo post è stato respinto. "
 
 #: templates/email/rejected_post.html:5
 #, fuzzy
@@ -6494,7 +6498,7 @@ msgstr "Possibili motivi:"
 
 #: templates/email/rejected_post.html:7
 msgid "Here is your original post"
-msgstr ""
+msgstr "Ecco il post originale"
 
 #: templates/email/reply_by_email_error.html:1
 msgid ""
@@ -6514,7 +6518,7 @@ msgstr "Benvenuto %(username)s,"
 
 #: templates/email/welcome_lamson_off.html:10
 msgid "We look forward to your Questions!"
-msgstr ""
+msgstr "Aspettiamo le tue domande!"
 
 #: templates/email/welcome_lamson_on.html:11
 msgid ""
@@ -6522,6 +6526,9 @@ msgid ""
 "need this to determine your email signature and that the email address is "
 "valid and was typed correctly."
 msgstr ""
+"Importante: <em>si prega di rispondere</em> a questo messaggio, senza "
+"modificarlo. Per determinare la tua firma email abbiamo bisogno che "
+"l'indirizzo sia valido e sia stato digitato correttamente."
 
 #: templates/email/welcome_lamson_on.html:14
 #, python-format
@@ -6529,6 +6536,8 @@ msgid ""
 "Until we receive the response from you, you will not be able ask or answer "
 "questions on %(site_name)s by email."
 msgstr ""
+"Fino a quando non riceveremo la tua risposta, non potrai chiedere o "
+"rispondere a domande su  %(site_name)s  via email."
 
 #: templates/embed/ask_by_widget.html:174
 #, fuzzy
@@ -6537,7 +6546,7 @@ msgstr "per favore inserisci un titolo descrittivo per la tua domanda"
 
 #: templates/embed/list_widgets.html:39
 msgid "How to use?"
-msgstr ""
+msgstr "Come si usa?"
 
 #: templates/embed/list_widgets.html:40
 msgid ""
@@ -6545,11 +6554,14 @@ msgid ""
 "    Just copy the &lt;script&gt; tag provided and paste it in the site where you wan to put it.\n"
 "    "
 msgstr ""
+"\n"
+" Basta copiare il &lt;script&gt; tag fornito ed incollarlo nel sito dove si vuole di metterlo.\n"
+" "
 
 #: templates/embed/widget_form.html:3 templates/embed/widget_form.html.py:5
 #, python-format
 msgid "%(action)s an %(widget_name)s widget"
-msgstr ""
+msgstr "%(action)s un %(widget_name)s widget"
 
 #: templates/embed/widget_form.html:14
 #: templates/user_profile/user_moderate.html:20
@@ -6565,6 +6577,8 @@ msgstr "widgets/"
 msgid ""
 "Create and embed widgets into your sites, here a list of available widgets."
 msgstr ""
+"Crea ed incorpora widget nei tuoi siti, qui un elenco dei widget "
+"disponibili."
 
 #: templates/embed/widgets.html:16
 msgid "Ask a question"
@@ -6602,11 +6616,11 @@ msgstr "posta in arrivo"
 
 #: templates/group_messaging/senders_list.html:3
 msgid "Sent"
-msgstr ""
+msgstr "Inviato"
 
 #: templates/group_messaging/senders_list.html:4
 msgid "Trash"
-msgstr ""
+msgstr "Cestino"
 
 #: templates/group_messaging/senders_list.html:8
 #, fuzzy
@@ -6620,7 +6634,7 @@ msgstr "utenti"
 
 #: templates/group_messaging/threads_list.html:15
 msgid "there are no messages yet..."
-msgstr ""
+msgstr "non ci sono ancora messaggi..."
 
 #: templates/main_page/headline.html:4 views/readers.py:150
 #, python-format
@@ -6768,7 +6782,7 @@ msgstr ""
 
 #: templates/question/answer_card.html:20
 msgid "This response is published"
-msgstr ""
+msgstr "Questa risposta è pubblicata"
 
 #: templates/question/answer_controls.html:2
 msgid "swap with question"
@@ -6894,7 +6908,7 @@ msgstr "La tua risposta"
 
 #: templates/question/content.html:38
 msgid "(only one answer per question is allowed)"
-msgstr ""
+msgstr "(è consentita una sola risposta per ogni domanda)"
 
 #: templates/question/new_answer_form.html:15
 msgid "Login/Signup to Answer"
@@ -7038,7 +7052,7 @@ msgstr "sottoscrivi al feed delle domande"
 
 #: templates/question/sidebar.html:55
 msgid "Invite"
-msgstr ""
+msgstr "Invito"
 
 #: templates/question/sidebar.html:61 templates/question/sidebar.html.py:67
 #: templates/widgets/tag_selector.html:19
@@ -7059,7 +7073,7 @@ msgstr "Email (non condivisa con altri):"
 
 #: templates/question/sidebar.html:92
 msgid "This question is currently shared only with:"
-msgstr ""
+msgstr "Questa domanda è attualmente condiviso solo con:"
 
 #: templates/question/sidebar.html:94
 #, fuzzy
@@ -7068,7 +7082,7 @@ msgstr "Selezionato individualmente"
 
 #: templates/question/sidebar.html:99
 msgid "You"
-msgstr ""
+msgstr "Si"
 
 #: templates/question/sidebar.html:106 templates/question/sidebar.html:126
 #, fuzzy
@@ -7082,13 +7096,15 @@ msgstr "%(rev_count)s revisione"
 
 #: templates/question/sidebar.html:137
 msgid "Public thread"
-msgstr ""
+msgstr "Discussione pubblica"
 
 #: templates/question/sidebar.html:138
 #, python-format
 msgid ""
 "This thread is public, all members of %(site_name)s can read this page."
 msgstr ""
+"Questo thread è pubblico, tutti i membri di  %(site_name)s  possono leggere "
+"questa pagina."
 
 #: templates/question/sidebar.html:146
 msgid "Stats"
@@ -7149,7 +7165,7 @@ msgstr "per numero di voti"
 
 #: templates/tags/header.html:31 templates/tags/header.html.py:32
 msgid "suggested"
-msgstr ""
+msgstr "suggerito"
 
 #: templates/user_inbox/base.html:6 templates/user_profile/user_tabs.html:12
 msgid "inbox"
@@ -7181,7 +7197,7 @@ msgstr "Riaprire le proprie domande"
 
 #: templates/user_inbox/group_join_requests.html:4
 msgid "inbox - group join requests"
-msgstr ""
+msgstr "posta in arrivo - richieste di partecipazione al gruppo"
 
 #: templates/user_inbox/group_join_requests.html:27
 #, fuzzy
@@ -7190,7 +7206,7 @@ msgstr "approvato"
 
 #: templates/user_inbox/group_join_requests.html:43
 msgid "Deny"
-msgstr ""
+msgstr "Negare"
 
 #: templates/user_inbox/messages.html:93
 #, fuzzy
@@ -7247,15 +7263,16 @@ msgstr "cancella"
 #: templates/user_profile/reject_post_dialog.html:11
 msgid "1) Enter a brief description of why you are rejecting the post."
 msgstr ""
+"1) Inserisci una breve descrizione del motivo per cui rifiuti il post."
 
 #: templates/user_profile/reject_post_dialog.html:14
 msgid "2) Please enter details here. This text will be sent to the user."
-msgstr ""
+msgstr "2) Inserire dettagli qui. Questo testo verrà inviato all'utente."
 
 #: templates/user_profile/reject_post_dialog.html:20
 #: templates/user_profile/reject_post_dialog.html:88
 msgid "Use this reason &amp; reject"
-msgstr ""
+msgstr "Utilizza questo motivo per rifiutare"
 
 #: templates/user_profile/reject_post_dialog.html:27
 #: templates/user_profile/reject_post_dialog.html:95
@@ -7265,7 +7282,7 @@ msgstr "Motivo della chiusura:"
 
 #: templates/user_profile/reject_post_dialog.html:33
 msgid "Save reason, but do not reject"
-msgstr ""
+msgstr "Salvare il motivo, ma non rifiutare"
 
 #: templates/user_profile/reject_post_dialog.html:43
 #, fuzzy
@@ -7284,7 +7301,7 @@ msgstr "cancella questo commento"
 
 #: templates/user_profile/reject_post_dialog.html:71
 msgid "Add a new reason"
-msgstr ""
+msgstr "Aggiungere un nuovo motivo"
 
 #: templates/user_profile/reject_post_dialog.html:81
 msgid ""
@@ -7292,6 +7309,9 @@ msgid ""
 "reason-title\"></span>\"</strong>. The text below will be sent to the user "
 "and the post(s) will be deleted:"
 msgstr ""
+"È stato selezionato il motivo del rigetto <strong>\"<span class=\"selected-"
+"reason-title\"></span>\"</strong>. Il testo qui sotto sarà inviato "
+"all'utente e verranno cancellati i post:"
 
 #: templates/user_profile/reject_post_dialog.html:101
 #, fuzzy
@@ -7390,7 +7410,7 @@ msgstr "Gruppi di impostazioni"
 
 #: templates/user_profile/user_info.html:71
 msgid "add group"
-msgstr ""
+msgstr "aggiungi gruppo"
 
 #: templates/user_profile/user_info.html:76
 msgid "member since"
@@ -7707,7 +7727,7 @@ msgstr "vedi le domande frequenti"
 
 #: templates/widgets/ask_button.html:8
 msgid "Ask the Group"
-msgstr ""
+msgstr "Chiedi al gruppo"
 
 #: templates/widgets/ask_form.html:6
 msgid ""
@@ -7765,6 +7785,8 @@ msgid ""
 "To post on behalf of someone else, enter user name <strong>and</strong> "
 "email below."
 msgstr ""
+"Per inviare per conto di qualcun altro, immettere il nome utente "
+"<strong>e</strong> la email qui sotto."
 
 #: templates/widgets/footer.html:33
 #, python-format
@@ -7789,7 +7811,7 @@ msgstr "contatti"
 
 #: templates/widgets/group_info.html:3
 msgid "Group info"
-msgstr ""
+msgstr "Informazioni gruppo"
 
 #: templates/widgets/group_info.html:26
 #, fuzzy
@@ -7808,7 +7830,7 @@ msgstr "cancella"
 
 #: templates/widgets/group_info.html:36
 msgid "add logo"
-msgstr ""
+msgstr "aggiungi logo"
 
 #: templates/widgets/group_info.html:46
 #, fuzzy
@@ -7822,11 +7844,11 @@ msgstr "consenti solo i tag selezionati"
 
 #: templates/widgets/group_info.html:63
 msgid "How users join this group?"
-msgstr ""
+msgstr "Come gli utenti possono partecipare a questo gruppo?"
 
 #: templates/widgets/group_info.html:82
 msgid "list of email addresses of pre-approved users"
-msgstr ""
+msgstr "elenco di indirizzi email degli utenti approvati"
 
 #: templates/widgets/group_info.html:87
 #, fuzzy
@@ -7837,6 +7859,8 @@ msgstr "la tua e-mail <i>(resterà privata)</i>"
 msgid ""
 "Users with these email adderesses will be added to the group automatically."
 msgstr ""
+"Gli utenti con questi indirizzi email verranno aggiunti automaticamente al "
+"gruppo."
 
 #: templates/widgets/group_info.html:89
 #, fuzzy
@@ -7845,21 +7869,23 @@ msgstr "modificato via email"
 
 #: templates/widgets/group_info.html:93
 msgid "list of preapproved email address domain names"
-msgstr ""
+msgstr "elenco di nomi di dominio email approvati"
 
 #: templates/widgets/group_info.html:98
 msgid "List of preapproved email domain names"
-msgstr ""
+msgstr "Elenco di nomi di dominio email approvati"
 
 #: templates/widgets/group_info.html:99
 msgid ""
 "Users whose email adderesses belong to these domains will be added to the "
 "group automatically."
 msgstr ""
+"Gli utenti i cui indirizzi email appartengono a questi domini verranno "
+"aggiunti automaticamente al gruppo."
 
 #: templates/widgets/group_info.html:100
 msgid "edit preapproved email domains"
-msgstr ""
+msgstr "modifica i domini email approvati"
 
 #: templates/widgets/logo.html:3
 msgid "back to home page"
@@ -7913,7 +7939,7 @@ msgstr "informazioni su Markdown"
 
 #: templates/widgets/meta_nav.html:12
 msgid "people & groups"
-msgstr ""
+msgstr "persone &amp; gruppi"
 
 #: templates/widgets/meta_nav.html:20
 msgid "users"
@@ -8002,17 +8028,19 @@ msgid ""
 "Categorize your question using this tag selector or entering text in tag "
 "box."
 msgstr ""
+"Classifica la tua domanda utilizzando il selettore di tag od inserendo del "
+"testo nella casella tag."
 
 #: templates/widgets/three_column_category_selector.html:7
 #: templates/widgets/three_column_category_selector.html:10
 msgid "(done editing)"
-msgstr ""
+msgstr "(fatto la modifica)"
 
 #: templates/widgets/three_column_category_selector.html:8
 #: templates/widgets/three_column_category_selector.html:9
 #: templates/widgets/three_column_category_selector.html:11
 msgid "(edit categories)"
-msgstr ""
+msgstr "(modifica categorie)"
 
 #: templates/widgets/user_long_score_and_badge_summary.html:4
 msgid "karma:"
@@ -8059,7 +8087,7 @@ msgstr ""
 
 #: utils/decorators.py:242
 msgid "This function is limited to moderators and administrators"
-msgstr ""
+msgstr "Questa funzione è limitata ai moderatori e amministratori"
 
 #: utils/forms.py:66
 msgid "this field is required"
@@ -8102,7 +8130,7 @@ msgstr ""
 
 #: utils/forms.py:110
 msgid "symbol \"@\" is not allowed"
-msgstr ""
+msgstr "il simbolo \"@\" non è consentito"
 
 #: utils/forms.py:215
 msgid "Your email <i>(never shared)</i>"
@@ -8244,11 +8272,12 @@ msgstr "Accedi per cancellare/ripristinare messaggi"
 #: views/commands.py:1270 views/commands.py:1303
 msgid "Sorry, looks like sharing request was invalid"
 msgstr ""
+"Siamo spiacenti, sembra che la richiesta di condivisione non sia valida"
 
 #: views/commands.py:1326
 #, python-format
 msgid "%(user)s, welcome to group %(group)s!"
-msgstr ""
+msgstr "%(user)s, benvenuti nel gruppo %(group)s!"
 
 #: views/commands.py:1376
 #, fuzzy
@@ -8257,11 +8286,11 @@ msgstr "Mi spiace, ma devi essere registrato per usare questa funzionalità"
 
 #: views/commands.py:1391
 msgid "The answer is now unpublished"
-msgstr ""
+msgstr "La risposta non è ancora stata pubblicata"
 
 #: views/commands.py:1395
 msgid "The answer is now published"
-msgstr ""
+msgstr "La risposta è stata pubblicata"
 
 #: views/meta.py:44
 #, python-format
@@ -8323,7 +8352,7 @@ msgstr "profilo utente &mdash; attività recente"
 
 #: views/users.py:705
 msgid "group joining requests"
-msgstr ""
+msgstr "richieste di partecipazione al gruppo"
 
 #: views/users.py:706
 #, fuzzy
@@ -8448,7 +8477,7 @@ msgstr "Mi spiace, ci sono dei problemi tecnici"
 
 #: views/writers.py:786
 msgid "the selected answer cannot be a comment"
-msgstr ""
+msgstr "la risposta selezionata non può essere un commento"
 
 #~ msgid "latest questions"
 #~ msgstr "domande recenti"
