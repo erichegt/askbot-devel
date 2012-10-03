@@ -391,7 +391,7 @@ def user_stats(request, user, context):
     ).select_related(
         'thread'
     ).order_by(
-        '-score', '-added_at'
+        '-points', '-added_at'
     )[:100]
 
     top_answer_count = len(top_answers)

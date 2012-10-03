@@ -299,7 +299,7 @@ POST_STATUS = {
     'deleted': _('[deleted]'),
     'default_version': _('initial version'),
     'retagged': _('retagged'),
-    'private': _('[private]')   
+    'private': _('[private]')
 }
 
 #choices used in email and display filters
@@ -361,7 +361,7 @@ DEFAULT_USER_STATUS = 'w'
 #number of items to show in user views
 USER_VIEW_DATA_SIZE = 50
 
-#not really dependency, but external links, which it would 
+#not really dependency, but external links, which it would
 #be nice to test for correctness from time to time
 DEPENDENCY_URLS = {
     'akismet': 'https://akismet.com/signup/',
@@ -411,8 +411,8 @@ SEARCH_ORDER_BY = (
                     ('last_activity_at', _('activity ascendant')),
                     ('-answer_count', _('answers descendant')),
                     ('answer_count', _('answers ascendant')),
-                    ('-score', _('votes descendant')),
-                    ('score', _('votes ascendant')),
+                    ('-points', _('votes descendant')),
+                    ('points', _('votes ascendant')),
                   )
 
 DEFAULT_QUESTION_WIDGET_STYLE = """

@@ -70,7 +70,7 @@ class BadgeTests(AskbotTestCase):
         #post another question and check that there are no new badges
         question2 = self.post_question(user = self.u1)
         answer2 = self.post_answer(user = self.u2, question = question2)
-        answer2.score = min_score - 1
+        answer2.score = min_points - 1
         answer2.save()
         self.u1.upvote(answer2)
 

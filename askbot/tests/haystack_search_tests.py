@@ -53,8 +53,8 @@ class HaystackSearchTests(AskbotTestCase):
     def test_title_search(self):
         #title search
         title_search_qs = models.Thread.objects.get_for_query('title')
-        self.assertEquals(title_search_qs.count(), 2)
         title_search_qs_2  = models.Thread.objects.get_for_query('Nome')
+        self.assertEquals(title_search_qs.count(), 2)
         self.assertEquals(title_search_qs_2.count(), 1)
 
     @skipIf('haystack' not in settings.INSTALLED_APPS,
