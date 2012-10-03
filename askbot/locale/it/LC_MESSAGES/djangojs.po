@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: 0.7\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-10-03 06:34-0500\n"
-"PO-Revision-Date: 2012-10-03 03:11\n"
+"PO-Revision-Date: 2012-10-03 08:21\n"
 "Last-Translator:   <stefano.mancini@devinterface.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: it\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 "X-Generator: Translate Toolkit 1.9.0\n"
 "X-Translated-Using: django-rosetta 0.6.8\n"
@@ -76,45 +76,45 @@ msgstr "Creare un account protetto da password"
 
 #: media/js/group_messaging.js:102 media/js/group_messaging.js.py:288
 msgid "required"
-msgstr ""
+msgstr "obbligatorio"
 
 #: media/js/group_messaging.js:139
 msgid "Your message:"
-msgstr ""
+msgstr "Il tuo messaggio:"
 
 #: media/js/group_messaging.js:152
 msgid "send"
-msgstr ""
+msgstr "invia"
 
 #: media/js/group_messaging.js:163 media/js/post.js:2423
 #: media/js/post.js.py:3920 media/js/user.js:886
 msgid "cancel"
-msgstr ""
+msgstr "annulla"
 
 #: media/js/group_messaging.js:226
 msgid "Reply"
-msgstr ""
+msgstr "Rispondi"
 
 #: media/js/group_messaging.js:235 media/js/group_messaging.js.py:659
 msgid "message sent"
-msgstr ""
+msgstr "messaggio inviato"
 
 #: media/js/group_messaging.js:269
 #, perl-brace-format
 msgid "user {{str}} does not exist"
 msgid_plural "users {{str}} do not exist"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "gli utenti {{str}} non esistono"
+msgstr[1] "l'utente {{str}} non esiste"
 
 #: media/js/group_messaging.js:319
 msgid "Recipient:"
-msgstr ""
+msgstr "Destinatario:"
 
 #: media/js/live_search.js:46
 msgid "Sorry, this tag does not exist"
 msgid_plural "Sorry, these tags do not exist"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Siamo spiacenti, i tag non esistono"
+msgstr[1] "Siamo spiacenti, il tag non esiste"
 
 #: media/js/post.js:27
 msgid "loading..."
@@ -123,8 +123,8 @@ msgstr "Caricamento..."
 #: media/js/post.js:99
 msgid "must be shorter than %(max_chars)s character"
 msgid_plural "must be shorter than %(max_chars)s characters"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "deve essere più corto di %(max_chars)s caratteri"
+msgstr[1] "deve essere più corto di %(max_chars)s carattere"
 
 #: media/js/post.js:153
 msgid "tags cannot be empty"
@@ -138,34 +138,34 @@ msgstr "il contenuto non può essere vuoto"
 #, perl-format
 msgid "question body must be > %s character"
 msgid_plural "question body must be > %s characters"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "la domanda deve essere > %s caratteri"
+msgstr[1] "la domanda deve essere > %s carattere"
 
 #: media/js/post.js:170
 msgid "please enter title"
 msgstr "Per favore inserisci il titolo"
 
 #: media/js/post.js:173
-#, fuzzy, perl-format
+#, perl-format
 msgid "title must be > %s character"
 msgid_plural "title must be > %s characters"
-msgstr[0] "%s caratteri rimanenti"
-msgstr[1] "%s caratteri rimanenti"
+msgstr[0] "il titolo deve essere > %s caratteri"
+msgstr[1] "il titolo deve essere > %s carattere"
 
 #: media/js/post.js:195
-#, fuzzy, perl-format
+#, perl-format
 msgid "answer must be > %s character"
 msgid_plural "answer must be > %s characters"
-msgstr[0] "%s caratteri rimanenti"
-msgstr[1] "%s caratteri rimanenti"
+msgstr[0] "la risposta deve essere > %s caratteri"
+msgstr[1] "la risposta deve essere > %s carattere"
 
 #: media/js/post.js:252
 msgid "Back to the question"
-msgstr ""
+msgstr "Torna alla domanda"
 
 #: media/js/post.js:302
 msgid "draft saved..."
-msgstr ""
+msgstr "bozza salvata..."
 
 #: media/js/post.js:547
 msgid "insufficient privilege"
@@ -237,83 +237,81 @@ msgstr "Per piacere inserisce un titolo per la tua domanda (>10 caratteri)"
 
 #: media/js/post.js:2417 media/js/post.js.py:3194 media/js/post.js.py:3382
 msgid "save"
-msgstr ""
+msgstr "salva"
 
 #: media/js/post.js:2543
 msgid "Enter the logo url or upload an image"
-msgstr ""
+msgstr "Immetti l'url del logo o carica un'immagine"
 
 #: media/js/post.js:2569
-#, fuzzy
 msgid "Do you really want to remove the image?"
-msgstr "Sei sicuro di che voler rimuovere il tuo login %s?"
+msgstr "Rimuovere l'immagine?"
 
 #: media/js/post.js:2669
 msgid "change logo"
-msgstr ""
+msgstr "cambia il logo"
 
 #: media/js/post.js:2670
 msgid "add logo"
-msgstr ""
+msgstr "aggiungi logo"
 
 #: media/js/post.js:2772
 #, perl-format
-msgid ""
-"tag \"%s\" was already added, no need to repeat (press \"escape\" to delete)"
+msgid "tag \"%s\" was already added, no need to repeat (press \"escape\" to delete)"
 msgstr ""
+"il tag \"%s\" è stato già aggiunto, non c'è bisogno di ripeterlo (premere "
+"\"ESC\" per eliminare)"
 
 #: media/js/post.js:2781
 #, perl-format
 msgid "a maximum of %s tag is allowed"
 msgid_plural "a maximum of %s tags are allowed"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "è consentito un massimo di %s tag"
+msgstr[1] "è consentito un massimo di %s tag"
 
 #: media/js/post.js:3124
-#, fuzzy
 msgid "Delete category?"
-msgstr "Elimina questi elementi"
+msgstr "Eliminare la categoria?"
 
 #: media/js/post.js:3213
 msgid "edit"
-msgstr ""
+msgstr "modifica"
 
 #: media/js/post.js:3300
-#, fuzzy
 msgid "category name cannot be empty"
 msgstr "il contenuto non può essere vuoto"
 
 #: media/js/post.js:3335
 msgid "already exists at the current level!"
-msgstr ""
+msgstr "già esiste al livello di corrente!"
 
 #: media/js/post.js:3371
 msgid "add category"
-msgstr ""
+msgstr "aggiungi categoria"
 
 #: media/js/post.js:3916
 msgid "save tags"
-msgstr ""
+msgstr "salva Tag"
 
 #: media/js/post.js:3997 media/js/post.js.py:4033
 msgid "User name:"
-msgstr ""
+msgstr "Nome utente:"
 
 #: media/js/post.js:4019
 msgid "Group name:"
-msgstr ""
+msgstr "Nome gruppo:"
 
 #: media/js/post.js:4046
 msgid "Shared with the following users:"
-msgstr ""
+msgstr "Condividi con i seguenti utenti:"
 
 #: media/js/post.js:4052
 msgid "Shared with the following groups:"
-msgstr ""
+msgstr "Condividi con i seguenti gruppi:"
 
 #: media/js/tag_moderation.js:90
 msgid "No suggested tags left"
-msgstr ""
+msgstr "Nessun tag suggerito a sinistra"
 
 #: media/js/tag_selector.js:14
 msgid "Tag \"<span></span>\" matches:"
@@ -341,53 +339,50 @@ msgstr[0] "Chiudi questi elementi"
 msgstr[1] "Chiudi questo elemento"
 
 #: media/js/user.js:75
-#, fuzzy
 msgid "Remove all flags and approve this entry?"
 msgid_plural "Remove all flags and approve these entries?"
-msgstr[0] "Rimuovi tutti i flag in questi elementi?"
-msgstr[1] "Rimuovi tutti i flag in questo elemento?"
+msgstr[0] "Rimuovi tutti i flag e approva questi elementi?"
+msgstr[1] "Rimuovi tutti i flag e approva questo elemento?"
 
 #: media/js/user.js:224
-#, fuzzy
 msgid "Post deleted"
 msgstr "Post eliminato"
 
 #: media/js/user.js:226
-#, fuzzy
 msgid "Post approved"
-msgstr "Post recuperato"
+msgstr "Post approvato"
 
 #: media/js/user.js:247
 msgid "Accept"
-msgstr ""
+msgstr "Accetta"
 
 #: media/js/user.js:256
 msgid "Reject"
-msgstr ""
+msgstr "Rifiuta"
 
 #: media/js/user.js:270
 msgid "add new reject reason"
-msgstr ""
+msgstr "aggiungere un motivo di rifiuto"
 
 #: media/js/user.js:374
 msgid "Looks there are some things to fix:"
-msgstr ""
+msgstr "Sembra che ci sono alcune cose da sistemare:"
 
 #: media/js/user.js:442
 msgid "Please provide description."
-msgstr ""
+msgstr "Si prega di fornire una descrizione."
 
 #: media/js/user.js:445
 msgid "Please provide details."
-msgstr ""
+msgstr "Si prega di fornire dettagli."
 
 #: media/js/user.js:559
 msgid "A reason must be selected to delete one."
-msgstr ""
+msgstr "Una ragione deve essere selezionata per eliminarne uno."
 
 #: media/js/user.js:657
 msgid "A reason must be selected to reject post."
-msgstr ""
+msgstr "Una ragione deve essere selezionata per rifiutare il post."
 
 #: media/js/user.js:706
 msgid "Please <a href=\"%(signin_url)s\">signin</a> to follow %(username)s"
@@ -410,19 +405,19 @@ msgstr "segui %s"
 
 #: media/js/user.js:805
 msgid "Remove"
-msgstr ""
+msgstr "Rimuovi"
 
 #: media/js/user.js:881
 msgid "add group"
-msgstr ""
+msgstr "aggiungi gruppo"
 
 #: media/js/user.js:961
 msgid "add"
-msgstr ""
+msgstr "aggiungi"
 
 #: media/js/utils.js:65
 msgid "and"
-msgstr ""
+msgstr "e"
 
 #: media/js/utils.js:71
 msgid "click to close"
@@ -430,89 +425,86 @@ msgstr "fare clic per chiudere"
 
 #: media/js/utils.js:1721
 msgid "Group %(name)s already exists. Group names are case-insensitive."
-msgstr ""
+msgstr "Esiste già un gruppo %(nome)s . I nomi dei gruppi sono minuscole."
 
 #: media/js/utils.js:1911
 #, perl-format
 msgid "see questions tagged '%s'"
-msgstr ""
+msgstr "vedi domande taggate '%s'"
 
 #: media/js/utils.js:2775
 msgid "ago"
-msgstr ""
+msgstr "fa"
 
 #: media/js/utils.js:2776
 msgid "from now"
-msgstr ""
+msgstr "da ora"
 
 #: media/js/utils.js:2777
 msgid "just now"
-msgstr ""
+msgstr "in questo momento"
 
 #: media/js/utils.js:2778
 msgid "about a minute"
-msgstr ""
+msgstr "circa un minuto"
 
 #: media/js/utils.js:2779
 #, perl-format
 msgid "%d minutes"
-msgstr ""
+msgstr "%d minuti"
 
 #: media/js/utils.js:2780
 msgid "about an hour"
-msgstr ""
+msgstr "circa un'ora"
 
 #: media/js/utils.js:2781
 #, perl-format
 msgid "%d hours"
-msgstr ""
+msgstr "%d ore"
 
 #: media/js/utils.js:2782
 msgid "yesterday"
-msgstr ""
+msgstr "ieri"
 
 #: media/js/utils.js:2783
 #, perl-format
 msgid "%d days"
-msgstr ""
+msgstr "%d giorni"
 
 #: media/js/utils.js:2784
 msgid "about a month"
-msgstr ""
+msgstr "circa un mese"
 
 #: media/js/utils.js:2785
 #, perl-format
 msgid "%d months"
-msgstr ""
+msgstr "%d mesi"
 
 #: media/js/utils.js:2786
 msgid "about a year"
-msgstr ""
+msgstr "circa un anno"
 
 #: media/js/utils.js:2787
 #, perl-format
 msgid "%d years"
-msgstr ""
+msgstr "%d anni"
 
 #: media/js/tinymce/plugins/askbot_attachment/editor_plugin.js:30
 #: media/js/tinymce/plugins/askbot_attachment/editor_plugin.js:71
 msgid "Insert a file"
-msgstr ""
+msgstr "Inserisci un file"
 
 #: media/js/tinymce/plugins/askbot_attachment/editor_plugin.js:37
 msgid "Or paste file url here"
-msgstr ""
+msgstr "O incolla l'url del file"
 
 #: media/js/tinymce/plugins/askbot_imageuploader/editor_plugin.js:30
 msgid "Upload an image"
-msgstr ""
+msgstr "Carica un'immagine"
 
 #: media/js/tinymce/plugins/askbot_imageuploader/editor_plugin.js:71
-#, fuzzy
 msgid "Insert image"
-msgstr ""
-"inserisci l'URL dell'immagine, es. http://www.example.com/immagine.jpg "
-"\"titolo immagine\""
+msgstr "Inserire immagine"
 
 #: media/js/wmd/wmd.js:27
 msgid "bold"
