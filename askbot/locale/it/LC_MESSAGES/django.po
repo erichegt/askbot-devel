@@ -4287,7 +4287,7 @@ msgstr "Si prega di registrarsi cliccando su una delle icone qui sotto"
 
 #: skins/common/templates/authopenid/signup_with_password.html:23
 msgid "or create a new user name and password here"
-msgstr "o crea un nuovo nome utente e password qui"
+msgstr "o creare un nuovo nome utente e password qui"
 
 #: skins/common/templates/authopenid/signup_with_password.html:25
 msgid "Create login name and password"
@@ -4639,7 +4639,7 @@ msgstr "mostra anteprima"
 #: skins/default/templates/widgets/ask_button.html:5
 #: skins/default/templates/widgets/ask_form.html:43
 msgid "Ask Your Question"
-msgstr "Chiedi"
+msgstr "Fai la tua domanda"
 
 #: skins/default/templates/badge.html:5 skins/default/templates/badge.html:9
 #: skins/default/templates/user_profile/user_recent.html:19
@@ -6512,7 +6512,7 @@ msgstr "informazioni su Askbot"
 #: skins/default/templates/widgets/footer.html:40
 #: skins/default/templates/widgets/user_navigation.html:17
 msgid "help"
-msgstr "Guida"
+msgstr "guida"
 
 #: skins/default/templates/widgets/footer.html:42
 msgid "privacy policy"
@@ -6989,7 +6989,7 @@ msgid "sorry, we seem to have some technical difficulties"
 msgstr "Mi spiace, ci sono dei problemi tecnici"
 
 msgid "Hi there! Please sign in"
-msgstr "Ciao! Loggati"
+msgstr "Ciao! Accedi"
 
 #~ msgid "use-these-chars-in-tags"
 #~ msgstr "usa-questi-caratteri-nei-tag"
