@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: 0.7\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-10-03 06:29-0500\n"
-"PO-Revision-Date: 2012-10-03 08:07\n"
+"PO-Revision-Date: 2012-10-03 08:26\n"
 "Last-Translator:   <stefano.mancini@devinterface.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -278,7 +278,7 @@ msgstr "L' email è obbligatoria, se il nome utente viene aggiunto"
 
 #: forms.py:888 forms.py:927
 msgid "ask anonymously"
-msgstr "chiedi come utente anonimo"
+msgstr "pubblica come utente anonimo"
 
 #: forms.py:890 forms.py:929
 msgid "Check if you do not want to reveal your name when asking this question"
@@ -4169,7 +4169,7 @@ msgstr "Domanda gettonata"
 #: models/badges.py:418 models/badges.py:429 models/badges.py:441
 #, python-format
 msgid "Asked a question with %(views)s views"
-msgstr "Ha posto una domanda con %(views)s consultazioni"
+msgstr "Ha posto una domanda con %(views)s viste"
 
 #: models/badges.py:425
 msgid "Notable Question"
@@ -6482,7 +6482,7 @@ msgstr "crea"
 
 #: templates/embed/widgets.html:20 templates/embed/widgets.html.py:29
 msgid "view list"
-msgstr "consultazioni"
+msgstr "viste"
 
 #: templates/embed/widgets.html:25
 msgid "List of questions"
@@ -7600,12 +7600,12 @@ msgid ""
 " is very simple. Login takes about 30 seconds, initial signup takes a minute"
 " or less."
 msgstr ""
-"<span class=\\\"strong big\\\">Sei invitato a postare la domanda in modo "
-"anonimo</span>. Quando si invia la domanda, verrai reindirizzato alla pagina"
-" di login/registrazione. La domanda verrà salvata nella sessione corrente e "
-"sarà pubblicata dopo il login. La procedura di login/registrazione è molto "
-"semplice. La login richiede circa 30 secondi, l'iscrizione iniziale richiede"
-" un minuto o meno."
+"<span class=\\\"strong big\\\">Stai per postare la domanda in modo "
+"anonimo</span>. Una volta inviata la domanda, verrai reindirizzato alla "
+"pagina di login/registrazione. La domanda verrà salvata nella sessione "
+"corrente e sarà pubblicata dopo il login. La procedura di "
+"login/registrazione è molto semplice. La login richiede circa 30 secondi, "
+"l'iscrizione iniziale richiede un minuto o meno."
 
 #: templates/widgets/ask_form.html:10
 #, python-format
@@ -8281,8 +8281,8 @@ msgid ""
 "will be published after you log in. Login/signup process is very simple. "
 "Login takes about 30 seconds, initial signup takes a minute or less."
 msgstr ""
-"<span class=\"strong big\">Sei invitati ad iniziare a postare la domanda in "
-"modo anonimo</span>. Quando si invia la domanda, verrai reindirizzato alla "
+"<span class=\"strong big\">Stai per postare la domanda in modo "
+"anonimo</span>. Una volta inviata la domanda, verrai reindirizzato alla "
 "pagina di login/registrazione. La domanda verrà salvata nella sessione "
 "corrente e sarà pubblicata dopo il login. La procedura di "
 "login/registrazione è molto semplice. La login richiede circa 30 secondi, l'"
