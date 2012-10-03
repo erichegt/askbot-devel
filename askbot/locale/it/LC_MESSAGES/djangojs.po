@@ -7,69 +7,72 @@ msgstr ""
 "Project-Id-Version: 0.7\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-04-18 18:52-0500\n"
-"PO-Revision-Date: 2011-11-19 06:41+0100\n"
-"Last-Translator: Luca Ferroni <luca@befair.it>\n"
+"PO-Revision-Date: 2012-10-03 03:11\n"
+"Last-Translator:   <stefano.mancini@devinterface.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: it\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 "X-Generator: Translate Toolkit 1.9.0\n"
+"X-Translated-Using: django-rosetta 0.6.8\n"
 
 #: skins/common/media/jquery-openid/jquery.openid.js:73
 #, perl-format
 msgid "Are you sure you want to remove your %s login?"
-msgstr ""
+msgstr "Sei sicuro di che voler rimuovere il tuo login %s?"
 
 #: skins/common/media/jquery-openid/jquery.openid.js:90
 msgid "Please add one or more login methods."
-msgstr ""
+msgstr "Si prega di aggiungere uno o più metodi di login."
 
 #: skins/common/media/jquery-openid/jquery.openid.js:93
 msgid ""
 "You don't have a method to log in right now, please add one or more by "
 "clicking any of the icons below."
 msgstr ""
+"Non hai un metodo per accedere adesso, si prega di aggiungere uno o più "
+"cliccando sulle icone qui sotto."
 
 #: skins/common/media/jquery-openid/jquery.openid.js:135
 msgid "passwords do not match"
-msgstr ""
+msgstr "le password non corrispondono"
 
 #: skins/common/media/jquery-openid/jquery.openid.js:161
 msgid "Show/change current login methods"
-msgstr ""
+msgstr "Visualizza/Modifica i metodi di login correnti"
 
 #: skins/common/media/jquery-openid/jquery.openid.js:226
 #, perl-format
 msgid "Please enter your %s, then proceed"
-msgstr ""
+msgstr "Per favore inserisci il tuo % s, quindi procedi"
 
 #: skins/common/media/jquery-openid/jquery.openid.js:228
 msgid "Connect your %(provider_name)s account to %(site)s"
-msgstr ""
+msgstr "Collega il tuo account di %(site)s al provider %(provider_name)s"
 
 #: skins/common/media/jquery-openid/jquery.openid.js:322
 #, perl-format
 msgid "Change your %s password"
-msgstr ""
+msgstr "Cambiare la password di %s"
 
 #: skins/common/media/jquery-openid/jquery.openid.js:323
 msgid "Change password"
-msgstr ""
+msgstr "Cambia password"
 
 #: skins/common/media/jquery-openid/jquery.openid.js:326
 #, perl-format
 msgid "Create a password for %s"
-msgstr ""
+msgstr "Crea una password per %s"
 
 #: skins/common/media/jquery-openid/jquery.openid.js:327
 msgid "Create password"
-msgstr ""
+msgstr "Crea una password"
 
 #: skins/common/media/jquery-openid/jquery.openid.js:343
 msgid "Create a password-protected account"
-msgstr ""
+msgstr "Creare un account protetto da password"
 
 #: skins/common/media/js/post.js:28
 msgid "loading..."
@@ -91,11 +94,11 @@ msgstr "Per favore effettua il login"
 
 #: skins/common/media/js/post.js:326
 msgid "anonymous users cannot follow questions"
-msgstr ""
+msgstr "gli utenti anonimi non possono seguire le domande"
 
 #: skins/common/media/js/post.js:327
 msgid "anonymous users cannot subscribe to questions"
-msgstr ""
+msgstr "gli utenti anonimi non possono sottoscrivere domande"
 
 #: skins/common/media/js/post.js:328
 msgid "anonymous users cannot vote"
@@ -108,11 +111,8 @@ msgstr ""
 "osservazioni poco idonee, ecc.?"
 
 #: skins/common/media/js/post.js:331
-#, fuzzy
 msgid "please confirm removal of offensive flag"
-msgstr ""
-"sei certo che questo post sia offensivo, contenga spam, pubblicità, "
-"osservazioni poco idonee, ecc.?"
+msgstr "si prega di confermare la rimozione della bandiera offensivo"
 
 #: skins/common/media/js/post.js:332
 msgid "anonymous users cannot flag offensive posts"
@@ -140,7 +140,7 @@ msgstr "OK"
 
 #: skins/common/media/js/post.js:1209
 msgid "save comment"
-msgstr ""
+msgstr "salva il commento"
 
 #: skins/common/media/js/post.js:1874
 msgid "Please enter question title (>10 characters)"
@@ -157,33 +157,31 @@ msgstr "e altre %s non mostrate..."
 
 #: skins/common/media/js/user.js:14
 msgid "Please select at least one item"
-msgstr ""
+msgstr "Si prega di selezionare almeno un elemento"
 
 #: skins/common/media/js/user.js:58
 msgid "Delete this notification?"
 msgid_plural "Delete these notifications?"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Cancella queste notifiche?"
+msgstr[1] "Cancella questa notifica?"
 
 #: skins/common/media/js/user.js:65
-#, fuzzy
 msgid "Close this entry?"
 msgid_plural "Close these entries?"
-msgstr[0] "Elimina questo commento"
-msgstr[1] "Elimina questo commento"
+msgstr[0] "Chiudi questi elementi"
+msgstr[1] "Chiudi questo elemento"
 
 #: skins/common/media/js/user.js:72
 msgid "Remove all flags on this entry?"
 msgid_plural "Remove all flags on these entries?"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Rimuovi tutti i flag in questi elementi?"
+msgstr[1] "Rimuovi tutti i flag in questo elemento?"
 
 #: skins/common/media/js/user.js:79
-#, fuzzy
 msgid "Delete this entry?"
 msgid_plural "Delete these entries?"
-msgstr[0] "Elimina questo commento"
-msgstr[1] "Elimina questo commento"
+msgstr[0] "Elimina questi elementi"
+msgstr[1] "Elimina questo elemento"
 
 #: skins/common/media/js/user.js:159
 msgid "Please <a href=\"%(signin_url)s\">signin</a> to follow %(username)s"
@@ -206,7 +204,7 @@ msgstr "segui %s"
 
 #: skins/common/media/js/utils.js:44
 msgid "click to close"
-msgstr ""
+msgstr "fare clic per chiudere"
 
 #: skins/common/media/js/wmd/wmd.js:26
 msgid "bold"
@@ -234,7 +232,7 @@ msgstr "Immagine"
 
 #: skins/common/media/js/wmd/wmd.js:32
 msgid "attachment"
-msgstr ""
+msgstr "allegato"
 
 #: skins/common/media/js/wmd/wmd.js:33
 msgid "numbered list"
@@ -272,7 +270,7 @@ msgstr "inserisci l'indirizzo web, e.g. <br />http://www.askbot.org/ </p>"
 
 #: skins/common/media/js/wmd/wmd.js:49
 msgid "upload file attachment"
-msgstr ""
+msgstr "caricare file allegato"
 
 #~ msgid "tags cannot be empty"
 #~ msgstr "Il campo Tags non può essere vuoto"
