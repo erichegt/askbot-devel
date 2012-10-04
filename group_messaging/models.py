@@ -169,9 +169,11 @@ class MessageManager(models.Manager):
         #add author of the parent as a recipient to parent
         parent.add_recipients([senders_group])
         #mark last active timestamp for the root message
-        #so that we know that this thread was most recently
-        #updated
-        message.update_root_info()
+        message.root.last_active_at = datetime.datetime.now()
+        #update senders info - stuff that is shown in the thread heading
+        message.root.update_senders_info()
+        #unarchive the thread for all recipients
+        message.root.unarchive()
         return message
 
 
@@ -241,17 +243,20 @@ class Message(models.Model):
             sender_list, created = SenderList.objects.get_or_create(recipient=recipient)
             sender_list.senders.add(self.sender)
 
-    def update_root_info(self):
-        """Update the last active at timestamp and
-        the contributors info, if relevant.
-        Root object will be saved to the database.
+    def update_senders_info(self):
+        """update the contributors info,
+        meant to be used on a root message only
         """
-        self.root.last_active_at = datetime.datetime.now()
-        senders_names = self.root.senders_info.split(',')
+        senders_names = self.senders_info.split(',')
 
         if self.sender.username in senders_names:
             senders_names.remove(self.sender.username)
         senders_names.insert(0, self.sender.username)
 
-        self.root.senders_info = (','.join(senders_names))[:64]
-        self.root.save()
+        self.senders_info = (','.join(senders_names))[:64]
+        self.save()
+
+    def unarchive(self):
+        """unarchive message for all recipients"""
+        memos = self.memos.filter(status=MessageMemo.ARCHIVED)
+        memos.update(status=MessageMemo.SEEN)

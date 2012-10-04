@@ -5,6 +5,8 @@ from group_messaging.models import MessageMemo
 from group_messaging.models import SenderList
 from group_messaging.models import get_personal_group
 from group_messaging.models import create_personal_group
+from group_messaging.views import ThreadsList
+from mock import Mock
 
 MESSAGE_TEXT = 'test message text'
 
@@ -116,3 +118,33 @@ class ModelTests(TestCase):
         self.assertEqual(threads, set([root_message]))
         threads = set(Message.objects.get_threads_for_user(self.recipient))
         self.assertEqual(threads, set([root_message]))
+
+    def test_answer_to_deleted_thread_undeletes_thread(self):
+        #setup: message, reply, responder deletes thread
+        root_message = self.create_thread_for_user(self.recipient)
+        response = Message.objects.create_response(
+                                        sender=self.recipient,
+                                        text='some response',
+                                        parent=root_message
+                                    )
+        memo1, created = MessageMemo.objects.get_or_create(
+                                        message=root_message,
+                                        user=self.recipient,
+                                        status=MessageMemo.ARCHIVED
+                                    )
+        #OP sends reply to reply
+        response2 = Message.objects.create_response(
+                                        sender=self.sender,
+                                        text='some response2',
+                                        parent=response
+                                    )
+
+        view = ThreadsList()
+        request = Mock(spec=('REQUEST', 'user'))
+        request.REQUEST = {'sender_id': '-1'}
+        request.user = self.recipient
+        context = view.get_context(request)
+        self.assertEqual(len(context['threads']), 1)
+        thread_id = context['threads'][0].id
+        thread_data = context['threads_data'][thread_id]
+        self.assertEqual(thread_data['status'], 'new')
