@@ -15,6 +15,8 @@ import hashlib
 import logging
 import urllib
 import uuid
+from celery import states
+from celery.task import task
 from django.core.urlresolvers import reverse, NoReverseMatch
 from django.db.models import signals as django_signals
 from django.template import Context
@@ -479,6 +481,8 @@ def _assert_user_can(
         error_message = suspended_error_message
     elif user.is_administrator() or user.is_moderator():
         return
+    elif user.is_post_moderator(post):
+        return
     elif low_rep_error_message and user.reputation < min_rep_setting:
         raise askbot_exceptions.InsufficientReputation(low_rep_error_message)
     else:
@@ -507,6 +511,7 @@ def user_assert_can_unaccept_best_answer(self, answer = None):
             'Sorry, you cannot accept or unaccept best answers '
             'because your account is suspended'
         )
+
     if self.is_blocked():
         error_message = blocked_error_message
     elif self.is_suspended():
@@ -530,7 +535,9 @@ def user_assert_can_unaccept_best_answer(self, answer = None):
                 )
         return # success
 
-    elif self.is_administrator() or self.is_moderator():
+    elif self.reputation >= askbot_settings.MIN_REP_TO_ACCEPT_ANY_ANSWER or \
+        self.is_administrator() or self.is_moderator() or self.is_post_moderator(answer):
+
         will_be_able_at = (
             answer.added_at +
             datetime.timedelta(
@@ -1965,6 +1972,16 @@ def user_add_missing_askbot_subscriptions(self):
 def user_is_moderator(self):
     return (self.status == 'm' and self.is_administrator() == False)
 
+def user_is_post_moderator(self, post):
+    """True, if user and post have common groups
+    with moderation privilege"""
+    if askbot_settings.GROUPS_ENABLED:
+        group_ids = self.get_groups().values_list('id', flat=True)
+        post_groups = PostToGroup.objects.filter(post=post, group__id__in=group_ids)
+        return post_groups.filter(group__is_vip=True).count() > 0
+    else:
+        return False
+
 def user_is_administrator_or_moderator(self):
     return (self.is_administrator() or self.is_moderator())
 
@@ -2691,9 +2708,18 @@ def user_leave_group(self, group):
     self.edit_group_membership(group=group, user=self, action='remove')
 
 def user_is_group_member(self, group=None):
-    return GroupMembership.objects.filter(
-                            user=self, group=group
-                        ).count() == 1
+    """True if user is member of group,
+    where group can be instance of Group
+    or name of group as string
+    """
+    if isinstance(group, str):
+        return GroupMembership.objects.filter(
+                user=self, group__name=group
+            ).count() == 1
+    else:
+        return GroupMembership.objects.filter(
+                                user=self, group=group
+                            ).count() == 1
 
 User.add_to_class(
     'add_missing_askbot_subscriptions',
@@ -2780,6 +2806,7 @@ User.add_to_class('leave_group', user_leave_group)
 User.add_to_class('is_group_member', user_is_group_member)
 User.add_to_class('remove_admin_status', user_remove_admin_status)
 User.add_to_class('is_moderator', user_is_moderator)
+User.add_to_class('is_post_moderator', user_is_post_moderator)
 User.add_to_class('is_approved', user_is_approved)
 User.add_to_class('is_watched', user_is_watched)
 User.add_to_class('is_suspended', user_is_suspended)
@@ -3031,24 +3058,79 @@ def get_reply_to_addresses(user, post):
     return primary_addr, secondary_addr
 
 #todo: action
+@task()
 def send_instant_notifications_about_activity_in_post(
                                                 update_activity = None,
                                                 post = None,
                                                 recipients = None,
                                             ):
-    if not django_settings.CELERY_ALWAYS_EAGER:
-        cache_key = 'instant-notification-%d' % post.thread.id
-        old_task_id = cache.cache.get(cache_key)
-        if old_task_id:
-            from celery.task.control import revoke
-            revoke(old_task_id, terminate=True)
+    #reload object from the database
+    post = Post.objects.get(id=post.id)
+    if post.is_approved() is False:
+        return
 
-    from askbot import tasks
-    result = tasks.send_instant_nofications.apply_async((update_activity,
-                                                         post, recipients),
-                                                         countdown = django_settings.NOTIFICATION_DELAY_TIME)
-    if not django_settings.CELERY_ALWAYS_EAGER:
-        cache.cache.set(cache_key, result.task_id, django_settings.NOTIFICATION_DELAY_TIME)
+    if recipients is None:
+        return
+
+    acceptable_types = const.RESPONSE_ACTIVITY_TYPES_FOR_INSTANT_NOTIFICATIONS
+
+    if update_activity.activity_type not in acceptable_types:
+        return
+
+    #calculate some variables used in the loop below
+    from askbot.skins.loaders import get_template
+    update_type_map = const.RESPONSE_ACTIVITY_TYPE_MAP_FOR_TEMPLATES
+    update_type = update_type_map[update_activity.activity_type]
+    origin_post = post.get_origin_post()
+    headers = mail.thread_headers(
+                            post,
+                            origin_post,
+                            update_activity.activity_type
+                        )
+
+    logger = logging.getLogger()
+    if logger.getEffectiveLevel() <= logging.DEBUG:
+        log_id = uuid.uuid1()
+        message = 'email-alert %s, logId=%s' % (post.get_absolute_url(), log_id)
+        logger.debug(message)
+    else:
+        log_id = None
+
+
+    for user in recipients:
+        if user.is_blocked():
+            continue
+
+        reply_address, alt_reply_address = get_reply_to_addresses(user, post)
+
+        subject_line, body_text = format_instant_notification_email(
+                            to_user = user,
+                            from_user = update_activity.user,
+                            post = post,
+                            reply_address = reply_address,
+                            alt_reply_address = alt_reply_address,
+                            update_type = update_type,
+                            template = get_template('email/instant_notification.html')
+                        )
+
+        headers['Reply-To'] = reply_address
+        try:
+            mail.send_mail(
+                subject_line=subject_line,
+                body_text=body_text,
+                recipient_list=[user.email],
+                related_object=origin_post,
+                activity_type=const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT,
+                headers=headers,
+                raise_on_failure=True
+            )
+        except askbot_exceptions.EmailNotSent, error:
+            logger.debug(
+                '%s, error=%s, logId=%s' % (user.email, error, log_id)
+            )
+        else:
+            logger.debug('success %s, logId=%s' % (user.email, log_id))
+
 
 def notify_author_of_published_revision(
     revision = None, was_approved = None, **kwargs

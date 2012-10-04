@@ -305,7 +305,7 @@ NewThreadComposer.prototype.createDom = function() {
 
     var usersAc = new AutoCompleter({
         url: '/get-users-info/',//askbot['urls']['get_users_info'],
-        preloadData: true,
+        preloadData: false,
         minChars: 1,
         useCache: true,
         matchInside: true,

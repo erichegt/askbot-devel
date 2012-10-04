@@ -16,6 +16,7 @@ from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from django.utils.http import urlquote as django_urlquote
 from django.core import exceptions as django_exceptions
+from django.core import cache
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.contrib.contenttypes.models import ContentType
@@ -577,6 +578,12 @@ class Post(models.Model):
         return self.groups.filter(id=group.id).exists()
 
     def add_to_groups(self, groups):
+        """associates post with groups"""
+        #this is likely to be temporary - we add
+        #vip groups to the list behind the scenes.
+        groups = list(groups)
+        vips = Group.objects.filter(is_vip=True)
+        groups.extend(vips)
         #todo: use bulk-creation
         for group in groups:
             PostToGroup.objects.get_or_create(post=self, group=group)
@@ -653,11 +660,18 @@ class Post(models.Model):
                     notify_sets['for_email'] = \
                         [u for u in notify_sets['for_email'] if u.is_administrator()]
 
+        if not settings.CELERY_ALWAYS_EAGER:
+            cache_key = 'instant-notification-%d-%d' % (self.thread.id, updated_by.id)
+            if cache.cache.get(cache_key):
+                return
+            cache.cache.set(cache_key, True, settings.NOTIFICATION_DELAY_TIME)
+
         from askbot.models import send_instant_notifications_about_activity_in_post
-        send_instant_notifications_about_activity_in_post(
-                                update_activity=update_activity,
-                                post=self,
-                                recipients=notify_sets['for_email'],
+        send_instant_notifications_about_activity_in_post.apply_async((
+                                update_activity,
+                                self,
+                                notify_sets['for_email']),
+                                countdown = settings.NOTIFICATION_DELAY_TIME
                             )
 
     def make_private(self, user, group_id=None):
@@ -834,7 +848,7 @@ class Post(models.Model):
             return filtered_candidates
 
     def format_for_email(
-        self, quote_level = 0, is_leaf_post = False, format = None
+        self, quote_level=0, is_leaf_post=False, format=None
     ):
         """format post for the output in email,
         if quote_level > 0, the post will be indented that number of times

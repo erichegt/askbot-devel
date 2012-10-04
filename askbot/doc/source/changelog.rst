@@ -3,6 +3,8 @@ Changes in Askbot
 
 Development version
 -------------------
+* Added minimum reputation setting to accept any answer as correct (Evgeny)
+* Added "VIP" option to groups - if checked, all posts belong to the group and users of that group in the future will be able to moderate those posts. Moderation features for VIP group are in progress (Evgeny)
 * Added setting `NOTIFICATION_DELAY_TIME` to use with enabled celery daemon (Adolfo)
 * Added setting `ASKBOT_INTERNAL_IPS` - to allow anonymous access to 
   closed sites from dedicated IP addresses (Evgeny)

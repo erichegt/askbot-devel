@@ -2108,7 +2108,9 @@ AutoCompleter.prototype.decorate = function(element){
     /**
      * Set prompt text
      */
-    this.setPrompt();
+    if (this.options['promptText']) {
+        this.setPrompt();
+    }
 
     /**
      * Create DOM element to hold results
@@ -2309,14 +2311,10 @@ AutoCompleter.prototype.activateNow = function() {
 };
 
 AutoCompleter.prototype.fetchData = function(value) {
-    if (this.options.data) {
-        this.filterAndShowResults(this.options.data, value);
-    } else {
-        var self = this;
-        this.fetchRemoteData(value, function(remoteData) {
-            self.filterAndShowResults(remoteData, value);
-        });
-    }
+    var self = this;
+    this.fetchRemoteData(value, function(remoteData) {
+        self.filterAndShowResults(remoteData, value);
+    });
 };
 
 AutoCompleter.prototype.fetchRemoteData = function(filter, callback) {

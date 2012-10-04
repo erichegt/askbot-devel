@@ -166,10 +166,7 @@ class DBApiTests(AskbotTestCase):
         count = models.Tag.objects.filter(name='one-tag').count()
         self.assertEquals(count, 0)
     
-    @with_settings({
-        'MAX_TAG_LENGTH': 200,
-        'MAX_TAGS_PER_POST': 50
-    })
+    @with_settings(MAX_TAG_LENGTH=200, MAX_TAGS_PER_POST=50)
     def test_retag_tags_too_long_raises(self):
         tags = "aoaoesuouooeueooeuoaeuoeou aostoeuoaethoeastn oasoeoa nuhoasut oaeeots aoshootuheotuoehao asaoetoeatuoasu o  aoeuethut aoaoe uou uoetu uouuou ao aouosutoeh"
         question = self.post_question(user=self.user)
@@ -444,6 +441,17 @@ class GroupTests(AskbotTestCase):
             'question_comment': question_comment,
             'answer_comment': answer_comment
         }
+
+    def test_is_group_member(self):
+        group1 = models.Group.objects.create(
+                            name='somegroup', openness=models.Group.OPEN
+                        )
+        self.u1.join_group(group1)
+        group2 = models.Group.objects.create(name='othergroup')
+        self.assertEqual(self.u1.is_group_member(group1), True)
+        self.assertEqual(self.u1.is_group_member('somegroup'), True)
+        self.assertEqual(self.u1.is_group_member(group2), False)
+        self.assertEqual(self.u1.is_group_member('othergroup'), False)
 
     def test_posts_added_to_global_group(self):
         q = self.post_question(user=self.u1)
