@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: 0.7\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-10-03 06:29-0500\n"
-"PO-Revision-Date: 2012-10-03 08:26\n"
+"PO-Revision-Date: 2012-10-03 08:38\n"
 "Last-Translator:   <stefano.mancini@devinterface.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -252,7 +252,7 @@ msgstr "Sei pregato di selezionare il campo \"Non voglio fornire la mia email\""
 
 #: forms.py:766
 msgid "keep private within your groups"
-msgstr "tenere privati all'interno dei vostri gruppi"
+msgstr "mantieni privata all'interno dei tuoi gruppi"
 
 #: forms.py:804
 msgid "User name:"
@@ -2778,7 +2778,7 @@ msgstr "[privato]"
 
 #: const/__init__.py:311
 msgid "show all tags"
-msgstr "vedi tutti i tag"
+msgstr "mostra tutti i tag"
 
 #: const/__init__.py:312 const/__init__.py:322
 msgid "exclude ignored tags"
@@ -4760,8 +4760,8 @@ msgid ""
 "Most importantly - questions should be <strong>relevant</strong> to this "
 "community."
 msgstr ""
-"La cosa più importante &mdash; le domande devono essere "
-"<strong>interessanti</strong> per gli altri"
+"La cosa più importante - le domande devono essere "
+"<strong>interessanti</strong> per gli altri."
 
 #: templates/faq_static.html:8
 msgid ""
@@ -5370,7 +5370,7 @@ msgstr "modifica"
 
 #: templates/macros.html:430
 msgid "convert to answer"
-msgstr "convertire in risposta"
+msgstr "converti in risposta"
 
 #: templates/macros.html:566
 #, python-format
@@ -5640,7 +5640,7 @@ msgstr "(oppure scegli una delle opzioni qui sopra)"
 #: templates/authopenid/signin.html:118
 #: templates/authopenid/widget_signin.html:118
 msgid "Sign in"
-msgstr "Registrati"
+msgstr "Accedi"
 
 #: templates/authopenid/changeemail.html:2
 #: templates/authopenid/changeemail.html:8
@@ -5919,7 +5919,7 @@ msgid ""
 "existing one."
 msgstr ""
 "Clicca su una delle icone qui sotto per aggiungere un nuovo metodo di login "
-"o riverifica uno esistente."
+"o riverificare uno esistente."
 
 #: templates/authopenid/signin.html:39
 #: templates/authopenid/widget_signin.html:44
@@ -6340,18 +6340,16 @@ msgstr "Di seguito è una copia del tuo post:"
 #, python-format
 msgid ""
 "\n"
-"                %(comment)s comment:\n"
-"            "
+"%(count)s comment:\n"
 msgid_plural ""
 "\n"
-"                %(count)s comments:\n"
-"            "
+"%(count)s comments:\n"
 msgstr[0] ""
 "\n"
-"%(comment)s commenti:"
+"%(count)s commenti:\n"
 msgstr[1] ""
 "\n"
-"%(comment)s commento:"
+"%(count)s commento:\n"
 
 #: templates/email/re_welcome_lamson_on.html:2
 #: templates/email/re_welcome_lamson_on.html:3
@@ -6618,7 +6616,7 @@ msgstr "Poni tu stesso la domanda!"
 
 #: templates/main_page/tab_bar.html:10
 msgid "subscribe to the questions feed"
-msgstr "sottoscrivi al feed delle domande"
+msgstr "sottoscrivi al feed della domanda"
 
 #: templates/main_page/tab_bar.html:11
 msgid "RSS"
@@ -6826,12 +6824,12 @@ msgid ""
 "forget to vote :)</strong> for the answers that you liked (or perhaps did "
 "not like)!"
 msgstr ""
-"<span class='big strong'>Sei invitato a rispondere alla tua domanda</span>, "
-"ma si prega assicurati di dare una <strong>risposta</strong>. Ricorda che "
-"puoi sempre <strong>rivedere la tua domanda originale</strong>. Si prega "
-"<strong>di utilizzare i commenti per le discussioni</strong> e <strong>non "
-"dimenticate di votare :)</strong> per le risposte che sono piaciute (o che "
-"forse non piacciono)!"
+"<span class='big strong'>Puoi rispondere alla tua domanda</span>, "
+"ma assicurati di dare una <strong>risposta</strong> interessante. Ricorda che "
+"puoi sempre <strong>rivedere la tua domanda originale</strong>."
+"<strong>Utilizza i commenti per le discussioni</strong> e <strong>non "
+"dimenticare di votare :)</strong> per le risposte che ti sono piaciute (o che "
+"forse non ti piacciono)!"
 
 #: templates/question/new_answer_form.html:37
 msgid ""
@@ -6928,7 +6926,7 @@ msgstr "sottoscrivi al feed delle domanda"
 
 #: templates/question/sidebar.html:46
 msgid "subscribe to rss feed"
-msgstr "sottoscrivi al feed delle domande"
+msgstr "sottoscrivi al feed della domanda"
 
 #: templates/question/sidebar.html:55
 msgid "Invite"
@@ -6988,11 +6986,11 @@ msgstr "Statistiche"
 
 #: templates/question/sidebar.html:148
 msgid "Asked"
-msgstr "Chiesto"
+msgstr "Creata"
 
 #: templates/question/sidebar.html:151
 msgid "Seen"
-msgstr "Visto"
+msgstr "Vista"
 
 #: templates/question/sidebar.html:151
 msgid "times"
@@ -7008,7 +7006,7 @@ msgstr "Domande simili"
 
 #: templates/question/subscribe_by_email_prompt.html:5
 msgid "Email me when there are any new answers"
-msgstr "Scrivimi quando ci sono nuove risposte"
+msgstr "Notificami via mail quando ci sono nuove risposte"
 
 #: templates/question/subscribe_by_email_prompt.html:11
 msgid ""
@@ -7063,7 +7061,7 @@ msgstr "risposte forum (%(re_count)s)"
 #: templates/user_inbox/base.html:31
 #, python-format
 msgid "flagged items (%(flags_count)s)"
-msgstr "elementi contrassegnati (%(flag_count)s)"
+msgstr "elementi contrassegnati (%(flags_count)s)"
 
 #: templates/user_inbox/base.html:38
 msgid "group join requests"
@@ -7095,15 +7093,15 @@ msgstr "seleziona:"
 
 #: templates/user_inbox/responses_and_flags.html:10
 msgid "seen"
-msgstr "visto"
+msgstr "viste"
 
 #: templates/user_inbox/responses_and_flags.html:11
 msgid "new"
-msgstr "nuovo"
+msgstr "nuove"
 
 #: templates/user_inbox/responses_and_flags.html:12
 msgid "none"
-msgstr "nessuno"
+msgstr "nessuna"
 
 #: templates/user_inbox/responses_and_flags.html:15
 msgid "mark as seen"
@@ -7115,7 +7113,7 @@ msgstr "contrassegna come nuovo"
 
 #: templates/user_inbox/responses_and_flags.html:17
 msgid "dismiss"
-msgstr "allontana"
+msgstr "cancella"
 
 #: templates/user_inbox/responses_and_flags.html:19
 msgid "remove flags/approve"
@@ -7239,11 +7237,11 @@ msgid ""
 "wish to receive emails - select 'no email' on all items below.<br/>Updates "
 "are only sent when there is any new activity on selected items."
 msgstr ""
-"<span class='big strong'>regola la frequenza degli aggiornamenti via "
+"<span class='big strong'>Regola la frequenza degli aggiornamenti via "
 "e-mail.</span> Ricevi gli aggiornamenti sulle domande interessanti per "
 "email, <strong><br/> aiuta la comunità</strong> rispondendo alle domande dei"
 " tuoi colleghi. Se non desideri ricevere email - seleziona 'nessuna email' "
-"su tutti gli articoli qui sotto. <br/>Gli aggiornamenti vengono inviati solo"
+"su tutti gli elementi qui sotto. <br/>Gli aggiornamenti vengono inviati solo"
 " quando c'è qualche nuova attività sugli elementi selezionati."
 
 #: templates/user_profile/user_email_subscriptions.html:23
@@ -7811,8 +7809,8 @@ msgstr "fai in modo che la tua risposta sia interessante per la comunità"
 #: templates/widgets/question_summary.html:12
 msgid "view"
 msgid_plural "views"
-msgstr[0] "consultazione"
-msgstr[1] "consultazioni"
+msgstr[0] "vista"
+msgstr[1] "viste"
 
 #: templates/widgets/question_summary.html:30
 msgid "answer"
@@ -7836,7 +7834,7 @@ msgstr "vedi domande senza risposta"
 
 #: templates/widgets/scope_nav.html:8
 msgid "UNANSWERED"
-msgstr "NON RISPOSTO"
+msgstr "SENZA RISPOSTA"
 
 #: templates/widgets/scope_nav.html:11
 msgid "see your followed questions"
@@ -7844,11 +7842,11 @@ msgstr "vedi le tue domande preferite"
 
 #: templates/widgets/scope_nav.html:11
 msgid "FOLLOWED"
-msgstr "SEGUITO"
+msgstr "SEGUITE"
 
 #: templates/widgets/scope_nav.html:14
 msgid "Please ask your question here"
-msgstr "Poni tu stesso la domanda!"
+msgstr "Fai qui la tua domanda!"
 
 #: templates/widgets/tag_selector.html:4
 msgid "Interesting tags"
@@ -7907,7 +7905,7 @@ msgstr "disconnettiti"
 
 #: templates/widgets/user_navigation.html:20
 msgid "Hi there! Please sign in"
-msgstr "Ciao! Accedi"
+msgstr "Accedi"
 
 #: templates/widgets/user_navigation.html:23
 msgid "settings"
