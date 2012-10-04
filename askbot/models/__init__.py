@@ -511,6 +511,7 @@ def user_assert_can_unaccept_best_answer(self, answer = None):
             'Sorry, you cannot accept or unaccept best answers '
             'because your account is suspended'
         )
+
     if self.is_blocked():
         error_message = blocked_error_message
     elif self.is_suspended():
@@ -534,7 +535,9 @@ def user_assert_can_unaccept_best_answer(self, answer = None):
                 )
         return # success
 
-    elif self.is_administrator() or self.is_moderator() or self.is_post_moderator(answer):
+    elif self.reputation >= askbot_settings.MIN_REP_TO_ACCEPT_ANY_ANSWER or \
+        self.is_administrator() or self.is_moderator() or self.is_post_moderator(answer):
+
         will_be_able_at = (
             answer.added_at +
             datetime.timedelta(
@@ -2705,9 +2708,18 @@ def user_leave_group(self, group):
     self.edit_group_membership(group=group, user=self, action='remove')
 
 def user_is_group_member(self, group=None):
-    return GroupMembership.objects.filter(
-                            user=self, group=group
-                        ).count() == 1
+    """True if user is member of group,
+    where group can be instance of Group
+    or name of group as string
+    """
+    if isinstance(group, str):
+        return GroupMembership.objects.filter(
+                user=self, group__name=group
+            ).count() == 1
+    else:
+        return GroupMembership.objects.filter(
+                                user=self, group=group
+                            ).count() == 1
 
 User.add_to_class(
     'add_missing_askbot_subscriptions',

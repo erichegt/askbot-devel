@@ -442,6 +442,17 @@ class GroupTests(AskbotTestCase):
             'answer_comment': answer_comment
         }
 
+    def test_is_group_member(self):
+        group1 = models.Group.objects.create(
+                            name='somegroup', openness=models.Group.OPEN
+                        )
+        self.u1.join_group(group1)
+        group2 = models.Group.objects.create(name='othergroup')
+        self.assertEqual(self.u1.is_group_member(group1), True)
+        self.assertEqual(self.u1.is_group_member('somegroup'), True)
+        self.assertEqual(self.u1.is_group_member(group2), False)
+        self.assertEqual(self.u1.is_group_member('othergroup'), False)
+
     def test_posts_added_to_global_group(self):
         q = self.post_question(user=self.u1)
         group_name = askbot_settings.GLOBAL_GROUP_NAME
