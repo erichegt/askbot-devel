@@ -266,3 +266,10 @@ class ModelTests(TestCase):
                                         parent=root
                                     )
         self.assertEqual(root.headline, 'some response')
+
+    def test_email_alert_sent(self):
+        root = self.create_thread_for_user(self.recipient)
+        from django.core.mail import outbox
+        self.assertEqual(len(outbox), 1)
+        self.assertEqual(len(outbox[0].recipients()), 1)
+        self.assertEqual(outbox[0].recipients()[0], self.recipient.email)

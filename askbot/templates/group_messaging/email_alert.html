@@ -1,0 +1,13 @@
+{% extends "email/base_mail.html"%}
+{% from "email/macros.html" import start_quote, end_quote %}
+{% set level = 0 %}
+{% for message in messages %}
+    {{ start_quote(level) }}
+        <p>{% trans author=message.sender %}{{ author }} wrote:{% endtrans %}</p>
+        {{ message.html|escape }}
+    {{ end_quote(level) }}
+    {% set level = level + 1 %}
+{% endfor %}
+{% block footer %}
+{% include "email/footer.html" %}
+{% endblock %}

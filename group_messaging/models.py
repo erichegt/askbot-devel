@@ -1,12 +1,16 @@
 """models for the ``group_messaging`` app
 """
 import datetime
+from coffin.template.loader import get_template
 from django.db import models
+from django.db.models import signals
 from django.contrib.auth.models import Group
 from django.contrib.auth.models import User
+from django.utils.translation import ugettext as _
 
 MAX_HEADLINE_LENGTH = 80
 MAX_SENDERS_INFO_LENGTH = 64
+MAX_SUBJECT_LINE_LENGTH = 30
 
 #dummy parse message function
 parse_message = lambda v: v
@@ -167,6 +171,7 @@ class MessageManager(models.Manager):
                     text=text,
                 )
         message.add_recipients(recipients)
+        message.send_email_alert()
         return message
 
     def create_response(self, sender=None, text=None, parent=None):
@@ -192,6 +197,7 @@ class MessageManager(models.Manager):
         message.root.update_senders_info()
         #unarchive the thread for all recipients
         message.root.unarchive()
+        message.send_email_alert()
         return message
 
 
@@ -260,6 +266,49 @@ class Message(models.Model):
         for recipient in recipients:
             sender_list, created = SenderList.objects.get_or_create(recipient=recipient)
             sender_list.senders.add(self.sender)
+
+    def get_email_subject_line(self):
+        """forms subject line based on the root message
+        and prepends 'Re': if message is non-root
+        """
+        subject = self.get_root_message().text[:MAX_SUBJECT_LINE_LENGTH]
+        if self.root:
+            subject = _('Re: ') + subject
+        return subject
+
+    def get_root_message(self):
+        """returns root message or self
+        if current message is root
+        """
+        return self.root or self
+
+    def get_recipients_users(self):
+        """returns query set of users"""
+        groups = self.recipients.all()
+        return User.objects.filter(
+                        groups__in=groups
+                    ).exclude(
+                        id=self.sender.id
+                    ).distinct()
+
+    def get_timeline(self):
+        """returns ordered query set of messages in the thread
+        with the newest first"""
+        root = self.get_root_message()
+        root_qs = Message.objects.filter(id=root.id)
+        return (root.descendants.all() | root_qs).order_by('-sent_at')
+
+
+    def send_email_alert(self):
+        """signal handler for the message post-save"""
+        subject = self.get_email_subject_line()
+        template = get_template('group_messaging/email_alert.html')
+        data = {'messages': self.get_timeline()}
+        body_text = template.render(data)
+        recipients = map(lambda v: v.email, self.get_recipients_users())
+        from askbot.mail import send_mail
+        send_mail(recipient_list=recipients, subject_line=subject, body_text=body_text)
+
 
     def update_senders_info(self):
         """update the contributors info,
