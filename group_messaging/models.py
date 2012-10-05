@@ -99,21 +99,37 @@ class MessageMemo(models.Model):
 class MessageManager(models.Manager):
     """model manager for the :class:`Message`"""
 
-    def get_threads_for_user(self, user, deleted=False):
-        user_groups = user.groups.all()
+    def get_threads(self, recipient=None, sender=None, deleted=False):
+        user_groups = recipient.groups.all()
         user_thread_filter = models.Q(
                 root=None,
                 message_type=Message.STORED,
                 recipients__in=user_groups
             )
-        deleted_filter = models.Q(
-                memos__status=MessageMemo.ARCHIVED,
-                memos__user=user
-            )
+
+        filter = user_thread_filter
+        if sender:
+            filter = filter & models.Q(sender=sender)
+
         if deleted:
-            return self.filter(user_thread_filter & deleted_filter)
+            deleted_filter = models.Q(
+                memos__status=MessageMemo.ARCHIVED,
+                memos__user=recipient
+            )
+            return self.filter(filter & deleted_filter)
         else:
-            return self.filter(user_thread_filter & ~deleted_filter)
+            #rather a tricky query (may need to change the idea to get rid of this)
+            #select threads that have a memo for the user, but the memo is not ARCHIVED
+            #in addition, select threads that have zero memos for the user
+            marked_as_non_deleted_filter = models.Q(
+                                            memos__status=MessageMemo.SEEN,
+                                            memos__user=recipient
+                                        )
+            #part1 - marked as non-archived
+            part1 = self.filter(filter & marked_as_non_deleted_filter)
+            #part2 - messages for the user without an attached memo
+            part2 = self.filter(filter & ~models.Q(memos__user=recipient))
+            return (part1 | part2).distinct()
 
     def create(self, **kwargs):
         """creates a message"""

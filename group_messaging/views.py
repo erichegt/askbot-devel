@@ -151,11 +151,18 @@ class ThreadsList(InboxView):
         #get threads and the last visit time
         sender_id = IntegerField().clean(request.REQUEST.get('sender_id', '-1'))
         if sender_id == -2:
-            threads = Message.objects.get_threads_for_user(request.user, deleted=True)
+            threads = Message.objects.get_threads(
+                                            recipient=request.user,
+                                            deleted=True
+                                        )
+        elif sender_id == -1:
+            threads = Message.objects.get_threads(recipient=request.user)
         else:
-            threads = Message.objects.get_threads_for_user(request.user)
-            if sender_id != -1:
-                threads = threads.filter(sender__id=sender_id)
+            sender = User.objects.get(id=sender_id)
+            threads = Message.objects.get_threads(
+                                            recipient=request.user,
+                                            sender=sender
+                                        )
 
         #for each thread we need to know if there is something
         #unread for the user - to mark "new" threads as bold

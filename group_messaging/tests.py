@@ -41,6 +41,32 @@ class ModelTests(TestCase):
         group = get_personal_group(user)
         return self.create_thread([group])
 
+
+    def get_view_context(self, view_class, data=None, user=None, method='GET'):
+        spec = ['REQUEST', 'user']
+        assert(method in ('GET', 'POST'))
+        spec.append(method)
+        request = Mock(spec=spec)
+        request.REQUEST = data
+        setattr(request, method, data)
+        request.user = user
+        return view_class().get_context(request)
+
+    def setup_three_message_thread(self):
+        """talk in this order: sender, recipient, sender"""
+        root_message = self.create_thread_for_user(self.recipient)
+        response = Message.objects.create_response(
+                                        sender=self.recipient,
+                                        text='some response',
+                                        parent=root_message
+                                    )
+        response2 = Message.objects.create_response(
+                                        sender=self.sender,
+                                        text='some response2',
+                                        parent=response
+                                    )
+        return root_message, response, response2
+
     def test_create_thread_for_user(self):
         """the basic create thread with one recipient
         tests that the recipient is there"""
@@ -102,11 +128,11 @@ class ModelTests(TestCase):
         expected_recipients = set([sender_group, recipient_group])
         self.assertEqual(recipients, expected_recipients)
 
-    def test_get_threads_for_user(self):
+    def test_get_threads(self):
         root_message = self.create_thread_for_user(self.recipient)
-        threads = set(Message.objects.get_threads_for_user(self.sender))
+        threads = set(Message.objects.get_threads(recipient=self.sender))
         self.assertEqual(threads, set([]))
-        threads = set(Message.objects.get_threads_for_user(self.recipient))
+        threads = set(Message.objects.get_threads(recipient=self.recipient))
         self.assertEqual(threads, set([root_message]))
 
         response = Message.objects.create_response(
@@ -114,9 +140,9 @@ class ModelTests(TestCase):
                                         text='some response',
                                         parent=root_message
                                     )
-        threads = set(Message.objects.get_threads_for_user(self.sender))
+        threads = set(Message.objects.get_threads(recipient=self.sender))
         self.assertEqual(threads, set([root_message]))
-        threads = set(Message.objects.get_threads_for_user(self.recipient))
+        threads = set(Message.objects.get_threads(recipient=self.recipient))
         self.assertEqual(threads, set([root_message]))
 
     def test_answer_to_deleted_thread_undeletes_thread(self):
@@ -139,12 +165,51 @@ class ModelTests(TestCase):
                                         parent=response
                                     )
 
-        view = ThreadsList()
-        request = Mock(spec=('REQUEST', 'user'))
-        request.REQUEST = {'sender_id': '-1'}
-        request.user = self.recipient
-        context = view.get_context(request)
+        context = self.get_view_context(
+                                ThreadsList,
+                                data={'sender_id': '-1'},
+                                user=self.recipient
+                            )
+
         self.assertEqual(len(context['threads']), 1)
         thread_id = context['threads'][0].id
         thread_data = context['threads_data'][thread_id]
         self.assertEqual(thread_data['status'], 'new')
+
+    def test_deleting_thread_is_user_specific(self):
+        """when one user deletes thread, that same thread
+        should not end up deleted by another user
+        """
+        root, response, response2 = self.setup_three_message_thread()
+
+        threads = Message.objects.get_threads(recipient=self.sender)
+        self.assertEquals(threads.count(), 1)
+        threads = Message.objects.get_threads(recipient=self.recipient)
+        self.assertEquals(threads.count(), 1)
+
+        memo1, created = MessageMemo.objects.get_or_create(
+                                        message=root,
+                                        user=self.recipient,
+                                        status=MessageMemo.ARCHIVED
+                                    )
+
+        threads = Message.objects.get_threads(recipient=self.sender)
+        self.assertEquals(threads.count(), 1)
+        threads = Message.objects.get_threads(recipient=self.recipient)
+        self.assertEquals(threads.count(), 0)
+        threads = Message.objects.get_threads(
+                                recipient=self.recipient, deleted=True
+                            )
+        self.assertEquals(threads.count(), 1)
+
+    def test_user_specific_inboxes(self):
+        self.create_thread_for_user(self.recipient)
+
+        threads = Message.objects.get_threads(
+                        recipient=self.recipient, sender=self.sender
+                    )
+        self.assertEqual(threads.count(), 1)
+        threads = Message.objects.get_threads(
+                        recipient=self.sender, sender=self.recipient
+                    )
+        self.assertEqual(threads.count(), 0)
