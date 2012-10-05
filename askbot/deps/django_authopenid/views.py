@@ -943,6 +943,7 @@ def register(request, login_provider_name=None, user_identifier=None):
                 user_info['django_username'] = username
                 user_info['email'] = email
                 user = ldap_create_user(user_info).user
+                user = authenticate(user_id=user.id, method='force')
                 del request.session['ldap_user_info']
                 login(request, user)
                 cleanup_post_register_session(request)
