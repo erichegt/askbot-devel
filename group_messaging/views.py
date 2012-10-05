@@ -190,8 +190,6 @@ class ThreadsList(InboxView):
             if thread_data['thread'].last_active_at <= last_visit.at:
                 thread_data['status'] = 'seen'
 
-        #after we have all the data - update the last visit time
-        last_visit_times.update(at=datetime.datetime.now())
         return {
             'threads': threads,
             'threads_data': threads_data,

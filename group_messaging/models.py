@@ -5,7 +5,7 @@ from django.db import models
 from django.contrib.auth.models import Group
 from django.contrib.auth.models import User
 
-MAX_TITLE_LENGTH = 80
+MAX_HEADLINE_LENGTH = 80
 MAX_SENDERS_INFO_LENGTH = 64
 
 #dummy parse message function
@@ -144,7 +144,7 @@ class MessageManager(models.Manager):
         kwargs['root'] = root
 
         headline = kwargs.get('headline', kwargs['text'])
-        kwargs['headline'] = headline[:MAX_TITLE_LENGTH]
+        kwargs['headline'] = headline[:MAX_HEADLINE_LENGTH]
         kwargs['html'] = parse_message(kwargs['text'])
 
         message = super(MessageManager, self).create(**kwargs)
@@ -184,6 +184,8 @@ class MessageManager(models.Manager):
         message.add_recipients(recipients)
         #add author of the parent as a recipient to parent
         parent.add_recipients([senders_group])
+        #update headline
+        message.root.headline = text[:MAX_HEADLINE_LENGTH]
         #mark last active timestamp for the root message
         message.root.last_active_at = datetime.datetime.now()
         #update senders info - stuff that is shown in the thread heading
@@ -231,7 +233,7 @@ class Message(models.Model):
         blank=True, related_name='children'
     )
 
-    headline = models.CharField(max_length=MAX_TITLE_LENGTH)
+    headline = models.CharField(max_length=MAX_HEADLINE_LENGTH)
 
     text = models.TextField(
         null=True, blank=True,

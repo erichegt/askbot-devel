@@ -3,10 +3,12 @@ from django.contrib.auth.models import User, Group
 from group_messaging.models import Message
 from group_messaging.models import MessageMemo
 from group_messaging.models import SenderList
+from group_messaging.models import LastVisitTime
 from group_messaging.models import get_personal_group
 from group_messaging.models import create_personal_group
 from group_messaging.views import ThreadsList
 from mock import Mock
+import time
 
 MESSAGE_TEXT = 'test message text'
 
@@ -213,3 +215,54 @@ class ModelTests(TestCase):
                         recipient=self.sender, sender=self.recipient
                     )
         self.assertEqual(threads.count(), 0)
+
+    def test_new_response_marks_thread_heading_as_new(self):
+        root = self.create_thread_for_user(self.recipient)
+        response = Message.objects.create_response(
+                                        sender=self.recipient,
+                                        text='some response',
+                                        parent=root
+                                    )
+        #response must show as "new" to the self.sender
+        context = self.get_view_context(
+                                ThreadsList,
+                                data={'sender_id': '-1'},
+                                user=self.sender
+                            )
+        self.assertEqual(context['threads_data'][root.id]['status'], 'new')
+        #"visit" the thread
+        last_visit_time = LastVisitTime.objects.create(
+                                                user=self.sender,
+                                                message=root
+                                            )
+        time.sleep(1.5)
+
+        #response must show as "seen"
+        context = self.get_view_context(
+                                ThreadsList,
+                                data={'sender_id': '-1'},
+                                user=self.sender
+                            )
+        self.assertEqual(context['threads_data'][root.id]['status'], 'seen')
+        #self.recipient makes another response
+        response = Message.objects.create_response(
+                                        sender=self.recipient,
+                                        text='some response',
+                                        parent=response
+                                    )
+        #thread must be "new" again
+        context = self.get_view_context(
+                                ThreadsList,
+                                data={'sender_id': '-1'},
+                                user=self.sender
+                            )
+        self.assertEqual(context['threads_data'][root.id]['status'], 'new')
+
+    def test_response_updates_thread_headline(self):
+        root = self.create_thread_for_user(self.recipient)
+        response = Message.objects.create_response(
+                                        sender=self.recipient,
+                                        text='some response',
+                                        parent=root
+                                    )
+        self.assertEqual(root.headline, 'some response')
