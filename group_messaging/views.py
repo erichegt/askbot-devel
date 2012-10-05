@@ -164,6 +164,8 @@ class ThreadsList(InboxView):
                                             sender=sender
                                         )
 
+        threads = threads.order_by('-last_active_at')
+
         #for each thread we need to know if there is something
         #unread for the user - to mark "new" threads as bold
         threads_data = dict()
