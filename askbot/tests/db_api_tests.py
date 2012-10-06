@@ -88,7 +88,7 @@ class DBApiTests(AskbotTestCase):
         rev = q.revisions.all()[0]
         self.assertTrue(rev.is_anonymous)
 
-    def tets_post_unicode_question(self):
+    def test_post_unicode_question(self):
         """there was a bug that caused this to raise a db error"""
         self.user.post_question(
             tags=u'\u043c\u043e\u0440\u0435',
