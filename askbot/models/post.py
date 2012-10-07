@@ -372,7 +372,7 @@ class Post(models.Model):
     text = models.TextField(null=True)#denormalized copy of latest revision
 
     # Denormalised data
-    summary = models.CharField(max_length=180)
+    summary = models.TextField(null=True)
 
     #note: anonymity here applies to question only, but
     #the field will still go to thread
