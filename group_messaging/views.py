@@ -12,6 +12,7 @@ import copy
 import datetime
 from coffin.template.loader import get_template
 from django.contrib.auth.models import User
+from django.db import models
 from django.forms import IntegerField
 from django.http import HttpResponse
 from django.http import HttpResponseNotAllowed
@@ -105,7 +106,12 @@ class NewThread(InboxView):
         if missing:
             result['success'] = False
             result['missing_users'] = missing
-        else:
+
+        if request.user.username in usernames:
+            result['success'] = False
+            result['self_message'] = True
+
+        if result.get('success', True):
             recipients = get_personal_groups_for_users(users)
             message = Message.objects.create_thread(
                             sender=request.user,
@@ -157,6 +163,8 @@ class ThreadsList(InboxView):
                                         )
         elif sender_id == -1:
             threads = Message.objects.get_threads(recipient=request.user)
+        elif sender_id == request.user.id:
+            threads = Message.objects.get_sent_threads(sender=request.user)
         else:
             sender = User.objects.get(id=sender_id)
             threads = Message.objects.get_threads(
@@ -180,6 +188,17 @@ class ThreadsList(InboxView):
             thread_data['senders_info'] = ', '.join(senders_names)
             thread_data['thread'] = thread
             threads_data[thread.id] = thread_data
+
+        ids = [thread.id for thread in threads]
+        counts = Message.objects.filter(
+                                id__in=ids
+                            ).annotate(
+                                responses_count=models.Count('descendants')
+                            ).values('id', 'responses_count')
+        for count in counts:
+            thread_id = count['id']
+            responses_count = count['responses_count']
+            threads_data[thread_id]['responses_count'] = responses_count
 
         last_visit_times = LastVisitTime.objects.filter(
                                             user=request.user,
@@ -243,7 +262,7 @@ class SendersList(InboxView):
         """get data about senders for the user"""
         senders = SenderList.objects.get_senders_for_user(request.user)
         senders = senders.values('id', 'username')
-        return {'senders': senders}
+        return {'senders': senders, 'request_user_id': request.user.id}
 
 
 class ThreadDetails(InboxView):

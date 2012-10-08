@@ -265,15 +265,19 @@ NewThreadComposer.prototype.onAfterShow = function() {
 
 NewThreadComposer.prototype.onSendErrorInternal = function(data) {
     var missingUsers = data['missing_users']
+    var errors = [];
     if (missingUsers) {
         var errorTpl = ngettext(
                             'user {{str}} does not exist',
                             'users {{str}} do not exist',
                             missingUsers.length
                         )
-        error = errorTpl.replace('{{str}}', joinAsPhrase(missingUsers));
-        this._toInputError.html(error);
+        errors.push(errorTpl.replace('{{str}}', joinAsPhrase(missingUsers)));
     }
+    if (data['self_message']) {
+        errors.push(gettext('cannot send message to yourself'));
+    }
+    this._toInputError.html(errors.join(', '));
 };
 
 NewThreadComposer.prototype.getInputData = function() {

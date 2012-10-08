@@ -17,6 +17,18 @@ parse_message = lambda v: v
 
 GROUP_NAME_TPL = '_personal_%s'
 
+def get_recipient_names(recipient_groups):
+    """returns list of user names if groups are private,
+    or group names, otherwise"""
+    names = set()
+    for group in recipient_groups:
+        if group.name.startswith('_personal_'):
+            names.add(group.user_set.all()[0].username)
+        else:
+            names.add(group.name)
+    return names
+            
+
 def get_personal_group_by_user_id(user_id):
     return Group.objects.get(name=GROUP_NAME_TPL % user_id)
 
@@ -103,13 +115,44 @@ class MessageMemo(models.Model):
 class MessageManager(models.Manager):
     """model manager for the :class:`Message`"""
 
+    def get_sent_threads(self, sender=None):
+        """returns list of threads for the "sent" mailbox
+        this function does not deal with deleted=True
+        """
+        responses = self.filter(sender=sender)
+        responded_to = models.Q(descendants__in=responses, root=None)
+        seen_filter = models.Q(
+            memos__status=MessageMemo.SEEN,
+            memos__user=sender
+        )
+        seen_responses = self.filter(responded_to & seen_filter)
+        unseen_responses = self.filter(responded_to & ~models.Q(memos__user=sender))
+        return (
+            self.get_threads(sender=sender) \
+            | seen_responses.distinct() \
+            | unseen_responses.distinct()
+        ).distinct()
+
     def get_threads(self, recipient=None, sender=None, deleted=False):
-        user_groups = recipient.groups.all()
-        user_thread_filter = models.Q(
-                root=None,
-                message_type=Message.STORED,
-                recipients__in=user_groups
-            )
+        """returns query set of first messages in conversations,
+        based on recipient, sender and whether to
+        load deleted messages or not"""
+
+        if sender and sender == recipient:
+            raise ValueError('sender cannot be the same as recipient')
+
+        filter_kwargs = {
+            'root': None,
+            'message_type': Message.STORED
+        }
+        if recipient:
+            filter_kwargs['recipients__in'] = recipient.groups.all()
+        else:
+            #todo: possibly a confusing hack - for this branch - 
+            #sender but no recipient in the args - we need "sent" origin threads
+            recipient = sender
+
+        user_thread_filter = models.Q(**filter_kwargs)
 
         filter = user_thread_filter
         if sender:
@@ -161,7 +204,6 @@ class MessageManager(models.Manager):
         )
         return message
 
-
     def create_thread(self, sender=None, recipients=None, text=None):
         """creates a stored message and adds recipients"""
         message = self.create(
@@ -170,6 +212,9 @@ class MessageManager(models.Manager):
                     senders_info=sender.username,
                     text=text,
                 )
+        names = get_recipient_names(recipients)
+        message.add_recipient_names_to_senders_info(recipients)
+        message.save()
         message.add_recipients(recipients)
         message.send_email_alert()
         return message
@@ -184,11 +229,14 @@ class MessageManager(models.Manager):
         #recipients are parent's recipients + sender
         #creator of response gets memo in the "read" status
         recipients = set(parent.recipients.all())
-        senders_group = get_personal_group(parent.sender)
-        recipients.add(senders_group)
+
+        if sender != parent.sender:
+            senders_group = get_personal_group(parent.sender)
+            parent.add_recipients([senders_group])
+            recipients.add(senders_group)
+
         message.add_recipients(recipients)
         #add author of the parent as a recipient to parent
-        parent.add_recipients([senders_group])
         #update headline
         message.root.headline = text[:MAX_HEADLINE_LENGTH]
         #mark last active timestamp for the root message
@@ -257,6 +305,12 @@ class Message(models.Model):
 
     objects = MessageManager()
 
+    def add_recipient_names_to_senders_info(self, recipient_groups):
+        names = get_recipient_names(recipient_groups)
+        old_names = set(self.senders_info.split(','))
+        names |= old_names
+        self.senders_info = ','.join(names)
+
     def add_recipients(self, recipients):
         """adds recipients to the message
         and updates the sender lists for all recipients
@@ -323,7 +377,24 @@ class Message(models.Model):
         self.senders_info = (','.join(senders_names))[:64]
         self.save()
 
-    def unarchive(self):
+    def unarchive(self, user=None):
         """unarchive message for all recipients"""
-        memos = self.memos.filter(status=MessageMemo.ARCHIVED)
+        archived_filter = {'status': MessageMemo.ARCHIVED}
+        if user:
+            archived_filter['user'] = user
+        memos = self.memos.filter(**archived_filter)
         memos.update(status=MessageMemo.SEEN)
+
+    def set_status_for_user(self, status, user):
+        """set specific status to the message for the user"""
+        memo, created = MessageMemo.objects.get_or_create(user=user, message=self)
+        memo.status = status
+        memo.save()
+
+    def archive(self, user):
+        """mark message as archived"""
+        self.set_status_for_user(MessageMemo.ARCHIVED, user)
+
+    def mark_as_seen(self, user):
+        """mark message as seen"""
+        self.set_status_for_user(MessageMemo.SEEN, user)

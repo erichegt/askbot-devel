@@ -9,7 +9,14 @@
         >
             <td class="delete-or-restore"></td>
             <td class="senders">{{ thread_data['senders_info']|escape }}</td>
-            <td class="subject">{{ thread.headline|escape }}</td>
+            <td class="subject">
+                {{ thread.headline|escape }}
+                {% if thread_data['responses_count'] > 0 %}
+                <span class="messages-count">
+                    ({{ thread_data['responses_count'] + 1 }})
+                </span>
+                {% endif %}
+            </td>
             <td class="timestamp">{{ thread.last_active_at|timesince }}</td>
         </tr>
     {% endfor %}
