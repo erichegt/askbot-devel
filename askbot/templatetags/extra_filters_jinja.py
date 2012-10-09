@@ -14,6 +14,7 @@ from askbot import exceptions as askbot_exceptions
 from askbot.conf import settings as askbot_settings
 from django.conf import settings as django_settings
 from askbot.skins import utils as skin_utils
+from askbot.utils.html import absolutize_urls
 from askbot.utils import functions
 from askbot.utils import url_utils
 from askbot.utils.slug import slugify
@@ -24,17 +25,7 @@ from django_countries import settings as countries_settings
 
 register = coffin_template.Library()
 
-def absolutize_urls_func(text):
-    url_re1 = re.compile(r'(?P<prefix><img[^<]+src=)"(?P<url>/[^"]+)"', re.I)
-    url_re2 = re.compile(r"(?P<prefix><img[^<]+src=)'(?P<url>/[^']+)'", re.I)
-    url_re3 = re.compile(r'(?P<prefix><a[^<]+href=)"(?P<url>/[^"]+)"', re.I)
-    url_re4 = re.compile(r"(?P<prefix><a[^<]+href=)'(?P<url>/[^']+)'", re.I)
-    replacement = '\g<prefix>"%s\g<url>"' % askbot_settings.APP_URL
-    text = url_re1.sub(replacement, text)
-    text = url_re2.sub(replacement, text)
-    text = url_re3.sub(replacement, text)
-    return url_re4.sub(replacement, text)
-absolutize_urls = register.filter(absolutize_urls_func)
+absolutize_urls = register.filter(absolutize_urls)
 
 TIMEZONE_STR = pytz.timezone(
                     django_settings.TIME_ZONE

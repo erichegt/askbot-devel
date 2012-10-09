@@ -31,9 +31,9 @@ APP_PATH = os.path.dirname(__file__)
 urlpatterns = patterns('',
     url(r'^$', views.readers.index, name='index'),
     url(
-        r'^sitemap.xml$', 
-        'django.contrib.sitemaps.views.sitemap', 
-        {'sitemaps': sitemaps}, 
+        r'^sitemap.xml$',
+        'django.contrib.sitemaps.views.sitemap',
+        {'sitemaps': sitemaps},
         name='sitemap'
     ),
     #no translation for this url!!
@@ -43,13 +43,13 @@ urlpatterns = patterns('',
     url(r'^%s$' % _('privacy/'), views.meta.privacy, name='privacy'),
     url(r'^%s$' % _('help/'), views.meta.help, name='help'),
     url(
-        r'^%s(?P<id>\d+)/%s$' % (_('answers/'), _('edit/')), 
-        views.writers.edit_answer, 
+        r'^%s(?P<id>\d+)/%s$' % (_('answers/'), _('edit/')),
+        views.writers.edit_answer,
         name='edit_answer'
     ),
     url(
-        r'^%s(?P<id>\d+)/%s$' % (_('answers/'), _('revisions/')), 
-        views.readers.revisions, 
+        r'^%s(?P<id>\d+)/%s$' % (_('answers/'), _('revisions/')),
+        views.readers.revisions,
         kwargs = {'post_type': 'answer'},
         name='answer_revisions'
     ),
@@ -67,16 +67,50 @@ urlpatterns = patterns('',
             r'(%s)?' % r'/page:(?P<page>\d+)' +
         r'/$'),
 
-        views.readers.questions, 
+        views.readers.questions,
         name='questions'
     ),
-
     # END main page urls
-    
+
     url(
         r'^api/get_questions/',
         views.commands.api_get_questions,
-        name = 'api_get_questions'
+        name='api_get_questions'
+    ),
+    url(
+        r'^get-thread-shared-users/',
+        views.commands.get_thread_shared_users,
+        name='get_thread_shared_users'
+    ),
+    url(
+        r'^get-thread-shared-groups/',
+        views.commands.get_thread_shared_groups,
+        name='get_thread_shared_groups'
+    ),
+    url(
+        r'^moderate-group-join-request/',
+        views.commands.moderate_group_join_request,
+        name='moderate_group_join_request'
+    ),
+    url(
+        r'^save-draft-question/',
+        views.commands.save_draft_question,
+        name = 'save_draft_question'
+    ),
+    url(
+        r'^save-draft-answer/',
+        views.commands.save_draft_answer,
+        name = 'save_draft_answer'
+    ),
+    url(
+        r'^share-question-with-group/',
+        views.commands.share_question_with_group,
+        name='share_question_with_group'
+    ),
+    url(
+        r'^share-question-with-user/',
+        views.commands.share_question_with_user,
+        name='share_question_with_user'
     ),
     url(
         r'^get-users-info/',
@@ -84,50 +118,50 @@ urlpatterns = patterns('',
         name='get_users_info'
     ),
     url(
-        r'^%s%s$' % (_('questions/'), _('ask/')), 
-        views.writers.ask, 
+        r'^get-editor/',
+        views.commands.get_editor,
+        name='get_editor'
+    ),
+    url(
+        r'^%s%s$' % (_('questions/'), _('ask/')),
+        views.writers.ask,
         name='ask'
     ),
     url(
-        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('edit/')), 
-        views.writers.edit_question, 
+        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('edit/')),
+        views.writers.edit_question,
         name='edit_question'
     ),
     url(#this url is both regular and ajax
-        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('retag/')), 
-        views.writers.retag_question, 
+        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('retag/')),
+        views.writers.retag_question,
         name='retag_question'
     ),
     url(
-        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('close/')), 
-        views.commands.close, 
+        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('close/')),
+        views.commands.close,
         name='close'
     ),
     url(
-        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('reopen/')), 
-        views.commands.reopen, 
+        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('reopen/')),
+        views.commands.reopen,
         name='reopen'
     ),
     url(
-        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('answer/')), 
-        views.writers.answer, 
+        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('answer/')),
+        views.writers.answer,
         name='answer'
     ),
     url(#ajax only
-        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('vote/')), 
-        views.commands.vote, 
+        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('vote/')),
+        views.commands.vote,
         name='vote'
     ),
     url(
-        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('revisions/')), 
-        views.readers.revisions, 
+        r'^%s(?P<id>\d+)/%s$' % (_('questions/'), _('revisions/')),
+        views.readers.revisions,
         kwargs = {'post_type': 'question'},
         name='question_revisions'
-    ),
-    url(
-        r'^%s%s$' % (_('widgets/'), _('questions/')),
-        views.readers.widget_questions, 
-        name='widget_questions'
     ),
     url(#ajax only
         r'^comment/upvote/$',
@@ -141,7 +175,7 @@ urlpatterns = patterns('',
     ),
     url(#ajax only
         r'^post_comments/$',
-        views.writers.post_comments, 
+        views.writers.post_comments,
         name='post_comments'
     ),
     url(#ajax only
@@ -151,18 +185,43 @@ urlpatterns = patterns('',
     ),
     url(#ajax only
         r'^comment/delete/$',
-        views.writers.delete_comment, 
+        views.writers.delete_comment,
         name='delete_comment'
     ),
     url(#ajax only
         r'^comment/get_text/$',
-        views.readers.get_comment, 
+        views.readers.get_comment,
         name='get_comment'
     ),
+    url(#post only
+        r'^comment/convert/$',
+        views.writers.comment_to_answer,
+        name='comment_to_answer'
+    ),
+    url(#post only
+        r'^answer/convert/$',
+        views.writers.answer_to_comment,
+        name='answer_to_comment'
+    ),
+    url(#post only
+        r'^answer/publish/$',
+        views.commands.publish_answer,
+        name='publish_answer'
+    ),
     url(
-        r'^%s$' % _('tags/'), 
-        views.readers.tags, 
+        r'^%s$' % _('tags/'),
+        views.readers.tags,
         name='tags'
+    ),
+    url(
+        r'^%s$' % _('suggested-tags/'),
+        views.meta.list_suggested_tags,
+        name = 'list_suggested_tags'
+    ),
+    url(#ajax only
+        r'^%s$' % 'moderate-suggested-tag',
+        views.commands.moderate_suggested_tag,
+        name = 'moderate_suggested_tag'
     ),
     #todo: collapse these three urls and use an extra json data var
     url(#ajax only
@@ -205,14 +264,29 @@ urlpatterns = patterns('',
         name = 'get_tag_list'
     ),
     url(
-        r'^load-tag-wiki-text/',
-        views.commands.load_tag_wiki_text,
-        name = 'load_tag_wiki_text'
+        r'^load-object-description/',
+        views.commands.load_object_description,
+        name = 'load_object_description'
     ),
     url(#ajax only
-        r'^save-tag-wiki-text/',
-        views.commands.save_tag_wiki_text,
-        name = 'save_tag_wiki_text'
+        r'^save-object-description/',
+        views.commands.save_object_description,
+        name = 'save_object_description'
+    ),
+    url(#ajax only
+        r'^add-tag-category/',
+        views.commands.add_tag_category,
+        name = 'add_tag_category'
+    ),
+    url(#ajax only
+        r'^rename-tag/',
+        views.commands.rename_tag,
+        name = 'rename_tag'
+    ),
+    url(#
+        r'^delete-tag/',
+        views.commands.delete_tag,
+        name = 'delete_tag'
     ),
     url(#ajax only
         r'^save-group-logo-url/',
@@ -225,9 +299,19 @@ urlpatterns = patterns('',
         name = 'delete_group_logo'
     ),
     url(#ajax only
+        r'^add-group/',
+        views.commands.add_group,
+        name = 'add_group'
+    ),
+    url(#ajax only
         r'^toggle-group-profile-property/',
         views.commands.toggle_group_profile_property,
-        name = 'toggle_group_profile_property'
+        name='toggle_group_profile_property'
+    ),
+    url(#ajax only
+        r'^set-group-openness/',
+        views.commands.set_group_openness,
+        name='set_group_openness'
     ),
     url(#ajax only
         r'^edit-object-property-text/',
@@ -251,12 +335,12 @@ urlpatterns = patterns('',
     ),
     url(
         r'^%s$' % _('users/'),
-        views.users.show_users, 
+        views.users.show_users,
         name='users'
     ),
     url(
         r'^%s%s(?P<group_id>\d+)/(?P<group_slug>.*)/$' % (_('users/'), _('by-group/')),
-        views.users.show_users, 
+        views.users.show_users,
         kwargs = {'by_group': True},
         name = 'users_by_group'
     ),
@@ -300,6 +384,11 @@ urlpatterns = patterns('',
         views.meta.badge,
         name='badge'
     ),
+    url(
+        r'get-html-template/',
+        views.commands.get_html_template,
+        name='get_html_template'
+    ),
     url(#ajax only
         r'^%s%s$' % (_('messages/'), _('markread/')),
         views.commands.read_message,
@@ -330,8 +419,62 @@ urlpatterns = patterns('',
         views.commands.join_or_leave_group,
         name = 'join_or_leave_group'
     ),
+    #widgets url!
     url(
-        r'^feeds/(?P<url>.*)/$', 
+        r'^%s$' % (_('widgets/')),
+        views.widgets.widgets,
+        name = 'widgets'
+    ),
+
+    url(
+        r'^%s%s(?P<widget_id>\d+)/$' % (_('widgets/'), _('ask/')),
+        views.widgets.ask_widget,
+        name = 'ask_by_widget'
+    ),
+    url(
+        r'^%s%s(?P<widget_id>\d+).js$' % (_('widgets/'), _('ask/')),
+        views.widgets.render_ask_widget_js,
+        name = 'render_ask_widget'
+    ),
+    url(
+        r'^%s%s(?P<widget_id>\d+).css$' % (_('widgets/'), _('ask/')),
+        views.widgets.render_ask_widget_css,
+        name = 'render_ask_widget_css'
+    ),
+
+    url(
+        r'^%s%s%s$' % (_('widgets/'), _('ask/'), _('complete/')),
+        views.widgets.ask_widget_complete,
+        name = 'ask_by_widget_complete'
+    ),
+    url(
+        r'^%s(?P<model>\w+)/%s$' % (_('widgets/'), _('create/')),
+        views.widgets.create_widget,
+        name = 'create_widget'
+    ),
+    url(
+        r'^%s(?P<model>\w+)/%s(?P<widget_id>\d+)/$' % (_('widgets/'), _('edit/')),
+        views.widgets.edit_widget,
+        name = 'edit_widget'
+    ),
+    url(
+        r'^%s(?P<model>\w+)/%s(?P<widget_id>\d+)/$' % (_('widgets/'), _('delete/')),
+        views.widgets.delete_widget,
+        name = 'delete_widget'
+    ),
+
+    url(
+        r'^%s(?P<model>\w+)/$' % (_('widgets/')),
+        views.widgets.list_widgets,
+        name = 'list_widgets'
+    ),
+    url(
+        r'^widgets/questions/(?P<widget_id>\d+)/$',
+        views.widgets.question_widget,
+        name = 'question_widget'
+    ),
+    url(
+        r'^feeds/(?P<url>.*)/$',
         'django.contrib.syndication.views.feed',
         {'feed_dict': feeds},
         name='feeds'
@@ -341,7 +484,7 @@ urlpatterns = patterns('',
     url(r'^%s$' % _('feedback/'), views.meta.feedback, name='feedback'),
     #url(r'^feeds/rss/$', RssLastestQuestionsFeed, name="latest_questions_feed"),
     url(
-        r'^doc/(?P<path>.*)$', 
+        r'^doc/(?P<path>.*)$',
         'django.views.static.serve',
         {'document_root': os.path.join(APP_PATH,'doc','build','html').replace('\\','/')},
         name='askbot_docs',
@@ -370,20 +513,21 @@ urlpatterns = patterns('',
         {'domain': 'djangojs','packages': ('askbot',)},
         name = 'askbot_jsi18n'
     ),
+    url('^messages/', include('group_messaging.urls')),
 )
 
 #todo - this url below won't work, because it is defined above
 #therefore the stackexchange urls feature won't work
 if getattr(settings, 'ASKBOT_USE_STACKEXCHANGE_URLS', False):
     urlpatterns += (url(
-        r'^%s(?P<id>\d+)/' % _('questions/'), 
-        views.readers.question, 
+        r'^%s(?P<id>\d+)/' % _('questions/'),
+        views.readers.question,
         name='question'
     ),)
 else:
     urlpatterns += (url(
-        r'^%s(?P<id>\d+)/' % _('question/'), 
-        views.readers.question, 
+        r'^%s(?P<id>\d+)/' % _('question/'),
+        views.readers.question,
         name='question'
     ),)
 

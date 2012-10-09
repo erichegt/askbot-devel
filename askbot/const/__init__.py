@@ -139,11 +139,13 @@ UNANSWERED_QUESTION_MEANING_CHOICES = (
 #however it will be hard to expect that people will type
 #correct regexes - plus this must be an anchored regex
 #to do full string match
+#IMPRTANT: tag related regexes must be portable between js and python
 TAG_CHARS = r'\w+.#-'
 TAG_REGEX_BARE = r'[%s]+' % TAG_CHARS
 TAG_REGEX = r'^%s$' % TAG_REGEX_BARE
 TAG_SPLIT_REGEX = r'[ ,]+'
 TAG_SEP = ',' # has to be valid TAG_SPLIT_REGEX char and MUST NOT be in const.TAG_CHARS
+#!!! see const.message_keys.TAG_WRONG_CHARS_MESSAGE
 EMAIL_REGEX = re.compile(r'\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b', re.I)
 
 TYPE_ACTIVITY_ASK_QUESTION = 1
@@ -174,6 +176,8 @@ TYPE_ACTIVITY_MODERATED_POST_EDIT = 25
 TYPE_ACTIVITY_CREATE_REJECT_REASON = 26
 TYPE_ACTIVITY_UPDATE_REJECT_REASON = 27
 TYPE_ACTIVITY_VALIDATION_EMAIL_SENT = 28
+TYPE_ACTIVITY_POST_SHARED = 29
+TYPE_ACTIVITY_ASK_TO_JOIN_GROUP = 30
 #TYPE_ACTIVITY_EDIT_QUESTION = 17
 #TYPE_ACTIVITY_EDIT_ANSWER = 18
 
@@ -197,6 +201,7 @@ TYPE_ACTIVITY = (
     (TYPE_ACTIVITY_FAVORITE, _('selected favorite')),
     (TYPE_ACTIVITY_USER_FULL_UPDATED, _('completed user profile')),
     (TYPE_ACTIVITY_EMAIL_UPDATE_SENT, _('email update sent to user')),
+    (TYPE_ACTIVITY_POST_SHARED, _('a post was shared')),
     (
         TYPE_ACTIVITY_UNANSWERED_REMINDER_SENT,
         _('reminder about unanswered questions sent'),
@@ -242,6 +247,7 @@ RESPONSE_ACTIVITY_TYPES_FOR_INSTANT_NOTIFICATIONS = (
     TYPE_ACTIVITY_UPDATE_QUESTION,
     TYPE_ACTIVITY_ANSWER,
     TYPE_ACTIVITY_ASK_QUESTION,
+    TYPE_ACTIVITY_POST_SHARED
 )
 
 
@@ -254,6 +260,7 @@ RESPONSE_ACTIVITY_TYPES_FOR_DISPLAY = (
     TYPE_ACTIVITY_COMMENT_ANSWER,
     TYPE_ACTIVITY_UPDATE_ANSWER,
     TYPE_ACTIVITY_UPDATE_QUESTION,
+    TYPE_ACTIVITY_POST_SHARED,
 #    TYPE_ACTIVITY_PRIZE,
 #    TYPE_ACTIVITY_MARK_ANSWER,
 #    TYPE_ACTIVITY_VOTE_UP,
@@ -265,15 +272,15 @@ RESPONSE_ACTIVITY_TYPES_FOR_DISPLAY = (
 #    TYPE_ACTIVITY_FAVORITE,
 )
 
-
 RESPONSE_ACTIVITY_TYPE_MAP_FOR_TEMPLATES = {
-        TYPE_ACTIVITY_COMMENT_QUESTION: 'question_comment',
-        TYPE_ACTIVITY_COMMENT_ANSWER: 'answer_comment',
-        TYPE_ACTIVITY_UPDATE_ANSWER: 'answer_update',
-        TYPE_ACTIVITY_UPDATE_QUESTION: 'question_update',
-        TYPE_ACTIVITY_ANSWER: 'new_answer',
-        TYPE_ACTIVITY_ASK_QUESTION: 'new_question',
-    }
+    TYPE_ACTIVITY_COMMENT_QUESTION: 'question_comment',
+    TYPE_ACTIVITY_COMMENT_ANSWER: 'answer_comment',
+    TYPE_ACTIVITY_UPDATE_ANSWER: 'answer_update',
+    TYPE_ACTIVITY_UPDATE_QUESTION: 'question_update',
+    TYPE_ACTIVITY_ANSWER: 'new_answer',
+    TYPE_ACTIVITY_ASK_QUESTION: 'new_question',
+    TYPE_ACTIVITY_POST_SHARED: 'post_shared'
+}
 
 assert(
     set(RESPONSE_ACTIVITY_TYPES_FOR_INSTANT_NOTIFICATIONS) \
@@ -288,21 +295,28 @@ TYPE_RESPONSE = {
 }
 
 POST_STATUS = {
-    'closed'            : _('[closed]'),
-    'deleted'           : _('[deleted]'),
-    'default_version'   : _('initial version'),
-    'retagged'          : _('retagged'),
+    'closed': _('[closed]'),
+    'deleted': _('[deleted]'),
+    'default_version': _('initial version'),
+    'retagged': _('retagged'),
+    'private': _('[private]')
 }
 
 #choices used in email and display filters
 INCLUDE_ALL = 0
 EXCLUDE_IGNORED = 1
 INCLUDE_INTERESTING = 2
-TAG_DISPLAY_FILTER_STRATEGY_CHOICES = (
+INCLUDE_SUBSCRIBED = 3
+TAG_DISPLAY_FILTER_STRATEGY_MINIMAL_CHOICES = (
     (INCLUDE_ALL, _('show all tags')),
     (EXCLUDE_IGNORED, _('exclude ignored tags')),
-    (INCLUDE_INTERESTING, _('only interesting tags')),
+    (INCLUDE_INTERESTING, _('only interesting tags'))
 )
+TAG_DISPLAY_FILTER_STRATEGY_CHOICES = \
+    TAG_DISPLAY_FILTER_STRATEGY_MINIMAL_CHOICES + \
+    ((INCLUDE_SUBSCRIBED, _('only subscribed tags')),)
+
+
 TAG_EMAIL_FILTER_STRATEGY_CHOICES = (
     (INCLUDE_ALL, _('email for all tags')),
     (EXCLUDE_IGNORED, _('exclude ignored tags')),
@@ -347,7 +361,7 @@ DEFAULT_USER_STATUS = 'w'
 #number of items to show in user views
 USER_VIEW_DATA_SIZE = 50
 
-#not really dependency, but external links, which it would 
+#not really dependency, but external links, which it would
 #be nice to test for correctness from time to time
 DEPENDENCY_URLS = {
     'akismet': 'https://akismet.com/signup/',
@@ -389,6 +403,48 @@ AVATAR_STATUS_CHOICE = (
     ('g', _('Gravatar')),#only if user has real uploaded gravatar
     ('a', _('Uploaded Avatar')),#avatar uploaded locally - with django-avatar app
 )
+
+SEARCH_ORDER_BY = (
+                    ('-added_at', _('date descendant')),
+                    ('added_at', _('date ascendant')),
+                    ('-last_activity_at', _('activity descendant')),
+                    ('last_activity_at', _('activity ascendant')),
+                    ('-answer_count', _('answers descendant')),
+                    ('answer_count', _('answers ascendant')),
+                    ('-points', _('votes descendant')),
+                    ('points', _('votes ascendant')),
+                  )
+
+DEFAULT_QUESTION_WIDGET_STYLE = """
+@import url('http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:300,400,700');
+body {
+    overflow: hidden;
+}
+
+#container {
+    width: 200px;
+    height: 350px;
+}
+ul {
+    list-style: none;
+    padding: 5px;
+    margin: 5px;
+}
+li {
+    border-bottom: #CCC 1px solid;
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+li:last-child {
+    border: none;
+}
+a {
+    text-decoration: none;
+    color: #464646;
+    font-family: 'Yanone Kaffeesatz', sans-serif;
+    font-size: 15px;
+}
+"""
 
 #an exception import * because that file has only strings
 from askbot.const.message_keys import *

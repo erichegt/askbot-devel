@@ -5,9 +5,11 @@ from django.core.urlresolvers import reverse
 from django.core import management
 from django.core.cache.backends.dummy import DummyCache
 from django.core import cache
+from django.utils import simplejson
 
 import coffin
 import coffin.template
+from bs4 import BeautifulSoup
 
 from askbot import models
 from askbot.utils.slug import slugify
@@ -15,6 +17,7 @@ from askbot.deployment import package_utils
 from askbot.tests.utils import AskbotTestCase
 from askbot.conf import settings as askbot_settings
 from askbot.tests.utils import skipIf
+from askbot.tests.utils import with_settings
 
 
 
@@ -69,7 +72,7 @@ class PageLoadTestCase(AskbotTestCase):
         self.old_cache = cache.cache
         #Disable caching (to not interfere with production cache,
         #not sure if that's possible but let's not risk it)
-        cache.cache = DummyCache('', {}) 
+        cache.cache = DummyCache('', {})
 
     def tearDown(self):
         cache.cache = self.old_cache  # Restore caching
@@ -149,6 +152,33 @@ class PageLoadTestCase(AskbotTestCase):
     def test_ask_page_allowed_anonymous(self):
         self.proto_test_ask_page(True, 200)
 
+    @with_settings(GROUPS_ENABLED=False)
+    def test_api_get_questions_groups_disabled(self):
+        data = {'query': 'Question'}
+        response = self.client.get(reverse('api_get_questions'), data)
+        data = simplejson.loads(response.content)
+        self.assertTrue(len(data) > 1)
+
+    @with_settings(GROUPS_ENABLED=True)
+    def test_api_get_questions_groups_enabled(self):
+
+        group = models.Group(name='secret group', openness=models.Group.OPEN)
+        group.save()
+        user = self.create_user('user')
+        user.join_group(group)
+        self.post_question(user=user, title='alibaba', group_id=group.id)
+
+        query_data = {'query': 'alibaba'}
+        response = self.client.get(reverse('api_get_questions'), query_data)
+        response_data = simplejson.loads(response.content)
+        self.assertEqual(len(response_data), 0)
+
+        self.client.login(method='force', user_id=user.id)
+        response = self.client.get(reverse('api_get_questions'), query_data)
+        response_data = simplejson.loads(response.content)
+        self.assertEqual(len(response_data), 1)
+
+
     def test_ask_page_disallowed_anonymous(self):
         self.proto_test_ask_page(False, 302)
 
@@ -158,6 +188,10 @@ class PageLoadTestCase(AskbotTestCase):
         """
 
         self.try_url('sitemap')
+        self.try_url(
+            'get_groups_list',
+            status_code=status_code
+        )
         self.try_url(
                 'feeds',
                 status_code=status_code,
@@ -311,12 +345,12 @@ class PageLoadTestCase(AskbotTestCase):
                 status_code=status_code,
                 template='users.html'
             )
-        self.try_url(
-                'widget_questions',
-                status_code = status_code,
-                data={'tags': 'tag-1-0'},
-                template='question_widget.html',
-            )
+        #self.try_url(
+        #        'widget_questions',
+        #        status_code = status_code,
+        #        data={'tags': 'tag-1-0'},
+        #        template='question_widget.html',
+        #    )
         #todo: really odd naming conventions for sort methods
         self.try_url(
                 'users',
@@ -409,10 +443,9 @@ class PageLoadTestCase(AskbotTestCase):
     @skipIf('askbot.middleware.forum_mode.ForumModeMiddleware' \
         not in settings.MIDDLEWARE_CLASSES,
         'no ForumModeMiddleware set')
+    @with_settings(ASKBOT_CLOSED_FORUM_MODE=True)
     def test_non_user_urls_in_closed_forum_mode(self):
-        askbot_settings.ASKBOT_CLOSED_FORUM_MODE = True
         self.proto_test_non_user_urls(status_code=302)
-        askbot_settings.ASKBOT_CLOSED_FORUM_MODE = False
 
     #def test_non_user_urls_logged_in(self):
         #user = User.objects.get(id=1)
@@ -481,11 +514,9 @@ class PageLoadTestCase(AskbotTestCase):
     @skipIf('askbot.middleware.forum_mode.ForumModeMiddleware' \
         not in settings.MIDDLEWARE_CLASSES,
         'no ForumModeMiddleware set')
+    @with_settings(ASKBOT_CLOSED_FORUM_MODE=True)
     def test_user_urls_in_closed_forum_mode(self):
-        askbot_settings.ASKBOT_CLOSED_FORUM_MODE = True
         self.proto_test_user_urls(status_code=302)
-        askbot_settings.ASKBOT_CLOSED_FORUM_MODE = False
-
 
     def test_user_urls_logged_in(self):
         user = models.User.objects.get(id=2)   # INFO: Hardcoded ID, might fail if DB allocates IDs in some non-continuous way
@@ -516,9 +547,16 @@ class PageLoadTestCase(AskbotTestCase):
             'user_profile',
             kwargs={'id': asker.id, 'slug': slugify(asker.username)},
             data={'sort':'inbox'},
-            template='user_profile/user_inbox.html',
+            template='user_inbox/responses_and_flags.html',
         )
 
+    @with_settings(GROUPS_ENABLED=True)
+    def test_user_page_with_groups_enabled(self):
+        self.try_url('users', status_code=302)
+
+    @with_settings(GROUPS_ENABLED=False)
+    def test_user_page_with_groups_disabled(self):
+        self.try_url('users', status_code=200)
 
 class AvatarTests(AskbotTestCase):
 
@@ -529,6 +567,17 @@ class AvatarTests(AskbotTestCase):
                                 'avatar_render_primary',
                                 kwargs = {'user': 'john doe', 'size': 48}
                             )
+
+
+class QuestionViewTests(AskbotTestCase):
+    def test_meta_description_has_question_summary(self):
+        user = self.create_user('user')
+        text = 'this is a question'
+        question = self.post_question(user=user, body_text=text)
+        response = self.client.get(question.get_absolute_url())
+        soup = BeautifulSoup(response.content)
+        meta_descr = soup.find_all('meta', attrs={'name': 'description'})[0]
+        self.assertTrue(text in meta_descr.attrs['content'])
 
 
 class QuestionPageRedirectTests(AskbotTestCase):
@@ -614,16 +663,60 @@ class QuestionPageRedirectTests(AskbotTestCase):
         self.assertRedirects(resp, expected_url = self.q.get_absolute_url())
 
 class CommandViewTests(AskbotTestCase):
-    def test_get_tag_wiki_text_succeeds(self):
-        tag1 = self.create_tag('tag1')
+    def test_load_empty_object_description_works(self):
+        group = models.Group(name='somegroup')
+        group.save()
+
         response = self.client.get(
-            reverse('load_tag_wiki_text'),
-            data = {'tag_id': tag1.id}
+            reverse('load_object_description'),
+            data = {'object_id': group.id,'model_name': 'Group'},
         )
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.content, '')
 
-    def test_get_tag_wiki_text_fails(self):
-        tag1 = self.create_tag('tag1')
-        response = self.client.get(reverse('load_tag_wiki_text'))
-        self.assertEqual(response.status_code, 400)#bad request
-        
+    def test_load_full_object_description_works(self):
+        group = models.Group(name='somegroup')
+        user = self.create_user('someuser')
+        post_params = {'author': user, 'text':'some text'}
+        post = models.Post.objects.create_new_tag_wiki(**post_params)
+        group.description = post
+        group.save()
+
+        response = self.client.get(
+            reverse('load_object_description'),
+            data = {'object_id': group.id,'model_name': 'Group'},
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.content, 'some text')
+
+    def test_save_object_description_works(self):
+        group = models.Group(name='somegroup')
+        group.save()
+        admin = self.create_user('admin', status='d')
+        self.client.login(user_id=admin.id, method='force')
+        post_data = {
+            'object_id': group.id,
+            'model_name': 'Group',
+            'text': 'some description'
+        }
+        self.client.post(#ajax post
+            reverse('save_object_description'),
+            data=post_data,
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest'
+        )
+        group = self.reload_object(group)
+        self.assertEqual(group.description.text, 'some description')
+
+        #test edit
+        post_data['text'] = 'edited description'
+        self.client.post(#second post to edit
+            reverse('save_object_description'),
+            data=post_data,
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest'
+        )
+        group = self.reload_object(group)
+        self.assertEqual(group.description.text, 'edited description')
+
+    def test_load_object_description_fails(self):
+        response = self.client.get(reverse('load_object_description'))
+        self.assertEqual(response.status_code, 404)#bad request

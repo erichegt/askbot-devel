@@ -1,4 +1,4 @@
-"""Tests database api - the basic data entry 
+"""Tests database api - the basic data entry
 functions that happen on behalf of users
 
 e.g. ``some_user.do_something(...)``
@@ -7,11 +7,14 @@ from django.core import exceptions
 from django.core.urlresolvers import reverse
 from django.test.client import Client
 from django.conf import settings
+from django.contrib.auth.models import AnonymousUser
 from django import forms
 from askbot.tests.utils import AskbotTestCase
+from askbot.tests.utils import with_settings
 from askbot import models
 from askbot import const
 from askbot.conf import settings as askbot_settings
+from askbot.models.tag import get_global_group
 import datetime
 
 class DBApiTests(AskbotTestCase):
@@ -84,6 +87,14 @@ class DBApiTests(AskbotTestCase):
         self.assertTrue(q.is_anonymous)
         rev = q.revisions.all()[0]
         self.assertTrue(rev.is_anonymous)
+
+    def test_post_unicode_question(self):
+        """there was a bug that caused this to raise a db error"""
+        self.user.post_question(
+            tags=u'\u043c\u043e\u0440\u0435',
+            body_text=u'\u041f\u043e\u0447\u0435\u043c\u0443 \u043c\u043e\u0440\u0435 \u0441\u0438\u043d\u0435\u0435? \u043e\u043f\u044f\u0442\u044c \u0436\u0435, \u0431\u044b\u043b\u043e \u0431\u044b \u043f\u0440\u0430\u043a\u0442\u0438\u0447\u043d\u0435\u0435 \u0435\u0441\u043b\u0438 \u0431\u044b \u043e\u043d\u043e \u0431\u044b\u043b\u043e \u043f\u0440\u043e\u0437\u0440\u0430\u0447\u043d\u043e\u0435, \u043c\u043e\u0436\u043d\u043e \u0431\u044b\u043b\u043e \u0441\u0440\u0430\u0437\u0443 \u0440\u0430\u0437\u0433\u043b\u044f\u0434\u0435\u0442\u044c \u0434\u043d\u043e.',
+            title=u'\u041f\u043e\u0447\u0435\u043c\u0443 \u043c\u043e\u0440\u0435 \u0441\u0438\u043d\u0435\u0435?'
+        )
 
     def test_post_bodyless_question(self):
         q = self.user.post_question(
@@ -162,6 +173,16 @@ class DBApiTests(AskbotTestCase):
 
         count = models.Tag.objects.filter(name='one-tag').count()
         self.assertEquals(count, 0)
+
+    @with_settings(MAX_TAG_LENGTH=200, MAX_TAGS_PER_POST=50)
+    def test_retag_tags_too_long_raises(self):
+        tags = "aoaoesuouooeueooeuoaeuoeou aostoeuoaethoeastn oasoeoa nuhoasut oaeeots aoshootuheotuoehao asaoetoeatuoasu o  aoeuethut aoaoe uou uoetu uouuou ao aouosutoeh"
+        question = self.post_question(user=self.user)
+        self.assertRaises(
+            exceptions.ValidationError,
+            self.user.retag_question,
+            question=question, tags=tags
+        )
 
     def test_search_with_apostrophe_works(self):
         self.post_question(
@@ -247,7 +268,7 @@ class UserLikeTagTests(AskbotTestCase):
         self.setup_wildcard('aouaou* o* on* oeu*', 'bad')
         self.assert_affinity_is('like', False)
         self.assert_affinity_is('dislike', True)
-        
+
         self.setup_wildcard('one*', 'good')
         self.assert_affinity_is('like', True)
         self.assert_affinity_is('dislike', False)
@@ -295,7 +316,7 @@ class GlobalTagSubscriberGetterTests(AskbotTestCase):
         self.assertEquals(actual_subscribers, expected_subscribers)
 
     def test_nobody_likes_any_tags(self):
-        """no-one had marked tags, so the set 
+        """no-one had marked tags, so the set
         of subscribers must be empty
         """
         self.assert_subscribers_are(
@@ -394,18 +415,235 @@ class CommentTests(AskbotTestCase):
     def test_other_user_can_cancel_upvote(self):
         self.test_other_user_can_upvote_comment()
         comment = models.Post.objects.get_comments().get(id = self.comment.id)
-        self.assertEquals(comment.score, 1)
+        self.assertEquals(comment.points, 1)
         self.other_user.upvote(comment, cancel = True)
         comment = models.Post.objects.get_comments().get(id = self.comment.id)
-        self.assertEquals(comment.score, 0)
+        self.assertEquals(comment.points, 0)
 
-class TagAndGroupTests(AskbotTestCase):
+class GroupTests(AskbotTestCase):
     def setUp(self):
         self.u1 = self.create_user('u1')
-        
-    def test_group_cannot_create_case_variant_tag(self):
-        self.post_question(user = self.u1, tags = 'one two three')
-        models.Tag.group_tags.get_or_create(user = self.u1, group_name = 'One')
-        tag_one = models.Tag.objects.filter(name__iexact = 'one')
-        self.assertEqual(tag_one.count(), 1)
-        self.assertEqual(tag_one[0].name, 'one')
+        askbot_settings.update('GROUPS_ENABLED', True)
+
+    def tearDown(self):
+        askbot_settings.update('GROUPS_ENABLED', False)
+
+    def assertObjectGroupsEqual(self, obj, expected_groups):
+        self.assertEqual(set(obj.groups.all()), set(expected_groups))
+
+    def post_question_answer_and_comments(self, is_private=False):
+        question = self.post_question(user=self.u1, is_private=is_private)
+        answer = self.post_answer(
+            user=self.u1, question=question, is_private=is_private
+        )
+        question_comment = self.post_comment(
+            user=self.u1, parent_post=question
+        )
+        answer_comment = self.post_comment(
+            user=self.u1, parent_post=answer
+        )
+        return {
+            'thread': question.thread,
+            'question': question,
+            'answer': answer,
+            'question_comment': question_comment,
+            'answer_comment': answer_comment
+        }
+
+    def test_is_group_member(self):
+        group1 = models.Group.objects.create(
+                            name='somegroup', openness=models.Group.OPEN
+                        )
+        self.u1.join_group(group1)
+        group2 = models.Group.objects.create(name='othergroup')
+        self.assertEqual(self.u1.is_group_member(group1), True)
+        self.assertEqual(self.u1.is_group_member('somegroup'), True)
+        self.assertEqual(self.u1.is_group_member(group2), False)
+        self.assertEqual(self.u1.is_group_member('othergroup'), False)
+
+    def test_posts_added_to_global_group(self):
+        q = self.post_question(user=self.u1)
+        group_name = askbot_settings.GLOBAL_GROUP_NAME
+        self.assertEqual(q.groups.filter(name=group_name).exists(), True)
+
+        a = self.post_answer(question=q, user=self.u1)
+        self.assertEqual(a.groups.filter(name=group_name).exists(), True)
+
+        c = self.post_comment(parent_post=a, user=self.u1)
+        self.assertEqual(c.groups.filter(name=group_name).exists(), True)
+
+    def test_posts_added_to_private_group(self):
+        group = self.create_group(group_name='private')
+        self.u1.join_group(group)
+
+        q = self.post_question(user=self.u1, is_private=True)
+        self.assertEqual(q.groups.count(), 2)
+        self.assertEqual(q.groups.filter(name='private').exists(), True)
+
+        a = self.post_answer(question=q, user=self.u1, is_private=True)
+        self.assertEqual(a.groups.count(), 2)
+        self.assertEqual(a.groups.filter(name='private').exists(), True)
+
+        qc = self.post_comment(parent_post=q, user=self.u1)#w/o private arg
+        self.assertEqual(qc.groups.count(), 2)
+        self.assertEqual(qc.groups.filter(name='private').exists(), True)
+
+        qa = self.post_comment(parent_post=a, user=self.u1)#w/o private arg
+        self.assertEqual(qa.groups.count(), 2)
+        self.assertEqual(qa.groups.filter(name='private').exists(), True)
+
+    def test_global_group_name_setting_changes_group_name(self):
+        askbot_settings.update('GLOBAL_GROUP_NAME', 'all-people')
+        group = get_global_group()
+        self.assertEqual(group.name, 'all-people')
+
+    def test_ask_global_group_by_id_works(self):
+        group = get_global_group()
+        q = self.post_question(user=self.u1, group_id=group.id)
+        self.assertEqual(q.groups.count(), 2)
+        self.assertEqual(q.groups.filter(name=group.name).exists(), True)
+
+    def test_making_public_question_private_works(self):
+        question = self.post_question(user=self.u1)
+        comment = self.post_comment(parent_post=question, user=self.u1)
+        group = self.create_group(group_name='private')
+        self.u1.join_group(group)
+        self.edit_question(question=question, user=self.u1, is_private=True)
+        self.assertEqual(question.groups.count(), 2)
+        self.assertEqual(question.groups.filter(id=group.id).count(), 1)
+        #comment inherits sharing scope
+        self.assertEqual(comment.groups.count(), 2)
+        self.assertEqual(comment.groups.filter(id=group.id).count(), 1)
+
+    def test_making_public_answer_private_works(self):
+        question = self.post_question(user=self.u1)
+        answer = self.post_answer(question=question, user=self.u1)
+        comment = self.post_comment(parent_post=answer, user=self.u1)
+        group = self.create_group(group_name='private')
+        self.u1.join_group(group)
+
+        #membership in `group` should not affect things,
+        #because answer groups always inherit thread groups
+        self.edit_answer(user=self.u1, answer=answer, is_private=True)
+        self.assertEqual(answer.groups.count(), 1)
+
+        #here we have a simple case - the comment to answer was posted
+        #by the answer author!!!
+        #won't work when comment was by someone else
+        u1_group = self.u1.get_personal_group()
+        self.assertEqual(answer.groups.filter(id=u1_group.id).count(), 1)
+        #comment inherits the sharing scope
+        self.assertEqual(comment.groups.count(), 1)
+        self.assertEqual(comment.groups.filter(id=u1_group.id).count(), 1)
+
+    def test_public_question_private_answer_works(self):
+        question = self.post_question(self.u1)
+
+        u2 = self.create_user('u2')
+        group = self.create_group(group_name='private')
+        u2.join_group(group)
+
+        answer = self.post_answer(question=question, user=u2, is_private=True)
+
+        threads = models.Thread.objects
+        #u2 will see question and answer
+        self.assertEqual(answer.thread.get_answer_count(user=u2), 1)
+        self.assertEqual(threads.get_visible(u2).count(), 1)
+        #u1 will see only question
+        self.assertEqual(answer.thread.get_answer_count(user=self.u1), 0)
+        self.assertEqual(threads.get_visible(self.u1).count(), 1)
+        #anonymous will see question
+        self.assertEqual(answer.thread.get_answer_count(), 0)
+        anon = AnonymousUser()
+        self.assertEqual(threads.get_visible(anon).count(), 1)
+
+    def test_thread_answer_count_for_multiple_groups(self):
+        question = self.post_question(self.u1)
+        group = self.create_group(group_name='private')
+        self.u1.join_group(group)
+        answer = self.post_answer(question=question, user=self.u1)
+        answer.add_to_groups((group,))
+        self.assertEqual(answer.groups.count(), 3)
+        self.assertEqual(answer.thread.posts.get_answers(self.u1).count(), 1)
+
+    def test_thread_make_public_recursive(self):
+        private_group = self.create_group(group_name='private')
+        self.u1.join_group(private_group)
+        data = self.post_question_answer_and_comments(is_private=True)
+
+        groups = [private_group, self.u1.get_personal_group()]
+        self.assertObjectGroupsEqual(data['thread'], groups)
+        self.assertObjectGroupsEqual(data['question'], groups)
+        self.assertObjectGroupsEqual(data['question_comment'], groups)
+        self.assertObjectGroupsEqual(data['answer'], groups)
+        self.assertObjectGroupsEqual(data['answer_comment'], groups)
+
+        data['thread'].make_public(recursive=True)
+
+        global_group = get_global_group()
+        groups = [global_group, private_group, self.u1.get_personal_group()]
+        self.assertObjectGroupsEqual(data['thread'], groups)
+        self.assertObjectGroupsEqual(data['question'], groups)
+        self.assertObjectGroupsEqual(data['question_comment'], groups)
+        self.assertObjectGroupsEqual(data['answer'], groups)
+        self.assertObjectGroupsEqual(data['answer_comment'], groups)
+
+    def test_thread_add_to_groups_recursive(self):
+        data = self.post_question_answer_and_comments()
+
+        private_group = self.create_group(group_name='private')
+        thread = data['thread']
+        thread.add_to_groups([private_group], recursive=True)
+
+        global_group = get_global_group()
+        groups = [global_group, private_group, self.u1.get_personal_group()]
+        self.assertObjectGroupsEqual(thread, groups)
+        self.assertObjectGroupsEqual(data['question'], groups)
+        self.assertObjectGroupsEqual(data['question_comment'], groups)
+        self.assertObjectGroupsEqual(data['answer'], groups)
+        self.assertObjectGroupsEqual(data['answer_comment'], groups)
+
+    def test_private_thread_is_invisible_to_anonymous_user(self):
+        group = self.create_group(group_name='private')
+        self.u1.join_group(group)
+        self.post_question(user=self.u1, is_private=True)
+
+        visible_threads = models.Thread.objects.get_visible(AnonymousUser())
+        self.assertEqual(visible_threads.count(), 0)
+
+    def test_join_group(self):
+        #create group
+        group = models.Group(name='somegroup')
+        group.openness = models.Group.OPEN
+        group.save()
+        #join
+        self.u1 = self.create_user('user1')
+        self.u1.join_group(group)
+        #assert membership of askbot group object
+        found_count = self.u1.get_groups().filter(name='somegroup').count()
+        self.assertEqual(found_count, 1)
+
+    def test_group_moderation(self):
+        #create group
+        group = models.Group(name='somegroup')
+        #make it moderated
+        group.openness = models.Group.MODERATED
+        group.save()
+
+        #add moderator to the group
+        mod = self.create_user('mod', status='d')
+        mod.join_group(group)
+
+        #create a regular user
+        reg = self.create_user('reg')
+        reg.join_group(group)
+        #assert that moderator has a notification
+        acts = models.Activity.objects.filter(
+                        user=reg,
+                        activity_type=const.TYPE_ACTIVITY_ASK_TO_JOIN_GROUP,
+                        object_id=group.id
+                    )
+        self.assertEqual(acts.count(), 1)
+        self.assertEqual(acts[0].recipients.count(), 1)
+        recipient = acts[0].recipients.all()[0]
+        self.assertEqual(recipient, mod)

@@ -55,6 +55,17 @@ Finally, add lin
 
 .. _embedding-video:
 
+Haystack search
+=============
+Askbot supports `Haystack <http://haystacksearch.org/>`_, a modular search framework that supports popular search engine backends as 
+Solr, Elasticsearch, Whoosh and Xapian. 
+
+To enable:
+
+* add 'haystack' to INSTALLED_APPS
+* add ENABLE_HAYSTACK_SEARCH = True in settings.py 
+* Configure your search backend according to your setup following `this guide <http://django-haystack.readthedocs.org/en/latest/tutorial.html#modify-your-settings-py>`_
+
 Embedding video
 ===============
 
@@ -83,24 +94,84 @@ To enable authentication via LDAP
 
     pip install python-ldap
 
-After that, add configuration parameters in :ref:`live settings <live-settings>`, section
-"Keys to connect the site with external services ..." 
-(url ``/settings/EXTERNAL_KEYS``, relative to the domain name)
+After that, add configuration parameters in :ref:`live settings <live-settings>`,
+section "LDAP settings" 
+(url ``/settings/LDAP_SETTINGS``, relative to the forum base url)
 
 .. note::
-    Location of these parameters is likely to change in the future.
-    When that happens, an update notice will appear in the documentation.
+    While it is possible to configure LDAP via web interface,
+    it is actually more safe to add them in your ``settings.py`` file in the
+    :ref:`LIVESETTINGS_OPTIONS <live-settings-options>` dictionary.
+    Consider that a breach in security of your forum might open
+    malicious access into your LDAP directory.
 
-The parameters are:
+The parameters are (note that some have pre-set defaults that might work for you)::
 
-* "Use LDAP authentication for the password login" - enable/disable the feature.
-  When enabled, the user name and password will be routed to use the LDAP protocol.
-  Default system password authentication will be overridden.
-* "LDAP service provider name" - any string - just come up with a name for the provider service.
-* "URL fro the LDAP service" - a correct url to access the service.
-* "Explain how to change the LDAP password"
-  - askbot does not provide a method to change LDAP passwords
-  , therefore - use this field to explain users how they can change their passwords.
+* in Login Provider Settings select "enable local login"
+  - this makes login/password form available
+* enable/disable LDAP for password login -
+  must check that, to connect the login/password form to LDAP flow
+* create accounts automatically or not (``LDAP_AUTOCREATE_USERS``)
+* protocol version (``LDAP_PROTOCOL_VERSION``) (version 2 is insecure and deprecated)
+* ldap url (``LDAP_URL``)
+* base distinguished name, 'dn' in LDAP parlance (``LDAP_BASEDN``)
+* user id field name (``LDAP_USERID_FIELD``)
+* email field name (``LDAP_EMAIL_FIELD``)
+* user name filter template (``LDAP_USERNAME_FILTER_TEMPLATE``)
+  must have two string placeholders.
+* given (first) name field (``LDAP_GIVEN_NAME_FIELD``)
+* surname (last name) field (``LDAP_SURNAME_FIELD``)
+* common name field (``LDAP_COMMON_NAME_FIELD``)
+  either given and surname should be used or common name.
+  All three are not necessary - either first two or common.
+  These fields are used to extract users first and last names.
+* Format of common name (``LDAP_COMMON_NAME_FIELD_FORMAT``)
+  values can be only 'first,last' or 'last,first' - used to 
+  extract last and first names from common name
+
+There are three more optional parameters that must go to the ``settings.py`` file::
+
+* ``LDAP_LOGIN_DN``
+* ``LDAP_PASSWORD``
+* ``LDAP_EXTRA_OPTIONS``, a list of two-item tuples - of names and values of
+  the options. Option names must be upper case strings all starting with ``OPT_``
+  as described in the `python ldap library documentation <http://www.python-ldap.org/doc/html/ldap.html#options>`_. An often used option is (`OPT_REFERRALS`, 0).
+* ``LDAP_AUTHENTICATE_FUNCTION`` - dotted python path to optional function that
+  can override the default `ldap_authenticate` function. This function allows to
+  completely customize the LDAP login procedure.
+  To see what is expected of this function (input parameters and the return value) -
+  look at the end of the doc string at
+  `askbot.deps.django_authopenid.ldap_auth.ldap_authenticate_default`.
+  One use case for the custom function is determining to which group
+  a user might belong or check any additional access rules that might be
+  stored in your LDAP directory. Another use case - is the case when 
+  the default procedure just does not work for you.
+* ``LDAP_AUTHENICATE_FAILURE_FUNCTION`` - python dotted path to an additional function
+  that may be called after a unsuccessful authentication.
+  This function can be used to set custom error messages to the login form.
+  The function should take two parameters (in the following order): user_info, login_form.
+  user_info - is the same dictionary
+  that is returned by the `ldap_authenticate` function.
+* ``LDAP_CREATE_USER_FUNCTION`` - python dotted path to function that will create
+  the ldap user, should actually return a user association object, like
+  ``askbot.deps.django_authopenid.ldap_auth.ldap_create_user_default``.
+  Function takes return value of the ldap authenticate function as a sole parameter.
+
+
+Use these when you have the "directory master passsword" - 
+for a specific user who can access the rest of the directory,
+these were not added to the live settings due to security concerns.
+
+``LDAP_USER`` and ``LDAP_PASSWORD`` will be used only if both are provided!
+
+Since LDAP authentication requires so many parameters,
+you might need to :ref:`debug <debugging>` the settings.
+The function to look at is `askbot.deps.django_authopenid.backends.ldap_authenticate`.
+If you have problems with LDAP please contact us at support@askbot.com.
+
+The easiest way to debug - insert ``import pdb; pdb.set_trace()`` line into function
+`askbot.deps.django_authopenid.backends.ldap_authenticate`,
+start the ``runserver`` and step through.
 
 Uploaded avatars
 ================
@@ -216,29 +287,32 @@ Askbot supports posting replies by email. For this feature  to work ``Lamson`` a
     
     pip install django-lamson
 
+.. note::
+    On Windows installation of the Lamson module may require
+    additional work. Askbot does not support this feature
+    on Windows automatically.
+
 The lamson daemon needs a folder to store it's mail queue files and a folder to store log files, create the folders folder named ``run`` and ``logs`` within your project folder by executing the following commands:
 
     mkdir run
 
     mkdir logs
 
-The minimum settings required to enable this feature are defining the port and binding address for the lamson SMTP daemon and the email handlers within askbot. Edit your settings.py file to include the following:
+The minimum settings required to enable this feature are defining the port and binding address for the lamson SMTP daemon and the email handlers within askbot. Edit your settings.py file to include the following::
 
     LAMSON_RECEIVER_CONFIG = {'host': 'your.ip.address', 'port': 25}
-    
     LAMSON_HANDLERS = ['askbot.mail.lamson_handlers']
-    
     LAMSON_ROUTER_DEFAULTS = {'host': '.+'}
 
-In the list of ``installed_apps`` add the app ``django-lamson``.
+In the list of ``installed_apps`` add the app ``django_lamson``.
 
 The ``LAMSON_RECEIVER_CONFIG`` parameter defines the binding address/port for the SMTP daemon. To recieve internet email you will need to bind to your external ip address and port 25. If you just want to test the feature by sending eamil from the same system you could bind to 127.0.0.1 and any higher port. 
 
-To run the lamson SMTP daemon you will need to execute the following management command:
+To run the lamson SMTP daemon you will need to execute the following management command::
     
     python manage.py lamson_start
 
-To stop the daemon issue the following command
+To stop the daemon issue the following command::
 
     python manage.py lamson_stop
 
@@ -251,7 +325,7 @@ Within the askbot admin interface there are 4 significant configuration points f
 * The last setting in this section controls the threshold for minimum length of the reply that is posted as an answer to a question. If the user is replying to a notification for a question and the reply  body is shorter than this threshold the reply will be posted as a comment to the question.
 * In the karma thresholds section the "Post answers and comments by email" defines the minimum karma for users to be able to post replies by email.
 
-If the system where lamson is hosted also acts as an email server or you simply want some of the emails to be ignored and sent to another server you can define forward rules. Any emails matching these rules will be sent to another smtp server, bypassing the reply by email function. As an example by adding the following in your settings.py file:
+If the system where lamson is hosted also acts as an email server or you simply want some of the emails to be ignored and sent to another server you can define forward rules. Any emails matching these rules will be sent to another smtp server, bypassing the reply by email function. As an example by adding the following in your settings.py file::
 
     LAMSON_FORWARD = (
         {

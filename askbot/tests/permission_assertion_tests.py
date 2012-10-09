@@ -5,6 +5,7 @@ from django.conf import settings
 from django.test import TestCase
 from django.core import exceptions
 from askbot.tests import utils
+from askbot.tests.utils import with_settings
 from askbot.conf import settings as askbot_settings
 from askbot import models
 from askbot.templatetags import extra_filters_jinja as template_filters
@@ -1367,11 +1368,18 @@ class AcceptBestAnswerPermissionAssertionTests(utils.AskbotTestCase):
         self.user_post_answer()
         self.assert_user_cannot()
 
-    def test_high_rep_other_user_cannot_accept_answer(self):
+    def test_low_rep_other_user_cannot_accept_answer(self):
         self.other_post_answer()
         self.create_user(username = 'third_user')
-        self.third_user.reputation = 1000000
+        self.third_user.reputation = askbot_settings.MIN_REP_TO_ACCEPT_ANY_ANSWER - 1
         self.assert_user_cannot(user = self.third_user)
+
+    @with_settings(MIN_DAYS_FOR_STAFF_TO_ACCEPT_ANSWER=0)
+    def test_high_rep_other_user_can_accept_answer(self):
+        self.other_post_answer()
+        self.create_user(username = 'third_user')
+        self.third_user.reputation = askbot_settings.MIN_REP_TO_ACCEPT_ANY_ANSWER
+        self.assert_user_can(user = self.third_user)
 
     def test_moderator_cannot_accept_own_answer(self):
         self.other_post_answer()
@@ -1590,7 +1598,10 @@ class ClosedForumTests(utils.AskbotTestCase):
         self.test_url = self.question.get_absolute_url()
         self.redirect_to = settings.LOGIN_URL
         self.client = Client()
-        askbot_settings.ASKBOT_CLOSED_FORUM_MODE = True
+        askbot_settings.update('ASKBOT_CLOSED_FORUM_MODE', True)
+
+    def tearDown(self):
+        askbot_settings.update('ASKBOT_CLOSED_FORUM_MODE', False)
 
     @skipIf('askbot.middleware.forum_mode.ForumModeMiddleware' \
         not in settings.MIDDLEWARE_CLASSES,
@@ -1615,6 +1626,3 @@ class ClosedForumTests(utils.AskbotTestCase):
         self.client.login(username=self.other_user.username, password=self.password)
         response = self.client.get(self.test_url)
         self.assertEquals(response.status_code, 200)
-
-    def tearDown(self):
-        askbot_settings.ASKBOT_CLOSED_FORUM_MODE = False

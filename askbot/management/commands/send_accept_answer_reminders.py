@@ -8,6 +8,8 @@ from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from askbot import mail
 from askbot.utils.classes import ReminderSchedule
+from askbot.skins.loaders import get_template
+from django.template import Context
 
 DEBUG_THIS_COMMAND = False
 
@@ -63,16 +65,15 @@ class Command(NoArgsCommand):
                 reminder_phrase = _('Please accept the best answer for this question:')
             else:
                 reminder_phrase = _('Please accept the best answer for these questions:')
-            body_text = '<p>' + reminder_phrase + '</p>'
-            body_text += '<ul>'
-            for question in final_question_list:
-                body_text += '<li><a href="%s%s?sort=latest">%s</a></li>' \
-                            % (
-                                askbot_settings.APP_URL,
-                                question.get_absolute_url(),
-                                question.thread.title
-                            )
-            body_text += '</ul>'
+
+            data = {
+                    'site_url': askbot_settings.APP_URL,
+                    'questions': final_question_list,
+                    'reminder_phrase': reminder_phrase
+                   }
+
+            template = get_template('email/accept_answer_reminder.html')
+            body_text = template.render(Context(data))
 
             if DEBUG_THIS_COMMAND:
                 print "User: %s<br>\nSubject:%s<br>\nText: %s<br>\n" % \

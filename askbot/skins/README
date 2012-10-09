@@ -17,7 +17,7 @@ How skins work in Askbot
 
 The skins reside in up to two directories:
 
-* `askbot/skins` in the source code (contains any stock skins)
+* `askbot` in the source within `templates` and `media` subdirectories
 * directory pointed to by a ASKBOT_EXTRA_SKINS_DIR in your settings.py
   with any other skins
 
@@ -27,7 +27,7 @@ absent in other skins. In a way - all other skins inherit from the "default".
 
 Templates and media are resolved in the following way:
 * check in skin named as in settings.ASKBOT_DEFAULT_SKIN
-* then skin named 'default'
+* then skin named 'default' - distributed within `askbot` source directory
 
 How to customize a skin
 =======================

@@ -6,11 +6,13 @@ from django.utils.translation import ungettext
 from askbot import mail
 from askbot.utils.classes import ReminderSchedule
 from askbot.models.question import Thread
+from askbot.skins.loaders import get_template
+from django.template import Context
 
 DEBUG_THIS_COMMAND = False
 
 class Command(NoArgsCommand):
-    """management command that sends reminders 
+    """management command that sends reminders
     about unanswered questions to all users
     """
     def handle_noargs(self, **options):
@@ -69,15 +71,15 @@ class Command(NoArgsCommand):
                 'topics': tag_summary
             }
 
-            body_text = '<ul>'
-            for question in final_question_list:
-                body_text += '<li><a href="%s%s?sort=latest">%s</a></li>' \
-                            % (
-                                askbot_settings.APP_URL,
-                                question.get_absolute_url(),
-                                question.thread.title
-                            )
-            body_text += '</ul>'
+            data = {
+                    'site_url': askbot_settings.APP_URL,
+                    'questions': final_question_list,
+                    'subject_line': subject_line
+                   }
+
+            template = get_template('email/unanswered_question_reminder.html')
+            body_text = template.render(Context(data))
+
 
             if DEBUG_THIS_COMMAND:
                 print "User: %s<br>\nSubject:%s<br>\nText: %s<br>\n" % \

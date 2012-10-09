@@ -6,6 +6,7 @@ import htmlentitydefs
 from urlparse import urlparse
 from django.core.urlresolvers import reverse
 from django.utils.html import escape
+from askbot.conf import settings as askbot_settings
 
 class HTMLSanitizerMixin(sanitizer.HTMLSanitizerMixin):
     acceptable_elements = ('a', 'abbr', 'acronym', 'address', 'b', 'big',
@@ -43,6 +44,23 @@ class HTMLSanitizer(tokenizer.HTMLTokenizer, HTMLSanitizerMixin):
             if token:
                 yield token
 
+def absolutize_urls(html):
+    """turns relative urls in <img> and <a> tags to absolute,
+    starting with the ``askbot_settings.APP_URL``"""
+    #temporal fix for bad regex with wysiwyg editor
+    url_re1 = re.compile(r'(?P<prefix><img[^<]+src=)"(?P<url>/[^"]+)"', re.I)
+    url_re2 = re.compile(r"(?P<prefix><img[^<]+src=)'(?P<url>/[^']+)'", re.I)
+    url_re3 = re.compile(r'(?P<prefix><a[^<]+href=)"(?P<url>/[^"]+)"', re.I)
+    url_re4 = re.compile(r"(?P<prefix><a[^<]+href=)'(?P<url>/[^']+)'", re.I)
+    img_replacement = '\g<prefix>"%s/\g<url>" style="max-width:500px;"' % askbot_settings.APP_URL
+    replacement = '\g<prefix>"%s\g<url>"' % askbot_settings.APP_URL
+    html = url_re1.sub(img_replacement, html)
+    html= url_re2.sub(img_replacement, html)
+    html = url_re3.sub(replacement, html)
+    #temporal fix for bad regex with wysiwyg editor
+    return url_re4.sub(replacement, html).replace('%s//' % askbot_settings.APP_URL,
+                                                  '%s/' % askbot_settings.APP_URL)
+
 def sanitize_html(html):
     """Sanitizes an HTML fragment."""
     p = html5lib.HTMLParser(tokenizer=HTMLSanitizer,
@@ -55,6 +73,11 @@ def sanitize_html(html):
     output_generator = s.serialize(stream)
     return u''.join(output_generator)
 
+def site_url(url):
+    from askbot.conf import settings
+    base_url = urlparse(settings.APP_URL)
+    return base_url.scheme + '://' + base_url.netloc + url
+
 def site_link(url_name, title):
     """returns html for the link to the given url
     todo: may be improved to process url parameters, keyword
@@ -62,8 +85,8 @@ def site_link(url_name, title):
     """
     from askbot.conf import settings
     base_url = urlparse(settings.APP_URL)
-    url = base_url.scheme + '://' + base_url.netloc + reverse(url_name)
-    return '<a href="%s">%s</a>' % (url, escape(title))
+    url = site_url(reverse(url_name))
+    return '<a href="%s">%s</a>' % (url, title)
 
 def unescape(text):
     """source: http://effbot.org/zone/re-sub.htm#unescape-html

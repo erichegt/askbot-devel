@@ -7,13 +7,16 @@ urlpatterns = patterns('askbot.deps.django_authopenid.views',
     url(r'^yadis.xrdf$', 'xrdf', name='yadis_xrdf'),
      # manage account registration
     url(r'^%s$' % _('signin/'), 'signin', name='user_signin'),
+    url(r'^%s$' % _('widget/signin/'), 'signin',
+        {'template_name': 'authopenid/widget_signin.html'},
+        name='widget_signin'),
     url(r'^%s$' % _('signout/'), 'signout', name='user_signout'),
     #this view is "complete-openid" signin
-    url(r'^%s%s$' % (_('signin/'), _('complete/')), 'complete_signin', 
+    url(r'^%s%s$' % (_('signin/'), _('complete/')), 'complete_signin',
         name='user_complete_signin'),
     url(
         r'^%s%s$' % (_('signin/'), _('complete-oauth/')),
-        'complete_oauth_signin', 
+        'complete_oauth_signin',
         name='user_complete_oauth_signin'
     ),
     url(r'^%s$' % _('register/'), 'register', name='user_register'),
@@ -27,7 +30,12 @@ urlpatterns = patterns('askbot.deps.django_authopenid.views',
     #but the setting is disabled right now
     #url(r'^%s%s$' % (_('email/'), _('sendkey/')), 'send_email_key', name='send_email_key'),
     #url(r'^%s%s(?P<id>\d+)/(?P<key>[\dabcdef]{32})/$' % (_('email/'), _('verify/')), 'verifyemail', name='user_verifyemail'),
-    url(r'^%s(?P<key>[\dabcdef]{32})?$' % _('recover/'), 'account_recover', name='user_account_recover'),
+    url(r'^%s$' % _('recover/'), 'account_recover', name='user_account_recover'),
+    url(
+        r'^%s$' % _('verify-email/'),
+        'verify_email_and_register',
+        name='verify_email_and_register'
+    ),
     url(
         r'^delete_login_method/$',#this method is ajax only
         'delete_login_method',

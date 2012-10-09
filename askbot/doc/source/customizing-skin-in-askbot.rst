@@ -15,8 +15,7 @@ of better performance and flexibility of coding.
 What are skins made of
 ======================
 
-Skin is a directory either within ``askbot/skins``
-or in a directory, pointed to by ``ASKBOT_EXTRA_SKINS_DIR``
+Skin is a directory, pointed to by ``ASKBOT_EXTRA_SKINS_DIR``
 parameter of your ``settings.py`` file.
 
 Skin name is the same as the name of its directory,
@@ -37,7 +36,7 @@ A skin consists of HTML templates, css and javascript
 and all of these resources are looked up first within currently active skin, 
 then in "default".
 
-Names "default" and "common" are reserved and should not be used to 
+Name "default" is reserved and should not be used to 
 name custom skins.
 
 Current state of skin system
@@ -108,7 +107,7 @@ In addition, it will help if your copy of askbot code is installed
 in the django project directory (use ``python setup.py develop`` method
 to install askbot in the first place).
 
-Then edit anything in directory ``askbot/skins/default``
+Then edit anything in directories ``askbot/templates`` and ``askbot/media``
 and commit to your own repository.
 
 If the askbot app is installed in the `site-packages` or `dist-packages`
@@ -156,7 +155,7 @@ Git makes this task quite simple and manageable.
 Skin templates
 ==============
 
-The first template to look at is `askbot/skins/default/templates/base.html`, it is quite simple and you can substantially change the appearance by modifying that template in the combination with adding some custom css.
+The first template to look at is `askbot/templates/base.html`, it is quite simple and you can substantially change the appearance by modifying that template in the combination with adding some custom css.
 
 More detailed description of templates will follow.
 

@@ -11,9 +11,14 @@ from django.core.cache.backends.locmem import LocMemCache
 
 from django.core.exceptions import ValidationError
 from askbot.tests.utils import AskbotTestCase
-from askbot.models import Post, PostRevision, Thread, Tag
+from askbot.models import Post
+from askbot.models import PostRevision
+from askbot.models import Thread
+from askbot.models import Tag
+from askbot.models import Group
 from askbot.search.state_manager import DummySearchState
 from django.utils import simplejson
+from askbot.conf import settings as askbot_settings
 
 
 class PostModelTests(AskbotTestCase):
@@ -24,23 +29,11 @@ class PostModelTests(AskbotTestCase):
         self.u3 = self.create_user(username='user3')
 
     def test_model_validation(self):
-        self.assertRaises(
-            NotImplementedError,
-            PostRevision.objects.create,
-            [],
-            {
-                'text': 'blah',
-                'author': self.u1,
-                'revised_at': datetime.datetime.now(),
-                'revision_type': PostRevision.QUESTION_REVISION
-            }
-        )
-
         self.assertRaisesRegexp(
             AttributeError,
             r"'NoneType' object has no attribute 'revisions'",
             # cannot set `revision` without a parent
-            PostRevision.objects.create_answer_revision,
+            PostRevision.objects.create,
             *[],
             **{
                 'text': 'blah',
@@ -54,56 +47,22 @@ class PostModelTests(AskbotTestCase):
             author=self.u1,
             revised_at=datetime.datetime.now(),
             revision=1,
-            revision_type=4
         )
 
         self.assertRaisesRegexp(
             ValidationError,
-            r"{'__all__': \[u'Post field has to be set.'\], 'revision_type': \[u'Value 4 is not a valid choice.'\]}",
+            r"{'__all__': \[u'Post field has to be set.'\]}",
             post_revision.save
         )
-
-            # revision_type not in (1,2)
 
         question = self.post_question(user=self.u1)
 
-        rev2 = PostRevision(post=question, text='blah', author=self.u1, revised_at=datetime.datetime.now(), revision=2, revision_type=PostRevision.QUESTION_REVISION)
+        rev2 = PostRevision(
+            post=question, text='blah', author=self.u1,
+            revised_at=datetime.datetime.now(), revision=2
+        )
         rev2.save()
         self.assertFalse(rev2.id is None)
-
-        post_revision = PostRevision(
-            post=question,
-            text='blah',
-            author=self.u1,
-            revised_at=datetime.datetime.now(),
-            revision=2,
-            revision_type=PostRevision.ANSWER_REVISION
-        )
-        self.assertRaisesRegexp(
-            ValidationError,
-            r"{'__all__': \[u'Revision_type doesn`t match values in question/answer fields.', u'Post revision with this Post and Revision already exists.'\]}",
-            post_revision.save
-        )
-
-
-        post_revision = PostRevision(
-            post=question,
-            text='blah',
-            author=self.u1,
-            revised_at=datetime.datetime.now(),
-            revision=3,
-            revision_type=PostRevision.ANSWER_REVISION
-        )
-        self.assertRaisesRegexp(
-            ValidationError,
-            r"{'__all__': \[u'Revision_type doesn`t match values in question/answer fields.'\]}",
-            post_revision.save
-        )
-
-        rev3 = PostRevision.objects.create_question_revision(post=question, text='blah', author=self.u1, revised_at=datetime.datetime.now(), revision_type=123) # revision_type
-        self.assertFalse(rev3.id is None)
-        self.assertEqual(3, rev3.revision) # By the way: let's test the auto-increase of revision number
-        self.assertEqual(PostRevision.QUESTION_REVISION, rev3.revision_type)
 
     def test_post_revision_autoincrease(self):
         question = self.post_question(user=self.u1)
@@ -178,6 +137,36 @@ class PostModelTests(AskbotTestCase):
         self.assertEqual('/question/3/lala-x-lala/', p.get_absolute_url(thread=th))
         self.assertTrue(p._thread_cache is th)
         self.assertEqual('/question/3/lala-x-lala/', p.get_absolute_url(thread=th))
+
+    def test_get_moderators_with_groups(self):
+        groups_enabled_backup = askbot_settings.GROUPS_ENABLED
+        askbot_settings.update('GROUPS_ENABLED', True)
+        #create group
+        group = Group(name='testers', openness=Group.OPEN)
+        group.save()
+
+        #create one admin and one moderator, and one reg user
+        mod1 = self.create_user('mod1', status='m')
+        adm1 = self.create_user('adm1', status='d')
+        reg1 = self.create_user('reg1')
+        #join them to the group
+        mod1.join_group(group)
+        adm1.join_group(group)
+        reg1.join_group(group)
+        #create one admin and one moderator, and one reg user
+        mod2 = self.create_user('mod2', status='m')
+        adm2 = self.create_user('adm2', status='d')
+        reg2 = self.create_user('reg2')
+        #make a post
+        question = self.post_question(user=reg1, group_id=group.id)
+        #run get_moderators and see that only one admin and one
+        mods = question.get_moderators()
+        self.assertEqual(
+            set([mod1, adm1]),
+            set(mods)
+        )
+        #moderator are in the set of moderators
+        askbot_settings.update('GROUPS_ENABLED', groups_enabled_backup)
 
 
 class ThreadTagModelsTests(AskbotTestCase):
@@ -331,6 +320,7 @@ class ThreadRenderLowLevelCachingTests(AskbotTestCase):
             'thread': thread,
             'question': thread._question_post(),
             'search_state': ss,
+            'visitor': None
         }
         proper_html = get_template('widgets/question_summary.html').render(context)
         self.assertEqual(test_html, proper_html)
@@ -418,7 +408,7 @@ class ThreadRenderLowLevelCachingTests(AskbotTestCase):
 
         ###
         cache.cache.delete(key)
-        thread.update_summary_html = lambda: "Monkey-patched <<<tag2>>>"
+        thread.update_summary_html = lambda dummy: "Monkey-patched <<<tag2>>>"
 
         self.assertFalse(thread.summary_html_cached())
         self.assertIsNone(thread.get_cached_summary_html())
@@ -452,7 +442,8 @@ class ThreadRenderCacheUpdateTests(AskbotTestCase):
             'thread': q.thread,
             'question': q,
             'search_state': DummySearchState(),
-            }
+            'visitor': None
+        }
         html = get_template('widgets/question_summary.html').render(context)
         return html
 
@@ -487,15 +478,22 @@ class ThreadRenderCacheUpdateTests(AskbotTestCase):
 
         time.sleep(1.5) # compensate for 1-sec time resolution in some databases
 
-        response = self.client.post(urlresolvers.reverse('edit_question', kwargs={'id': question.id}), data={
-            'title': 'edited title',
-            'text': 'edited body text',
-            'tags': 'tag1 tag2',
-            'summary': 'just some edit',
-        })
+        response = self.client.post(
+            urlresolvers.reverse('edit_question', kwargs={'id': question.id}),
+            data={
+                'title': 'edited title',
+                'text': 'edited body text',
+                'tags': 'tag1 tag2',
+                'summary': 'just some edit',
+                'select_revision': 'false'
+            }
+        )
         self.assertEqual(1, Post.objects.count())
         question = Post.objects.all()[0]
-        self.assertRedirects(response=response, expected_url=question.get_absolute_url())
+        self.assertRedirects(
+            response=response,
+            expected_url=question.get_absolute_url()
+        )
 
         thread = question.thread
         self.assertEqual(0, thread.answer_count)
@@ -574,10 +572,17 @@ class ThreadRenderCacheUpdateTests(AskbotTestCase):
         time.sleep(1.5)  # compensate for 1-sec time resolution in some databases
         self.client.logout()
         self.client.login(username='user2', password='pswd')
-        response = self.client.post(urlresolvers.reverse('edit_answer', kwargs={'id': answer.id}), data={
-            'text': 'edited body text',
-            'summary': 'just some edit',
-        })
+        response = self.client.post(
+            urlresolvers.reverse(
+                'edit_answer',
+                kwargs={'id': answer.id}
+            ),
+            data={
+                'text': 'edited body text',
+                'summary': 'just some edit',
+                'select_revision': 'false'
+            }
+        )
         self.assertRedirects(response=response, expected_url=answer.get_absolute_url())
 
         answer = Post.objects.get(id=answer.id)
@@ -613,7 +618,7 @@ class ThreadRenderCacheUpdateTests(AskbotTestCase):
 
     def test_question_upvote_downvote(self):
         question = self.post_question()
-        question.score = 5
+        question.points = 5
         question.vote_up_count = 7
         question.vote_down_count = 2
         question.save()
@@ -626,7 +631,7 @@ class ThreadRenderCacheUpdateTests(AskbotTestCase):
         data = simplejson.loads(response.content)
 
         self.assertEqual(1, data['success'])
-        self.assertEqual(6, data['count'])  # 6 == question.score(5) + 1
+        self.assertEqual(6, data['count'])  # 6 == question.points(5) + 1
 
         thread = Thread.objects.get(id=question.thread.id)
 
@@ -642,7 +647,7 @@ class ThreadRenderCacheUpdateTests(AskbotTestCase):
         data = simplejson.loads(response.content)
 
         self.assertEqual(1, data['success'])
-        self.assertEqual(5, data['count'])  # 6 == question.score(6) - 1
+        self.assertEqual(5, data['count'])  # 6 == question.points(6) - 1
 
         thread = Thread.objects.get(id=question.thread.id)
 
