@@ -11,6 +11,9 @@ class HaystackSearchTests(AskbotTestCase):
     that were added for askbot
     """
     def setUp(self):
+        self._old_value = settings.ENABLE_HAYSTACK_SEARCH
+        setattr(settings, "ENABLE_HAYSTACK_SEARCH", True)
+
         self.user = self.create_user(username='gepeto')
         self.other_user = self.create_user(username = 'pinocho')
         self.other_user.location = 'Managua'
@@ -47,6 +50,9 @@ class HaystackSearchTests(AskbotTestCase):
                                         question = self.question2,
                                         body_text="Just a random text to fill the space"
                                        )
+
+    def tearDown(self):
+        setattr(settings, "ENABLE_HAYSTACK_SEARCH", self._old_value)
 
     @skipIf('haystack' not in settings.INSTALLED_APPS,
         'Haystack not setup')

@@ -53,7 +53,7 @@ try:
                     #FIXME: add a highlight here?
                     id_list.append(r.pk)
 
-            return model_klass.objects.filter(id__in=set(id_list)).distinct()
+            return model_klass.objects.filter(id__in=set(id_list))
 
 except:
     pass
