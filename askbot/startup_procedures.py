@@ -686,7 +686,7 @@ def run_startup_tests():
     test_middleware()
     test_celery()
     #test_csrf_cookie_domain()
-    #test_tinymce()
+    test_tinymce()
     test_staticfiles()
     test_new_skins()
     test_longerusername()
