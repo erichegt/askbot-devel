@@ -55,6 +55,17 @@ Finally, add lin
 
 .. _embedding-video:
 
+Haystack search
+=============
+Askbot supports `Haystack <http://haystacksearch.org/>`_, a modular search framework that supports popular search engine backends as 
+Solr, Elasticsearch, Whoosh and Xapian. 
+
+To enable:
+
+* add 'haystack' to INSTALLED_APPS
+* add ENABLE_HAYSTACK_SEARCH = True in settings.py 
+* Configure your search backend according to your setup following `this guide <http://django-haystack.readthedocs.org/en/latest/tutorial.html#modify-your-settings-py>`_
+
 Embedding video
 ===============
 

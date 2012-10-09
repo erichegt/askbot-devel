@@ -358,7 +358,7 @@ class Post(models.Model):
     locked_by = models.ForeignKey(User, null=True, blank=True, related_name='locked_posts')
     locked_at = models.DateTimeField(null=True, blank=True)
 
-    score = models.IntegerField(default=0)
+    points = models.IntegerField(default=0, db_column='score')
     vote_up_count = models.IntegerField(default=0)
     vote_down_count = models.IntegerField(default=0)
 
@@ -389,6 +389,14 @@ class Post(models.Model):
         app_label = 'askbot'
         db_table = 'askbot_post'
 
+    #property to support legacy themes in case there are.
+    @property
+    def score(self):
+        return int(self.points)
+    @score.setter
+    def score(self, number):
+        if number:
+            self.points = int(number)
 
     def parse_post_text(self):
         """typically post has a field to store raw source text

@@ -43,13 +43,13 @@ class Badge(object):
     """
     def __init__(self,
                 key = '',
-                name = '', 
+                name = '',
                 level = None,
                 description = None,
                 multiple = False):
 
         #key - must be an ASCII only word
-        self.key = key 
+        self.key = key
         self.name = name
         self.level = level
         self.description = description
@@ -114,11 +114,11 @@ class Badge(object):
 
     def consider_award(self, actor = None,
             context_object = None, timestamp = None):
-        """Normally this method should be reimplemented 
+        """Normally this method should be reimplemented
         in subclass, but some badges are awarded without
         checks. Those do no need to override this method
 
-        actor - user who committed some action, context_object - 
+        actor - user who committed some action, context_object -
         the object related to the award situation, e.g. answer
         """
         return self.award(actor, context_object, timestamp)
@@ -141,7 +141,7 @@ class Disciplined(Badge):
 
         if context_object.author != actor:
             return False
-        if context_object.score >= \
+        if context_object.points>= \
             askbot_settings.DISCIPLINED_BADGE_MIN_UPVOTES:
             return self.award(actor, context_object, timestamp)
 
@@ -163,7 +163,7 @@ class PeerPressure(Badge):
 
         if context_object.author != actor:
             return False
-        if context_object.score <= \
+        if context_object.points<= \
             -1 * askbot_settings.PEER_PRESSURE_BADGE_MIN_DOWNVOTES:
             return self.award(actor, context_object, timestamp)
         return False
@@ -181,12 +181,12 @@ class Teacher(Badge):
             multiple = False
         )
 
-    def consider_award(self, actor = None, 
+    def consider_award(self, actor = None,
                 context_object = None, timestamp = None):
         if context_object.post_type != 'answer':
             return False
 
-        if context_object.score >= askbot_settings.TEACHER_BADGE_MIN_UPVOTES:
+        if context_object.points>= askbot_settings.TEACHER_BADGE_MIN_UPVOTES:
             return self.award(context_object.author, context_object, timestamp)
         return False
 
@@ -268,7 +268,7 @@ class SelfLearner(Badge):
         question = context_object.thread._question_post()
         answer = context_object
 
-        if question.author == answer.author and answer.score >= min_upvotes:
+        if question.author == answer.author and answer.points >= min_upvotes:
             self.award(context_object.author, context_object, timestamp)
 
 class QualityPost(Badge):
@@ -294,7 +294,7 @@ class QualityPost(Badge):
                 context_object = None, timestamp = None):
         if context_object.post_type not in ('answer', 'question'):
             return False
-        if context_object.score >= self.min_votes:
+        if context_object.points >= self.min_votes:
             return self.award(context_object.author, context_object, timestamp)
         return False
 
@@ -485,7 +485,7 @@ class VotedAcceptedAnswer(Badge):
         if context_object.post_type != 'answer':
             return None
         answer = context_object
-        if answer.score >= self.min_votes and answer.accepted():
+        if answer.points >= self.min_votes and answer.accepted():
             return self.award(answer.author, answer, timestamp)
 
 class Enlightened(VotedAcceptedAnswer):
@@ -537,7 +537,7 @@ class Necromancer(Badge):
         delta = datetime.timedelta(askbot_settings.NECROMANCER_BADGE_MIN_DELAY)
         min_score = askbot_settings.NECROMANCER_BADGE_MIN_UPVOTES
         if answer.added_at - question.added_at >= delta \
-            and answer.score >= min_score:
+            and answer.points >= min_score:
             return self.award(answer.author, answer, timestamp)
         return False
 
@@ -723,7 +723,7 @@ class Enthusiast(Badge):
         return False
 
 class Commentator(Badge):
-    """Commentator is a bronze badge that is 
+    """Commentator is a bronze badge that is
     awarded once when user posts a certain number of
     comments"""
     def __init__(self):
@@ -778,7 +778,7 @@ class Expert(Badge):
         )
 
 ORIGINAL_DATA = """
- 
+
 extra badges from stackexchange
 * commentator - left n comments (single)
 * enthusiast, fanatic - visited site n days in a row (s)
@@ -894,7 +894,7 @@ award_badges_signal = Signal(
 #context_object - database object related to the event, e.g. question
 
 @auto_now_timestamp
-def award_badges(event = None, actor = None, 
+def award_badges(event = None, actor = None,
                 context_object = None, timestamp = None, **kwargs):
     """function that is called when signal `award_badges_signal` is sent
     """

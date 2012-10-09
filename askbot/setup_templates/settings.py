@@ -162,6 +162,7 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
     'django.contrib.sitemaps',
     #'debug_toolbar',
+    #'haystack',
     'askbot',
     'askbot.deps.django_authopenid',
     #'askbot.importers.stackexchange', #se loader
@@ -234,6 +235,13 @@ STATICFILES_DIRS = (
 )
 
 RECAPTCHA_USE_SSL = True
+
+#HAYSTACK_SETTINGS
+ENABLE_HAYSTACK_SEARCH = False
+HAYSTACK_SITECONF = 'askbot.search.haystack'
+#more information
+#http://django-haystack.readthedocs.org/en/v1.2.7/settings.html
+HAYSTACK_SEARCH_ENGINE = 'simple'
 
 TINYMCE_COMPRESSOR = True
 TINYMCE_SPELLCHECKER = False
