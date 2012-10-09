@@ -755,6 +755,7 @@ def user_responses(request, user, context):
         context.update(SendersList().get_context(request))
         context.update(ThreadsList().get_context(request))
         data = {
+            'inbox_threads_count': context['threads_count'],#a hackfor the inbox count
             'active_tab':'users',
             'page_class': 'user-profile-page',
             'tab_name' : 'inbox',

@@ -1,7 +1,11 @@
 {% if senders %}
 <ul class="senders-list">
     <li>{% trans %}Messages by sender:{% endtrans %}</li>
-    <li><a class="selected" data-sender-id="-1">{% trans %}inbox{% endtrans %}</a></li>
+    <li><a class="selected" data-sender-id="-1">
+        {% trans %}inbox{% endtrans %}
+        {% if inbox_threads_count %}({{ inbox_threads_count }}){% endif %}
+        </a>
+    </li>
     <li><a data-sender-id="{{ request_user_id }}">{% trans %}sent{% endtrans %}</a></li>
     {% for sender in senders %}
         {% if sender.id != request_user_id %}

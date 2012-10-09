@@ -211,6 +211,7 @@ class ThreadsList(InboxView):
 
         return {
             'threads': threads,
+            'threads_count': threads.count(),
             'threads_data': threads_data,
             'sender_id': sender_id
         }
