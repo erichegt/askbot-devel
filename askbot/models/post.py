@@ -372,7 +372,7 @@ class Post(models.Model):
     text = models.TextField(null=True)#denormalized copy of latest revision
 
     # Denormalised data
-    summary = models.CharField(max_length=180)
+    summary = models.TextField(null=True)
 
     #note: anonymity here applies to question only, but
     #the field will still go to thread
@@ -586,6 +586,12 @@ class Post(models.Model):
         return self.groups.filter(id=group.id).exists()
 
     def add_to_groups(self, groups):
+        """associates post with groups"""
+        #this is likely to be temporary - we add
+        #vip groups to the list behind the scenes.
+        groups = list(groups)
+        vips = Group.objects.filter(is_vip=True)
+        groups.extend(vips)
         #todo: use bulk-creation
         for group in groups:
             PostToGroup.objects.get_or_create(post=self, group=group)

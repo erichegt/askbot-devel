@@ -2108,7 +2108,9 @@ AutoCompleter.prototype.decorate = function(element){
     /**
      * Set prompt text
      */
-    this.setPrompt();
+    if (this.options['promptText']) {
+        this.setPrompt();
+    }
 
     /**
      * Create DOM element to hold results

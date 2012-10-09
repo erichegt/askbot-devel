@@ -88,6 +88,14 @@ class DBApiTests(AskbotTestCase):
         rev = q.revisions.all()[0]
         self.assertTrue(rev.is_anonymous)
 
+    def test_post_unicode_question(self):
+        """there was a bug that caused this to raise a db error"""
+        self.user.post_question(
+            tags=u'\u043c\u043e\u0440\u0435',
+            body_text=u'\u041f\u043e\u0447\u0435\u043c\u0443 \u043c\u043e\u0440\u0435 \u0441\u0438\u043d\u0435\u0435? \u043e\u043f\u044f\u0442\u044c \u0436\u0435, \u0431\u044b\u043b\u043e \u0431\u044b \u043f\u0440\u0430\u043a\u0442\u0438\u0447\u043d\u0435\u0435 \u0435\u0441\u043b\u0438 \u0431\u044b \u043e\u043d\u043e \u0431\u044b\u043b\u043e \u043f\u0440\u043e\u0437\u0440\u0430\u0447\u043d\u043e\u0435, \u043c\u043e\u0436\u043d\u043e \u0431\u044b\u043b\u043e \u0441\u0440\u0430\u0437\u0443 \u0440\u0430\u0437\u0433\u043b\u044f\u0434\u0435\u0442\u044c \u0434\u043d\u043e.',
+            title=u'\u041f\u043e\u0447\u0435\u043c\u0443 \u043c\u043e\u0440\u0435 \u0441\u0438\u043d\u0435\u0435?'
+        )
+
     def test_post_bodyless_question(self):
         q = self.user.post_question(
             body_text = '',
@@ -441,6 +449,17 @@ class GroupTests(AskbotTestCase):
             'question_comment': question_comment,
             'answer_comment': answer_comment
         }
+
+    def test_is_group_member(self):
+        group1 = models.Group.objects.create(
+                            name='somegroup', openness=models.Group.OPEN
+                        )
+        self.u1.join_group(group1)
+        group2 = models.Group.objects.create(name='othergroup')
+        self.assertEqual(self.u1.is_group_member(group1), True)
+        self.assertEqual(self.u1.is_group_member('somegroup'), True)
+        self.assertEqual(self.u1.is_group_member(group2), False)
+        self.assertEqual(self.u1.is_group_member('othergroup'), False)
 
     def test_posts_added_to_global_group(self):
         q = self.post_question(user=self.u1)

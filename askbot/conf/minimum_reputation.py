@@ -53,6 +53,15 @@ settings.register(
 settings.register(
     livesettings.IntegerValue(
         MIN_REP,
+        'MIN_REP_TO_ACCEPT_ANY_ANSWER',
+        default=500,
+        description=_('Accept any answer')
+    )
+)
+
+settings.register(
+    livesettings.IntegerValue(
+        MIN_REP,
         'MIN_REP_TO_FLAG_OFFENSIVE',
         default=5,
         description=_('Flag offensive')

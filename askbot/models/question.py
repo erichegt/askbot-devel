@@ -874,7 +874,7 @@ class Thread(models.Model):
         if self.is_moderated() and user != question_post.author:
             #if moderated - then author is guaranteed to be the
             #limited visibility enquirer
-            published_answers = self.posts.get_answers(
+            published_answer_ids = self.posts.get_answers(
                                         user=question_post.author#todo: may be > 1
                                     ).filter(
                                         deleted=False
@@ -884,12 +884,15 @@ class Thread(models.Model):
                                             'oldest':'added_at',
                                             'votes':'-score'
                                         }[sort_method]
-                                    )
+                                    ).values_list('id', flat=True)
+
+            published_answer_ids = reversed(published_answer_ids)
             #now put those answers first
-            for answer in reversed(published_answers):
+            answer_map = dict([(answer.id, answer) for answer in answers])
+            for answer_id in published_answer_ids:
+                answer = answer_map[answer_id]
                 answers.remove(answer)
                 answers.insert(0, answer)
-                published_answer_ids.append(answer.id)
 
         return (question_post, answers, post_to_author, published_answer_ids)
 
@@ -999,7 +1002,7 @@ class Thread(models.Model):
             return ThreadToGroup.objects.filter(
                             thread=self,
                             visibility=ThreadToGroup.SHOW_PUBLISHED_RESPONSES
-                        )
+                        ).count() > 0
         return False
 
     def add_child_posts_to_groups(self, groups):
