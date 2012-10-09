@@ -1,3 +1,6 @@
+import time
+import urlparse
+from bs4 import BeautifulSoup
 from django.test import TestCase
 from django.contrib.auth.models import User, Group
 from group_messaging.models import Message
@@ -8,7 +11,6 @@ from group_messaging.models import get_personal_group
 from group_messaging.models import create_personal_group
 from group_messaging.views import ThreadsList
 from mock import Mock
-import time
 
 MESSAGE_TEXT = 'test message text'
 
@@ -282,6 +284,14 @@ class ModelsTests(GroupMessagingTests):
         self.assertEqual(len(outbox), 1)
         self.assertEqual(len(outbox[0].recipients()), 1)
         self.assertEqual(outbox[0].recipients()[0], self.recipient.email)
+        html_message = outbox[0].alternatives[0][0]
+        self.assertTrue(root.text in html_message)
+        soup = BeautifulSoup(html_message)
+        links = soup.find_all('a', attrs={'class': 'thread-link'})
+        self.assertEqual(len(links), 1)
+        parse_result = urlparse.urlparse(links[0]['href'])
+        query = urlparse.parse_qs(parse_result.query.replace('&amp;', '&'))
+        self.assertEqual(query['thread_id'][0], str(root.id))
 
     def test_get_sent_threads(self):
         root1, re11, re12 = self.setup_three_message_thread()

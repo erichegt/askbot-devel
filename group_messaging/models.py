@@ -1,11 +1,17 @@
 """models for the ``group_messaging`` app
 """
+import copy
 import datetime
+import urllib
+from askbot.mail import send_mail #todo: remove dependency?
 from coffin.template.loader import get_template
 from django.db import models
 from django.db.models import signals
+from django.conf import settings as django_settings
 from django.contrib.auth.models import Group
 from django.contrib.auth.models import User
+from django.contrib.sites.models import Site
+from django.utils.importlib import import_module
 from django.utils.translation import ugettext as _
 
 MAX_HEADLINE_LENGTH = 80
@@ -321,6 +327,24 @@ class Message(models.Model):
             sender_list, created = SenderList.objects.get_or_create(recipient=recipient)
             sender_list.senders.add(self.sender)
 
+    def get_absolute_url(self, user=None, include_domain_name=False):
+        """returns absolute url to the thread"""
+        assert(user != None)
+        settings = django_settings.GROUP_MESSAGING
+        func_path = settings['base_url_getter_function']
+        path_bits = func_path.split('.')
+        url_getter = getattr(
+                        import_module('.'.join(path_bits[:-1])),
+                        path_bits[-1]
+                    )
+        params = copy.copy(settings['base_url_params'])
+        params['thread_id'] = self.id
+        url = url_getter(user) + '?' + urllib.urlencode(params)
+        if include_domain_name:
+            site = Site.objects.get_current()
+            url = 'http://' + site.domain + url
+        return url
+
     def get_email_subject_line(self):
         """forms subject line based on the root message
         and prepends 'Re': if message is non-root
@@ -355,13 +379,25 @@ class Message(models.Model):
 
     def send_email_alert(self):
         """signal handler for the message post-save"""
-        subject = self.get_email_subject_line()
-        template = get_template('group_messaging/email_alert.html')
+        root_message = self.get_root_message()
         data = {'messages': self.get_timeline()}
+        template = get_template('group_messaging/email_alert.html')
         body_text = template.render(data)
-        recipients = map(lambda v: v.email, self.get_recipients_users())
-        from askbot.mail import send_mail
-        send_mail(recipient_list=recipients, subject_line=subject, body_text=body_text)
+        subject = self.get_email_subject_line()
+        for user in self.get_recipients_users():
+            #todo change url scheme so that all users have the same
+            #urls within their personal areas of the user profile
+            #so that we don't need to have loops like this one
+            thread_url = root_message.get_absolute_url(
+                            user, include_domain_name=True
+                        ).replace('&', '&amp;')
+            #in the template we have a placeholder to be replaced like this:
+            body_text = body_text.replace('THREAD_URL_HOLE', thread_url)
+            send_mail(
+                recipient_list=[user.email,],
+                subject_line=subject,
+                body_text=body_text
+            )
 
 
     def update_senders_info(self):

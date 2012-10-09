@@ -104,7 +104,7 @@
     {% trans %}inbox - messages{% endtrans %}
 {% endblock %}
 {% block inbox_content %}
-    {% include "group_messaging/home.html" %}
+    {% include group_messaging_template_name %}
 {% endblock %}
 {% block userjs %}
     <script type="text/javascript" src="{{ 'js/group_messaging.js'|media }}"></script>

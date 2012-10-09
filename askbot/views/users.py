@@ -749,8 +749,7 @@ def user_responses(request, user, context):
     elif section == 'messages':
         if request.user != user:
             raise Http404
-        #here we take shortcut, because we don't care about
-        #all the extra context loaded below
+
         from group_messaging.views import SendersList, ThreadsList
         context.update(SendersList().get_context(request))
         context.update(ThreadsList().get_context(request))
@@ -764,9 +763,23 @@ def user_responses(request, user, context):
             'page_title' : _('profile - messages')
         }
         context.update(data)
-        return render_into_skin(
-            'user_inbox/messages.html', context, request
-        )
+        import pdb
+        pdb.set_trace()
+        if 'thread_id' in request.GET:
+            from group_messaging.models import Message
+            from group_messaging.views import ThreadDetails
+            try:
+                thread_id = request.GET['thread_id']
+                context.update(ThreadDetails().get_context(request, thread_id))
+                context['group_messaging_template_name'] = \
+                    'group_messaging/home_thread_details.html'
+            except Message.DoesNotExist:
+                raise Http404
+        else:
+            context['group_messaging_template_name'] = 'group_messaging/home.html'
+            #here we take shortcut, because we don't care about
+            #all the extra context loaded below
+        return render_into_skin('user_inbox/messages.html', context, request)
     else:
         raise Http404
 

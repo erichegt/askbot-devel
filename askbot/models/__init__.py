@@ -2228,7 +2228,7 @@ def delete_messages(self):
     self.message_set.all().delete()
 
 #todo: find where this is used and replace with get_absolute_url
-def get_profile_url(self):
+def user_get_profile_url(self):
     """Returns the URL for this User's profile."""
     return reverse(
                 'user_profile',
@@ -2781,7 +2781,7 @@ User.add_to_class(
     user_get_flag_count_posted_today
 )
 User.add_to_class('get_flags_for_post', user_get_flags_for_post)
-User.add_to_class('get_profile_url', get_profile_url)
+User.add_to_class('get_profile_url', user_get_profile_url)
 User.add_to_class('get_profile_link', get_profile_link)
 User.add_to_class('get_tag_filtered_questions', user_get_tag_filtered_questions)
 User.add_to_class('get_messages', get_messages)
@@ -2964,8 +2964,9 @@ def format_instant_notification_email(
     else:
         raise ValueError('unrecognized post type')
 
-    post_url = strip_path(site_url) + post.get_absolute_url()
-    user_url = strip_path(site_url) + from_user.get_absolute_url()
+    base_url = strip_path(site_url)
+    post_url = base_url + post.get_absolute_url()
+    user_url = base_url + from_user.get_absolute_url()
     user_action = user_action % {
         'user': '<a href="%s">%s</a>' % (user_url, from_user.username),
         'post_link': '<a href="%s">%s</a>' % (post_url, _(post.post_type))
