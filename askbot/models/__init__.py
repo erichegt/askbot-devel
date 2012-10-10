@@ -65,6 +65,8 @@ from askbot.utils.diff import textDiff as htmldiff
 from askbot.utils.url_utils import strip_path
 from askbot import mail
 
+from django import get_version as django_version
+
 def get_model(model_name):
     """a shortcut for getting model for an askbot app"""
     return models.get_model('askbot', model_name)
@@ -115,6 +117,42 @@ def get_users_by_text_query(search_query, users_query_set = None):
         #        models.Q(username__search = search_query) |
         #        models.Q(about__search = search_query)
         #    )
+
+class CacheMessage(object):
+    '''An object to replace the django.contrib.auth.models.Message model
+       that stores the messages in the cache'''
+
+    def __init__(self, user):
+        self.user = user
+        self.cache_key = 'user-message-%d' % self.user.id
+        self.messages = cache.cache.get(self.cache_key) or []
+
+    def _set_message(self, message):
+        self.messages.append(message)
+        cache.cache.set(self.cache_key, self.messages)
+
+    def create(self, message=''):
+        if message:
+            self._set_message(message)
+
+    def get_and_delete_messages(self):
+        cache.cache.delete(self.cache_key)
+        return_value = self.messages
+        self.messages = []
+        return return_value
+
+@property
+def user_message_set(self):
+    if not hasattr(self, '_message_set_cache'):
+        self._message_set_cache = CacheMessage(self)
+    return self._message_set_cache
+
+def user_get_and_delete_messages(self):
+    return self.message_set.get_and_delete_messages()
+
+if django_version() > '1.3.1':
+    User.add_to_class('message_set', user_message_set)
+    User.add_to_class('get_and_delete_messages', user_get_and_delete_messages)
 
 User.add_to_class(
             'status',
@@ -3585,7 +3623,6 @@ def moderate_group_joining(sender, instance=None, created=False, **kwargs):
                 recipients = group.get_moderators(),
                 content_object = group
             )
-
 
 #signal for User model save changes
 django_signals.pre_save.connect(make_admin_if_first_user, sender=User)
