@@ -485,6 +485,8 @@ class Group(AuthGroup):
                             null = True, blank = True, default = ''
                         )
 
+    is_vip = models.BooleanField(default=False)
+
     objects = GroupManager()
 
     class Meta:

@@ -2654,6 +2654,14 @@ UserGroupProfileEditor.prototype.decorate = function(element){
     var btn = element.find('#moderate-answers-to-enquirers');
     moderate_publishing_replies_toggle.decorate(btn);
 
+    var vip_toggle = new TwoStateToggle();
+    vip_toggle.setPostData({
+        group_id: this.getTagId(),
+        property_name: 'is_vip'
+    });
+    var btn = element.find('#vip-toggle');
+    vip_toggle.decorate(btn);
+
     var opennessSelector = new DropdownSelect();
     var selectorElement = element.find('#group-openness-selector');
     opennessSelector.setPostData({
