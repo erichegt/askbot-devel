@@ -433,7 +433,7 @@ msgstr "privacy/"
 
 #: urls.py:44
 msgid "help/"
-msgstr "aiuto/"
+msgstr "guida/"
 
 #: urls.py:46 urls.py:51
 msgid "answers/"
@@ -5086,7 +5086,7 @@ msgstr "Benvenuto,"
 #: templates/help.html:13
 #, python-format
 msgid "Thank you for using %(app_name)s, here is how it works."
-msgstr "Grazie per aver utilizzato %(app_name)s, ecco come funziona."
+msgstr "Grazie per aver scelto di utilizzare %(app_name)s! Ecco come funziona."
 
 #: templates/help.html:16
 msgid "How questions, answers and comments work"
@@ -5097,7 +5097,7 @@ msgid ""
 "This site is for asking and answering questions, not for open-ended "
 "discussions."
 msgstr ""
-"Questo sito è per chiedere e rispondere alle domande, non per discussioni "
+"Questo sito è stato creato per chiedere e rispondere a domande, non per discussioni "
 "aperte."
 
 #: templates/help.html:19
@@ -5105,28 +5105,28 @@ msgid ""
 "We encourage everyone to use “question” space for asking and “answer” for "
 "answering."
 msgstr ""
-"Invitiamo tutti a usare lo spazio \"domanda\" per chiedere e \"risposta\" "
-"per la rispondere."
+"Ti invitiamo quindi ad usare lo spazio \"domanda\" per chiedere e \"risposta\" "
+"per rispondere."
 
 #: templates/help.html:22
 msgid ""
 "Despite that, each question and answer can be commented – \n"
 "    the comments are good for the limited discussions."
 msgstr ""
-"Nonostante ciò, ogni domanda e  risposta possono essere commentati - i "
-"commenti sono buoni per le discussioni limitate."
+"In ogni caso, tutte le domande e risposte possono essere commentate - i "
+"commenti sono un ottimo mezzo per creare discussioni limitate."
 
 #: templates/help.html:26
 msgid "Please search before asking your questions"
-msgstr "Si prega di ricercare prima di fare una domanda"
+msgstr "Prima di fare una domanda, sei pregato di cercare nel forum se ne esiste già una simile!"
 
 #: templates/help.html:27
 msgid ""
 "Type your question in the search bar and see whether a similar question has "
 "been asked before"
 msgstr ""
-"Digitare la domanda nella barra di ricerca e vedere se una simile domanda è "
-"stata chiesta prima"
+"Basta digitare la domanda nella barra di ricerca e vedere se una domanda simile è "
+"già stata posta in precedenza"
 
 #: templates/help.html:29
 msgid "Search has advanced capabilities:"
@@ -5143,7 +5143,7 @@ msgstr "per la ricerca di tag - immettere [tag: qualchetag] o #qualchetag"
 #: templates/help.html:33
 msgid "to search by user - enter [user: somename] or @somename or @\"some name\""
 msgstr ""
-"per la ricerca dall'utente - immettere [utente: qualchenome] o @qualchenome "
+"per la ricerca per utente - immettere [utente: qualchenome] o @qualchenome "
 "o @\"qualche nome\""
 
 #: templates/help.html:35
@@ -5160,7 +5160,7 @@ msgid ""
 "page, where the search tags can be entered as well"
 msgstr ""
 "Infine, è disponibile nella barra laterale della pagina principale un box di"
-" ricerca tag, dove i tag possono essere inseriti comunque"
+" ricerca per tag, dove i tag possono anche essere inseriti"
 
 #: templates/help.html:40
 msgid ""
@@ -5173,7 +5173,7 @@ msgstr ""
 
 #: templates/help.html:42
 msgid "Voting"
-msgstr "Voto"
+msgstr "Voti"
 
 #: templates/help.html:44
 #, python-format
@@ -5181,8 +5181,8 @@ msgid ""
 "Voting in %(app_name)s helps to select best answers and thank most helpful "
 "users."
 msgstr ""
-"Votare in %(app_name)s  aiuta a selezionare le migliori risposte e premiare "
-"gli utenti più utili."
+"Votare in %(app_name)s  aiuta a selezionare le migliori risposte ed a premiare "
+"gli utenti più attivi."
 
 #: templates/help.html:47
 #, python-format
@@ -5190,7 +5190,7 @@ msgid ""
 "Please vote when you find helpful information,\n"
 "    it really helps the %(app_name)s community."
 msgstr ""
-"Si prega di votare quando troverete informazioni utili, aiuta molto la "
+"Sei pregato di votare quando troverai delle informazioni utili - aiuta molto la "
 "comunità di %(app_name)s."
 
 #: templates/help.html:51
@@ -5203,8 +5203,8 @@ msgid ""
 "    follow users and conversations and report inappropriate content by flagging it."
 msgstr ""
 "Inoltre, è possibile menzionare (@mention) gli utenti in tutto il testo per "
-"ottenere la loro attenzione, seguire le conversazioni e gli utenti e "
-"segnalare contenuti inappropriati contrassegnandoli."
+"ottenere la loro attenzione, seguire conversazioni e utenti e "
+"segnalare contenuti inappropriati."
 
 #: templates/help.html:56
 msgid "Enjoy."
@@ -7826,7 +7826,7 @@ msgstr[1] "voti"
 
 #: templates/widgets/scope_nav.html:6
 msgid "ALL"
-msgstr "TUTTO"
+msgstr "TUTTE"
 
 #: templates/widgets/scope_nav.html:8
 msgid "see unanswered questions"
@@ -7842,7 +7842,7 @@ msgstr "vedi le tue domande preferite"
 
 #: templates/widgets/scope_nav.html:11
 msgid "FOLLOWED"
-msgstr "SEGUITE"
+msgstr "PREFERITE"
 
 #: templates/widgets/scope_nav.html:14
 msgid "Please ask your question here"
