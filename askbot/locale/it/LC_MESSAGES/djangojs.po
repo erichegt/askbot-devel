@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-03 08:30-0500\n"
+"POT-Creation-Date: 2012-10-10 05:28-0500\n"
 "PO-Revision-Date: 2012-10-03 08:21\n"
 "Last-Translator:   <stefano.mancini@devinterface.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -87,7 +87,7 @@ msgid "send"
 msgstr "invia"
 
 #: media/js/group_messaging.js:163 media/js/post.js:2423
-#: media/js/post.js.py:3920 media/js/user.js:886
+#: media/js/post.js.py:3928 media/js/user.js:886
 msgid "cancel"
 msgstr "annulla"
 
@@ -235,7 +235,7 @@ msgstr "salva il commento"
 msgid "Please enter question title (>10 characters)"
 msgstr "Per piacere inserisce un titolo per la tua domanda (>10 caratteri)"
 
-#: media/js/post.js:2417 media/js/post.js.py:3194 media/js/post.js.py:3382
+#: media/js/post.js:2417 media/js/post.js.py:3202 media/js/post.js.py:3390
 msgid "save"
 msgstr "salva"
 
@@ -247,15 +247,15 @@ msgstr "Immetti l'url del logo o carica un'immagine"
 msgid "Do you really want to remove the image?"
 msgstr "Rimuovere l'immagine?"
 
-#: media/js/post.js:2669
+#: media/js/post.js:2677
 msgid "change logo"
 msgstr "cambia il logo"
 
-#: media/js/post.js:2670
+#: media/js/post.js:2678
 msgid "add logo"
 msgstr "aggiungi logo"
 
-#: media/js/post.js:2772
+#: media/js/post.js:2780
 #, perl-format
 msgid ""
 "tag \"%s\" was already added, no need to repeat (press \"escape\" to delete)"
@@ -263,50 +263,50 @@ msgstr ""
 "il tag \"%s\" è stato già aggiunto, non c'è bisogno di ripeterlo (premere "
 "\"ESC\" per eliminare)"
 
-#: media/js/post.js:2781
+#: media/js/post.js:2789
 #, perl-format
 msgid "a maximum of %s tag is allowed"
 msgid_plural "a maximum of %s tags are allowed"
 msgstr[0] "è consentito un massimo di %s tag"
 msgstr[1] "è consentito un massimo di %s tag"
 
-#: media/js/post.js:3124
+#: media/js/post.js:3132
 msgid "Delete category?"
 msgstr "Eliminare la categoria?"
 
-#: media/js/post.js:3213
+#: media/js/post.js:3221
 msgid "edit"
 msgstr "modifica"
 
-#: media/js/post.js:3300
+#: media/js/post.js:3308
 msgid "category name cannot be empty"
 msgstr "il contenuto non può essere vuoto"
 
-#: media/js/post.js:3335
+#: media/js/post.js:3343
 msgid "already exists at the current level!"
 msgstr "già esiste al livello di corrente!"
 
-#: media/js/post.js:3371
+#: media/js/post.js:3379
 msgid "add category"
 msgstr "aggiungi categoria"
 
-#: media/js/post.js:3916
+#: media/js/post.js:3924
 msgid "save tags"
 msgstr "salva Tag"
 
-#: media/js/post.js:3997 media/js/post.js.py:4033
+#: media/js/post.js:4005 media/js/post.js.py:4041
 msgid "User name:"
 msgstr "Nome utente:"
 
-#: media/js/post.js:4019
+#: media/js/post.js:4027
 msgid "Group name:"
 msgstr "Nome gruppo:"
 
-#: media/js/post.js:4046
+#: media/js/post.js:4054
 msgid "Shared with the following users:"
 msgstr "Condividi con i seguenti utenti:"
 
-#: media/js/post.js:4052
+#: media/js/post.js:4060
 msgid "Shared with the following groups:"
 msgstr "Condividi con i seguenti gruppi:"
 
@@ -433,59 +433,59 @@ msgstr "Esiste già un gruppo %(nome)s . I nomi dei gruppi sono minuscole."
 msgid "see questions tagged '%s'"
 msgstr "vedi domande taggate '%s'"
 
-#: media/js/utils.js:2775
+#: media/js/utils.js:2777
 msgid "ago"
 msgstr "fa"
 
-#: media/js/utils.js:2776
+#: media/js/utils.js:2778
 msgid "from now"
 msgstr "da ora"
 
-#: media/js/utils.js:2777
+#: media/js/utils.js:2779
 msgid "just now"
 msgstr "in questo momento"
 
-#: media/js/utils.js:2778
+#: media/js/utils.js:2780
 msgid "about a minute"
 msgstr "circa un minuto"
 
-#: media/js/utils.js:2779
+#: media/js/utils.js:2781
 #, perl-format
 msgid "%d minutes"
 msgstr "%d minuti"
 
-#: media/js/utils.js:2780
+#: media/js/utils.js:2782
 msgid "about an hour"
 msgstr "circa un'ora"
 
-#: media/js/utils.js:2781
+#: media/js/utils.js:2783
 #, perl-format
 msgid "%d hours"
 msgstr "%d ore"
 
-#: media/js/utils.js:2782
+#: media/js/utils.js:2784
 msgid "yesterday"
 msgstr "ieri"
 
-#: media/js/utils.js:2783
+#: media/js/utils.js:2785
 #, perl-format
 msgid "%d days"
 msgstr "%d giorni"
 
-#: media/js/utils.js:2784
+#: media/js/utils.js:2786
 msgid "about a month"
 msgstr "circa un mese"
 
-#: media/js/utils.js:2785
+#: media/js/utils.js:2787
 #, perl-format
 msgid "%d months"
 msgstr "%d mesi"
 
-#: media/js/utils.js:2786
+#: media/js/utils.js:2788
 msgid "about a year"
 msgstr "circa un anno"
 
-#: media/js/utils.js:2787
+#: media/js/utils.js:2789
 #, perl-format
 msgid "%d years"
 msgstr "%d anni"

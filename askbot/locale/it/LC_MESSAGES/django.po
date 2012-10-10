@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-03 06:29-0500\n"
-"PO-Revision-Date: 2012-10-03 08:38\n"
+"POT-Creation-Date: 2012-10-10 05:27-0500\n"
+"PO-Revision-Date: 2012-10-10 05:30\n"
 "Last-Translator:   <stefano.mancini@devinterface.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -1722,76 +1722,80 @@ msgid "Accept own answer"
 msgstr "Accetta la tua riposta"
 
 #: conf/minimum_reputation.py:58
+msgid "Accept any answer"
+msgstr "Accetta qualsiasi riposta"
+
+#: conf/minimum_reputation.py:67
 msgid "Flag offensive"
 msgstr "Segnalare come inappropriato"
 
-#: conf/minimum_reputation.py:67
+#: conf/minimum_reputation.py:76
 msgid "Leave comments"
 msgstr "Lasciare commenti"
 
-#: conf/minimum_reputation.py:76
+#: conf/minimum_reputation.py:85
 msgid "Delete comments posted by others"
 msgstr "Cancellare commenti inviati da altri"
 
-#: conf/minimum_reputation.py:85
+#: conf/minimum_reputation.py:94
 msgid "Delete questions and answers posted by others"
 msgstr "Cancellare domande e risposte inviate da altri"
 
-#: conf/minimum_reputation.py:94
+#: conf/minimum_reputation.py:103
 msgid "Upload files"
 msgstr "Caricare files"
 
-#: conf/minimum_reputation.py:103
+#: conf/minimum_reputation.py:112
 msgid "Close own questions"
 msgstr "Chiudere le proprie domande"
 
-#: conf/minimum_reputation.py:112
+#: conf/minimum_reputation.py:121
 msgid "Retag questions posted by other people"
 msgstr "Ritaggare domande inviate da altri utenti"
 
-#: conf/minimum_reputation.py:121
+#: conf/minimum_reputation.py:130
 msgid "Reopen own questions"
 msgstr "Riaprire le proprie domande"
 
-#: conf/minimum_reputation.py:130
+#: conf/minimum_reputation.py:139
 msgid "Edit community wiki posts"
 msgstr "Modificare le domande comunitarie"
 
-#: conf/minimum_reputation.py:139
+#: conf/minimum_reputation.py:148
 msgid "Edit posts authored by other people"
 msgstr "Modificare i post scritti da altri utenti"
 
-#: conf/minimum_reputation.py:148
+#: conf/minimum_reputation.py:157
 msgid "View offensive flags"
 msgstr "Visualizzare i flag inappropriati"
 
-#: conf/minimum_reputation.py:157
+#: conf/minimum_reputation.py:166
 msgid "Close questions asked by others"
 msgstr "Chiudere domande poste da altri"
 
-#: conf/minimum_reputation.py:166
+#: conf/minimum_reputation.py:175
 msgid "Lock posts"
 msgstr "Bloccare posts"
 
-#: conf/minimum_reputation.py:175
+#: conf/minimum_reputation.py:184
 msgid "Remove rel=nofollow from own homepage"
 msgstr ""
 
-#: conf/minimum_reputation.py:177
+#: conf/minimum_reputation.py:186
 msgid ""
 "When a search engine crawler will see a rel=nofollow attribute on a link - "
 "the link will not count towards the rank of the users personal site."
 msgstr ""
 
-#: conf/minimum_reputation.py:189
+#: conf/minimum_reputation.py:198
 msgid "Post answers and comments by email"
 msgstr ""
 
-#: conf/minimum_reputation.py:198
+#: conf/minimum_reputation.py:207
 msgid "Trigger email notifications"
 msgstr ""
 
-#: conf/minimum_reputation.py:200
+#: conf/minimum_reputation.py:209
 msgid ""
 "Reduces spam as notifications wont't be sent to regular users for posts of "
 "low karma users"
@@ -2978,7 +2982,7 @@ msgstr ""
 "nuovi post fintanto che il problema non è stato risolto. Sei pregato di "
 "contattare l'amministratore del forum per trovare una soluzione. "
 
-#: const/message_keys.py:52 models/__init__.py:994
+#: const/message_keys.py:52 models/__init__.py:999
 msgid ""
 "Sorry, your account appears to be suspended and you cannot make new posts "
 "until this issue is resolved. You can, however edit your existing posts. "
@@ -3253,17 +3257,17 @@ msgstr ""
 msgid "Your %(provider)s login works fine"
 msgstr "Il tuo metodo di accesso con %(provider)s funziona"
 
-#: deps/django_authopenid/views.py:1047
+#: deps/django_authopenid/views.py:1048
 msgid ""
 "Sorry, registration failed. Please ask the site administrator for help."
 msgstr "Siamo spiacenti, registrazione non riuscita."
 
-#: deps/django_authopenid/views.py:1193
+#: deps/django_authopenid/views.py:1194
 #, python-format
 msgid "Recover your %(site)s account"
 msgstr "Recupera la password su %(site)s"
 
-#: deps/django_authopenid/views.py:1229
+#: deps/django_authopenid/views.py:1230
 msgid "Please check your email and visit the enclosed link."
 msgstr "Prego controlla la tua email e visita l'indirizzo ivi contenuto"
 
@@ -3522,7 +3526,7 @@ msgstr[1] "%(question_count)d domanda non risposta riguardo %(topics)s"
 msgid "Please log in to use %s"
 msgstr "Accedi o registrati per usare %s"
 
-#: models/__init__.py:505
+#: models/__init__.py:507
 msgid ""
 "Sorry, you cannot accept or unaccept best answers because your account is "
 "blocked"
@@ -3530,14 +3534,14 @@ msgstr ""
 "Mi spiace, non puoi accettare risposte perché il tuo account è stato "
 "bloccato"
 
-#: models/__init__.py:509
+#: models/__init__.py:511
 msgid ""
 "Sorry, you cannot accept or unaccept best answers because your account is "
 "suspended"
 msgstr ""
 "Mi spiace, non puoi accettare risposte perché il tuo account è sospeso"
 
-#: models/__init__.py:522
+#: models/__init__.py:525
 #, python-format
 msgid ""
 ">%(points)s points required to accept or unaccept  your own answer to your "
@@ -3546,7 +3550,7 @@ msgstr ""
 "Ti servono più di %(points)s punti per accettare o negare la risposta alla "
 "tua stessa domanda"
 
-#: models/__init__.py:544
+#: models/__init__.py:549
 #, python-format
 msgid ""
 "Sorry, you will be able to accept this answer only after %(will_be_able_at)s"
@@ -3554,7 +3558,7 @@ msgstr ""
 "Siamo spiacenti, sarai in grado di accettare questa risposta solo dopo "
 "%(will_be_able_at)s"
 
-#: models/__init__.py:552
+#: models/__init__.py:557
 #, python-format
 msgid ""
 "Sorry, only moderators or original author of the question  - %(username)s - "
@@ -3563,49 +3567,49 @@ msgstr ""
 "Mi spiace, solo il moderatore o l'autore della domanda, %(username)s, può "
 "accettare la risposta migliore"
 
-#: models/__init__.py:575
+#: models/__init__.py:580
 msgid "Sorry, you cannot vote for your own posts"
 msgstr "Mi spiace, non puoi votare per i tuoi post"
 
-#: models/__init__.py:579
+#: models/__init__.py:584
 msgid "Sorry your account appears to be blocked "
 msgstr "Mi spiace, il tuo account è stato bloccato"
 
-#: models/__init__.py:584
+#: models/__init__.py:589
 msgid "Sorry your account appears to be suspended "
 msgstr "Mi spiace, il tuo account è stato sospeso"
 
-#: models/__init__.py:594
+#: models/__init__.py:599
 #, python-format
 msgid ">%(points)s points required to upvote"
 msgstr ""
 "Serve avere più di %(points)s punti reputazione per poter votare a favore"
 
-#: models/__init__.py:600
+#: models/__init__.py:605
 #, python-format
 msgid ">%(points)s points required to downvote"
 msgstr ""
 "Serve avere più di %(points)s punti reputazione per poter votare contro"
 
-#: models/__init__.py:615
+#: models/__init__.py:620
 msgid "Sorry, blocked users cannot upload files"
 msgstr "Mi spiace, gli utenti bloccati non possono caricare files"
 
-#: models/__init__.py:616
+#: models/__init__.py:621
 msgid "Sorry, suspended users cannot upload files"
 msgstr "Mi spiace, gli utenti sospesi non possono caricare files"
 
-#: models/__init__.py:618
+#: models/__init__.py:623
 #, python-format
 msgid "sorry, file uploading requires karma >%(min_rep)s"
 msgstr "siamo spiacenti, l'upload dei file richiede un karma >%(min_rep)s"
 
-#: models/__init__.py:650
+#: models/__init__.py:655
 msgid "Sorry, you already gave an answer, please edit it instead."
 msgstr ""
 "Siamo spiacenti, hai già dato una risposta, si prega di modificarla invece."
 
-#: models/__init__.py:674
+#: models/__init__.py:679
 #, python-format
 msgid ""
 "Sorry, comments (except the last one) are editable only within %(minutes)s "
@@ -3620,20 +3624,20 @@ msgstr[1] ""
 "Siamo spiacenti, i commenti (eccetto l'ultimo) sono editabili solo dopo "
 "%(minutes)s minuto  dalla pubblicazione "
 
-#: models/__init__.py:686
+#: models/__init__.py:691
 msgid "Sorry, but only post owners or moderators can edit comments"
 msgstr ""
 "Mi spiace, solo gli autori, i moderatori e gli amministratori  possono "
 "modificare i commenti"
 
-#: models/__init__.py:711
+#: models/__init__.py:716
 msgid ""
 "Sorry, since your account is suspended you can comment only your own posts"
 msgstr ""
 "Mi spiace, visto che il tuo account è sospeso puoi commentare solo i tuoi "
 "post"
 
-#: models/__init__.py:715
+#: models/__init__.py:720
 #, python-format
 msgid ""
 "Sorry, to comment any post a minimum reputation of %(min_rep)s points is "
@@ -3643,7 +3647,7 @@ msgstr ""
 "Per commentare gli altri post serve avere almeno %(min_rep)s punti "
 "reputazione. "
 
-#: models/__init__.py:745
+#: models/__init__.py:750
 msgid ""
 "This post has been deleted and can be seen only by post owners, site "
 "administrators and moderators"
@@ -3651,7 +3655,7 @@ msgstr ""
 "Questo post è stato cancellato e può essere consultato solo dall'autore, dai"
 " moderatori e dagli amministratori"
 
-#: models/__init__.py:762
+#: models/__init__.py:767
 msgid ""
 "Sorry, only moderators, site administrators and post owners can edit deleted"
 " posts"
@@ -3659,19 +3663,19 @@ msgstr ""
 "Mi spiace, solo l'autore, i moderatori e gli amministratori possono "
 "modificare un post cancellato."
 
-#: models/__init__.py:777
+#: models/__init__.py:782
 msgid "Sorry, since your account is blocked you cannot edit posts"
 msgstr ""
 "Mi spiace, non puoi modificare alcun post perché il tuo account è stato "
 "bloccato"
 
-#: models/__init__.py:781
+#: models/__init__.py:786
 msgid ""
 "Sorry, since your account is suspended you can edit only your own posts"
 msgstr ""
 "Mi spiace, puoi modificare solo i tuoi post perché il tuo account è sospeso"
 
-#: models/__init__.py:786
+#: models/__init__.py:791
 #, python-format
 msgid ""
 "Sorry, to edit wiki posts, a minimum reputation of %(min_rep)s is required"
@@ -3679,7 +3683,7 @@ msgstr ""
 "Mi spiace, per modificare i post appartenenti allo wiki servono almeno "
 "%(min_rep)s punti reputazione"
 
-#: models/__init__.py:793
+#: models/__init__.py:798
 #, python-format
 msgid ""
 "Sorry, to edit other people's posts, a minimum reputation of %(min_rep)s is "
@@ -3688,7 +3692,7 @@ msgstr ""
 "Mi spiace, per modificare i post altrui servono almeno %(min_rep)s punti "
 "reputazione"
 
-#: models/__init__.py:856
+#: models/__init__.py:861
 msgid ""
 "Sorry, cannot delete your question since it has an upvoted answer posted by "
 "someone else"
@@ -3702,17 +3706,17 @@ msgstr[1] ""
 "Mi spiace, non puoi cancellare la tua domanda perché qualcun altro ha "
 "fornito delle risposte con voti a favore"
 
-#: models/__init__.py:871
+#: models/__init__.py:876
 msgid "Sorry, since your account is blocked you cannot delete posts"
 msgstr "Mi spiace, non puoi cancellare post perché il tuo account è blocato"
 
-#: models/__init__.py:875
+#: models/__init__.py:880
 msgid ""
 "Sorry, since your account is suspended you can delete only your own posts"
 msgstr ""
 "Mi spiace, puoi cancellare solo i tuoi post perché il tuo account è sospeso"
 
-#: models/__init__.py:879
+#: models/__init__.py:884
 #, python-format
 msgid ""
 "Sorry, to deleted other people' posts, a minimum reputation of %(min_rep)s "
@@ -3721,16 +3725,16 @@ msgstr ""
 "Mi spiace, per cancellare i post altrui servono almeno %(min_rep)s punti "
 "reputazione"
 
-#: models/__init__.py:899
+#: models/__init__.py:904
 msgid "Sorry, since your account is blocked you cannot close questions"
 msgstr ""
 "Mi spiace, non puoi chiudere domande perché il tuo account è stato bloccato"
 
-#: models/__init__.py:903
+#: models/__init__.py:908
 msgid "Sorry, since your account is suspended you cannot close questions"
 msgstr "Mi spiace, non puoi chiudere domande perché il tuo account è sospeso"
 
-#: models/__init__.py:907
+#: models/__init__.py:912
 #, python-format
 msgid ""
 "Sorry, to close other people' posts, a minimum reputation of %(min_rep)s is "
@@ -3739,7 +3743,7 @@ msgstr ""
 "Mi spiace, per chiudere post altrui servono almeno %(min_rep)s punti "
 "reputazione."
 
-#: models/__init__.py:916
+#: models/__init__.py:921
 #, python-format
 msgid ""
 "Sorry, to close own question a minimum reputation of %(min_rep)s is required"
@@ -3747,7 +3751,7 @@ msgstr ""
 "Mi spiace, per chiudere una tua domanda servono almeno %(min_rep)s punti "
 "reputazione."
 
-#: models/__init__.py:942
+#: models/__init__.py:947
 #, python-format
 msgid ""
 "Sorry, only administrators, moderators or post owners with reputation > "
@@ -3756,7 +3760,7 @@ msgstr ""
 "Mi spiace, solo amministratori, moderatori e autori con più di %(min_rep)s "
 "punti reputazione possono riaprire domande."
 
-#: models/__init__.py:948
+#: models/__init__.py:953
 #, python-format
 msgid ""
 "Sorry, to reopen own question a minimum reputation of %(min_rep)s is "
@@ -3765,26 +3769,26 @@ msgstr ""
 "Mi spiace, per riaprire una tua domanda devi avere almeno %(min_rep)s punti "
 "reputazione."
 
-#: models/__init__.py:953
+#: models/__init__.py:958
 msgid "Sorry, you cannot reopen questions because your account is blocked"
 msgstr ""
 "Mi spiace, non puoi riaprire domande perché il tuo account è stato bloccato"
 
-#: models/__init__.py:958
+#: models/__init__.py:963
 msgid "Sorry, you cannot reopen questions because your account is suspended"
 msgstr "Mi spiace, non puoi riaprire domande perché il tuo account è sospeso"
 
-#: models/__init__.py:981
+#: models/__init__.py:986
 msgid "You have flagged this question before and cannot do it more than once"
 msgstr ""
 "Hai selezionato la domanda in precedenza e non puoi farlo più di una volta"
 
-#: models/__init__.py:989
+#: models/__init__.py:994
 msgid ""
 "Sorry, since your account is blocked you cannot flag posts as offensive"
 msgstr "Mi spiace, non puoi cancellare post perché il tuo account è blocato"
 
-#: models/__init__.py:1000
+#: models/__init__.py:1005
 #, python-format
 msgid ""
 "Sorry, to flag posts as offensive a minimum reputation of %(min_rep)s is "
@@ -3793,7 +3797,7 @@ msgstr ""
 "Mi spiace, servono almeno %(min_rep)s punti reputazione per dichiarare un "
 "post come offensivo"
 
-#: models/__init__.py:1021
+#: models/__init__.py:1026
 #, python-format
 msgid ""
 "Sorry, you have exhausted the maximum number of %(max_flags_per_day)s "
@@ -3802,15 +3806,15 @@ msgstr ""
 "siamo spiacenti, hai esaurito il massimo numero di %(max_flags_per_day)s "
 "flag offensivi al giorno"
 
-#: models/__init__.py:1033
+#: models/__init__.py:1038
 msgid "cannot remove non-existing flag"
 msgstr "Non è possibile rimuovere un flag non esistente"
 
-#: models/__init__.py:1039
+#: models/__init__.py:1044
 msgid "Sorry, since your account is blocked you cannot remove flags"
 msgstr "Mi spiace, non puoi cancellare i flag perché il tuo account è blocato"
 
-#: models/__init__.py:1043
+#: models/__init__.py:1048
 msgid ""
 "Sorry, your account appears to be suspended and you cannot remove flags. "
 "Please contact the forum administrator to reach a resolution."
@@ -3819,7 +3823,7 @@ msgstr ""
 "rimuovere i flag. Prego contatta un amministratore per risolvere il "
 "problema."
 
-#: models/__init__.py:1049
+#: models/__init__.py:1054
 #, python-format
 msgid "Sorry, to flag posts a minimum reputation of %(min_rep)d is required"
 msgid_plural ""
@@ -3831,15 +3835,15 @@ msgstr[1] ""
 "Mi spiace, serve almeno %(min_rep)d punto reputazione per cambiare i tag di "
 "una domanda"
 
-#: models/__init__.py:1068
+#: models/__init__.py:1073
 msgid "you don't have the permission to remove all flags"
 msgstr "Non hai i permessi per modificare i valori."
 
-#: models/__init__.py:1069
+#: models/__init__.py:1074
 msgid "no flags for this entry"
 msgstr "nessun flag per questo elemento"
 
-#: models/__init__.py:1093
+#: models/__init__.py:1098
 msgid ""
 "Sorry, only question owners, site administrators and moderators can retag "
 "deleted questions"
@@ -3847,19 +3851,19 @@ msgstr ""
 "Mi spiace, solo gli autori, i moderatori e gli amministratori  possono "
 "cambiare i tag di una domanda cancellata"
 
-#: models/__init__.py:1100
+#: models/__init__.py:1105
 msgid "Sorry, since your account is blocked you cannot retag questions"
 msgstr ""
 "Mi spiace, non puoi cambiare i tag perché il tuo account è stato bloccato."
 
-#: models/__init__.py:1104
+#: models/__init__.py:1109
 msgid ""
 "Sorry, since your account is suspended you can retag only your own questions"
 msgstr ""
 "Mi spiace, puoi cambiare i tag solo alle tue domande perché il tuo account è"
 " sospeso."
 
-#: models/__init__.py:1108
+#: models/__init__.py:1113
 #, python-format
 msgid ""
 "Sorry, to retag questions a minimum reputation of %(min_rep)s is required"
@@ -3867,65 +3871,65 @@ msgstr ""
 "Mi spiace, servono almeno %(min_rep)s punti reputazione per cambiare i tag "
 "di una domanda"
 
-#: models/__init__.py:1127
+#: models/__init__.py:1132
 msgid "Sorry, since your account is blocked you cannot delete comment"
 msgstr ""
 "Mi spiace, non puoi cancellare commenti perché il tuo account è stato "
 "bloccato."
 
-#: models/__init__.py:1131
+#: models/__init__.py:1136
 msgid ""
 "Sorry, since your account is suspended you can delete only your own comments"
 msgstr ""
 "Mi spiace, puoi cancellare solo i tuoi commenti perché il tuo account è "
 "sospeso."
 
-#: models/__init__.py:1135
+#: models/__init__.py:1140
 #, python-format
 msgid "Sorry, to delete comments reputation of %(min_rep)s is required"
 msgstr ""
 "Mi spiace, servono almeno %(min_rep)s punti reputazione per cancellare "
 "commenti."
 
-#: models/__init__.py:1159
+#: models/__init__.py:1164
 msgid "sorry, but older votes cannot be revoked"
 msgstr "siamo spiacenti, ma i vecchi voti non possono essere tolti"
 
-#: models/__init__.py:1815 utils/functions.py:97
+#: models/__init__.py:1820 utils/functions.py:97
 #, python-format
 msgid "on %(date)s"
 msgstr "il %(date)s"
 
-#: models/__init__.py:1817
+#: models/__init__.py:1822
 msgid "in two days"
 msgstr "in due giorni"
 
-#: models/__init__.py:1819
+#: models/__init__.py:1824
 msgid "tomorrow"
 msgstr "domani"
 
-#: models/__init__.py:1821
+#: models/__init__.py:1826
 #, python-format
 msgid "in %(hr)d hour"
 msgid_plural "in %(hr)d hours"
 msgstr[0] "%(hr)d ora fa"
 msgstr[1] "%(hr)d ore fa"
 
-#: models/__init__.py:1823
+#: models/__init__.py:1828
 #, python-format
 msgid "in %(min)d min"
 msgid_plural "in %(min)d mins"
 msgstr[0] "%(min)d minuto fa"
 msgstr[1] "%(min)d minuti fa"
 
-#: models/__init__.py:1824
+#: models/__init__.py:1829
 #, python-format
 msgid "%(days)d day"
 msgid_plural "%(days)d days"
 msgstr[0] "%(days)d giorni"
 msgstr[1] "%(days)d giorno"
 
-#: models/__init__.py:1826
+#: models/__init__.py:1831
 #, python-format
 msgid ""
 "New users must wait %(days)s before answering their own question.  You can "
@@ -3934,114 +3938,114 @@ msgstr ""
 "I nuovi utenti devono aspettare %(days)s prima di poter rispondere alle "
 "proprie domande.  Puoi pubblicare una risposta %(left)s"
 
-#: models/__init__.py:2004 templates/email/feedback_email.txt:9
+#: models/__init__.py:2019 templates/email/feedback_email.txt:9
 msgid "Anonymous"
 msgstr "utente non registrato"
 
-#: models/__init__.py:2108
+#: models/__init__.py:2123
 msgid "Site Adminstrator"
 msgstr "Amministratore del sito"
 
-#: models/__init__.py:2110
+#: models/__init__.py:2125
 msgid "Forum Moderator"
 msgstr "Moderatore del forum"
 
-#: models/__init__.py:2112
+#: models/__init__.py:2127
 msgid "Suspended User"
 msgstr "Utente sospeso"
 
-#: models/__init__.py:2114
+#: models/__init__.py:2129
 msgid "Blocked User"
 msgstr "Utente bloccato"
 
-#: models/__init__.py:2116
+#: models/__init__.py:2131
 msgid "Registered User"
 msgstr "Utente registrato"
 
-#: models/__init__.py:2118
+#: models/__init__.py:2133
 msgid "Watched User"
 msgstr "Utente in prova"
 
-#: models/__init__.py:2120
+#: models/__init__.py:2135
 msgid "Approved User"
 msgstr "Utente approvato"
 
-#: models/__init__.py:2302
+#: models/__init__.py:2317
 #, python-format
 msgid "%(username)s karma is %(reputation)s"
 msgstr "%(username)s ha %(reputation)s punti reputazione"
 
-#: models/__init__.py:2312
+#: models/__init__.py:2327
 #, python-format
 msgid "one gold badge"
 msgid_plural "%(count)d gold badges"
 msgstr[0] "%(count)d medaglie d'oro"
 msgstr[1] "una medaglia d'oro"
 
-#: models/__init__.py:2319
+#: models/__init__.py:2334
 #, python-format
 msgid "one silver badge"
 msgid_plural "%(count)d silver badges"
 msgstr[0] "una medaglia d'argento"
 msgstr[1] "%(count)d medaglie d'argento"
 
-#: models/__init__.py:2326
+#: models/__init__.py:2341
 #, python-format
 msgid "one bronze badge"
 msgid_plural "%(count)d bronze badges"
 msgstr[0] "una medaglia di bronzo"
 msgstr[1] "%(count)d medaglie di bronzo"
 
-#: models/__init__.py:2337
+#: models/__init__.py:2352
 #, python-format
 msgid "%(item1)s and %(item2)s"
 msgstr "%(item1)s e %(item2)s"
 
-#: models/__init__.py:2341
+#: models/__init__.py:2356
 #, python-format
 msgid "%(user)s has %(badges)s"
 msgstr "%(user)s ha %(badges)s"
 
-#: models/__init__.py:2923
+#: models/__init__.py:2948
 #, python-format
 msgid "%(user)s shared a %(post_link)s."
 msgstr "%(user)s ha condiviso %(post_link)s."
 
-#: models/__init__.py:2926 models/__init__.py:2936
+#: models/__init__.py:2951 models/__init__.py:2961
 #, python-format
 msgid "%(user)s edited a %(post_link)s."
 msgstr "%(user)s ha modificato %(post_link)s."
 
-#: models/__init__.py:2928
+#: models/__init__.py:2953
 #, python-format
 msgid "%(user)s posted a %(post_link)s"
 msgstr "%(user)s ha pubblicato un %(post_link)s"
 
-#: models/__init__.py:2931
+#: models/__init__.py:2956
 #, python-format
 msgid "%(user)s edited an %(post_link)s."
 msgstr "%(user)s ha modificato %(post_link)s."
 
-#: models/__init__.py:2933
+#: models/__init__.py:2958
 #, python-format
 msgid "%(user)s posted an %(post_link)s."
 msgstr "%(user)s ha pubblicato un %(post_link)s"
 
-#: models/__init__.py:2938
+#: models/__init__.py:2963
 #, python-format
 msgid "%(user)s posted a %(post_link)s."
 msgstr "%(user)s ha pubblicato un %(post_link)s"
 
-#: models/__init__.py:2954
+#: models/__init__.py:2979
 msgid "To reply, PLEASE WRITE ABOVE THIS LINE."
 msgstr "Per rispondere, si prega di scrivere di sopra di questa linea."
 
-#: models/__init__.py:2986
+#: models/__init__.py:3011
 #, python-format
 msgid "\"%(title)s\""
 msgstr "\"%(title)s\""
 
-#: models/__init__.py:3210
+#: models/__init__.py:3235
 #, python-format
 msgid ""
 "Congratulations, you have received a badge '%(badge_name)s'. Check out <a "
@@ -4050,12 +4054,12 @@ msgstr ""
 "Congratulazioni, hai ricevuto la medaglia %(badge_name)s. Controlla il <a "
 "href=\"%(user_profile)s\">tuo profilo</a>."
 
-#: models/__init__.py:3482
+#: models/__init__.py:3507
 #, python-format
 msgid "Welcome to %(site_name)s"
 msgstr "Benvenuto in %(site_name)s"
 
-#: models/__init__.py:3503 views/commands.py:678
+#: models/__init__.py:3528 views/commands.py:678
 msgid "Your tag subscription was saved, thanks!"
 msgstr "La tua sottoscrizione al tag è stata salvata."
 
@@ -4323,11 +4327,11 @@ msgstr "Esperto"
 msgid "Very active in one tag"
 msgstr "Molto attivo in domande con lo stesso tag"
 
-#: models/post.py:1477
+#: models/post.py:1483
 msgid "Sorry, this question has been deleted and is no longer accessible"
 msgstr "Mi spiace, questa domanda è stata cancellata e non è più accessibile"
 
-#: models/post.py:1493
+#: models/post.py:1499
 msgid ""
 "Sorry, the answer you are looking for is no longer available, because the "
 "parent question has been removed"
@@ -4335,11 +4339,11 @@ msgstr ""
 "Siamo spiacenti, la risposta che cercavi non è più disponibile perchè la "
 "domanda originale è stata rimossa"
 
-#: models/post.py:1500
+#: models/post.py:1506
 msgid "Sorry, this answer has been removed and is no longer accessible"
 msgstr "Mi spiace, questa domanda è stata cancellata e non è più accessibile"
 
-#: models/post.py:1516
+#: models/post.py:1522
 msgid ""
 "Sorry, the comment you are looking for is no longer accessible, because the "
 "parent question has been removed"
@@ -4347,7 +4351,7 @@ msgstr ""
 "Siamo spiacenti, il commento che cercavi non è più disponibile perchè la "
 "domanda originale è stata rimossa"
 
-#: models/post.py:1523
+#: models/post.py:1529
 msgid ""
 "Sorry, the comment you are looking for is no longer accessible, because the "
 "parent answer has been removed"
@@ -4355,11 +4359,11 @@ msgstr ""
 "Siamo spiacenti, la risposta che cercavi non è più disponibile perchè la "
 "domanda originale è stata rimossa"
 
-#: models/post.py:1545
+#: models/post.py:1551
 msgid "This post is temporarily not available"
 msgstr "Questo post è temporaneamente non disponibile"
 
-#: models/post.py:2048
+#: models/post.py:2054
 #, python-format
 msgid ""
 "Thank you for your post to %(site)s. It will be published after the "
@@ -4368,12 +4372,12 @@ msgstr ""
 "Grazie per il tuo post a %(site)s. Saraà pubblicato dopo la revisione dei "
 "moderatori."
 
-#: models/post.py:2052
+#: models/post.py:2058
 #, python-format
 msgid "your post to %(site)s"
 msgstr "il tuo post in  %(site)s"
 
-#: models/post.py:2059
+#: models/post.py:2065
 msgid ""
 "Your post was placed on the moderation queue and will be published after the"
 " moderator approval."
@@ -4397,12 +4401,12 @@ msgid_plural "%(count)d answers:"
 msgstr[0] "%(count)d risposte"
 msgstr[1] "%(count)d risposta"
 
-#: models/question.py:1162
+#: models/question.py:1165
 #, python-format
 msgid "Tag %s is new and will be submitted for the moderators approval"
 msgstr "Il tag %s è nuovo e sarà presentato per l'approvazione dei moderatori"
 
-#: models/question.py:1167 models/tag.py:231
+#: models/question.py:1170 models/tag.py:231
 #, python-format
 msgid "Tags %s are new and will be submitted for the moderators approval"
 msgstr ""
@@ -4504,23 +4508,23 @@ msgstr "Ogni settimana"
 msgid "No email"
 msgstr "Mai"
 
-#: models/user.py:510
+#: models/user.py:512
 msgid "Can join when they want"
 msgstr "Possono entrare quando vogliono"
 
-#: models/user.py:511
+#: models/user.py:513
 msgid "Users ask permission"
 msgstr "Utenti chiedono il permesso"
 
-#: models/user.py:512
+#: models/user.py:514
 msgid "Moderator adds users"
 msgstr "Moderatore aggiunge utenti"
 
-#: models/user.py:561
+#: models/user.py:563
 msgid "Please give a list of valid email addresses."
 msgstr "inserisci un indirizzo e-mail valido"
 
-#: models/user.py:571
+#: models/user.py:573
 msgid "Please give a list of valid email domain names."
 msgstr "inserisci un dominio e-mail valido"
 
@@ -5086,7 +5090,8 @@ msgstr "Benvenuto,"
 #: templates/help.html:13
 #, python-format
 msgid "Thank you for using %(app_name)s, here is how it works."
-msgstr "Grazie per aver scelto di utilizzare %(app_name)s! Ecco come funziona."
+msgstr ""
+"Grazie per aver scelto di utilizzare %(app_name)s! Ecco come funziona."
 
 #: templates/help.html:16
 msgid "How questions, answers and comments work"
@@ -5097,16 +5102,16 @@ msgid ""
 "This site is for asking and answering questions, not for open-ended "
 "discussions."
 msgstr ""
-"Questo sito è stato creato per chiedere e rispondere a domande, non per discussioni "
-"aperte."
+"Questo sito è stato creato per chiedere e rispondere a domande, non per "
+"discussioni aperte."
 
 #: templates/help.html:19
 msgid ""
 "We encourage everyone to use “question” space for asking and “answer” for "
 "answering."
 msgstr ""
-"Ti invitiamo quindi ad usare lo spazio \"domanda\" per chiedere e \"risposta\" "
-"per rispondere."
+"Ti invitiamo quindi ad usare lo spazio \"domanda\" per chiedere e "
+"\"risposta\" per rispondere."
 
 #: templates/help.html:22
 msgid ""
@@ -5118,15 +5123,17 @@ msgstr ""
 
 #: templates/help.html:26
 msgid "Please search before asking your questions"
-msgstr "Prima di fare una domanda, sei pregato di cercare nel forum se ne esiste già una simile!"
+msgstr ""
+"Prima di fare una domanda, sei pregato di cercare nel forum se ne esiste già"
+" una simile!"
 
 #: templates/help.html:27
 msgid ""
 "Type your question in the search bar and see whether a similar question has "
 "been asked before"
 msgstr ""
-"Basta digitare la domanda nella barra di ricerca e vedere se una domanda simile è "
-"già stata posta in precedenza"
+"Basta digitare la domanda nella barra di ricerca e vedere se una domanda "
+"simile è già stata posta in precedenza"
 
 #: templates/help.html:29
 msgid "Search has advanced capabilities:"
@@ -5143,8 +5150,8 @@ msgstr "per la ricerca di tag - immettere [tag: qualchetag] o #qualchetag"
 #: templates/help.html:33
 msgid "to search by user - enter [user: somename] or @somename or @\"some name\""
 msgstr ""
-"per la ricerca per utente - immettere [utente: qualchenome] o @qualchenome "
-"o @\"qualche nome\""
+"per la ricerca per utente - immettere [utente: qualchenome] o @qualchenome o"
+" @\"qualche nome\""
 
 #: templates/help.html:35
 msgid ""
@@ -5181,8 +5188,8 @@ msgid ""
 "Voting in %(app_name)s helps to select best answers and thank most helpful "
 "users."
 msgstr ""
-"Votare in %(app_name)s  aiuta a selezionare le migliori risposte ed a premiare "
-"gli utenti più attivi."
+"Votare in %(app_name)s  aiuta a selezionare le migliori risposte ed a "
+"premiare gli utenti più attivi."
 
 #: templates/help.html:47
 #, python-format
@@ -5190,8 +5197,8 @@ msgid ""
 "Please vote when you find helpful information,\n"
 "    it really helps the %(app_name)s community."
 msgstr ""
-"Sei pregato di votare quando troverai delle informazioni utili - aiuta molto la "
-"comunità di %(app_name)s."
+"Sei pregato di votare quando troverai delle informazioni utili - aiuta molto"
+" la comunità di %(app_name)s."
 
 #: templates/help.html:51
 msgid "Other topics"
@@ -5203,8 +5210,8 @@ msgid ""
 "    follow users and conversations and report inappropriate content by flagging it."
 msgstr ""
 "Inoltre, è possibile menzionare (@mention) gli utenti in tutto il testo per "
-"ottenere la loro attenzione, seguire conversazioni e utenti e "
-"segnalare contenuti inappropriati."
+"ottenere la loro attenzione, seguire conversazioni e utenti e segnalare "
+"contenuti inappropriati."
 
 #: templates/help.html:56
 msgid "Enjoy."
@@ -6340,16 +6347,18 @@ msgstr "Di seguito è una copia del tuo post:"
 #, python-format
 msgid ""
 "\n"
-"%(count)s comment:\n"
+"                %(comment)s comment:\n"
+"            "
 msgid_plural ""
 "\n"
-"%(count)s comments:\n"
+"                %(comment)s comments:\n"
+"            "
 msgstr[0] ""
 "\n"
-"%(count)s commenti:\n"
+"%(comment)s commenti:"
 msgstr[1] ""
 "\n"
-"%(count)s commento:\n"
+"%(comment)s commento:"
 
 #: templates/email/re_welcome_lamson_on.html:2
 #: templates/email/re_welcome_lamson_on.html:3
@@ -6824,12 +6833,12 @@ msgid ""
 "forget to vote :)</strong> for the answers that you liked (or perhaps did "
 "not like)!"
 msgstr ""
-"<span class='big strong'>Puoi rispondere alla tua domanda</span>, "
-"ma assicurati di dare una <strong>risposta</strong> interessante. Ricorda che "
-"puoi sempre <strong>rivedere la tua domanda originale</strong>."
-"<strong>Utilizza i commenti per le discussioni</strong> e <strong>non "
-"dimenticare di votare :)</strong> per le risposte che ti sono piaciute (o che "
-"forse non ti piacciono)!"
+"<span class='big strong'>Puoi rispondere alla tua domanda</span>, ma "
+"assicurati di dare una <strong>risposta</strong> interessante. Ricorda che "
+"puoi sempre <strong>rivedere la tua domanda "
+"originale</strong>.<strong>Utilizza i commenti per le discussioni</strong> e"
+" <strong>non dimenticare di votare :)</strong> per le risposte che ti sono "
+"piaciute (o che forse non ti piacciono)!"
 
 #: templates/question/new_answer_form.html:37
 msgid ""
@@ -7701,34 +7710,38 @@ msgstr "visualizza solo risposte selezionate"
 msgid "How users join this group?"
 msgstr "Come gli utenti possono partecipare a questo gruppo?"
 
-#: templates/widgets/group_info.html:82
+#: templates/widgets/group_info.html:87
+msgid "Make group VIP"
+msgstr "Rendi un gruppo VIP"
+
+#: templates/widgets/group_info.html:93
 msgid "list of email addresses of pre-approved users"
 msgstr "elenco di indirizzi email degli utenti approvati"
 
-#: templates/widgets/group_info.html:87
+#: templates/widgets/group_info.html:98
 msgid "List of preapproved email addresses"
 msgstr "Elenco di indirizzi email preapprovati"
 
-#: templates/widgets/group_info.html:88
+#: templates/widgets/group_info.html:99
 msgid ""
 "Users with these email adderesses will be added to the group automatically."
 msgstr ""
 "Gli utenti con questi indirizzi email verranno aggiunti automaticamente al "
 "gruppo."
 
-#: templates/widgets/group_info.html:89
+#: templates/widgets/group_info.html:100
 msgid "edit preapproved emails"
 msgstr "Modifica email preapprovate"
 
-#: templates/widgets/group_info.html:93
+#: templates/widgets/group_info.html:104
 msgid "list of preapproved email address domain names"
 msgstr "elenco di nomi di dominio email approvati"
 
-#: templates/widgets/group_info.html:98
+#: templates/widgets/group_info.html:109
 msgid "List of preapproved email domain names"
 msgstr "Elenco di nomi di dominio email approvati"
 
-#: templates/widgets/group_info.html:99
+#: templates/widgets/group_info.html:110
 msgid ""
 "Users whose email adderesses belong to these domains will be added to the "
 "group automatically."
@@ -7736,7 +7749,7 @@ msgstr ""
 "Gli utenti i cui indirizzi email appartengono a questi domini verranno "
 "aggiunti automaticamente al gruppo."
 
-#: templates/widgets/group_info.html:100
+#: templates/widgets/group_info.html:111
 msgid "edit preapproved email domains"
 msgstr "modifica i domini email approvati"
 
@@ -8115,27 +8128,27 @@ msgstr "Accedi per votare"
 msgid "Please sign in to delete/restore posts"
 msgstr "Accedi per cancellare/ripristinare messaggi"
 
-#: views/commands.py:1270 views/commands.py:1303
+#: views/commands.py:1274 views/commands.py:1307
 msgid "Sorry, looks like sharing request was invalid"
 msgstr ""
 "Siamo spiacenti, sembra che la richiesta di condivisione non sia valida"
 
-#: views/commands.py:1326
+#: views/commands.py:1330
 #, python-format
 msgid "%(user)s, welcome to group %(group)s!"
 msgstr "%(user)s, benvenuti nel gruppo %(group)s!"
 
-#: views/commands.py:1376
+#: views/commands.py:1380
 msgid "Sorry, only thread moderators can use this function"
 msgstr ""
 "Siamo spiacenti, solo moderatori del thread possono utilizzare questa "
 "funzione"
 
-#: views/commands.py:1391
+#: views/commands.py:1395
 msgid "The answer is now unpublished"
 msgstr "La risposta non è ancora stata pubblicata"
 
-#: views/commands.py:1395
+#: views/commands.py:1399
 msgid "The answer is now published"
 msgstr "La risposta è stata pubblicata"
 
@@ -8320,6 +8333,19 @@ msgstr "Mi spiace, ci sono dei problemi tecnici"
 #: views/writers.py:786
 msgid "the selected answer cannot be a comment"
 msgstr "la risposta selezionata non può essere un commento"
+
+#~ msgid ""
+#~ "\n"
+#~ "%(count)s comment:\n"
+#~ msgid_plural ""
+#~ "\n"
+#~ "%(count)s comments:\n"
+#~ msgstr[0] ""
+#~ "\n"
+#~ "%(count)s commenti:\n"
+#~ msgstr[1] ""
+#~ "\n"
+#~ "%(count)s commento:\n"
 
 #~ msgid "latest questions"
 #~ msgstr "domande recenti"
