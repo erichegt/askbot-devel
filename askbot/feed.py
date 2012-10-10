@@ -12,10 +12,7 @@
 """
 #!/usr/bin/env python
 #encoding:utf-8
-try:
-    from django.contrib.syndication.feeds import Feed
-except ImportError:
-    from django.contrib.syndication.views import Feed
+from django.contrib.syndication.views import Feed
 
 import itertools
 
@@ -40,10 +37,10 @@ class RssIndividualQuestionFeed(Feed):
     def description(self):
         return askbot_settings.APP_DESCRIPTION
 
-    def get_object(self, bits):
-        if len(bits) != 1:
-            raise ObjectDoesNotExist
-        return Post.objects.get_questions().get(id__exact = bits[0])
+    def get_object(self, request, pk):
+        #hack to get the request object into the Feed class
+        self.request = request
+        return Post.objects.get_questions().get(id__exact = pk)
 
     def item_link(self, item):
         """get full url to the item
@@ -139,7 +136,7 @@ class RssLastestQuestionsFeed(Feed):
         """returns url without the slug
         because the slug can change
         """
-        return self.link + item.get_absolute_url(no_slug = True)
+        return self.link() + item.get_absolute_url(no_slug = True)
 
     def item_description(self, item):
         """returns the description for the item
@@ -168,6 +165,11 @@ class RssLastestQuestionsFeed(Feed):
                 qs = qs.filter(thread__tags__name = tag)
 
         return qs.order_by('-thread__last_activity_at')[:30]
+
+    #hack to get the request object into the Feed class
+    def get_feed(self, obj, request):
+        self.request = request
+        return super(RssLastestQuestionsFeed, self).get_feed(obj, request)
 
 def main():
     """main function for use as a script

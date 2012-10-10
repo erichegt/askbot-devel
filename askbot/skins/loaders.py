@@ -1,5 +1,5 @@
 import os.path
-from django.template.loaders import filesystem
+from django.template.loaders.filesystem import Loader
 from django.template import RequestContext
 from django.http import HttpResponse
 from django.utils import translation
@@ -21,6 +21,8 @@ template.add_to_builtins('askbot.templatetags.extra_filters_jinja')
 #to work on unicode file paths
 #here it is ignored because it is assumed that we won't use unicode paths
 ASKBOT_SKIN_COLLECTION_DIR = os.path.dirname(__file__)
+
+filesystem = Loader()
 
 #changed the name from load_template_source
 def filesystem_load_template_source(name, dirs=None):

@@ -125,20 +125,23 @@ class CacheMessage(object):
     def __init__(self, user):
         self.user = user
         self.cache_key = 'user-message-%d' % self.user.id
-        self.messages = cache.cache.get(self.cache_key) or []
+
+    @property
+    def messages(self):
+        return cache.cache.get(self.cache_key) or []
 
     def _set_message(self, message):
-        self.messages.append(message)
-        cache.cache.set(self.cache_key, self.messages)
+        messages = self.messages
+        messages.append(message)
+        cache.cache.set(self.cache_key, messages)
 
     def create(self, message=''):
         if message:
             self._set_message(message)
 
     def get_and_delete_messages(self):
-        cache.cache.delete(self.cache_key)
         return_value = self.messages
-        self.messages = []
+        cache.cache.delete(self.cache_key)
         return return_value
 
 @property

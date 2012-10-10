@@ -219,6 +219,11 @@ urlpatterns = patterns('',
         views.meta.list_suggested_tags,
         name = 'list_suggested_tags'
     ),
+
+    #feeds
+    url(r'^feeds/rss/$', RssLastestQuestionsFeed(), name="latest_questions_feed"),
+    url(r'^feeds/question/(?P<pk>\d+)/$', RssIndividualQuestionFeed(), name="individual_question_feed"),
+
     url(#ajax only
         r'^%s$' % 'moderate-suggested-tag',
         views.commands.moderate_suggested_tag,
@@ -551,19 +556,4 @@ if 'avatar' in settings.INSTALLED_APPS:
             views.avatar_views.render_primary,
             name='avatar_render_primary'
         ),
-    )
-
-if django.get_version() <= '1.3.1':
-    urlpatterns += (
-        url(
-            r'^feeds/(?P<url>.*)/$',
-            'django.contrib.syndication.views.feed',
-            {'feed_dict': feeds},
-            name='feeds'
-        ),
-    )
-else:
-    urlpatterns += (
-        url(r'^feeds/rss/$', RssLastestQuestionsFeed, name="latest_questions_feed"),
-        url(r'^feeds/question/$', RssIndividualQuestionFeed, name="individual_question_feed"),
     )
