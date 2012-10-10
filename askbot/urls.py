@@ -2,6 +2,7 @@
 askbot askbot url configuraion file
 """
 import os.path
+import django
 from django.conf import settings
 from django.conf.urls.defaults import url, patterns, include
 from django.conf.urls.defaults import handler500, handler404
@@ -473,16 +474,9 @@ urlpatterns = patterns('',
         views.widgets.question_widget,
         name = 'question_widget'
     ),
-    url(
-        r'^feeds/(?P<url>.*)/$',
-        'django.contrib.syndication.views.feed',
-        {'feed_dict': feeds},
-        name='feeds'
-    ),
     #upload url is ajax only
     url( r'^%s$' % _('upload/'), views.writers.upload, name='upload'),
     url(r'^%s$' % _('feedback/'), views.meta.feedback, name='feedback'),
-    #url(r'^feeds/rss/$', RssLastestQuestionsFeed, name="latest_questions_feed"),
     url(
         r'^doc/(?P<path>.*)$',
         'django.views.static.serve',
@@ -557,4 +551,19 @@ if 'avatar' in settings.INSTALLED_APPS:
             views.avatar_views.render_primary,
             name='avatar_render_primary'
         ),
+    )
+
+if django.get_version() <= '1.3.1':
+    urlpatterns += (
+        url(
+            r'^feeds/(?P<url>.*)/$',
+            'django.contrib.syndication.views.feed',
+            {'feed_dict': feeds},
+            name='feeds'
+        ),
+    )
+else:
+    urlpatterns += (
+        url(r'^feeds/rss/$', RssLastestQuestionsFeed, name="latest_questions_feed"),
+        url(r'^feeds/question/$', RssIndividualQuestionFeed, name="individual_question_feed"),
     )
