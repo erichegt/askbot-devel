@@ -46,15 +46,15 @@ msgstr "Il campo Stato è obbligatorio"
 #, python-format
 msgid "must be > %d word"
 msgid_plural "must be > %d words"
-msgstr[0] "deve essere > %d parole"
-msgstr[1] "deve essere > %d parola"
+msgstr[0] "deve essere > %d parola"
+msgstr[1] "deve essere > %d parole"
 
 #: forms.py:196
 #, python-format
 msgid "must be < %d word"
 msgid_plural "must be < %d words"
-msgstr[0] "deve essere < %d parole"
-msgstr[1] "deve essere < %d parola"
+msgstr[0] "deve essere < %d parola"
+msgstr[1] "deve essere < %d parole"
 
 #: forms.py:230 templates/widgets/markdown_help.html:20
 #: templates/widgets/markdown_help.html:24
@@ -69,7 +69,7 @@ msgstr "per favore inserisci un titolo descrittivo per la tua domanda"
 #, python-format
 msgid "title must be > %d character"
 msgid_plural "title must be > %d characters"
-msgstr[0] "il titolo deve essere più lungo di %d caratteri"
+msgstr[0] "il titolo deve essere più lungo di %d carattere"
 msgstr[1] "il titolo deve essere più lungo di %d caratteri"
 
 #: forms.py:253
@@ -2802,7 +2802,7 @@ msgstr "e-mail per tutti i tag"
 
 #: const/__init__.py:327
 msgid "instantly"
-msgstr "immediatamente"
+msgstr "subito"
 
 #: const/__init__.py:328
 msgid "daily"
@@ -3479,8 +3479,8 @@ msgstr "Per favore accetta la migliore risposta per queste domande:"
 #, python-format
 msgid "%(question_count)d updated question about %(topics)s"
 msgid_plural "%(question_count)d updated questions about %(topics)s"
-msgstr[0] "%(question_count)d domande aggiornate riguardanti %(topics)s"
-msgstr[1] "%(question_count)d domanda aggiornata riguardante %(topics)s"
+msgstr[0] "%(question_count)d domanda aggiornata riguardante %(topics)s"
+msgstr[1] "%(question_count)d domande aggiornate riguardanti %(topics)s"
 
 #: management/commands/send_email_alerts.py:425
 #, python-format
@@ -3491,10 +3491,10 @@ msgid_plural ""
 "<p>Dear %(name)s,</p><p>The following %(num)d questions have been updated on"
 " %(sitename)s:</p>"
 msgstr[0] ""
-"<p>Caro %(name)s,</p><p>La seguenti  %(num)d domande sono state aggiornate "
+"<p>Caro %(name)s,</p><p>La seguente  %(num)d domanda è stata aggiornata "
 "in %(sitename)s:</p>"
 msgstr[1] ""
-"<p>Caro %(name)s,</p><p>La seguente domanda è stata aggiornata in "
+"<p>Caro %(name)s,</p><p>Le seguenti domande sono state aggiornate in "
 "%(sitename)s</p>"
 
 #: management/commands/send_email_alerts.py:449
@@ -3518,8 +3518,8 @@ msgstr ""
 #, python-format
 msgid "%(question_count)d unanswered question about %(topics)s"
 msgid_plural "%(question_count)d unanswered questions about %(topics)s"
-msgstr[0] "%(question_count)d domande non risposte riguardo %(topics)s"
-msgstr[1] "%(question_count)d domanda non risposta riguardo %(topics)s"
+msgstr[0] "%(question_count)d domanda non risposta riguardo %(topics)s"
+msgstr[1] "%(question_count)d domande non risposte riguardo %(topics)s"
 
 #: middleware/forum_mode.py:57
 #, python-format
@@ -3619,10 +3619,10 @@ msgid_plural ""
 "minutes from posting"
 msgstr[0] ""
 "Siamo spiacenti, i commenti (eccetto l'ultimo) sono editabili solo dopo "
-"%(minutes)s minuti  dalla pubblicazione "
+"%(minutes)s minuto  dalla pubblicazione "
 msgstr[1] ""
 "Siamo spiacenti, i commenti (eccetto l'ultimo) sono editabili solo dopo "
-"%(minutes)s minuto  dalla pubblicazione "
+"%(minutes)s minuti  dalla pubblicazione "
 
 #: models/__init__.py:691
 msgid "Sorry, but only post owners or moderators can edit comments"
@@ -3829,10 +3829,10 @@ msgid "Sorry, to flag posts a minimum reputation of %(min_rep)d is required"
 msgid_plural ""
 "Sorry, to flag posts a minimum reputation of %(min_rep)d is required"
 msgstr[0] ""
-"Mi spiace, servono almeno %(min_rep)d punti reputazione per cambiare i tag "
+"Mi spiace, serve almeno %(min_rep)d punto reputazione per cambiare i tag "
 "di una domanda"
 msgstr[1] ""
-"Mi spiace, serve almeno %(min_rep)d punto reputazione per cambiare i tag di "
+"Mi spiace, servono almeno %(min_rep)d punti reputazione per cambiare i tag di "
 "una domanda"
 
 #: models/__init__.py:1073
@@ -3926,8 +3926,8 @@ msgstr[1] "%(min)d minuti fa"
 #, python-format
 msgid "%(days)d day"
 msgid_plural "%(days)d days"
-msgstr[0] "%(days)d giorni"
-msgstr[1] "%(days)d giorno"
+msgstr[0] "%(days)d giorno"
+msgstr[1] "%(days)d giorni"
 
 #: models/__init__.py:1831
 #, python-format
@@ -3979,8 +3979,8 @@ msgstr "%(username)s ha %(reputation)s punti reputazione"
 #, python-format
 msgid "one gold badge"
 msgid_plural "%(count)d gold badges"
-msgstr[0] "%(count)d medaglie d'oro"
-msgstr[1] "una medaglia d'oro"
+msgstr[0] "%(count)d medaglia d'oro"
+msgstr[1] "una medaglie d'oro"
 
 #: models/__init__.py:2334
 #, python-format
@@ -4084,7 +4084,7 @@ msgstr "Sotto pressione"
 #: models/badges.py:174
 #, python-format
 msgid "Received at least %(votes)s upvote for an answer for the first time"
-msgstr "Ricevi almeno %(votes)s voti positivi per una risposta la prima volta"
+msgstr "Ricevuto almeno %(votes)s voti positivi per una risposta la prima volta"
 
 #: models/badges.py:178
 msgid "Teacher"
@@ -4398,8 +4398,8 @@ msgstr "\" ed altro ancora"
 #, python-format
 msgid "%(count)d answer:"
 msgid_plural "%(count)d answers:"
-msgstr[0] "%(count)d risposte"
-msgstr[1] "%(count)d risposta"
+msgstr[0] "%(count)d risposta"
+msgstr[1] "%(count)d risposte"
 
 #: models/question.py:1165
 #, python-format
@@ -4687,7 +4687,7 @@ msgstr "Medaglie"
 #: templates/badges.html:7
 msgid "Community gives you awards for your questions, answers and votes."
 msgstr ""
-"Il tuo contributo a questa comunità, attraverso domande, risposte e voti, "
+"Il tuo contributo a questa comunità attraverso domande, risposte e voti, "
 "viene premiato con delle medaglie."
 
 #: templates/badges.html:8
@@ -5468,7 +5468,7 @@ msgstr "visualizza <strong>commento aggiuntivo</strong>"
 
 #: templates/question.html:151 templates/question/javascript.html:26
 msgid "post a comment"
-msgstr "aggiungi commento"
+msgstr "aggiungi un commento"
 
 #: templates/question.html:170 templates/question/content.html:47
 msgid "Answer Your Own Question"
@@ -5934,7 +5934,7 @@ msgid ""
 "You don't have a method to log in right now, please add one or more by "
 "clicking any of the icons below."
 msgstr ""
-"Non hai un metodo per accedere adesso, sei pregato di aggiungerne uno o più "
+"Non hai ancora definito un metodo di accesso veloce. Puoi aggiungerne uno o più "
 "cliccando sulle icone qui sotto."
 
 #: templates/authopenid/signin.html:42
@@ -6006,7 +6006,7 @@ msgstr "ultimo accesso"
 #: templates/authopenid/signin.html:168
 #: templates/authopenid/widget_signin.html:168
 msgid "delete, if you like"
-msgstr "eliminare, se preferisci"
+msgstr "elimina, se preferisci"
 
 #: templates/authopenid/signin.html:182
 #: templates/authopenid/widget_signin.html:182
@@ -6355,10 +6355,10 @@ msgid_plural ""
 "            "
 msgstr[0] ""
 "\n"
-"%(comment)s commenti:"
+"%(comment)s commento:"
 msgstr[1] ""
 "\n"
-"%(comment)s commento:"
+"%(comment)s commenti:"
 
 #: templates/email/re_welcome_lamson_on.html:2
 #: templates/email/re_welcome_lamson_on.html:3
@@ -6654,8 +6654,8 @@ msgstr ""
 #, python-format
 msgid "each tag must be shorter that %(max_chars)s character"
 msgid_plural "each tag must be shorter than %(max_chars)s characters"
-msgstr[0] "ogni tag deve essere più corto di %(max_chars)s caratteri"
-msgstr[1] "ogni tag deve essere più corto di %(max_chars)s carattere"
+msgstr[0] "ogni tag deve essere più corto di %(max_chars)s carattere"
+msgstr[1] "ogni tag deve essere più corto di %(max_chars)s caratteri"
 
 #: templates/meta/editor_data.html:9
 #, python-format
@@ -6743,10 +6743,10 @@ msgid_plural ""
 "        "
 msgstr[0] ""
 "\n"
-"%(counter)s Risposte:"
+"%(counter)s Risposta:"
 msgstr[1] ""
 "\n"
-"%(counter)s Risposta:"
+"%(counter)s Risposte:"
 
 #: templates/question/answer_tab_bar.html:11
 msgid "Sort by »"
@@ -6914,8 +6914,8 @@ msgstr "Segui"
 #, python-format
 msgid "%(count)s follower"
 msgid_plural "%(count)s followers"
-msgstr[0] "%(count)s seguaci"
-msgstr[1] "%(count)s seguace"
+msgstr[0] "%(count)s seguace"
+msgstr[1] "%(count)s seguaci"
 
 #: templates/question/sidebar.html:37
 msgid "email the updates"
@@ -7192,7 +7192,7 @@ msgstr "Modifica questo motivo"
 #: templates/user_profile/user.html:12
 #, python-format
 msgid "%(username)s's profile"
-msgstr "profilo dell'utente %(username)s"
+msgstr "Profilo di %(username)s"
 
 #: templates/user_profile/user_edit.html:4
 msgid "Edit user profile"
@@ -7249,7 +7249,7 @@ msgstr ""
 "<span class='big strong'>Regola la frequenza degli aggiornamenti via "
 "e-mail.</span> Ricevi gli aggiornamenti sulle domande interessanti per "
 "email, <strong><br/> aiuta la comunità</strong> rispondendo alle domande dei"
-" tuoi colleghi. Se non desideri ricevere email - seleziona 'nessuna email' "
+" tuoi colleghi. Se non desideri ricevere email - seleziona 'mai' "
 "su tutti gli elementi qui sotto. <br/>Gli aggiornamenti vengono inviati solo"
 " quando c'è qualche nuova attività sugli elementi selezionati."
 
@@ -7260,7 +7260,7 @@ msgstr "Interrompere l'email"
 #: templates/user_profile/user_favorites.html:4
 #: templates/user_profile/user_tabs.html:29
 msgid "followed questions"
-msgstr "domande seguite"
+msgstr "domande preferite"
 
 #: templates/user_profile/user_info.html:38
 msgid "update profile"
@@ -7415,15 +7415,15 @@ msgstr "rete"
 #, python-format
 msgid "Followed by %(count)s person"
 msgid_plural "Followed by %(count)s people"
-msgstr[0] "Seguito da %(count)s persone"
-msgstr[1] "Seguito da %(count)s persona"
+msgstr[0] "Seguito da %(count)s persona"
+msgstr[1] "Seguito da %(count)s persone"
 
 #: templates/user_profile/user_network.html:21
 #, python-format
 msgid "Following %(count)s person"
 msgid_plural "Following %(count)s people"
-msgstr[0] "Segue %(count)s persone"
-msgstr[1] "Segue %(count)s persona"
+msgstr[0] "Segui %(count)s persona"
+msgstr[1] "Segui %(count)s persone"
 
 #: templates/user_profile/user_network.html:33
 msgid ""
@@ -7473,8 +7473,8 @@ msgstr[1] "<span class=\"count\">%(counter)s</span> Domande"
 #: templates/user_profile/user_stats.html:17
 msgid "Answer"
 msgid_plural "Answers"
-msgstr[0] "Risposte"
-msgstr[1] "Risposta"
+msgstr[0] "Risposta"
+msgstr[1] "Risposte"
 
 #: templates/user_profile/user_stats.html:25
 #, python-format
@@ -7664,7 +7664,7 @@ msgstr "I contenuti di questo sito sono creati sotto licenza %(license)s"
 
 #: templates/widgets/footer.html:38
 msgid "about"
-msgstr "informazioni su Askbot"
+msgstr "informazioni"
 
 #: templates/widgets/footer.html:40 templates/widgets/user_navigation.html:26
 msgid "help"
@@ -7817,7 +7817,7 @@ msgstr "medaglie"
 
 #: templates/widgets/question_edit_tips.html:5
 msgid "ask a question interesting to this community"
-msgstr "fai in modo che la tua risposta sia interessante per la comunità"
+msgstr "fai in modo che la tua domanda sia interessante per la comunità"
 
 #: templates/widgets/question_summary.html:12
 msgid "view"
@@ -7828,8 +7828,8 @@ msgstr[1] "viste"
 #: templates/widgets/question_summary.html:30
 msgid "answer"
 msgid_plural "answers"
-msgstr[0] "risposte"
-msgstr[1] "risposta"
+msgstr[0] "risposta"
+msgstr[1] "risposte"
 
 #: templates/widgets/question_summary.html:41
 msgid "vote"
