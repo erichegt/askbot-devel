@@ -67,6 +67,9 @@ from askbot import mail
 
 from django import get_version as django_version
 
+if django_version() > '1.3.1':
+    from askbot.models.message import Message
+
 def get_model(model_name):
     """a shortcut for getting model for an askbot app"""
     return models.get_model('askbot', model_name)
@@ -118,40 +121,33 @@ def get_users_by_text_query(search_query, users_query_set = None):
         #        models.Q(about__search = search_query)
         #    )
 
-class CacheMessage(object):
-    '''An object to replace the django.contrib.auth.models.Message model
-       that stores the messages in the cache'''
+class RelatedObjectSimulator(object):
+    '''Objects that simulates the "messages_set" related field
+    somehow django does not creates it automatically in django1.4.1'''
 
-    def __init__(self, user):
+    def __init__(self, user, model_class):
         self.user = user
-        self.cache_key = 'user-message-%d' % self.user.id
+        self.model_class = model_class
 
-    @property
-    def messages(self):
-        return cache.cache.get(self.cache_key) or []
+    def create(self, **kwargs):
+        return self.model_class.objects.create(user=self.user, **kwargs)
 
-    def _set_message(self, message):
-        messages = self.messages
-        messages.append(message)
-        cache.cache.set(self.cache_key, messages)
+    def filter(self, *args, **kwargs):
+        return self.model_class.objects.filter(*args, **kwargs)
 
-    def create(self, message=''):
-        if message:
-            self._set_message(message)
 
-    def get_and_delete_messages(self):
-        return_value = self.messages
-        cache.cache.delete(self.cache_key)
-        return return_value
-
+#django 1.4.1 only
 @property
 def user_message_set(self):
-    if not hasattr(self, '_message_set_cache'):
-        self._message_set_cache = CacheMessage(self)
-    return self._message_set_cache
+    return RelatedObjectSimulator(self, Message)
 
+#django 1.4.1 only
 def user_get_and_delete_messages(self):
-    return self.message_set.get_and_delete_messages()
+    messages = []
+    for message in Message.objects.filter(user=self):
+        messages.append(message)
+        message.delete()
+    return messages
 
 if django_version() > '1.3.1':
     User.add_to_class('message_set', user_message_set)
