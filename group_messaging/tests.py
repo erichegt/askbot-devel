@@ -172,6 +172,16 @@ class ViewsTests(GroupMessagingTests):
         thread_lists = dom.find_all('table', attrs={'class': 'threads-list'})
         self.assertEquals(len(thread_lists), 0)
 
+    def test_sent_thread_is_visited_by_sender(self):
+        root = self.create_thread_for_user(self.sender, self.recipient)
+        context = self.get_view_context(
+                                ThreadsList,
+                                data={'sender_id': str(self.sender.id)},
+                                user=self.sender
+                            )
+        thread_data = context['threads_data'][root.id]
+        self.assertEqual(thread_data['status'], 'seen')
+
 class ModelsTests(GroupMessagingTests):
     """test cases for the `private_messaging` models"""
 
