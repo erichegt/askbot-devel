@@ -763,8 +763,6 @@ def user_responses(request, user, context):
             'page_title' : _('profile - messages')
         }
         context.update(data)
-        import pdb
-        pdb.set_trace()
         if 'thread_id' in request.GET:
             from group_messaging.models import Message
             from group_messaging.views import ThreadDetails

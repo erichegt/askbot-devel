@@ -218,6 +218,8 @@ class MessageManager(models.Manager):
                     senders_info=sender.username,
                     text=text,
                 )
+        now = datetime.datetime.now()
+        LastVisitTime.objects.create(message=message, user=sender, at=now)
         names = get_recipient_names(recipients)
         message.add_recipient_names_to_senders_info(recipients)
         message.save()
@@ -327,7 +329,7 @@ class Message(models.Model):
             sender_list, created = SenderList.objects.get_or_create(recipient=recipient)
             sender_list.senders.add(self.sender)
 
-    def get_absolute_url(self, user=None, include_domain_name=False):
+    def get_absolute_url(self, user=None):
         """returns absolute url to the thread"""
         assert(user != None)
         settings = django_settings.GROUP_MESSAGING
@@ -340,9 +342,9 @@ class Message(models.Model):
         params = copy.copy(settings['base_url_params'])
         params['thread_id'] = self.id
         url = url_getter(user) + '?' + urllib.urlencode(params)
-        if include_domain_name:
-            site = Site.objects.get_current()
-            url = 'http://' + site.domain + url
+        #if include_domain_name: #don't need this b/c
+        #    site = Site.objects.get_current()
+        #    url = 'http://' + site.domain + url
         return url
 
     def get_email_subject_line(self):
@@ -388,9 +390,8 @@ class Message(models.Model):
             #todo change url scheme so that all users have the same
             #urls within their personal areas of the user profile
             #so that we don't need to have loops like this one
-            thread_url = root_message.get_absolute_url(
-                            user, include_domain_name=True
-                        ).replace('&', '&amp;')
+            thread_url = root_message.get_absolute_url(user)
+            thread_url = thread_url.replace('&', '&amp;')
             #in the template we have a placeholder to be replaced like this:
             body_text = body_text.replace('THREAD_URL_HOLE', thread_url)
             send_mail(

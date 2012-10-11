@@ -1,3 +1,4 @@
+import datetime
 import time
 import urlparse
 from bs4 import BeautifulSoup
@@ -27,6 +28,10 @@ def create_user(name):
     group, created = Group.objects.get_or_create(name=group_name)
     user.groups.add(group)
     return user
+
+def get_html_message(mail_message):
+    """mail message is an item from the django.core.mail.outbox"""
+    return mail_message.alternatives[0][0]
 
 class GroupMessagingTests(TestCase):
     """base class for the test cases in this app"""
@@ -90,11 +95,13 @@ class ViewsTests(GroupMessagingTests):
                                 user=self.sender
                             )
         self.assertEqual(context['threads_data'][root.id]['status'], 'new')
-        #"visit" the thread
-        last_visit_time = LastVisitTime.objects.create(
+        #"visit" the thread: todo - make a method
+        last_visit_time, created = LastVisitTime.objects.get_or_create(
                                                 user=self.sender,
                                                 message=root
                                             )
+        last_visit_time.at = datetime.datetime.now()
+        last_visit_time.save()
         time.sleep(1.5)
 
         #response must show as "seen"
@@ -149,6 +156,21 @@ class ViewsTests(GroupMessagingTests):
         thread_data = context['threads_data'][thread_id]
         self.assertEqual(thread_data['status'], 'new')
 
+    def test_emailed_message_url_works_for_post_recipient(self):
+        root = self.create_thread_for_user(self.sender, self.recipient)
+        from django.core.mail import outbox
+        html_message = get_html_message(outbox[0])
+        link = BeautifulSoup(html_message).find('a', attrs={'class': 'thread-link'})
+        url = link['href'].replace('&amp;', '&')
+        parsed_url = urlparse.urlparse(url)
+        url_data = urlparse.parse_qsl(parsed_url.query)
+        self.client.login(user_id=self.recipient.id, method='force')
+        response = self.client.get(parsed_url.path, url_data)
+        dom = BeautifulSoup(response.content)
+        threads = dom.find_all('ul', attrs={'class': 'thread'})
+        self.assertEquals(len(threads), 1)
+        thread_lists = dom.find_all('table', attrs={'class': 'threads-list'})
+        self.assertEquals(len(thread_lists), 0)
 
 class ModelsTests(GroupMessagingTests):
     """test cases for the `private_messaging` models"""
@@ -284,7 +306,7 @@ class ModelsTests(GroupMessagingTests):
         self.assertEqual(len(outbox), 1)
         self.assertEqual(len(outbox[0].recipients()), 1)
         self.assertEqual(outbox[0].recipients()[0], self.recipient.email)
-        html_message = outbox[0].alternatives[0][0]
+        html_message = get_html_message(outbox[0])
         self.assertTrue(root.text in html_message)
         soup = BeautifulSoup(html_message)
         links = soup.find_all('a', attrs={'class': 'thread-link'})
@@ -322,3 +344,10 @@ class ModelsTests(GroupMessagingTests):
                                     )
         threads = Message.objects.get_threads(recipient=self.sender)
         self.assertEqual(threads.count(), 0)
+
+    def test_sent_message_is_seen_by_the_sender(self):
+        root = self.create_thread_for_user(self.sender, self.recipient)
+        time.sleep(1.5)
+        last_visits = LastVisitTime.objects.filter(message=root, user=self.sender)
+        self.assertEqual(last_visits.count(), 1)
+
