@@ -93,7 +93,7 @@ def get_users_by_text_query(search_query, users_query_set = None):
     """Runs text search in user names and profile.
     For postgres, search also runs against user group names.
     """
-    if django_settings.ENABLE_HAYSTACK_SEARCH:
+    if getattr(django_settings, 'ENABLE_HAYSTACK_SEARCH', False):
         from askbot.search.haystack import AskbotSearchQuerySet
         qs = AskbotSearchQuerySet().filter(content=search_query).models(User).get_django_queryset(User)
         return qs
@@ -2894,7 +2894,6 @@ def format_instant_notification_email(
     only update_types in const.RESPONSE_ACTIVITY_TYPE_MAP_FOR_TEMPLATES
     are supported
     """
-
     site_url = askbot_settings.APP_URL
     origin_post = post.get_origin_post()
     #todo: create a better method to access "sub-urls" in user views
