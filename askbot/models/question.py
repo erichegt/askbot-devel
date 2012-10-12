@@ -2,7 +2,7 @@ import datetime
 import operator
 import re
 
-from django.conf import settings
+from django.conf import settings as django_settings
 from django.db import models
 from django.contrib.auth.models import User
 from django.core import cache  # import cache, not from cache import cache, to be able to monkey-patch cache.cache in test cases
@@ -176,7 +176,7 @@ class ThreadManager(BaseQuerySetManager):
         """returns a query set of questions,
         matching the full text query
         """
-        if settings.ENABLE_HAYSTACK_SEARCH:
+        if django_settings.ENABLE_HAYSTACK_SEARCH:
             from askbot.search.haystack import AskbotSearchQuerySet
             hs_qs = AskbotSearchQuerySet().filter(content=search_query)
             return hs_qs.get_django_queryset()
@@ -303,7 +303,7 @@ class ThreadManager(BaseQuerySetManager):
 
         elif search_state.scope == 'favorite':
             favorite_filter = models.Q(favorited_by=request_user)
-            if 'followit' in settings.INSTALLED_APPS:
+            if 'followit' in django_settings.INSTALLED_APPS:
                 followed_users = request_user.get_followed_users()
                 favorite_filter |= models.Q(posts__post_type__in=('question', 'answer'), posts__author__in=followed_users)
             qs = qs.filter(favorite_filter)
@@ -383,7 +383,10 @@ class ThreadManager(BaseQuerySetManager):
 
         orderby = QUESTION_ORDER_BY_MAP[search_state.sort]
 
-        if not (settings.ENABLE_HAYSTACK_SEARCH and orderby=='-relevance'):
+        if not (
+            getattr(django_settings, 'ENABLE_HAYSTACK_SEARCH', False) \
+            and orderby=='-relevance'
+        ):
             #FIXME: this does not produces the very same results as postgres.
             qs = qs.extra(order_by=[orderby])
 
@@ -882,7 +885,7 @@ class Thread(models.Model):
                                         {
                                             'latest':'-added_at',
                                             'oldest':'added_at',
-                                            'votes':'-score'
+                                            'votes':'-points'
                                         }[sort_method]
                                     ).values_list('id', flat=True)
 

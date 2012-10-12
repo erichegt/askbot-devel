@@ -11,7 +11,7 @@ class HaystackSearchTests(AskbotTestCase):
     that were added for askbot
     """
     def setUp(self):
-        self._old_value = settings.ENABLE_HAYSTACK_SEARCH
+        self._old_value = getattr(settings, 'ENABLE_HAYSTACK_SEARCH', False)
         setattr(settings, "ENABLE_HAYSTACK_SEARCH", True)
 
         self.user = self.create_user(username='gepeto')

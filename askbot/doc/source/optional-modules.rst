@@ -60,6 +60,11 @@ Haystack search
 Askbot supports `Haystack <http://haystacksearch.org/>`_, a modular search framework that supports popular search engine backends as 
 Solr, Elasticsearch, Whoosh and Xapian. 
 
+.. note::
+    Haystack support in Askbot is a new feature,
+    please give us your feedback at ``support@askbot.com``
+    regarding the possible improvements.
+
 To enable:
 
 * add 'haystack' to INSTALLED_APPS
