@@ -534,12 +534,16 @@ def test_avatar():
 def test_haystack():
     if 'haystack' in django_settings.INSTALLED_APPS:
         try_import('haystack', 'django-haystack', short_message = True)
-        if not hasattr(django_settings, 'HAYSTACK_SEARCH_ENGINE'):
-            message = 'Please add HAYSTACK_SEARCH_ENGINE = simple, for more info please checkout: http://django-haystack.readthedocs.org/en/v1.2.7/settings.html#haystack-search-engine'
-            raise AskbotConfigError(message)
-        if not hasattr(django_settings, 'HAYSTACK_SITECONF'):
-            message = 'Please add HAYSTACK_SITECONF = "askbot.search.haystack"'
-            raise AskbotConfigError(message)
+        if getattr(django_settings, 'ENABLE_HAYSTACK_SEARCH', False):
+            errors = list()
+            if not hasattr(django_settings, 'HAYSTACK_SEARCH_ENGINE'):
+                message = "Please HAYSTACK_SEARCH_ENGINE to an appropriate value, value 'simple' can be used for basic testing"
+                errors.append(message)
+            if not hasattr(django_settings, 'HAYSTACK_SITECONF'):
+                message = 'Please add HAYSTACK_SITECONF = "askbot.search.haystack"'
+                errors.append(message)
+            footer = 'Please refer to haystack documentation at http://django-haystack.readthedocs.org/en/v1.2.7/settings.html#haystack-search-engine'
+            print_errors(errors, footer=footer)
 
 def test_custom_user_profile_tab():
     setting_name = 'ASKBOT_CUSTOM_USER_PROFILE_TAB'
@@ -731,9 +735,6 @@ def run_startup_tests():
         'RECAPTCHA_USE_SSL': {
             'value': True,
             'message': 'Please add: RECAPTCHA_USE_SSL = True'
-        },
-        'ENABLE_HAYSTACK_SEARCH': {
-            'message': 'Please add: ENABLE_HAYSTACK_SEARCH = False or True according to your setup'
         },
         'HAYSTACK_SITECONF': {
             'value': 'askbot.search.haystack',

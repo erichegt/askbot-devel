@@ -12,6 +12,7 @@ import functools
 import datetime
 import logging
 import operator
+import urllib
 
 from django.db.models import Count
 from django.conf import settings as django_settings
@@ -54,7 +55,8 @@ def owner_or_moderator_required(f):
         elif request.user.is_authenticated() and request.user.can_moderate_user(profile_owner):
             pass
         else:
-            params = '?next=%s' % request.path
+            next_url = request.path + '?' + urllib.urlencode(request.REQUEST)
+            params = '?next=%s' % urllib.quote(next_url)
             return HttpResponseRedirect(url_utils.get_login_url() + params)
         return f(request, profile_owner, context)
     return wrapped_func
