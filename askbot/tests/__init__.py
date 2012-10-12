@@ -19,5 +19,6 @@ from askbot.tests.email_parsing_tests import *
 from askbot.tests.widget_tests import *
 from askbot.tests.category_tree_tests import CategoryTreeTests
 from askbot.tests.user_model_tests import UserModelTests
+from askbot.tests.user_views_tests import *
 from askbot.tests.utils_tests import *
 from askbot.tests.view_context_tests import *
