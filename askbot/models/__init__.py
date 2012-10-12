@@ -93,23 +93,28 @@ def get_users_by_text_query(search_query, users_query_set = None):
     """Runs text search in user names and profile.
     For postgres, search also runs against user group names.
     """
-    import askbot
-    if users_query_set is None:
-        users_query_set = User.objects.all()
-    if 'postgresql_psycopg2' in askbot.get_database_engine_name():
-        from askbot.search import postgresql
-        return postgresql.run_full_text_search(users_query_set, search_query)
+    if django_settings.ENABLE_HAYSTACK_SEARCH:
+        from askbot.search.haystack import AskbotSearchQuerySet
+        qs = AskbotSearchQuerySet().filter(content=search_query).models(User).get_django_queryset(User)
+        return qs
     else:
-        return users_query_set.filter(
-            models.Q(username__icontains=search_query) |
-            models.Q(about__icontains=search_query)
-        )
-    #if askbot.get_database_engine_name().endswith('mysql') \
-    #    and mysql.supports_full_text_search():
-    #    return User.objects.filter(
-    #        models.Q(username__search = search_query) |
-    #        models.Q(about__search = search_query)
-    #    )
+        import askbot
+        if users_query_set is None:
+            users_query_set = User.objects.all()
+        if 'postgresql_psycopg2' in askbot.get_database_engine_name():
+            from askbot.search import postgresql
+            return postgresql.run_full_text_search(users_query_set, search_query)
+        else:
+            return users_query_set.filter(
+                models.Q(username__icontains=search_query) |
+                models.Q(about__icontains=search_query)
+            )
+        #if askbot.get_database_engine_name().endswith('mysql') \
+        #    and mysql.supports_full_text_search():
+        #    return User.objects.filter(
+        #        models.Q(username__search = search_query) |
+        #        models.Q(about__search = search_query)
+        #    )
 
 User.add_to_class(
             'status',
@@ -851,7 +856,7 @@ def user_assert_can_delete_question(self, question = None):
         #if there are answers by other people,
         #then deny, unless user in admin or moderator
         answer_count = question.thread.all_answers()\
-                        .exclude(author=self).exclude(score__lte=0).count()
+                        .exclude(author=self).exclude(points__lte=0).count()
 
         if answer_count > 0:
             if self.is_administrator() or self.is_moderator():
@@ -2458,7 +2463,7 @@ def _process_vote(user, post, timestamp=None, cancel=False, vote_type=None):
 
     if post.post_type == 'question':
         #denormalize the question post score on the thread
-        post.thread.score = post.score
+        post.thread.points = post.points
         post.thread.save()
         post.thread.update_summary_html()
 

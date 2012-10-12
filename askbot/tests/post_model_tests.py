@@ -618,7 +618,7 @@ class ThreadRenderCacheUpdateTests(AskbotTestCase):
 
     def test_question_upvote_downvote(self):
         question = self.post_question()
-        question.score = 5
+        question.points = 5
         question.vote_up_count = 7
         question.vote_down_count = 2
         question.save()
@@ -631,7 +631,7 @@ class ThreadRenderCacheUpdateTests(AskbotTestCase):
         data = simplejson.loads(response.content)
 
         self.assertEqual(1, data['success'])
-        self.assertEqual(6, data['count'])  # 6 == question.score(5) + 1
+        self.assertEqual(6, data['count'])  # 6 == question.points(5) + 1
 
         thread = Thread.objects.get(id=question.thread.id)
 
@@ -647,7 +647,7 @@ class ThreadRenderCacheUpdateTests(AskbotTestCase):
         data = simplejson.loads(response.content)
 
         self.assertEqual(1, data['success'])
-        self.assertEqual(5, data['count'])  # 6 == question.score(6) - 1
+        self.assertEqual(5, data['count'])  # 6 == question.points(6) - 1
 
         thread = Thread.objects.get(id=question.thread.id)
 

@@ -173,13 +173,13 @@ class DBApiTests(AskbotTestCase):
 
         count = models.Tag.objects.filter(name='one-tag').count()
         self.assertEquals(count, 0)
-    
+
     @with_settings(MAX_TAG_LENGTH=200, MAX_TAGS_PER_POST=50)
     def test_retag_tags_too_long_raises(self):
         tags = "aoaoesuouooeueooeuoaeuoeou aostoeuoaethoeastn oasoeoa nuhoasut oaeeots aoshootuheotuoehao asaoetoeatuoasu o  aoeuethut aoaoe uou uoetu uouuou ao aouosutoeh"
         question = self.post_question(user=self.user)
         self.assertRaises(
-            exceptions.ValidationError, 
+            exceptions.ValidationError,
             self.user.retag_question,
             question=question, tags=tags
         )
@@ -415,10 +415,10 @@ class CommentTests(AskbotTestCase):
     def test_other_user_can_cancel_upvote(self):
         self.test_other_user_can_upvote_comment()
         comment = models.Post.objects.get_comments().get(id = self.comment.id)
-        self.assertEquals(comment.score, 1)
+        self.assertEquals(comment.points, 1)
         self.other_user.upvote(comment, cancel = True)
         comment = models.Post.objects.get_comments().get(id = self.comment.id)
-        self.assertEquals(comment.score, 0)
+        self.assertEquals(comment.points, 0)
 
 class GroupTests(AskbotTestCase):
     def setUp(self):
@@ -526,7 +526,7 @@ class GroupTests(AskbotTestCase):
         #because answer groups always inherit thread groups
         self.edit_answer(user=self.u1, answer=answer, is_private=True)
         self.assertEqual(answer.groups.count(), 1)
-    
+
         #here we have a simple case - the comment to answer was posted
         #by the answer author!!!
         #won't work when comment was by someone else

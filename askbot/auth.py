@@ -238,7 +238,7 @@ def onAnswerAcceptCanceled(answer, user, timestamp=None):
         reputation.save()
 
     if answer.author == question.author and user == question.author:
-        #a symmettric measure for the reputation gaming plug 
+        #a symmettric measure for the reputation gaming plug
         #as in the onAnswerAccept function
         #here it protects the user from uwanted reputation loss
         return
@@ -263,7 +263,7 @@ def onUpVoted(vote, post, user, timestamp=None):
 
     if post.post_type != 'comment':
         post.vote_up_count = int(post.vote_up_count) + 1
-    post.score = int(post.score) + 1
+    post.points = int(post.points) + 1
     post.save()
 
     if post.post_type == 'comment':
@@ -300,7 +300,7 @@ def onUpVotedCanceled(vote, post, user, timestamp=None):
         if post.vote_up_count < 0:
             post.vote_up_count  = 0
 
-    post.score = int(post.score) - 1
+    post.points = int(post.points) - 1
     post.save()
 
     if post.post_type == 'comment':
@@ -333,7 +333,7 @@ def onDownVoted(vote, post, user, timestamp=None):
     vote.save()
 
     post.vote_down_count = int(post.vote_down_count) + 1
-    post.score = int(post.score) - 1
+    post.points = int(post.points) - 1
     post.save()
 
     if not (post.wiki or post.is_anonymous):
@@ -375,7 +375,7 @@ def onDownVotedCanceled(vote, post, user, timestamp=None):
     post.vote_down_count = int(post.vote_down_count) - 1
     if post.vote_down_count < 0:
         post.vote_down_count  = 0
-    post.score = post.score + 1
+    post.points = post.points + 1
     post.save()
 
     if not (post.wiki or post.is_anonymous):
