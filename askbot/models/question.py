@@ -717,7 +717,7 @@ class Thread(models.Model):
 
     def get_answers_by_user(self, user):
         """regardless - deleted or not"""
-        return self.posts.filter(post_type = 'answer', author = user)
+        return self.posts.filter(post_type='answer', author=user, deleted=False)
 
     def has_answer_by_user(self, user):
         #use len to cache the queryset

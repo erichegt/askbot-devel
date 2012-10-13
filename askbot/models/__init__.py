@@ -886,7 +886,7 @@ def user_assert_can_delete_answer(self, answer = None):
                 'you can delete only your own posts'
             )
     low_rep_error_message = _(
-                'Sorry, to deleted other people\' posts, a minimum '
+                'Sorry, to delete other people\'s posts, a minimum '
                 'reputation of %(min_rep)s is required'
             ) % \
             {'min_rep': askbot_settings.MIN_REP_TO_DELETE_OTHERS_POSTS}
