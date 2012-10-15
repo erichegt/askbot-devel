@@ -3159,8 +3159,7 @@ msgstr "Cambia password di %(provider)s"
 #, python-format
 msgid "Click to see if your %(provider)s signin still works for %(site_name)s"
 msgstr ""
-"Clicca per vedere se la tua autenticazione con %(provider)s funziona ancora "
-"per %(site_name)s"
+"Clicca per accedere con %(provider)s in %(site_name)s"
 
 #: deps/django_authopenid/util.py:624
 #, python-format
@@ -3207,7 +3206,7 @@ msgstr "La combinazione login password non è corretta"
 
 #: deps/django_authopenid/views.py:657
 msgid "Please click any of the icons below to sign in"
-msgstr "Sei pregato di cliccare in una delle icone sotto per accedere"
+msgstr "Sei pregato di cliccare su una delle icone sotto per accedere"
 
 #: deps/django_authopenid/views.py:659
 msgid "Account recovery email sent"
@@ -5867,8 +5866,7 @@ msgid ""
 "However, you still may be logged in to your OpenID provider. Please logout "
 "of your provider if you wish to do so."
 msgstr ""
-"Comunque, puoi ancora essere collegato col tuo provider OpenID. Prego "
-"sloggati se vuoi continuare."
+"Ti aspettiamo presto!"
 
 #: templates/authopenid/signin.html:5
 #: templates/authopenid/widget_signin.html:5
