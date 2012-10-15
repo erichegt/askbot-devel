@@ -14,9 +14,9 @@
                         {% if is_leaf_post %}
                             {% trans %}Question by {{ author }}:{% endtrans %}
                         {% else %}
-                            {% trans %}
+                            {% trans -%}
                                 In reply to {{ author }}'s question:
-                            {% endtrans %}
+                            {%- endtrans %}
                         {% endif %}
                     {% else %}
                         {% trans %}Question :{% endtrans %}
@@ -39,13 +39,13 @@
                 <p style="font-size:10px; font-weight: bold;">
                     {% if format == 'parent_subthread' %}
                         {% if is_leaf_post %}
-                            {% trans %}
+                            {% trans -%}
                                 {{ author }}'s answer:
-                            {% endtrans %}
+                            {%- endtrans %}
                         {% else %}
-                            {% trans %}
+                            {% trans -%}
                                 In reply to {{ author }}'s answer:
-                            {% endtrans %}
+                            {%- endtrans %}
                         {% endif %}
                     {% else %}
                         {% trans %}Answered by {{ author }}:{% endtrans %}
@@ -55,18 +55,18 @@
                 <p style="font-size:10px; font-weight: bold;">
                     {% if format == 'parent_subthread' %}
                         {% if is_leaf_post %}
-                            {% trans %}
+                            {% trans -%}
                                 {{ author }}'s comment:
-                            {% endtrans %}
+                            {%- endtrans %}
                         {% else %}
-                            {% trans %}
+                            {% trans -%}
                                 In reply to {{ author }}'s comment:
-                            {% endtrans %}
+                            {%- endtrans %}
                         {% endif %}
                     {% else %}
-                        {% trans author %}
+                        {% trans author -%}
                             Commented by {{ author }}:
-                        {% endtrans %}
+                        {%- endtrans %}
                     {% endif %}
                 </p>
             {% endif %}

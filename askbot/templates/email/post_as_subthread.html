@@ -7,9 +7,9 @@
         <p>
             {% trans count=comments|length -%}
                 {{ comment }} comment:
-            {% pluralize %}
+            {%- pluralize -%}
                 {{ count }} comments:
-            {% endtrans %}
+            {%- endtrans -%}
         </p>
         {% for comment in comments %}
             {{ quoted_post(comment, quote_level = 1) }}
