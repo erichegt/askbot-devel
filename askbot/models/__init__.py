@@ -1730,14 +1730,15 @@ def user_edit_answer(
                 ):
     if force == False:
         self.assert_can_edit_answer(answer)
+
     answer.apply_edit(
-        edited_at = timestamp,
-        edited_by = self,
-        text = body_text,
-        comment = revision_comment,
-        wiki = wiki,
-        is_private = is_private,
-        by_email = by_email
+        edited_at=timestamp,
+        edited_by=self,
+        text=body_text,
+        comment=revision_comment,
+        wiki=wiki,
+        is_private=is_private,
+        by_email=by_email
     )
 
     answer.thread.invalidate_cached_data()

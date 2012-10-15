@@ -496,13 +496,13 @@ def edit_answer(request, id):
                     if form.has_changed():
                         user = form.get_post_user(request.user)
                         user.edit_answer(
-                                answer = answer,
-                                body_text = form.cleaned_data['text'],
-                                revision_comment = form.cleaned_data['summary'],
-                                wiki = form.cleaned_data.get('wiki', answer.wiki),
-                                is_private = form.cleaned_data.get('is_private', False)
-                                #todo: add wiki field to form
-                            )
+                            answer=answer,
+                            body_text=form.cleaned_data['text'],
+                            revision_comment=form.cleaned_data['summary'],
+                            wiki=form.cleaned_data.get('wiki', answer.wiki),
+                            is_private=form.cleaned_data.get('post_privately', False)
+                            #todo: add wiki field to form
+                        )
                     return HttpResponseRedirect(answer.get_absolute_url())
         else:
             revision_form = forms.RevisionForm(answer, revision)

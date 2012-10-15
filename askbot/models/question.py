@@ -890,7 +890,8 @@ class Thread(models.Model):
             #if moderated - then author is guaranteed to be the
             #limited visibility enquirer
             published_answer_ids = self.posts.get_answers(
-                                        user=question_post.author#todo: may be > 1
+                                        user=question_post.author
+                                        #todo: may be > 1 user
                                     ).filter(
                                         deleted=False
                                     ).order_by(
@@ -905,9 +906,13 @@ class Thread(models.Model):
             #now put those answers first
             answer_map = dict([(answer.id, answer) for answer in answers])
             for answer_id in published_answer_ids:
-                answer = answer_map[answer_id]
-                answers.remove(answer)
-                answers.insert(0, answer)
+                #note that answer map may not contain answers publised
+                #to the question enquirer, because current user may
+                #not have access to that answer, so we use the .get() method
+                answer = answer_map.get(answer_id, None)
+                if answer:
+                    answers.remove(answer)
+                    answers.insert(0, answer)
 
         return (question_post, answers, post_to_author, published_answer_ids)
 
