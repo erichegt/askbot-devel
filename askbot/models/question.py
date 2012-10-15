@@ -717,7 +717,7 @@ class Thread(models.Model):
 
     def get_answers_by_user(self, user):
         """regardless - deleted or not"""
-        return self.posts.filter(post_type = 'answer', author = user)
+        return self.posts.filter(post_type='answer', author=user, deleted=False)
 
     def has_answer_by_user(self, user):
         #use len to cache the queryset
@@ -758,14 +758,26 @@ class Thread(models.Model):
         if user is None or user.is_anonymous():
             return self.posts.get_answers().filter(deleted=False)
         else:
-            if user.is_administrator() or user.is_moderator():
-                return self.posts.get_answers(user = user)
-            else:
-                return self.posts.get_answers(user = user).filter(
-                            models.Q(deleted = False) \
-                            | models.Q(author = user) \
-                            | models.Q(deleted_by = user)
-                        )
+            return self.posts.get_answers(
+                                    user=user
+                                ).filter(deleted=False)
+            #    return self.posts.get_answers(user=user).filter(
+            #                models.Q(deleted=False) \
+            #                | models.Q(author=user) \
+            #                | models.Q(deleted_by=user)
+            #            )
+            #we used to show deleted answers to admins,
+            #users who deleted those answers and answer owners
+            #but later decided to not show deleted answers at all
+            #because it makes caching the post lists for thread easier
+            #if user.is_administrator() or user.is_moderator():
+            #    return self.posts.get_answers(user=user)
+            #else:
+            #    return self.posts.get_answers(user=user).filter(
+            #                models.Q(deleted=False) \
+            #                | models.Q(author=user) \
+            #                | models.Q(deleted_by=user)
+            #            )
 
     def invalidate_cached_thread_content_fragment(self):
         cache.cache.delete(self.SUMMARY_CACHE_KEY_TPL % self.id)
@@ -878,7 +890,8 @@ class Thread(models.Model):
             #if moderated - then author is guaranteed to be the
             #limited visibility enquirer
             published_answer_ids = self.posts.get_answers(
-                                        user=question_post.author#todo: may be > 1
+                                        user=question_post.author
+                                        #todo: may be > 1 user
                                     ).filter(
                                         deleted=False
                                     ).order_by(
@@ -893,9 +906,13 @@ class Thread(models.Model):
             #now put those answers first
             answer_map = dict([(answer.id, answer) for answer in answers])
             for answer_id in published_answer_ids:
-                answer = answer_map[answer_id]
-                answers.remove(answer)
-                answers.insert(0, answer)
+                #note that answer map may not contain answers publised
+                #to the question enquirer, because current user may
+                #not have access to that answer, so we use the .get() method
+                answer = answer_map.get(answer_id, None)
+                if answer:
+                    answers.remove(answer)
+                    answers.insert(0, answer)
 
         return (question_post, answers, post_to_author, published_answer_ids)
 
@@ -1281,7 +1298,7 @@ class Thread(models.Model):
 
         return last_updated_at, last_updated_by
 
-    def get_summary_html(self, search_state, visitor = None):
+    def get_summary_html(self, search_state=None, visitor = None):
         html = self.get_cached_summary_html(visitor)
         if not html:
             html = self.update_summary_html(visitor)
@@ -1295,6 +1312,9 @@ class Thread(models.Model):
             r'<<<(%s)>>>' % const.TAG_REGEX_BARE,
             re.UNICODE
         )
+
+        if search_state is None:
+            search_state = DummySearchState()
 
         while True:
             match = regex.search(html)
@@ -1316,6 +1336,12 @@ class Thread(models.Model):
         return cache.cache.get(self.SUMMARY_CACHE_KEY_TPL % self.id)
 
     def update_summary_html(self, visitor = None):
+        #todo: it is quite wrong that visitor is an argument here
+        #because we do not include any visitor-related info in the cache key
+        #ideally cache should be shareable between users, so straight up
+        #using the user id for cache is wrong, we could use group
+        #memberships, but in that case we'd need to be more careful with 
+        #cache invalidation
         context = {
             'thread': self,
             #fetch new question post to make sure we're up-to-date
