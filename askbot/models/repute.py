@@ -75,14 +75,14 @@ class Vote(models.Model):
         """
         #importing locally because of circular dependency
         from askbot import auth
-        score_before = self.voted_post.score
+        score_before = self.voted_post.points
         if self.vote > 0:
             # cancel upvote
             auth.onUpVotedCanceled(self, self.voted_post, self.user)
         else:
             # cancel downvote
             auth.onDownVotedCanceled(self, self.voted_post, self.user)
-        score_after = self.voted_post.score
+        score_after = self.voted_post.points
 
         return score_after - score_before
 
@@ -94,7 +94,7 @@ class BadgeData(models.Model):
     awarded_to    = models.ManyToManyField(User, through='Award', related_name='badges')
 
     def _get_meta_data(self):
-        """retrieves badge metadata stored 
+        """retrieves badge metadata stored
         in a file"""
         from askbot.models import badges
         return badges.get_badge(self.slug)
@@ -171,9 +171,9 @@ class ReputeManager(models.Manager):
             tomorrow = today + datetime.timedelta(1)
             rep_types = (1,-8)
             sums = self.filter(models.Q(reputation_type__in=rep_types),
-                                user=user, 
+                                user=user,
                                 reputed_at__range=(today, tomorrow),
-                      ).aggregate(models.Sum('positive'), models.Sum('negative'))            
+                      ).aggregate(models.Sum('positive'), models.Sum('negative'))
             if sums:
                 pos = sums['positive__sum']
                 neg = sums['negative__sum']
@@ -200,7 +200,7 @@ class Repute(models.Model):
     #assigned_by_moderator - so that reason can be displayed
     #in that case Question field will be blank
     comment = models.CharField(max_length=128, null=True)
-    
+
     objects = ReputeManager()
 
     def __unicode__(self):
@@ -214,7 +214,7 @@ class Repute(models.Model):
         """returns HTML snippet with a link to related question
         or a text description for a the reason of the reputation change
 
-        in the implementation description is returned only 
+        in the implementation description is returned only
         for Repute.reputation_type == 10 - "assigned by the moderator"
 
         part of the purpose of this method is to hide this idiosyncracy
@@ -242,7 +242,7 @@ class Repute(models.Model):
 
             return '<a href="%(url)s" title="%(link_title)s">%(question_title)s</a>' \
                             % {
-                               'url': self.question.get_absolute_url(), 
+                               'url': self.question.get_absolute_url(),
                                'question_title': escape(self.question.thread.title),
                                'link_title': escape(link_title)
                             }

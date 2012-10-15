@@ -12,6 +12,7 @@ import functools
 import datetime
 import logging
 import operator
+import urllib
 
 from django.db.models import Count
 from django.conf import settings as django_settings
@@ -54,7 +55,8 @@ def owner_or_moderator_required(f):
         elif request.user.is_authenticated() and request.user.can_moderate_user(profile_owner):
             pass
         else:
-            params = '?next=%s' % request.path
+            next_url = request.path + '?' + urllib.urlencode(request.REQUEST)
+            params = '?next=%s' % urllib.quote(next_url)
             return HttpResponseRedirect(url_utils.get_login_url() + params)
         return f(request, profile_owner, context)
     return wrapped_func
@@ -369,9 +371,15 @@ def user_stats(request, user, context):
     #
     # Questions
     #
-    questions = user.posts.get_questions().filter(**question_filter).\
-                    order_by('-score', '-thread__last_activity_at').\
-                    select_related('thread', 'thread__last_activity_by')[:100]
+    questions = user.posts.get_questions(
+                    user=request.user
+                ).filter(
+                    **question_filter
+                ).order_by(
+                    '-points', '-thread__last_activity_at'
+                ).select_related(
+                    'thread', 'thread__last_activity_by'
+                )[:100]
 
     #added this if to avoid another query if questions is less than 100
     if len(questions) < 100:
@@ -391,7 +399,7 @@ def user_stats(request, user, context):
     ).select_related(
         'thread'
     ).order_by(
-        '-score', '-added_at'
+        '-points', '-added_at'
     )[:100]
 
     top_answer_count = len(top_answers)
@@ -724,7 +732,7 @@ def user_responses(request, user, context):
     and "flags" - moderation items for mods only
     """
 
-    #0) temporary, till urls are fixed: update context 
+    #0) temporary, till urls are fixed: update context
     #   to contain response counts for all sub-sections
     context.update(view_context.get_for_inbox(request.user))
 
@@ -904,7 +912,7 @@ def user_favorites(request, user, context):
     favorite_threads = user.user_favorite_questions.values_list('thread', flat=True)
     questions = models.Post.objects.filter(post_type='question', thread__in=favorite_threads)\
                     .select_related('thread', 'thread__last_activity_by')\
-                    .order_by('-score', '-thread__last_activity_at')[:const.USER_VIEW_DATA_SIZE]
+                    .order_by('-points', '-thread__last_activity_at')[:const.USER_VIEW_DATA_SIZE]
 
     data = {
         'active_tab':'users',

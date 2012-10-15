@@ -473,7 +473,7 @@ def edit_answer(request, id):
             if request.POST['select_revision'] == 'true':
                 # user has changed revistion number
                 revision_form = forms.RevisionForm(
-                                                answer, 
+                                                answer,
                                                 revision,
                                                 request.POST
                                             )
@@ -496,13 +496,13 @@ def edit_answer(request, id):
                     if form.has_changed():
                         user = form.get_post_user(request.user)
                         user.edit_answer(
-                                answer = answer,
-                                body_text = form.cleaned_data['text'],
-                                revision_comment = form.cleaned_data['summary'],
-                                wiki = form.cleaned_data.get('wiki', answer.wiki),
-                                is_private = form.cleaned_data.get('is_private', False)
-                                #todo: add wiki field to form
-                            )
+                            answer=answer,
+                            body_text=form.cleaned_data['text'],
+                            revision_comment=form.cleaned_data['summary'],
+                            wiki=form.cleaned_data.get('wiki', answer.wiki),
+                            is_private=form.cleaned_data.get('post_privately', False)
+                            #todo: add wiki field to form
+                        )
                     return HttpResponseRedirect(answer.get_absolute_url())
         else:
             revision_form = forms.RevisionForm(answer, revision)
@@ -618,7 +618,8 @@ def __generate_comments_json(obj, user):#non-view generates json data for the po
             'user_id': comment_owner.id,
             'is_deletable': is_deletable,
             'is_editable': is_editable,
-            'score': comment.score,
+            'points': comment.points,
+            'score': comment.points, #to support js
             'upvoted_by_user': getattr(comment, 'upvoted_by_user', False)
         }
         json_comments.append(comment_data)
@@ -685,7 +686,8 @@ def edit_comment(request):
         'user_id': comment_post.author.id,
         'is_deletable': is_deletable,
         'is_editable': is_editable,
-        'score': comment_post.score,
+        'score': comment_post.points, #to support unchanged js
+        'points': comment_post.points,
         'voted': comment_post.is_upvoted_by(request.user),
     }
 

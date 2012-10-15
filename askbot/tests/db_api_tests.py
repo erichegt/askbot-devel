@@ -9,6 +9,7 @@ from django.test.client import Client
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django import forms
+from askbot import exceptions as askbot_exceptions
 from askbot.tests.utils import AskbotTestCase
 from askbot.tests.utils import with_settings
 from askbot import models
@@ -38,6 +39,7 @@ class DBApiTests(AskbotTestCase):
                                                 user = user,
                                                 question = question,
                                             )
+        return self.answer
 
     def assert_post_is_deleted(self, post):
         self.assertTrue(post.deleted == True)
@@ -81,6 +83,25 @@ class DBApiTests(AskbotTestCase):
                         tags = 'test'
                     )
         return self.reload_object(q)
+
+    def test_user_cannot_post_two_answers(self):
+        question = self.post_question(user=self.user)
+        answer = self.post_answer(question=question, user=self.user)
+        self.assertRaises(
+            askbot_exceptions.AnswerAlreadyGiven,
+            self.post_answer,
+            question=question,
+            user=self.user
+        )
+
+    def test_user_can_post_answer_after_deleting_one(self):
+        question = self.post_question(user=self.user)
+        answer = self.post_answer(question=question, user=self.user)
+        self.user.delete_answer(answer=answer)
+        answer2 = self.post_answer(question=question, user=self.user)
+        answers = question.thread.get_answers(user=self.user)
+        self.assertEqual(answers.count(), 1)
+        self.assertEqual(answers[0], answer2)
 
     def test_post_anonymous_question(self):
         q = self.ask_anonymous_question()
@@ -173,13 +194,13 @@ class DBApiTests(AskbotTestCase):
 
         count = models.Tag.objects.filter(name='one-tag').count()
         self.assertEquals(count, 0)
-    
+
     @with_settings(MAX_TAG_LENGTH=200, MAX_TAGS_PER_POST=50)
     def test_retag_tags_too_long_raises(self):
         tags = "aoaoesuouooeueooeuoaeuoeou aostoeuoaethoeastn oasoeoa nuhoasut oaeeots aoshootuheotuoehao asaoetoeatuoasu o  aoeuethut aoaoe uou uoetu uouuou ao aouosutoeh"
         question = self.post_question(user=self.user)
         self.assertRaises(
-            exceptions.ValidationError, 
+            exceptions.ValidationError,
             self.user.retag_question,
             question=question, tags=tags
         )
@@ -415,10 +436,10 @@ class CommentTests(AskbotTestCase):
     def test_other_user_can_cancel_upvote(self):
         self.test_other_user_can_upvote_comment()
         comment = models.Post.objects.get_comments().get(id = self.comment.id)
-        self.assertEquals(comment.score, 1)
+        self.assertEquals(comment.points, 1)
         self.other_user.upvote(comment, cancel = True)
         comment = models.Post.objects.get_comments().get(id = self.comment.id)
-        self.assertEquals(comment.score, 0)
+        self.assertEquals(comment.points, 0)
 
 class GroupTests(AskbotTestCase):
     def setUp(self):
@@ -526,7 +547,7 @@ class GroupTests(AskbotTestCase):
         #because answer groups always inherit thread groups
         self.edit_answer(user=self.u1, answer=answer, is_private=True)
         self.assertEqual(answer.groups.count(), 1)
-    
+
         #here we have a simple case - the comment to answer was posted
         #by the answer author!!!
         #won't work when comment was by someone else

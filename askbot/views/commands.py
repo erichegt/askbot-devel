@@ -169,7 +169,7 @@ def process_vote(user = None, vote_direction = None, post = None):
     if vote != None:
         user.assert_can_revoke_old_vote(vote)
         score_delta = vote.cancel()
-        response_data['count'] = post.score + score_delta
+        response_data['count'] = post.points+ score_delta
         response_data['status'] = 1 #this means "cancel"
 
     else:
@@ -192,7 +192,7 @@ def process_vote(user = None, vote_direction = None, post = None):
         else:
             vote = user.downvote(post = post)
 
-        response_data['count'] = post.score
+        response_data['count'] = post.points
         response_data['status'] = 0 #this means "not cancel", normal operation
 
     response_data['success'] = 1
@@ -842,7 +842,8 @@ def upvote_comment(request):
         )
     else:
         raise ValueError
-    return {'score': comment.score}
+    #FIXME: rename js
+    return {'score': comment.points}
 
 @csrf.csrf_exempt
 @decorators.ajax_only

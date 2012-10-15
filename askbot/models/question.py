@@ -2,7 +2,7 @@ import datetime
 import operator
 import re
 
-from django.conf import settings
+from django.conf import settings as django_settings
 from django.db import models
 from django.contrib.auth.models import User
 from django.core import cache  # import cache, not from cache import cache, to be able to monkey-patch cache.cache in test cases
@@ -176,28 +176,33 @@ class ThreadManager(BaseQuerySetManager):
         """returns a query set of questions,
         matching the full text query
         """
-        if not qs:
-            qs = self.all()
-#        if getattr(settings, 'USE_SPHINX_SEARCH', False):
-#            matching_questions = Question.sphinx_search.query(search_query)
-#            question_ids = [q.id for q in matching_questions]
-#            return qs.filter(posts__post_type='question', posts__deleted=False, posts__self_question_id__in=question_ids)
-        if askbot.get_database_engine_name().endswith('mysql') \
-            and mysql.supports_full_text_search():
-            return qs.filter(
-                models.Q(title__search = search_query) |
-                models.Q(tagnames__search = search_query) |
-                models.Q(posts__deleted=False, posts__text__search = search_query)
-            )
-        elif 'postgresql_psycopg2' in askbot.get_database_engine_name():
-            from askbot.search import postgresql
-            return postgresql.run_full_text_search(qs, search_query)
+        if django_settings.ENABLE_HAYSTACK_SEARCH:
+            from askbot.search.haystack import AskbotSearchQuerySet
+            hs_qs = AskbotSearchQuerySet().filter(content=search_query)
+            return hs_qs.get_django_queryset()
         else:
-            return qs.filter(
-                models.Q(title__icontains=search_query) |
-                models.Q(tagnames__icontains=search_query) |
-                models.Q(posts__deleted=False, posts__text__icontains = search_query)
-            )
+            if not qs:
+                qs = self.all()
+    #        if getattr(settings, 'USE_SPHINX_SEARCH', False):
+    #            matching_questions = Question.sphinx_search.query(search_query)
+    #            question_ids = [q.id for q in matching_questions]
+    #            return qs.filter(posts__post_type='question', posts__deleted=False, posts__self_question_id__in=question_ids)
+            if askbot.get_database_engine_name().endswith('mysql') \
+                and mysql.supports_full_text_search():
+                return qs.filter(
+                    models.Q(title__search = search_query) |
+                    models.Q(tagnames__search = search_query) |
+                    models.Q(posts__deleted=False, posts__text__search = search_query)
+                )
+            elif 'postgresql_psycopg2' in askbot.get_database_engine_name():
+                from askbot.search import postgresql
+                return postgresql.run_full_text_search(qs, search_query)
+            else:
+                return qs.filter(
+                    models.Q(title__icontains=search_query) |
+                    models.Q(tagnames__icontains=search_query) |
+                    models.Q(posts__deleted=False, posts__text__icontains = search_query)
+                )
 
 
     def run_advanced_search(self, request_user, search_state):  # TODO: !! review, fix, and write tests for this
@@ -211,8 +216,8 @@ class ThreadManager(BaseQuerySetManager):
 
         # TODO: add a possibility to see deleted questions
         qs = self.filter(
-                posts__post_type='question', 
-                posts__deleted=False
+                posts__post_type='question',
+                posts__deleted=False,
             ) # (***) brings `askbot_post` into the SQL query, see the ordering section below
 
         if askbot_settings.ENABLE_CONTENT_MODERATION:
@@ -249,7 +254,7 @@ class ThreadManager(BaseQuerySetManager):
                 ) # TODO: unify with search_state.author ?
 
         #unified tags - is list of tags taken from the tag selection
-        #plus any tags added to the query string with #tag or [tag:something] 
+        #plus any tags added to the query string with #tag or [tag:something]
         #syntax.
         #run tag search in addition to these unified tags
         meta_data = {}
@@ -271,7 +276,7 @@ class ThreadManager(BaseQuerySetManager):
                         existing_tags.add(tag_record.name)
                     except Tag.DoesNotExist:
                         non_existing_tags.add(tag)
-                        
+
                 meta_data['non_existing_tags'] = list(non_existing_tags)
                 tags = existing_tags
             else:
@@ -298,7 +303,7 @@ class ThreadManager(BaseQuerySetManager):
 
         elif search_state.scope == 'favorite':
             favorite_filter = models.Q(favorited_by=request_user)
-            if 'followit' in settings.INSTALLED_APPS:
+            if 'followit' in django_settings.INSTALLED_APPS:
                 followed_users = request_user.get_followed_users()
                 favorite_filter |= models.Q(posts__post_type__in=('question', 'answer'), posts__author__in=followed_users)
             qs = qs.filter(favorite_filter)
@@ -370,13 +375,21 @@ class ThreadManager(BaseQuerySetManager):
             'activity-asc': 'last_activity_at',
             'answers-desc': '-answer_count',
             'answers-asc': 'answer_count',
-            'votes-desc': '-score',
-            'votes-asc': 'score',
+            'votes-desc': '-points',
+            'votes-asc': 'points',
 
             'relevance-desc': '-relevance', # special Postgresql-specific ordering, 'relevance' quaso-column is added by get_for_query()
         }
+
         orderby = QUESTION_ORDER_BY_MAP[search_state.sort]
-        qs = qs.extra(order_by=[orderby])
+
+        if not (
+            getattr(django_settings, 'ENABLE_HAYSTACK_SEARCH', False) \
+            and orderby=='-relevance'
+        ):
+            #FIXME: this does not produces the very same results as postgres.
+            qs = qs.extra(order_by=[orderby])
+
 
         # HACK: We add 'ordering_key' column as an alias and order by it, because when distict() is used,
         #       qs.extra(order_by=[orderby,]) is lost if only `orderby` column is from askbot_post!
@@ -403,7 +416,7 @@ class ThreadManager(BaseQuerySetManager):
         page_questions = Post.objects.filter(
             post_type='question', thread__id__in = thread_ids
         ).only(# pick only the used fields
-            'id', 'thread', 'score', 'is_anonymous',
+            'id', 'thread', 'points', 'is_anonymous',
             'summary', 'post_type', 'deleted'
         )
         page_question_map = {}
@@ -514,12 +527,22 @@ class Thread(models.Model):
     answer_accepted_at = models.DateTimeField(null=True, blank=True)
     added_at = models.DateTimeField(default = datetime.datetime.now)
 
-    score = models.IntegerField(default = 0)
+    #db_column will be removed later
+    points = models.IntegerField(default = 0, db_column='score')
 
     objects = ThreadManager()
-    
+
     class Meta:
         app_label = 'askbot'
+
+    #property to support legacy themes in case there are.
+    @property
+    def score(self):
+        return int(self.points)
+    @score.setter
+    def score(self, number):
+        if number:
+            self.points = int(number)
 
     def _question_post(self, refresh=False):
         if refresh and hasattr(self, '_question_cache'):
@@ -694,7 +717,7 @@ class Thread(models.Model):
 
     def get_answers_by_user(self, user):
         """regardless - deleted or not"""
-        return self.posts.filter(post_type = 'answer', author = user)
+        return self.posts.filter(post_type='answer', author=user, deleted=False)
 
     def has_answer_by_user(self, user):
         #use len to cache the queryset
@@ -735,14 +758,26 @@ class Thread(models.Model):
         if user is None or user.is_anonymous():
             return self.posts.get_answers().filter(deleted=False)
         else:
-            if user.is_administrator() or user.is_moderator():
-                return self.posts.get_answers(user = user)
-            else:
-                return self.posts.get_answers(user = user).filter(
-                            models.Q(deleted = False) \
-                            | models.Q(author = user) \
-                            | models.Q(deleted_by = user)
-                        )
+            return self.posts.get_answers(
+                                    user=user
+                                ).filter(deleted=False)
+            #    return self.posts.get_answers(user=user).filter(
+            #                models.Q(deleted=False) \
+            #                | models.Q(author=user) \
+            #                | models.Q(deleted_by=user)
+            #            )
+            #we used to show deleted answers to admins,
+            #users who deleted those answers and answer owners
+            #but later decided to not show deleted answers at all
+            #because it makes caching the post lists for thread easier
+            #if user.is_administrator() or user.is_moderator():
+            #    return self.posts.get_answers(user=user)
+            #else:
+            #    return self.posts.get_answers(user=user).filter(
+            #                models.Q(deleted=False) \
+            #                | models.Q(author=user) \
+            #                | models.Q(deleted_by=user)
+            #            )
 
     def invalidate_cached_thread_content_fragment(self):
         cache.cache.delete(self.SUMMARY_CACHE_KEY_TPL % self.id)
@@ -751,7 +786,7 @@ class Thread(models.Model):
         return 'thread-data-%s-%s' % (self.id, sort_method)
 
     def invalidate_cached_post_data(self):
-        """needs to be called when anything notable 
+        """needs to be called when anything notable
         changes in the post data - on votes, adding,
         deleting, editing content"""
         #we can call delete_many() here if using Django > 1.2
@@ -798,7 +833,7 @@ class Thread(models.Model):
                     {
                         'latest':'-added_at',
                         'oldest':'added_at',
-                        'votes':'-score'
+                        'votes':'-points'
                     }[sort_method]
                 )
         #1) collect question, answer and comment posts and list of post id's
@@ -852,17 +887,18 @@ class Thread(models.Model):
         #todo: there may be > 1 enquirers
         published_answer_ids = list()
         if self.is_moderated() and user != question_post.author:
-            #if moderated - then author is guaranteed to be the 
+            #if moderated - then author is guaranteed to be the
             #limited visibility enquirer
             published_answer_ids = self.posts.get_answers(
-                                        user=question_post.author#todo: may be > 1
+                                        user=question_post.author
+                                        #todo: may be > 1 user
                                     ).filter(
                                         deleted=False
                                     ).order_by(
                                         {
                                             'latest':'-added_at',
                                             'oldest':'added_at',
-                                            'votes':'-score'
+                                            'votes':'-points'
                                         }[sort_method]
                                     ).values_list('id', flat=True)
 
@@ -870,9 +906,13 @@ class Thread(models.Model):
             #now put those answers first
             answer_map = dict([(answer.id, answer) for answer in answers])
             for answer_id in published_answer_ids:
-                answer = answer_map[answer_id]
-                answers.remove(answer)
-                answers.insert(0, answer)
+                #note that answer map may not contain answers publised
+                #to the question enquirer, because current user may
+                #not have access to that answer, so we use the .get() method
+                answer = answer_map.get(answer_id, None)
+                if answer:
+                    answers.remove(answer)
+                    answers.insert(0, answer)
 
         return (question_post, answers, post_to_author, published_answer_ids)
 
@@ -940,8 +980,8 @@ class Thread(models.Model):
                     url = question_post.get_absolute_url()
                     title = thread.get_title(question_post)
                     result.append({'url': url, 'title': title})
-                
-            return result 
+
+            return result
 
         def get_cached_data():
             """similar thread data will expire
@@ -986,7 +1026,7 @@ class Thread(models.Model):
         return False
 
     def add_child_posts_to_groups(self, groups):
-        """adds questions and answers of the thread to 
+        """adds questions and answers of the thread to
         given groups, comments are taken care of implicitly
         by the underlying ``Post`` methods
         """
@@ -1258,7 +1298,7 @@ class Thread(models.Model):
 
         return last_updated_at, last_updated_by
 
-    def get_summary_html(self, search_state, visitor = None):
+    def get_summary_html(self, search_state=None, visitor = None):
         html = self.get_cached_summary_html(visitor)
         if not html:
             html = self.update_summary_html(visitor)
@@ -1272,6 +1312,9 @@ class Thread(models.Model):
             r'<<<(%s)>>>' % const.TAG_REGEX_BARE,
             re.UNICODE
         )
+
+        if search_state is None:
+            search_state = DummySearchState()
 
         while True:
             match = regex.search(html)
@@ -1293,6 +1336,12 @@ class Thread(models.Model):
         return cache.cache.get(self.SUMMARY_CACHE_KEY_TPL % self.id)
 
     def update_summary_html(self, visitor = None):
+        #todo: it is quite wrong that visitor is an argument here
+        #because we do not include any visitor-related info in the cache key
+        #ideally cache should be shareable between users, so straight up
+        #using the user id for cache is wrong, we could use group
+        #memberships, but in that case we'd need to be more careful with 
+        #cache invalidation
         context = {
             'thread': self,
             #fetch new question post to make sure we're up-to-date

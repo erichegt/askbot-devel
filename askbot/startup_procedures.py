@@ -531,13 +531,27 @@ def test_avatar():
             short_message = True
         )
 
+def test_haystack():
+    if 'haystack' in django_settings.INSTALLED_APPS:
+        try_import('haystack', 'django-haystack', short_message = True)
+        if getattr(django_settings, 'ENABLE_HAYSTACK_SEARCH', False):
+            errors = list()
+            if not hasattr(django_settings, 'HAYSTACK_SEARCH_ENGINE'):
+                message = "Please HAYSTACK_SEARCH_ENGINE to an appropriate value, value 'simple' can be used for basic testing"
+                errors.append(message)
+            if not hasattr(django_settings, 'HAYSTACK_SITECONF'):
+                message = 'Please add HAYSTACK_SITECONF = "askbot.search.haystack"'
+                errors.append(message)
+            footer = 'Please refer to haystack documentation at http://django-haystack.readthedocs.org/en/v1.2.7/settings.html#haystack-search-engine'
+            print_errors(errors, footer=footer)
+
 def test_custom_user_profile_tab():
     setting_name = 'ASKBOT_CUSTOM_USER_PROFILE_TAB'
     tab_settings = getattr(django_settings, setting_name, None)
     if tab_settings:
         if not isinstance(tab_settings, dict):
             print "Setting %s must be a dictionary!!!" % setting_name
-            
+
         name = tab_settings.get('NAME', None)
         slug = tab_settings.get('SLUG', None)
         func_name = tab_settings.get('CONTENT_GENERATOR', None)
@@ -691,6 +705,7 @@ def run_startup_tests():
     test_new_skins()
     test_longerusername()
     test_avatar()
+    test_haystack()
     settings_tester = SettingsTester({
         'CACHE_MIDDLEWARE_ANONYMOUS_ONLY': {
             'value': True,
@@ -720,6 +735,10 @@ def run_startup_tests():
         'RECAPTCHA_USE_SSL': {
             'value': True,
             'message': 'Please add: RECAPTCHA_USE_SSL = True'
+        },
+        'HAYSTACK_SITECONF': {
+            'value': 'askbot.search.haystack',
+            'message': 'Please add: HAYSTACK_SITECONF = "askbot.search.haystack"'
         }
     })
     settings_tester.run()
