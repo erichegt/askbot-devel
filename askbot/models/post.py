@@ -59,6 +59,15 @@ class PostQuerySet(models.query.QuerySet):
     #todo: we may not need this query set class,
     #as all methods on this class seem to want to
     #belong to Thread manager or Query set.
+    def get_for_user(self, user):
+        if askbot_settings.GROUPS_ENABLED:
+            if user is None or user.is_anonymous():
+                groups = [get_global_group()]
+            else:
+                groups = user.get_groups()
+            return self.filter(groups__in = groups).distinct()
+        else:
+            return self
 
     def get_by_text_query(self, search_query):
         """returns a query set of questions,
@@ -156,24 +165,16 @@ class PostManager(BaseQuerySetManager):
     def get_query_set(self):
         return PostQuerySet(self.model)
 
-    def get_questions(self):
-        return self.filter(post_type='question')
+    def get_questions(self, user=None):
+        questions = self.filter(post_type='question')
+        return questions.get_for_user(user)
 
-    def get_answers(self, user = None):
+    def get_answers(self, user=None):
         """returns query set of answer posts,
         optionally filtered to exclude posts of groups
         to which user does not belong"""
         answers = self.filter(post_type='answer')
-
-        if askbot_settings.GROUPS_ENABLED:
-            if user is None or user.is_anonymous():
-                groups = [get_global_group()]
-            else:
-                groups = user.get_groups()
-            answers = answers.filter(groups__in = groups).distinct()
-
-        return answers
-
+        return answers.get_for_user(user)
 
     def get_comments(self):
         return self.filter(post_type='comment')
@@ -358,7 +359,7 @@ class Post(models.Model):
     locked_by = models.ForeignKey(User, null=True, blank=True, related_name='locked_posts')
     locked_at = models.DateTimeField(null=True, blank=True)
 
-    score = models.IntegerField(default=0)
+    points = models.IntegerField(default=0, db_column='score')
     vote_up_count = models.IntegerField(default=0)
     vote_down_count = models.IntegerField(default=0)
 
@@ -389,6 +390,14 @@ class Post(models.Model):
         app_label = 'askbot'
         db_table = 'askbot_post'
 
+    #property to support legacy themes in case there are.
+    @property
+    def score(self):
+        return int(self.points)
+    @score.setter
+    def score(self, number):
+        if number:
+            self.points = int(number)
 
     def parse_post_text(self):
         """typically post has a field to store raw source text
@@ -1717,9 +1726,10 @@ class Post(models.Model):
         ##it is important to do this before __apply_edit b/c of signals!!!
         if self.is_private() != is_private:
             if is_private:
-                self.make_private(self.author)
+                #todo: make private for author or for the editor?
+                self.thread.make_private(self.author)
             else:
-                self.make_public()
+                self.thread.make_public(recursive=False)
 
         self.__apply_edit(
             edited_at=edited_at,

@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-18 18:52-0500\n"
-"PO-Revision-Date: 2011-11-19 06:41+0100\n"
-"Last-Translator: Luca Ferroni <luca@befair.it>\n"
+"POT-Creation-Date: 2012-10-10 05:28-0500\n"
+"PO-Revision-Date: 2012-10-03 08:21\n"
+"Last-Translator:   <stefano.mancini@devinterface.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -16,275 +16,565 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 "X-Generator: Translate Toolkit 1.9.0\n"
+"X-Translated-Using: django-rosetta 0.6.8\n"
 
-#: skins/common/media/jquery-openid/jquery.openid.js:73
+#: media/jquery-openid/jquery.openid.js:73
 #, perl-format
 msgid "Are you sure you want to remove your %s login?"
-msgstr ""
+msgstr "Sei sicuro di che voler rimuovere il tuo login %s?"
 
-#: skins/common/media/jquery-openid/jquery.openid.js:90
+#: media/jquery-openid/jquery.openid.js:90
 msgid "Please add one or more login methods."
-msgstr ""
+msgstr "Si prega di aggiungere uno o più metodi di login."
 
-#: skins/common/media/jquery-openid/jquery.openid.js:93
+#: media/jquery-openid/jquery.openid.js:93
 msgid ""
 "You don't have a method to log in right now, please add one or more by "
 "clicking any of the icons below."
 msgstr ""
+"Non hai un metodo per accedere adesso, si prega di aggiungere uno o più "
+"cliccando sulle icone qui sotto."
 
-#: skins/common/media/jquery-openid/jquery.openid.js:135
+#: media/jquery-openid/jquery.openid.js:135
 msgid "passwords do not match"
-msgstr ""
+msgstr "le password non corrispondono"
 
-#: skins/common/media/jquery-openid/jquery.openid.js:161
+#: media/jquery-openid/jquery.openid.js:161
 msgid "Show/change current login methods"
-msgstr ""
+msgstr "Visualizza/Modifica i metodi di login correnti"
 
-#: skins/common/media/jquery-openid/jquery.openid.js:226
+#: media/jquery-openid/jquery.openid.js:226
 #, perl-format
 msgid "Please enter your %s, then proceed"
-msgstr ""
+msgstr "Per favore inserisci il tuo % s, quindi procedi"
 
-#: skins/common/media/jquery-openid/jquery.openid.js:228
+#: media/jquery-openid/jquery.openid.js:228
 msgid "Connect your %(provider_name)s account to %(site)s"
-msgstr ""
+msgstr "Collega il tuo account di %(site)s al provider %(provider_name)s"
 
-#: skins/common/media/jquery-openid/jquery.openid.js:322
+#: media/jquery-openid/jquery.openid.js:322
 #, perl-format
 msgid "Change your %s password"
-msgstr ""
+msgstr "Cambiare la password di %s"
 
-#: skins/common/media/jquery-openid/jquery.openid.js:323
+#: media/jquery-openid/jquery.openid.js:323
 msgid "Change password"
-msgstr ""
+msgstr "Cambia password"
 
-#: skins/common/media/jquery-openid/jquery.openid.js:326
+#: media/jquery-openid/jquery.openid.js:326
 #, perl-format
 msgid "Create a password for %s"
-msgstr ""
+msgstr "Crea una password per %s"
 
-#: skins/common/media/jquery-openid/jquery.openid.js:327
+#: media/jquery-openid/jquery.openid.js:327
 msgid "Create password"
-msgstr ""
+msgstr "Crea una password"
 
-#: skins/common/media/jquery-openid/jquery.openid.js:343
+#: media/jquery-openid/jquery.openid.js:343
 msgid "Create a password-protected account"
-msgstr ""
+msgstr "Creare un account protetto da password"
 
-#: skins/common/media/js/post.js:28
+#: media/js/group_messaging.js:102 media/js/group_messaging.js.py:288
+msgid "required"
+msgstr "obbligatorio"
+
+#: media/js/group_messaging.js:139
+msgid "Your message:"
+msgstr "Il tuo messaggio:"
+
+#: media/js/group_messaging.js:152
+msgid "send"
+msgstr "invia"
+
+#: media/js/group_messaging.js:163 media/js/post.js:2423
+#: media/js/post.js.py:3928 media/js/user.js:886
+msgid "cancel"
+msgstr "annulla"
+
+#: media/js/group_messaging.js:226
+msgid "Reply"
+msgstr "Rispondi"
+
+#: media/js/group_messaging.js:235 media/js/group_messaging.js.py:659
+msgid "message sent"
+msgstr "messaggio inviato"
+
+#: media/js/group_messaging.js:269
+#, perl-brace-format
+msgid "user {{str}} does not exist"
+msgid_plural "users {{str}} do not exist"
+msgstr[0] "gli utenti {{str}} non esistono"
+msgstr[1] "l'utente {{str}} non esiste"
+
+#: media/js/group_messaging.js:319
+msgid "Recipient:"
+msgstr "Destinatario:"
+
+#: media/js/live_search.js:46
+msgid "Sorry, this tag does not exist"
+msgid_plural "Sorry, these tags do not exist"
+msgstr[0] "Siamo spiacenti, i tag non esistono"
+msgstr[1] "Siamo spiacenti, il tag non esiste"
+
+#: media/js/post.js:27
 msgid "loading..."
 msgstr "Caricamento..."
 
-#: skins/common/media/js/post.js:318
+#: media/js/post.js:99
+msgid "must be shorter than %(max_chars)s character"
+msgid_plural "must be shorter than %(max_chars)s characters"
+msgstr[0] "deve essere più corto di %(max_chars)s caratteri"
+msgstr[1] "deve essere più corto di %(max_chars)s carattere"
+
+#: media/js/post.js:153
+msgid "tags cannot be empty"
+msgstr "Il campo Tags non può essere vuoto"
+
+#: media/js/post.js:159 media/js/post.js.py:192
+msgid "content cannot be empty"
+msgstr "il contenuto non può essere vuoto"
+
+#: media/js/post.js:162
+#, perl-format
+msgid "question body must be > %s character"
+msgid_plural "question body must be > %s characters"
+msgstr[0] "la domanda deve essere > %s caratteri"
+msgstr[1] "la domanda deve essere > %s carattere"
+
+#: media/js/post.js:170
+msgid "please enter title"
+msgstr "Per favore inserisci il titolo"
+
+#: media/js/post.js:173
+#, perl-format
+msgid "title must be > %s character"
+msgid_plural "title must be > %s characters"
+msgstr[0] "il titolo deve essere > %s caratteri"
+msgstr[1] "il titolo deve essere > %s carattere"
+
+#: media/js/post.js:195
+#, perl-format
+msgid "answer must be > %s character"
+msgid_plural "answer must be > %s characters"
+msgstr[0] "la risposta deve essere > %s caratteri"
+msgstr[1] "la risposta deve essere > %s carattere"
+
+#: media/js/post.js:252
+msgid "Back to the question"
+msgstr "Torna alla domanda"
+
+#: media/js/post.js:302
+msgid "draft saved..."
+msgstr "bozza salvata..."
+
+#: media/js/post.js:547
 msgid "insufficient privilege"
 msgstr "privilegi non sufficienti"
 
-#: skins/common/media/js/post.js:319
+#: media/js/post.js:548
 msgid "cannot pick own answer as best"
 msgstr ""
 "non è possibile assegnare come miglior risposta ad una propria domanda una "
 "propria risposta"
 
-#: skins/common/media/js/post.js:324
+#: media/js/post.js:553
 msgid "please login"
 msgstr "Per favore effettua il login"
 
-#: skins/common/media/js/post.js:326
+#: media/js/post.js:555
 msgid "anonymous users cannot follow questions"
-msgstr ""
+msgstr "gli utenti anonimi non possono seguire le domande"
 
-#: skins/common/media/js/post.js:327
+#: media/js/post.js:556
 msgid "anonymous users cannot subscribe to questions"
-msgstr ""
+msgstr "gli utenti anonimi non possono sottoscrivere domande"
 
-#: skins/common/media/js/post.js:328
+#: media/js/post.js:557
 msgid "anonymous users cannot vote"
 msgstr "Gli utenti anonimi non possono votare "
 
-#: skins/common/media/js/post.js:330
+#: media/js/post.js:559
 msgid "please confirm offensive"
 msgstr ""
 "sei certo che questo post sia offensivo, contenga spam, pubblicità, "
 "osservazioni poco idonee, ecc.?"
 
-#: skins/common/media/js/post.js:331
-#, fuzzy
+#: media/js/post.js:560
 msgid "please confirm removal of offensive flag"
-msgstr ""
-"sei certo che questo post sia offensivo, contenga spam, pubblicità, "
-"osservazioni poco idonee, ecc.?"
+msgstr "si prega di confermare la rimozione della bandiera offensivo"
 
-#: skins/common/media/js/post.js:332
+#: media/js/post.js:561
 msgid "anonymous users cannot flag offensive posts"
 msgstr "Gli utenti anonimi non possono flaggare come offensivo questo post"
 
-#: skins/common/media/js/post.js:333
+#: media/js/post.js:562
 msgid "confirm delete"
 msgstr "conferma la cancellazione"
 
-#: skins/common/media/js/post.js:334
+#: media/js/post.js:563
 msgid "anonymous users cannot delete/undelete"
 msgstr "Gli utenti anonimi non possono cancellare/annullare la cancellazione"
 
-#: skins/common/media/js/post.js:335
+#: media/js/post.js:564
 msgid "post recovered"
 msgstr "Post recuperato"
 
-#: skins/common/media/js/post.js:336
+#: media/js/post.js:565
 msgid "post deleted"
 msgstr "Post eliminato"
 
-#: skins/common/media/js/post.js:1206
+#: media/js/post.js:1435
 msgid "add comment"
 msgstr "OK"
 
-#: skins/common/media/js/post.js:1209
+#: media/js/post.js:1438
 msgid "save comment"
-msgstr ""
+msgstr "salva il commento"
 
-#: skins/common/media/js/post.js:1874
+#: media/js/post.js:2122
 msgid "Please enter question title (>10 characters)"
 msgstr "Per piacere inserisce un titolo per la tua domanda (>10 caratteri)"
 
-#: skins/common/media/js/tag_selector.js:15
+#: media/js/post.js:2417 media/js/post.js.py:3202 media/js/post.js.py:3390
+msgid "save"
+msgstr "salva"
+
+#: media/js/post.js:2543
+msgid "Enter the logo url or upload an image"
+msgstr "Immetti l'url del logo o carica un'immagine"
+
+#: media/js/post.js:2569
+msgid "Do you really want to remove the image?"
+msgstr "Rimuovere l'immagine?"
+
+#: media/js/post.js:2677
+msgid "change logo"
+msgstr "cambia il logo"
+
+#: media/js/post.js:2678
+msgid "add logo"
+msgstr "aggiungi logo"
+
+#: media/js/post.js:2780
+#, perl-format
+msgid ""
+"tag \"%s\" was already added, no need to repeat (press \"escape\" to delete)"
+msgstr ""
+"il tag \"%s\" è stato già aggiunto, non c'è bisogno di ripeterlo (premere "
+"\"ESC\" per eliminare)"
+
+#: media/js/post.js:2789
+#, perl-format
+msgid "a maximum of %s tag is allowed"
+msgid_plural "a maximum of %s tags are allowed"
+msgstr[0] "è consentito un massimo di %s tag"
+msgstr[1] "è consentito un massimo di %s tag"
+
+#: media/js/post.js:3132
+msgid "Delete category?"
+msgstr "Eliminare la categoria?"
+
+#: media/js/post.js:3221
+msgid "edit"
+msgstr "modifica"
+
+#: media/js/post.js:3308
+msgid "category name cannot be empty"
+msgstr "il contenuto non può essere vuoto"
+
+#: media/js/post.js:3343
+msgid "already exists at the current level!"
+msgstr "già esiste al livello di corrente!"
+
+#: media/js/post.js:3379
+msgid "add category"
+msgstr "aggiungi categoria"
+
+#: media/js/post.js:3924
+msgid "save tags"
+msgstr "salva Tag"
+
+#: media/js/post.js:4005 media/js/post.js.py:4041
+msgid "User name:"
+msgstr "Nome utente:"
+
+#: media/js/post.js:4027
+msgid "Group name:"
+msgstr "Nome gruppo:"
+
+#: media/js/post.js:4054
+msgid "Shared with the following users:"
+msgstr "Condividi con i seguenti utenti:"
+
+#: media/js/post.js:4060
+msgid "Shared with the following groups:"
+msgstr "Condividi con i seguenti gruppi:"
+
+#: media/js/tag_moderation.js:90
+msgid "No suggested tags left"
+msgstr "Nessun tag suggerito a sinistra"
+
+#: media/js/tag_selector.js:14
 msgid "Tag \"<span></span>\" matches:"
 msgstr "Il tag \"<span></span>\" corrisponde a:"
 
-#: skins/common/media/js/tag_selector.js:84
+#: media/js/tag_selector.js:84
 #, perl-format
 msgid "and %s more, not shown..."
 msgstr "e altre %s non mostrate..."
 
-#: skins/common/media/js/user.js:14
+#: media/js/user.js:16
 msgid "Please select at least one item"
-msgstr ""
+msgstr "Si prega di selezionare almeno un elemento"
 
-#: skins/common/media/js/user.js:58
+#: media/js/user.js:60
 msgid "Delete this notification?"
 msgid_plural "Delete these notifications?"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Cancella queste notifiche?"
+msgstr[1] "Cancella questa notifica?"
 
-#: skins/common/media/js/user.js:65
-#, fuzzy
+#: media/js/user.js:67
 msgid "Close this entry?"
 msgid_plural "Close these entries?"
-msgstr[0] "Elimina questo commento"
-msgstr[1] "Elimina questo commento"
+msgstr[0] "Chiudi questi elementi"
+msgstr[1] "Chiudi questo elemento"
 
-#: skins/common/media/js/user.js:72
-msgid "Remove all flags on this entry?"
-msgid_plural "Remove all flags on these entries?"
-msgstr[0] ""
-msgstr[1] ""
+#: media/js/user.js:75
+msgid "Remove all flags and approve this entry?"
+msgid_plural "Remove all flags and approve these entries?"
+msgstr[0] "Rimuovi tutti i flag e approva questi elementi?"
+msgstr[1] "Rimuovi tutti i flag e approva questo elemento?"
 
-#: skins/common/media/js/user.js:79
-#, fuzzy
-msgid "Delete this entry?"
-msgid_plural "Delete these entries?"
-msgstr[0] "Elimina questo commento"
-msgstr[1] "Elimina questo commento"
+#: media/js/user.js:224
+msgid "Post deleted"
+msgstr "Post eliminato"
 
-#: skins/common/media/js/user.js:159
+#: media/js/user.js:226
+msgid "Post approved"
+msgstr "Post approvato"
+
+#: media/js/user.js:247
+msgid "Accept"
+msgstr "Accetta"
+
+#: media/js/user.js:256
+msgid "Reject"
+msgstr "Rifiuta"
+
+#: media/js/user.js:270
+msgid "add new reject reason"
+msgstr "aggiungere un motivo di rifiuto"
+
+#: media/js/user.js:374
+msgid "Looks there are some things to fix:"
+msgstr "Sembra che ci sono alcune cose da sistemare:"
+
+#: media/js/user.js:442
+msgid "Please provide description."
+msgstr "Si prega di fornire una descrizione."
+
+#: media/js/user.js:445
+msgid "Please provide details."
+msgstr "Si prega di fornire dettagli."
+
+#: media/js/user.js:559
+msgid "A reason must be selected to delete one."
+msgstr "Una ragione deve essere selezionata per eliminarne uno."
+
+#: media/js/user.js:657
+msgid "A reason must be selected to reject post."
+msgstr "Una ragione deve essere selezionata per rifiutare il post."
+
+#: media/js/user.js:706
 msgid "Please <a href=\"%(signin_url)s\">signin</a> to follow %(username)s"
 msgstr "<a href=\"%(signin_url)s\">Entra</a> per seguire %(username)s"
 
-#: skins/common/media/js/user.js:191
+#: media/js/user.js:738
 #, perl-format
 msgid "unfollow %s"
 msgstr "non seguire %s"
 
-#: skins/common/media/js/user.js:194
+#: media/js/user.js:741
 #, perl-format
 msgid "following %s"
 msgstr "stai seguendo %s"
 
-#: skins/common/media/js/user.js:200
+#: media/js/user.js:747
 #, perl-format
 msgid "follow %s"
 msgstr "segui %s"
 
-#: skins/common/media/js/utils.js:44
-msgid "click to close"
-msgstr ""
+#: media/js/user.js:805
+msgid "Remove"
+msgstr "Rimuovi"
 
-#: skins/common/media/js/wmd/wmd.js:26
+#: media/js/user.js:881
+msgid "add group"
+msgstr "aggiungi gruppo"
+
+#: media/js/user.js:961
+msgid "add"
+msgstr "aggiungi"
+
+#: media/js/utils.js:65
+msgid "and"
+msgstr "e"
+
+#: media/js/utils.js:71
+msgid "click to close"
+msgstr "fare clic per chiudere"
+
+#: media/js/utils.js:1721
+msgid "Group %(name)s already exists. Group names are case-insensitive."
+msgstr "Esiste già un gruppo %(nome)s . I nomi dei gruppi sono minuscole."
+
+#: media/js/utils.js:1911
+#, perl-format
+msgid "see questions tagged '%s'"
+msgstr "vedi domande taggate '%s'"
+
+#: media/js/utils.js:2777
+msgid "ago"
+msgstr "fa"
+
+#: media/js/utils.js:2778
+msgid "from now"
+msgstr "da ora"
+
+#: media/js/utils.js:2779
+msgid "just now"
+msgstr "in questo momento"
+
+#: media/js/utils.js:2780
+msgid "about a minute"
+msgstr "circa un minuto"
+
+#: media/js/utils.js:2781
+#, perl-format
+msgid "%d minutes"
+msgstr "%d minuti"
+
+#: media/js/utils.js:2782
+msgid "about an hour"
+msgstr "circa un'ora"
+
+#: media/js/utils.js:2783
+#, perl-format
+msgid "%d hours"
+msgstr "%d ore"
+
+#: media/js/utils.js:2784
+msgid "yesterday"
+msgstr "ieri"
+
+#: media/js/utils.js:2785
+#, perl-format
+msgid "%d days"
+msgstr "%d giorni"
+
+#: media/js/utils.js:2786
+msgid "about a month"
+msgstr "circa un mese"
+
+#: media/js/utils.js:2787
+#, perl-format
+msgid "%d months"
+msgstr "%d mesi"
+
+#: media/js/utils.js:2788
+msgid "about a year"
+msgstr "circa un anno"
+
+#: media/js/utils.js:2789
+#, perl-format
+msgid "%d years"
+msgstr "%d anni"
+
+#: media/js/tinymce/plugins/askbot_attachment/editor_plugin.js:30
+#: media/js/tinymce/plugins/askbot_attachment/editor_plugin.js:71
+msgid "Insert a file"
+msgstr "Inserisci un file"
+
+#: media/js/tinymce/plugins/askbot_attachment/editor_plugin.js:37
+msgid "Or paste file url here"
+msgstr "O incolla l'url del file"
+
+#: media/js/tinymce/plugins/askbot_imageuploader/editor_plugin.js:30
+msgid "Upload an image"
+msgstr "Carica un'immagine"
+
+#: media/js/tinymce/plugins/askbot_imageuploader/editor_plugin.js:71
+msgid "Insert image"
+msgstr "Inserire immagine"
+
+#: media/js/wmd/wmd.js:27
 msgid "bold"
 msgstr "grassetto"
 
-#: skins/common/media/js/wmd/wmd.js:27
+#: media/js/wmd/wmd.js:28
 msgid "italic"
 msgstr "corsivo"
 
-#: skins/common/media/js/wmd/wmd.js:28
+#: media/js/wmd/wmd.js:29
 msgid "link"
 msgstr "Link"
 
-#: skins/common/media/js/wmd/wmd.js:29
+#: media/js/wmd/wmd.js:30
 msgid "quote"
 msgstr "cita"
 
-#: skins/common/media/js/wmd/wmd.js:30
+#: media/js/wmd/wmd.js:31
 msgid "preformatted text"
 msgstr "Testo preformattato"
 
-#: skins/common/media/js/wmd/wmd.js:31
+#: media/js/wmd/wmd.js:32
 msgid "image"
 msgstr "Immagine"
 
-#: skins/common/media/js/wmd/wmd.js:32
+#: media/js/wmd/wmd.js:33
 msgid "attachment"
-msgstr ""
+msgstr "allegato"
 
-#: skins/common/media/js/wmd/wmd.js:33
+#: media/js/wmd/wmd.js:34
 msgid "numbered list"
 msgstr "Lista numerata"
 
-#: skins/common/media/js/wmd/wmd.js:34
+#: media/js/wmd/wmd.js:35
 msgid "bulleted list"
 msgstr "Lista"
 
-#: skins/common/media/js/wmd/wmd.js:35
+#: media/js/wmd/wmd.js:36
 msgid "heading"
 msgstr "Titolo"
 
-#: skins/common/media/js/wmd/wmd.js:36
+#: media/js/wmd/wmd.js:37
 msgid "horizontal bar"
 msgstr "barra orizzontale"
 
-#: skins/common/media/js/wmd/wmd.js:37
+#: media/js/wmd/wmd.js:38
 msgid "undo"
 msgstr "annulla"
 
-#: skins/common/media/js/wmd/wmd.js:38 skins/common/media/js/wmd/wmd.js:1053
+#: media/js/wmd/wmd.js:39 media/js/wmd/wmd.js.py:1111
 msgid "redo"
 msgstr "Esegui nuovamente"
 
-#: skins/common/media/js/wmd/wmd.js:47
+#: media/js/wmd/wmd.js:48
 msgid "enter image url"
 msgstr ""
 "inserisci l'URL dell'immagine, es. http://www.example.com/immagine.jpg "
 "\"titolo immagine\""
 
-#: skins/common/media/js/wmd/wmd.js:48
+#: media/js/wmd/wmd.js:49
 msgid "enter url"
 msgstr "inserisci l'indirizzo web, e.g. <br />http://www.askbot.org/ </p>"
 
-#: skins/common/media/js/wmd/wmd.js:49
+#: media/js/wmd/wmd.js:50
 msgid "upload file attachment"
-msgstr ""
-
-#~ msgid "tags cannot be empty"
-#~ msgstr "Il campo Tags non può essere vuoto"
-
-#~ msgid "content cannot be empty"
-#~ msgstr "il contenuto non può essere vuoto"
+msgstr "caricare file allegato"
 
 #~ msgid "%s content minchars"
 #~ msgstr "per favore inserisci più di %s caratteri"
-
-#~ msgid "please enter title"
-#~ msgstr "Per favore inserisci il titolo"
 
 #~ msgid "%s title minchars"
 #~ msgstr "per favore inserisci almeno %s caratteri"
@@ -305,9 +595,6 @@ msgstr ""
 
 #~ msgid "delete"
 #~ msgstr "elimina"
-
-#~ msgid "enter %s more characters"
-#~ msgstr "%s caratteri rimanenti"
 
 #~ msgid "%s characters left"
 #~ msgstr "%s caratteri rimanenti"

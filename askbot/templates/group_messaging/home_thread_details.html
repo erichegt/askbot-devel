@@ -8,7 +8,9 @@
         {% include "group_messaging/senders_list.html" %}
     </div>
     <div class="second-col">
+        <div><div>{# need two nested divs to match dom of ThreadContainer #}
         {% include "group_messaging/thread_details.html" %}
+        </div></div>
     </div>
     <div class="clear-fix"></div>
 </div>
