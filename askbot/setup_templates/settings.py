@@ -163,6 +163,7 @@ INSTALLED_APPS = (
     'django.contrib.sitemaps',
     #'debug_toolbar',
     #'haystack',
+    'tinymce',
     'askbot',
     'askbot.deps.django_authopenid',
     #'askbot.importers.stackexchange', #se loader
