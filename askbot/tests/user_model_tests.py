@@ -15,3 +15,13 @@ class UserModelTests(AskbotTestCase):
                                                 group=group, user=user
                                             )
         self.assertEqual(memberships.count(), 1)
+
+    def test_delete_user(self):
+        user = self.create_user('user')
+        user.delete()
+        self.assertRaises(User.DoesNotExist, User.objects.get, username='user')
+
+    def test_rename_user(self):
+        user = self.create_user('user')
+        user.username = 'user2'
+        user.save()
