@@ -40,7 +40,7 @@ from askbot.models.base import BaseQuerySetManager, DraftContent
 
 #todo: maybe merge askbot.utils.markup and forum.utils.html
 from askbot.utils.diff import textDiff as htmldiff
-from askbot.utils import mysql
+from askbot.search import mysql
 
 class PostToGroup(models.Model):
     post = models.ForeignKey('Post')
