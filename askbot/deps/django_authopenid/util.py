@@ -414,7 +414,7 @@ def get_enabled_major_login_providers():
         token = oauth.Token(data['oauth_token'], data['oauth_token_secret'])
         client = oauth.Client(consumer, token=token)
         url = 'https://identi.ca/api/account/verify_credentials.json'
-        content = urllib2.urlopen(url).read()
+        response, content = client.request(url, 'GET')
         json = simplejson.loads(content)
         return json['id']
     if askbot_settings.IDENTICA_KEY and askbot_settings.IDENTICA_SECRET:
