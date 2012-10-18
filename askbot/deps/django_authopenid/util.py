@@ -127,9 +127,6 @@ class DjangoOpenIDStore(OpenIDStore):
 
         return False
    
-    def cleanupNonce(self):
-        Nonce.objects.filter(timestamp<int(time.time()) - nonce.SKEW).delete()
-
     def cleanupAssociations(self):
         Association.objects.extra(where=['issued + lifetimeint<(%s)' % time.time()]).delete()
 
