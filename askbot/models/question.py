@@ -30,7 +30,7 @@ from askbot.models.user import Group, PERSONAL_GROUP_NAME_PREFIX
 from askbot.models import signals
 from askbot import const
 from askbot.utils.lists import LazyList
-from askbot.utils import mysql
+from askbot.search import mysql
 from askbot.utils.slug import slugify
 from askbot.skins.loaders import get_template #jinja2 template loading enviroment
 from askbot.search.state_manager import DummySearchState
