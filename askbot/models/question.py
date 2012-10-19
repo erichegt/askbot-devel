@@ -6,6 +6,7 @@ from django.conf import settings as django_settings
 from django.db import models
 from django.contrib.auth.models import User
 from django.core import cache  # import cache, not from cache import cache, to be able to monkey-patch cache.cache in test cases
+from django.core import exceptions as django_exceptions
 from django.core.urlresolvers import reverse
 from django.utils.hashcompat import md5_constructor
 from django.utils.translation import ugettext as _
@@ -29,7 +30,7 @@ from askbot.models.user import Group, PERSONAL_GROUP_NAME_PREFIX
 from askbot.models import signals
 from askbot import const
 from askbot.utils.lists import LazyList
-from askbot.utils import mysql
+from askbot.search import mysql
 from askbot.utils.slug import slugify
 from askbot.skins.loaders import get_template #jinja2 template loading enviroment
 from askbot.search.state_manager import DummySearchState
@@ -176,7 +177,7 @@ class ThreadManager(BaseQuerySetManager):
         """returns a query set of questions,
         matching the full text query
         """
-        if django_settings.ENABLE_HAYSTACK_SEARCH:
+        if getattr(django_settings, 'ENABLE_HAYSTACK_SEARCH', False):
             from askbot.search.haystack import AskbotSearchQuerySet
             hs_qs = AskbotSearchQuerySet().filter(content=search_query)
             return hs_qs.get_django_queryset()
@@ -612,6 +613,8 @@ class Thread(models.Model):
 
         group_ids = thread_groups.values_list('group_id', flat=True)
 
+        group_ids = list(group_ids)#force query for MySQL
+
         from askbot.models import GroupMembership
         user_ids = GroupMembership.objects.filter(
                                     group__id__in=group_ids
@@ -635,7 +638,7 @@ class Thread(models.Model):
             thread_groups = thread_groups[:max_count]
 
         group_ids = thread_groups.values_list('group_id', flat=True)
-        return Group.objects.filter(id__in=group_ids)
+        return Group.objects.filter(id__in=list(group_ids))#force list 4 mysql
 
     def update_favorite_count(self):
         self.favourite_count = FavoriteQuestion.objects.filter(thread=self).count()
@@ -1158,8 +1161,8 @@ class Thread(models.Model):
         #modified tags go on to recounting their use
         #todo - this can actually be done asynchronously - not so important
         modified_tags, unused_tags = separate_unused_tags(removed_tags)
-        delete_tags(unused_tags)#tags with used_count == 0 are deleted
 
+        delete_tags(unused_tags)#tags with used_count == 0 are deleted
         modified_tags = removed_tags
 
         #add new tags to the relation
@@ -1173,8 +1176,9 @@ class Thread(models.Model):
             added_tags = list(reused_tags)
             #tag moderation is in the call below
             created_tags = Tag.objects.create_in_bulk(
-                                            tag_names = new_tagnames, user = user
-                                        )
+                                        tag_names=new_tagnames,
+                                        user=user
+                                    )
 
             added_tags.extend(created_tags)
             #todo: not nice that assignment of added_tags is way above
@@ -1216,15 +1220,15 @@ class Thread(models.Model):
         ####################################################################
         self.update_summary_html() # regenerate question/thread summary html
         ####################################################################
-
         #if there are any modified tags, update their use counts
+        modified_tags = set(modified_tags) - set(unused_tags)
         if modified_tags:
             Tag.objects.update_use_counts(modified_tags)
             signals.tags_updated.send(None,
-                                thread = self,
-                                tags = modified_tags,
-                                user = user,
-                                timestamp = timestamp
+                                thread=self,
+                                tags=modified_tags,
+                                user=user,
+                                timestamp=timestamp
                             )
             return True
 
@@ -1250,6 +1254,9 @@ class Thread(models.Model):
         """changes thread tags"""
         if None in (retagged_by, retagged_at, tagnames):
             raise Exception('arguments retagged_at, retagged_by and tagnames are required')
+
+        if len(tagnames) > 125:#todo: remove magic number!!!
+            raise django_exceptions.ValidationError('tagnames value too long')
 
         thread_question = self._question_post()
 
