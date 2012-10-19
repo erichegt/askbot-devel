@@ -473,6 +473,7 @@ ThreadContainer.prototype.appendEditor = function() {
     editor.setSendUrl(this._replyUrl);
     this._element.append(editor.getElement());
     this._editor = editor;
+    editor.show();
 };
 
 ThreadContainer.prototype.createDom = function() {
@@ -489,6 +490,9 @@ ThreadContainer.prototype.decorate = function(element) {
     var thread = new Thread();
     thread.decorate(element.find('.thread'));
     this.appendEditor();
+    var postData = {parent_id: thread.getLastMessageId()};
+    this._editor.setPostData(postData);
+    this._editor.setThread(thread);
 };
 
 
