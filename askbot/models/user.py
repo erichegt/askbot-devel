@@ -15,7 +15,7 @@ from askbot import const
 from askbot.conf import settings as askbot_settings
 from askbot.utils import functions
 from askbot.models.base import BaseQuerySetManager
-from askbot.models.tag import Tag, get_global_group
+from askbot.models.tag import Tag
 from askbot.models.tag import clean_group_name#todo - delete this
 from askbot.forms import DomainNameField
 from askbot.utils.forms import email_is_allowed
@@ -411,7 +411,7 @@ class GroupQuerySet(models.query.QuerySet):
 
     def get_for_user(self, user=None, private=False):
         if private:
-            global_group = get_global_group()
+            global_group = Group.objects.get_global_group()
             return self.filter(
                         user=user
                     ).exclude(id=global_group.id)
@@ -427,6 +427,20 @@ class GroupManager(BaseQuerySetManager):
     
     def get_query_set(self):
         return GroupQuerySet(self.model)
+
+    def get_global_group(self):
+        """Returns the global group,
+        if necessary, creates one
+        """
+        #todo: when groups are disconnected from tags,
+        #find comment as shown below in the test cases and
+        #revert the values
+        #todo: change groups to django groups
+        group_name = askbot_settings.GLOBAL_GROUP_NAME
+        try:
+            return self.get_query_set().get(name=group_name)
+        except Group.DoesNotExist:
+            return self.get_query_set().create(name=group_name)
 
     def create(self, **kwargs):
         name = kwargs['name']

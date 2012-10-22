@@ -9,21 +9,6 @@ from askbot import const
 from askbot.conf import settings as askbot_settings
 from askbot.utils import category_tree
 
-def get_global_group():
-    """Returns the global group,
-    if necessary, creates one
-    """
-    #todo: when groups are disconnected from tags,
-    #find comment as shown below in the test cases and
-    #revert the values
-    #todo: change groups to django groups
-    group_name = askbot_settings.GLOBAL_GROUP_NAME
-    from askbot.models import Group
-    try:
-        return Group.objects.get(name=group_name)
-    except Group.DoesNotExist:
-        return Group.objects.create(name=group_name)
-
 def delete_tags(tags):
     """deletes tags in the list"""
     tag_ids = [tag.id for tag in tags]

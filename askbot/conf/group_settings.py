@@ -20,14 +20,15 @@ settings.register(
 )
 
 def group_name_update_callback(old_name, new_name):
-    from askbot.models.tag import get_global_group, clean_group_name
+    from askbot.models.tag import clean_group_name
+    from askbot.models import Group
     cleaned_new_name = clean_group_name(new_name.strip())
 
     if new_name == '':
         #name cannot be empty
         return old_name
 
-    group = get_global_group()
+    group = Group.objects.get_global_group()
     group.name = cleaned_new_name
     group.save()
     return new_name
