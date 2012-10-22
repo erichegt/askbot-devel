@@ -3,7 +3,6 @@ from askbot.conf import settings as askbot_settings
 from askbot import const
 from askbot.tests.utils import AskbotTestCase
 from askbot import models
-from askbot.models.tag import get_global_group
 from django.core.urlresolvers import reverse
 
 
@@ -36,7 +35,7 @@ class PrivateQuestionViewsTests(AskbotTestCase):
         self.assertTrue(const.POST_STATUS['private'] in title)
         question = models.Thread.objects.get(id=1)
         self.assertEqual(question.title, self.qdata['title'])
-        self.assertFalse(get_global_group() in set(question.groups.all()))
+        self.assertFalse(models.Group.objects.get_global_group() in set(question.groups.all()))
 
         #private question is not accessible to unauthorized users
         self.client.logout()
@@ -67,7 +66,7 @@ class PrivateQuestionViewsTests(AskbotTestCase):
         response2 = self.client.get(question.get_absolute_url())
         dom = BeautifulSoup(response2.content)
         title = dom.find('h1').text
-        self.assertTrue(get_global_group() in set(question.groups.all()))
+        self.assertTrue(models.Group.objects.get_global_group() in set(question.groups.all()))
         self.assertEqual(title, self.qdata['title'])
 
         self.client.logout()
@@ -88,7 +87,7 @@ class PrivateQuestionViewsTests(AskbotTestCase):
         response2 = self.client.get(question.get_absolute_url())
         dom = BeautifulSoup(response2.content)
         title = dom.find('h1').text
-        self.assertFalse(get_global_group() in set(question.groups.all()))
+        self.assertFalse(models.Group.objects.get_global_group() in set(question.groups.all()))
         self.assertTrue(const.POST_STATUS['private'] in title)
 
     def test_private_checkbox_is_on_when_editing_private_question(self):
@@ -136,7 +135,7 @@ class PrivateAnswerViewsTests(AskbotTestCase):
             data={'text': 'some answer text', 'post_privately': 'checked'}
         )
         answer = self.question.thread.get_answers(user=self.user)[0]
-        self.assertFalse(get_global_group() in set(answer.groups.all()))
+        self.assertFalse(models.Group.objects.get_global_group() in set(answer.groups.all()))
         self.client.logout()
 
         user2 = self.create_user('user2')
@@ -182,7 +181,7 @@ class PrivateAnswerViewsTests(AskbotTestCase):
             data={'text': 'edited answer text', 'select_revision': 'false'}
         )
         answer = self.reload_object(answer)
-        self.assertTrue(get_global_group() in answer.groups.all())
+        self.assertTrue(models.Group.objects.get_global_group() in answer.groups.all())
         self.client.logout()
         response = self.client.get(self.question.get_absolute_url())
         self.assertTrue('edited answer text' in response.content)
@@ -200,7 +199,7 @@ class PrivateAnswerViewsTests(AskbotTestCase):
         )
         #check that answer is not visible to the "everyone" group
         answer = self.reload_object(answer)
-        self.assertFalse(get_global_group() in answer.groups.all())
+        self.assertFalse(models.Group.objects.get_global_group() in answer.groups.all())
         #check that countent is not seen by an anonymous user
         self.client.logout()
         response = self.client.get(self.question.get_absolute_url())

@@ -17,13 +17,10 @@ from askbot.conf import settings as askbot_settings
 from askbot import mail
 from askbot.mail import messages
 from askbot.models.tag import Tag
-from askbot.models.tag import get_groups
-from askbot.models.tag import get_global_group
 from askbot.models.tag import get_tags_by_names
 from askbot.models.tag import filter_accepted_tags, filter_suggested_tags
 from askbot.models.tag import delete_tags, separate_unused_tags
 from askbot.models.base import DraftContent, BaseQuerySetManager
-from askbot.models.tag import Tag, get_groups
 from askbot.models.post import Post, PostRevision
 from askbot.models.post import PostToGroup
 from askbot.models.user import Group, PERSONAL_GROUP_NAME_PREFIX
@@ -41,7 +38,7 @@ class ThreadQuerySet(models.query.QuerySet):
         if user.is_authenticated():
             groups = user.get_groups()
         else:
-            groups = [get_global_group()]
+            groups = [Group.objects.get_global_group()]
         return self.filter(groups__in=groups).distinct()
 
 class ThreadManager(BaseQuerySetManager):
@@ -825,7 +822,7 @@ class Thread(models.Model):
         thread_posts = self.posts.all()
         if askbot_settings.GROUPS_ENABLED:
             if user is None or user.is_anonymous():
-                groups = (get_global_group(),)
+                groups = (Group.objects.get_global_group(),)
             else:
                 groups = user.get_groups()
 
@@ -1078,7 +1075,7 @@ class Thread(models.Model):
 
     def make_public(self, recursive=False):
         """adds the global group to the thread"""
-        groups = (get_global_group(), )
+        groups = (Group.objects.get_global_group(), )
         self.add_to_groups(groups, recursive=recursive)
         if recursive == False:
             self._question_post().make_public()
@@ -1093,13 +1090,13 @@ class Thread(models.Model):
             groups = [group]
             self.add_to_groups(groups)
 
-            global_group = get_global_group()
+            global_group = Group.objects.get_global_group()
             if group != global_group:
                 self.remove_from_groups((global_group,))
         else:
             groups = user.get_groups(private=True)
             self.add_to_groups(groups)
-            self.remove_from_groups((get_global_group(),))
+            self.remove_from_groups((Group.objects.get_global_group(),))
 
         self._question_post().make_private(user, group_id)
 
@@ -1110,7 +1107,7 @@ class Thread(models.Model):
     def is_private(self):
         """true, if thread belongs to the global group"""
         if askbot_settings.GROUPS_ENABLED:
-            group = get_global_group()
+            group = Group.objects.get_global_group()
             return not self.groups.filter(id=group.id).exists()
         return False
 
