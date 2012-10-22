@@ -923,7 +923,7 @@ def user_assert_can_delete_answer(self, answer = None):
                 'you can delete only your own posts'
             )
     low_rep_error_message = _(
-                'Sorry, to deleted other people\' posts, a minimum '
+                'Sorry, to delete other people\'s posts, a minimum '
                 'reputation of %(min_rep)s is required'
             ) % \
             {'min_rep': askbot_settings.MIN_REP_TO_DELETE_OTHERS_POSTS}
@@ -1767,14 +1767,15 @@ def user_edit_answer(
                 ):
     if force == False:
         self.assert_can_edit_answer(answer)
+
     answer.apply_edit(
-        edited_at = timestamp,
-        edited_by = self,
-        text = body_text,
-        comment = revision_comment,
-        wiki = wiki,
-        is_private = is_private,
-        by_email = by_email
+        edited_at=timestamp,
+        edited_by=self,
+        text=body_text,
+        comment=revision_comment,
+        wiki=wiki,
+        is_private=is_private,
+        by_email=by_email
     )
 
     answer.thread.invalidate_cached_data()

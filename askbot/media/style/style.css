@@ -139,6 +139,9 @@ blockquote {
   padding: 10px 0px 1px 10px;
   background-color: #F5F5F5;
 }
+html {
+  overflow-y: scroll;
+}
 /* http://pathfindersoftware.com/2007/09/developers-note-2/ */
 * html .clearfix,
 * html .paginator {
@@ -444,6 +447,7 @@ body.user-messages {
 #searchBar .searchInputCancelable {
   font-size: 26px;
   height: 39px;
+  line-height: 39px;
   font-weight: 300;
   background: #FFF;
   border: 0px;
@@ -484,6 +488,7 @@ body.user-messages {
   color: #ce8888;
   background: #fff;
   height: 42px;
+  line-height: 42px;
   border: 0px;
   border-left: #deded0 1px solid;
   text-align: center;
@@ -661,6 +666,7 @@ body.anon #searchBar .searchInputCancelable {
   padding-left: 5px;
   border: #c9c9b5 1px solid;
   height: 25px;
+  line-height: 25px;
   font-size: 14px;
 }
 .box .inputs #ab-tag-search {
@@ -1434,8 +1440,8 @@ ul#related-tags li {
 }
 #askFormBar .questionTitleInput {
   font-size: 24px;
-  line-height: 24px;
   height: 36px;
+  line-height: 36px;
   margin: 0px;
   padding: 0px 0 0 5px;
   border: #cce6ec 3px solid;
@@ -1501,6 +1507,7 @@ ul#related-tags li {
 .edit-answer-page #id_post_author_email {
   border: #cce6ec 3px solid;
   height: 25px;
+  line-height: 25px;
   padding-left: 5px;
   font-size: 14px;
   width: 186px;
@@ -1815,6 +1822,24 @@ ul#related-tags li {
 .wmd-preview IMG {
   max-width: 600px;
 }
+.defaultSkin table.mceLayout,
+.defaultSkin table.mceLayout tr.mceFirst td {
+  border: none;
+}
+.defaultSkin table.mceLayout tr.mceLast td {
+  border-bottom: none;
+}
+.mceStatusbar {
+  height: 5px;
+  background: #fff;
+}
+.defaultSkin span.mce_askbot_imageuploader {
+  background-position: -380px 0px;
+}
+.defaultSkin span.mce_askbot_attachment {
+  background-image: url(../images/attachment.png);
+  background-position: 0px 0px;
+}
 .user-page .wmd-buttons {
   width: 725px;
 }
@@ -2053,16 +2078,24 @@ ul#related-tags li {
 }
 .question-page .post-controls .question-delete,
 .question-page .answer-controls .question-delete {
-  background: url(../images/delete.png) no-repeat center left;
+  background: url(../images/delete.png) no-repeat left 2px;
   padding-left: 11px;
 }
 .question-page .post-controls .question-flag,
 .question-page .answer-controls .question-flag {
   background: url(../images/flag.png) no-repeat center left;
 }
+.question-page .post-controls .answer-publish,
+.question-page .answer-controls .answer-publish {
+  background: url(../images/publish.png) no-repeat center left;
+}
+.question-page .post-controls .answer-unpublish,
+.question-page .answer-controls .answer-unpublish {
+  background: url(../images/unpublish.png) no-repeat 2px center;
+}
 .question-page .post-controls .question-edit,
 .question-page .answer-controls .question-edit {
-  background: url(../images/edit2.png) no-repeat center left;
+  background: url(../images/edit2.png) no-repeat 2px center;
 }
 .question-page .post-controls .question-retag,
 .question-page .answer-controls .question-retag {
@@ -2607,6 +2640,7 @@ ul#related-tags li {
 .user-profile-page select {
   border: #cce6ec 3px solid;
   height: 25px;
+  line-height: 25px;
   padding-left: 5px;
   width: 395px;
   font-size: 14px;
@@ -2886,11 +2920,10 @@ a:hover.medal {
 /* profile page */
 .tabBar-profile {
   width: 100%;
-  margin-bottom: 15px;
+  margin-bottom: 5px;
   float: left;
 }
 .user-profile-page {
-  font-size: 13px;
   color: #525252;
 }
 .user-profile-page p {
@@ -3301,7 +3334,7 @@ table.ab-subscr-form {
 }
 .errors {
   line-height: 20px;
-  color: red;
+  color: #990000;
 }
 .error,
 .openid-signin p.error {
@@ -4084,6 +4117,7 @@ textarea.tipped-input {
   border: none;
   font-size: 15px;
   font-color: #707070;
+  height: 16px;
   line-height: 16px;
   margin-top: 9px;
   -webkit-box-shadow: none;

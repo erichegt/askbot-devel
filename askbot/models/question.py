@@ -6,6 +6,7 @@ from django.conf import settings as django_settings
 from django.db import models
 from django.contrib.auth.models import User
 from django.core import cache  # import cache, not from cache import cache, to be able to monkey-patch cache.cache in test cases
+from django.core import exceptions as django_exceptions
 from django.core.urlresolvers import reverse
 from django.utils.hashcompat import md5_constructor
 from django.utils.translation import ugettext as _
@@ -29,7 +30,7 @@ from askbot.models.user import Group, PERSONAL_GROUP_NAME_PREFIX
 from askbot.models import signals
 from askbot import const
 from askbot.utils.lists import LazyList
-from askbot.utils import mysql
+from askbot.search import mysql
 from askbot.utils.slug import slugify
 from askbot.skins.loaders import get_template #jinja2 template loading enviroment
 from askbot.search.state_manager import DummySearchState
@@ -176,7 +177,7 @@ class ThreadManager(BaseQuerySetManager):
         """returns a query set of questions,
         matching the full text query
         """
-        if django_settings.ENABLE_HAYSTACK_SEARCH:
+        if getattr(django_settings, 'ENABLE_HAYSTACK_SEARCH', False):
             from askbot.search.haystack import AskbotSearchQuerySet
             hs_qs = AskbotSearchQuerySet().filter(content=search_query)
             return hs_qs.get_django_queryset()
@@ -612,6 +613,8 @@ class Thread(models.Model):
 
         group_ids = thread_groups.values_list('group_id', flat=True)
 
+        group_ids = list(group_ids)#force query for MySQL
+
         from askbot.models import GroupMembership
         user_ids = GroupMembership.objects.filter(
                                     group__id__in=group_ids
@@ -635,7 +638,7 @@ class Thread(models.Model):
             thread_groups = thread_groups[:max_count]
 
         group_ids = thread_groups.values_list('group_id', flat=True)
-        return Group.objects.filter(id__in=group_ids)
+        return Group.objects.filter(id__in=list(group_ids))#force list 4 mysql
 
     def update_favorite_count(self):
         self.favourite_count = FavoriteQuestion.objects.filter(thread=self).count()
@@ -717,7 +720,7 @@ class Thread(models.Model):
 
     def get_answers_by_user(self, user):
         """regardless - deleted or not"""
-        return self.posts.filter(post_type = 'answer', author = user)
+        return self.posts.filter(post_type='answer', author=user, deleted=False)
 
     def has_answer_by_user(self, user):
         #use len to cache the queryset
@@ -758,14 +761,26 @@ class Thread(models.Model):
         if user is None or user.is_anonymous():
             return self.posts.get_answers().filter(deleted=False)
         else:
-            if user.is_administrator() or user.is_moderator():
-                return self.posts.get_answers(user = user)
-            else:
-                return self.posts.get_answers(user = user).filter(
-                            models.Q(deleted = False) \
-                            | models.Q(author = user) \
-                            | models.Q(deleted_by = user)
-                        )
+            return self.posts.get_answers(
+                                    user=user
+                                ).filter(deleted=False)
+            #    return self.posts.get_answers(user=user).filter(
+            #                models.Q(deleted=False) \
+            #                | models.Q(author=user) \
+            #                | models.Q(deleted_by=user)
+            #            )
+            #we used to show deleted answers to admins,
+            #users who deleted those answers and answer owners
+            #but later decided to not show deleted answers at all
+            #because it makes caching the post lists for thread easier
+            #if user.is_administrator() or user.is_moderator():
+            #    return self.posts.get_answers(user=user)
+            #else:
+            #    return self.posts.get_answers(user=user).filter(
+            #                models.Q(deleted=False) \
+            #                | models.Q(author=user) \
+            #                | models.Q(deleted_by=user)
+            #            )
 
     def invalidate_cached_thread_content_fragment(self):
         cache.cache.delete(self.SUMMARY_CACHE_KEY_TPL % self.id)
@@ -878,7 +893,8 @@ class Thread(models.Model):
             #if moderated - then author is guaranteed to be the
             #limited visibility enquirer
             published_answer_ids = self.posts.get_answers(
-                                        user=question_post.author#todo: may be > 1
+                                        user=question_post.author
+                                        #todo: may be > 1 user
                                     ).filter(
                                         deleted=False
                                     ).order_by(
@@ -893,9 +909,13 @@ class Thread(models.Model):
             #now put those answers first
             answer_map = dict([(answer.id, answer) for answer in answers])
             for answer_id in published_answer_ids:
-                answer = answer_map[answer_id]
-                answers.remove(answer)
-                answers.insert(0, answer)
+                #note that answer map may not contain answers publised
+                #to the question enquirer, because current user may
+                #not have access to that answer, so we use the .get() method
+                answer = answer_map.get(answer_id, None)
+                if answer:
+                    answers.remove(answer)
+                    answers.insert(0, answer)
 
         return (question_post, answers, post_to_author, published_answer_ids)
 
@@ -1141,8 +1161,8 @@ class Thread(models.Model):
         #modified tags go on to recounting their use
         #todo - this can actually be done asynchronously - not so important
         modified_tags, unused_tags = separate_unused_tags(removed_tags)
-        delete_tags(unused_tags)#tags with used_count == 0 are deleted
 
+        delete_tags(unused_tags)#tags with used_count == 0 are deleted
         modified_tags = removed_tags
 
         #add new tags to the relation
@@ -1156,8 +1176,9 @@ class Thread(models.Model):
             added_tags = list(reused_tags)
             #tag moderation is in the call below
             created_tags = Tag.objects.create_in_bulk(
-                                            tag_names = new_tagnames, user = user
-                                        )
+                                        tag_names=new_tagnames,
+                                        user=user
+                                    )
 
             added_tags.extend(created_tags)
             #todo: not nice that assignment of added_tags is way above
@@ -1199,15 +1220,15 @@ class Thread(models.Model):
         ####################################################################
         self.update_summary_html() # regenerate question/thread summary html
         ####################################################################
-
         #if there are any modified tags, update their use counts
+        modified_tags = set(modified_tags) - set(unused_tags)
         if modified_tags:
             Tag.objects.update_use_counts(modified_tags)
             signals.tags_updated.send(None,
-                                thread = self,
-                                tags = modified_tags,
-                                user = user,
-                                timestamp = timestamp
+                                thread=self,
+                                tags=modified_tags,
+                                user=user,
+                                timestamp=timestamp
                             )
             return True
 
@@ -1233,6 +1254,9 @@ class Thread(models.Model):
         """changes thread tags"""
         if None in (retagged_by, retagged_at, tagnames):
             raise Exception('arguments retagged_at, retagged_by and tagnames are required')
+
+        if len(tagnames) > 125:#todo: remove magic number!!!
+            raise django_exceptions.ValidationError('tagnames value too long')
 
         thread_question = self._question_post()
 
@@ -1281,7 +1305,7 @@ class Thread(models.Model):
 
         return last_updated_at, last_updated_by
 
-    def get_summary_html(self, search_state, visitor = None):
+    def get_summary_html(self, search_state=None, visitor = None):
         html = self.get_cached_summary_html(visitor)
         if not html:
             html = self.update_summary_html(visitor)
@@ -1295,6 +1319,9 @@ class Thread(models.Model):
             r'<<<(%s)>>>' % const.TAG_REGEX_BARE,
             re.UNICODE
         )
+
+        if search_state is None:
+            search_state = DummySearchState()
 
         while True:
             match = regex.search(html)
@@ -1316,6 +1343,12 @@ class Thread(models.Model):
         return cache.cache.get(self.SUMMARY_CACHE_KEY_TPL % self.id)
 
     def update_summary_html(self, visitor = None):
+        #todo: it is quite wrong that visitor is an argument here
+        #because we do not include any visitor-related info in the cache key
+        #ideally cache should be shareable between users, so straight up
+        #using the user id for cache is wrong, we could use group
+        #memberships, but in that case we'd need to be more careful with 
+        #cache invalidation
         context = {
             'thread': self,
             #fetch new question post to make sure we're up-to-date

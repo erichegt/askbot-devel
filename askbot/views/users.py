@@ -371,9 +371,15 @@ def user_stats(request, user, context):
     #
     # Questions
     #
-    questions = user.posts.get_questions().filter(**question_filter).\
-                    order_by('-points', '-thread__last_activity_at').\
-                    select_related('thread', 'thread__last_activity_by')[:100]
+    questions = user.posts.get_questions(
+                    user=request.user
+                ).filter(
+                    **question_filter
+                ).order_by(
+                    '-points', '-thread__last_activity_at'
+                ).select_related(
+                    'thread', 'thread__last_activity_by'
+                )[:100]
 
     #added this if to avoid another query if questions is less than 100
     if len(questions) < 100:

@@ -96,6 +96,6 @@ def export_as_python(request):
     pp = pprint.PrettyPrinter(indent=4)
     pretty = pp.pformat(work)
 
-    return render_to_response('askbot.deps.livesettings/text.txt', { 'text' : pretty }, mimetype='text/plain')
+    return render_to_response('livesettings/text.txt', { 'text' : pretty }, mimetype='text/plain')
     
 export_as_python = never_cache(staff_member_required(export_as_python))

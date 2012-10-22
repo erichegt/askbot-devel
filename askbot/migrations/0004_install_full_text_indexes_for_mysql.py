@@ -3,11 +3,12 @@ import os
 import datetime
 from south.db import db
 from south.v2 import DataMigration
+from django.db import connection
 from django.db import models
-from askbot.utils import mysql
 
 Q_INDEX_NAME = 'askbot_question_full_text_index'
 A_INDEX_NAME = 'askbot_answer_full_text_index'
+SUPPORTS_FTS = None
 
 NO_FTS_WARNING = """
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -18,6 +19,17 @@ NO_FTS_WARNING = """
 !!                                                  !!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 """
+def supports_full_text_search():
+    global SUPPORTS_FTS
+    if SUPPORTS_FTS is None:
+        cursor = connection.cursor()
+        cursor.execute("SHOW CREATE TABLE question") # In migration 0004 model forum.Question used db table `question`
+        data = cursor.fetchone()
+        if 'ENGINE=MyISAM' in data[1]:
+            SUPPORTS_FTS = True
+        else:
+            SUPPORTS_FTS = False
+    return SUPPORTS_FTS
 
 def get_create_full_text_index_sql(index_name, table_name, column_list):
     column_sql = '(%s)' % ','.join(column_list)
@@ -35,7 +47,7 @@ class Migration(DataMigration):
         and will probably fail otherwise
         """
         if db.backend_name == 'mysql':
-            if mysql.supports_full_text_search_migr0004():
+            if supports_full_text_search():
                 #todo: extract column names by introspection
                 question_index_sql = get_create_full_text_index_sql(
                                                 Q_INDEX_NAME,
@@ -55,7 +67,7 @@ class Migration(DataMigration):
     
     def backwards(self, orm):
         "code for removal of full text indices in mysql"
-        if db.backend_name == 'mysql' and mysql.supports_full_text_search():
+        if db.backend_name == 'mysql' and supports_full_text_search():
             db.execute(
                     get_drop_index_sql(
                             Q_INDEX_NAME,

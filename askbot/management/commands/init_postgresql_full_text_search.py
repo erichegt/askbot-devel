@@ -14,3 +14,11 @@ class Command(NoArgsCommand):
                             'thread_and_post_models_01162012.plsql'
                         )
         setup_full_text_search(script_path)
+        
+        script_path = os.path.join(
+                            askbot.get_install_directory(),
+                            'search',
+                            'postgresql',
+                            'user_profile_search_16102012.plsql'
+                        )
+        setup_full_text_search(script_path)

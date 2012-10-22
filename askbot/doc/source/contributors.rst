@@ -54,6 +54,6 @@ Translations
 * Pekka Gaiser - German
 * Pekka Järvinen - Finnish
 * Adi Robian - Romanian
-* Dario Ghilardi, Federico Poloni, `Luca Ferroni <http://www.linkedin.com/in/lucaferroni>`_ - Italian
+* `Stefano Mancini <https://github.com/xponrails>`_, Dario Ghilardi, Federico Poloni, `Luca Ferroni <http://www.linkedin.com/in/lucaferroni>`_ - Italian
 * `Jordi Bofill <https://github.com/jbofill>`_ - Catalan
 
