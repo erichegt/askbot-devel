@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# encoding: utf-8
 import datetime
 from south.db import db
 from south.v2 import SchemaMigration
@@ -95,7 +95,7 @@ class Migration(SchemaMigration):
             'awarded_count': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'awarded_to': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'badges'", 'symmetrical': 'False', 'through': "orm['askbot.Award']", 'to': "orm['auth.User']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'slug': ('django.db.models.fields.SlugField', [], {'unique': 'True', 'max_length': '50'})
+            'slug': ('django.db.models.fields.SlugField', [], {'unique': 'True', 'max_length': '50', 'db_index': 'True'})
         },
         'askbot.draftanswer': {
             'Meta': {'object_name': 'DraftAnswer'},
