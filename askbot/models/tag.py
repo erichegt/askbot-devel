@@ -262,7 +262,8 @@ class TagManager(BaseQuerySetManager):
         return created_tags
 
 def clean_group_name(name):
-    """group names allow spaces,
+    """todo: move to the models/user.py
+    group names allow spaces,
     tag names do not, so we use this method
     to replace spaces with dashes"""
     return re.sub('\s+', '-', name.strip())
@@ -317,11 +318,3 @@ class MarkedTag(models.Model):
 
     class Meta:
         app_label = 'askbot'
-
-def get_groups():
-    from askbot.models import Group
-    return Group.objects.all()
-
-def get_group_names():
-    #todo: cache me
-    return get_groups().values_list('name', flat = True)

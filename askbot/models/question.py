@@ -17,12 +17,10 @@ from askbot.conf import settings as askbot_settings
 from askbot import mail
 from askbot.mail import messages
 from askbot.models.tag import Tag
-from askbot.models.tag import get_groups
 from askbot.models.tag import get_tags_by_names
 from askbot.models.tag import filter_accepted_tags, filter_suggested_tags
 from askbot.models.tag import delete_tags, separate_unused_tags
 from askbot.models.base import DraftContent, BaseQuerySetManager
-from askbot.models.tag import Tag, get_groups
 from askbot.models.post import Post, PostRevision
 from askbot.models.post import PostToGroup
 from askbot.models.user import Group, PERSONAL_GROUP_NAME_PREFIX

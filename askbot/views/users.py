@@ -39,7 +39,6 @@ from askbot.conf import settings as askbot_settings
 from askbot import models
 from askbot import exceptions
 from askbot.models.badges import award_badges_signal
-from askbot.models.tag import get_groups
 from askbot.models.tag import format_personal_group_name
 from askbot.skins.loaders import render_into_skin
 from askbot.search.state_manager import SearchState
@@ -177,7 +176,7 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
     #extra context for the groups
     if askbot_settings.GROUPS_ENABLED:
         #todo: cleanup this branched code after groups are migrated to auth_group
-        user_groups = get_groups().exclude_personal()
+        user_groups = models.Group.objects.exclude_personal()
         if len(user_groups) <= 1:
             assert(user_groups[0].name == askbot_settings.GLOBAL_GROUP_NAME)
             user_groups = None

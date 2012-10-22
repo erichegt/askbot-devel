@@ -12,7 +12,6 @@ from django.contrib.auth.models import User
 from django_countries import countries
 from askbot.utils.forms import NextUrlField, UserNameField
 from askbot.mail import extract_first_email_address
-from askbot.models.tag import get_groups
 from recaptcha_works.fields import RecaptchaField
 from askbot.conf import settings as askbot_settings
 from askbot.conf import get_tag_display_filter_strategy_choices
@@ -958,10 +957,10 @@ class CreateAskWidgetForm(forms.Form, FormWithHideableFields):
                     )
 
     def __init__(self, *args, **kwargs):
-        from askbot.models import Tag
+        from askbot.models import Group, Tag
         super(CreateAskWidgetForm, self).__init__(*args, **kwargs)
         self.fields['group'] = forms.ModelChoiceField(
-            queryset=get_groups().exclude_personal(),
+            queryset=Group.objects.exclude_personal(),
             required=False
         )
         self.fields['tag'] = forms.ModelChoiceField(queryset=Tag.objects.get_content_tags(),
@@ -985,10 +984,11 @@ class CreateQuestionWidgetForm(forms.Form, FormWithHideableFields):
     )
 
     def __init__(self, *args, **kwargs):
+        from askbot.models import Group
         super(CreateQuestionWidgetForm, self).__init__(*args, **kwargs)
         self.fields['tagnames'] = TagNamesField()
         self.fields['group'] = forms.ModelChoiceField(
-            queryset=get_groups().exclude(name__startswith='_internal'),
+            queryset=Group.objects.exclude(name__startswith='_internal'),
             required=False
         )
 
