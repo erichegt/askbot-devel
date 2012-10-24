@@ -174,6 +174,7 @@ INSTALLED_APPS = (
     'djcelery',
     'djkombu',
     'followit',
+    'tinymce',
     #'avatar',#experimental use git clone git://github.com/ericflo/django-avatar.git$
 )
 
@@ -249,6 +250,7 @@ TINYMCE_JS_ROOT = os.path.join(STATIC_ROOT, 'common/media/js/tinymce/')
 TINYMCE_URL = STATIC_URL + 'common/media/js/tinymce/'
 TINYMCE_DEFAULT_CONFIG = {
     'plugins': 'askbot_imageuploader,askbot_attachment',
+    'convert_urls': False,
     'theme': 'advanced',
     'content_css': STATIC_URL + 'default/media/style/tinymce/content.css',
     'force_br_newlines': True,
