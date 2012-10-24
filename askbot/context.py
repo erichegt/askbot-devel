@@ -69,7 +69,7 @@ def application_settings(request):
             )
 
         #load id's and names of all groups
-        global_group = models.tag.get_global_group()
+        global_group = models.Group.objects.get_global_group()
         groups = models.Group.objects.exclude_personal()
         groups = groups.exclude(id=global_group.id)
         groups_data = list(groups.values('id', 'name'))

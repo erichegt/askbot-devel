@@ -1,7 +1,6 @@
 from askbot.tests.utils import AskbotTestCase
 from askbot.conf import settings as askbot_settings
 from askbot import models
-from askbot.models.tag import get_global_group
 import django.core.mail
 from django.core.urlresolvers import reverse
 
@@ -63,7 +62,7 @@ class ThreadModelTestsWithGroupsEnabled(AskbotTestCase):
     def test_answer_to_private_question_is_not_globally_visible(self):
         question = self.post_question(user=self.admin, is_private=True)
         answer = self.post_answer(question=question, user=self.admin, is_private=False)
-        global_group = get_global_group()
+        global_group = models.Group.objects.get_global_group()
         self.assertEqual(
             global_group in set(answer.groups.all()),
             False
@@ -74,7 +73,7 @@ class ThreadModelTestsWithGroupsEnabled(AskbotTestCase):
         question = self.post_question(user=self.user, group_id=self.group.id)
         #answer posted by a group member
         answer = self.post_answer(question=question, user=self.admin, is_private=False)
-        global_group = get_global_group()
+        global_group = models.Group.objects.get_global_group()
         self.assertEqual(
             global_group in set(answer.groups.all()),
             False

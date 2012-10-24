@@ -41,9 +41,6 @@ from askbot.models.question import QuestionView, AnonymousQuestion
 from askbot.models.question import DraftQuestion
 from askbot.models.question import FavoriteQuestion
 from askbot.models.tag import Tag, MarkedTag
-from askbot.models.tag import get_global_group
-from askbot.models.tag import get_group_names
-from askbot.models.tag import get_groups
 from askbot.models.tag import format_personal_group_name
 from askbot.models.user import EmailFeedSetting, ActivityAuditStatus, Activity
 from askbot.models.user import GroupMembership
@@ -2300,7 +2297,7 @@ def user_get_foreign_groups(self):
     """returns a query set of groups to which user does not belong"""
     #todo: maybe cache this query
     user_group_ids = self.get_groups().values_list('id', flat = True)
-    return get_groups().exclude(id__in = user_group_ids)
+    return Group.objects.exclude(id__in = user_group_ids)
 
 def user_get_primary_group(self):
     """a temporary function - returns ether None or
@@ -3501,9 +3498,8 @@ def add_user_to_global_group(sender, instance, created, **kwargs):
     ``instance`` is an instance of ``User`` class
     """
     if created:
-        from askbot.models.tag import get_global_group
         instance.edit_group_membership(
-            group=get_global_group(),
+            group=Group.objects.get_global_group(),
             user=instance,
             action='add'
         )
@@ -3696,6 +3692,4 @@ __all__ = [
         'ReplyAddress',
 
         'get_model',
-        'get_group_names',
-        'get_groups'
 ]

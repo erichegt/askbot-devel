@@ -30,8 +30,7 @@ from askbot.models.user import EmailFeedSetting
 from askbot.models.user import Group
 from askbot.models.user import GroupMembership
 from askbot.models.tag import Tag, MarkedTag
-from askbot.models.tag import get_groups, tags_match_some_wildcard
-from askbot.models.tag import get_global_group
+from askbot.models.tag import tags_match_some_wildcard
 from askbot.conf import settings as askbot_settings
 from askbot import exceptions
 from askbot.utils import markup
@@ -62,7 +61,7 @@ class PostQuerySet(models.query.QuerySet):
     def get_for_user(self, user):
         if askbot_settings.GROUPS_ENABLED:
             if user is None or user.is_anonymous():
-                groups = [get_global_group()]
+                groups = [Group.objects.get_global_group()]
             else:
                 groups = user.get_groups()
             return self.filter(groups__in = groups).distinct()
@@ -692,7 +691,7 @@ class Post(models.Model):
             groups = [group]
             self.add_to_groups(groups)
 
-            global_group = get_global_group()
+            global_group = Group.objects.get_global_group()
             if group != global_group:
                 self.remove_from_groups((global_group,))
         else:
@@ -706,7 +705,7 @@ class Post(models.Model):
                 groups = user.get_groups(private=True)
 
             self.add_to_groups(groups)
-            self.remove_from_groups((get_global_group(),))
+            self.remove_from_groups((Group.objects.get_global_group(),))
 
         if len(groups) == 0:
             message = 'Sharing did not work, because group is unknown'
@@ -714,13 +713,13 @@ class Post(models.Model):
 
     def make_public(self):
         """removes the privacy mark from users groups"""
-        groups = (get_global_group(),)
+        groups = (Group.objects.get_global_group(),)
         self.add_to_groups(groups)
 
     def is_private(self):
         """true, if post belongs to the global group"""
         if askbot_settings.GROUPS_ENABLED:
-            group = get_global_group()
+            group = Group.objects.get_global_group()
             return not self.groups.filter(id=group.id).exists()
         return False
 
