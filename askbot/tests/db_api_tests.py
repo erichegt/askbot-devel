@@ -185,8 +185,6 @@ class DBApiTests(AskbotTestCase):
         self.assertTrue(saved_question.thread.answer_count == 1)
 
     def test_unused_tag_is_auto_deleted(self):
-        import pdb
-        pdb.set_trace()
         self.user.retag_question(self.question, tags='one-tag')
         tag = models.Tag.objects.get(name='one-tag')
         self.assertEquals(tag.used_count, 1)

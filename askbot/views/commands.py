@@ -471,7 +471,7 @@ def get_tags_by_wildcard(request):
     """
     wildcard = request.GET.get('wildcard', None)
     if wildcard is None:
-        raise Http404
+        return HttpResponseForbidden()
 
     matching_tags = models.Tag.objects.get_by_wildcards( [wildcard,] )
     count = matching_tags.count()
@@ -1345,6 +1345,8 @@ def get_editor(request):
     * scripts - an array of script tags
     * success - True
     """
+    if 'config' not in request.GET:
+        return HttpResponseForbidden()
     config = simplejson.loads(request.GET['config'])
     form = forms.EditorForm(editor_attrs=config)
     editor_html = render_text_into_skin(
