@@ -1182,6 +1182,8 @@ class Thread(models.Model):
         else:
             added_tags = Tag.objects.none()
 
+        #this is odd: in sqlite you have to delete after creating new tags
+        #somehow sqlite does not continue the id sequence, like postgrjs&mysql do
         delete_tags(unused_tags)#tags with used_count == 0 are deleted
 
         #Save denormalized tag names on thread. Preserve order from user input.
