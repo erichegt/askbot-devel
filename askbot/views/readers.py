@@ -509,7 +509,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
         from askbot import tasks
         tasks.record_question_visit.delay(
             question_post = question_post,
-            user = request.user,
+            user_id = request.user.id,
             update_view_count = update_view_count
         )
 

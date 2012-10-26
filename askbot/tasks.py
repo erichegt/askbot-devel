@@ -138,7 +138,7 @@ def record_post_update_celery_task(
 @task(ignore_result = True)
 def record_question_visit(
     question_post = None,
-    user = None,
+    user_id = None,
     update_view_count = False):
     """celery task which records question visit by a person
     updates view counter, if necessary,
@@ -151,6 +151,8 @@ def record_question_visit(
     #).select_related('thread')[0]
     if update_view_count:
         question_post.thread.increase_view_count()
+
+    user = User.objects.get(id=user_id)
 
     if user.is_anonymous():
         return
