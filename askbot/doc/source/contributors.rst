@@ -51,7 +51,7 @@ Translations
 * Evgeny Fadeev - English
 * Oktay Yildiz, Onur Mat, Cemre - Turkish
 * Jérôme Blondon (bearstech) - French
-* Pekka Gaiser - German
+* Pekka Gaiser, Edur - German
 * Pekka Järvinen - Finnish
 * Adi Robian - Romanian
 * `Stefano Mancini <https://github.com/xponrails>`_, Dario Ghilardi, Federico Poloni, `Luca Ferroni <http://www.linkedin.com/in/lucaferroni>`_ - Italian
