@@ -674,7 +674,7 @@ class Post(models.Model):
                 return
             cache.cache.set(cache_key, True, settings.NOTIFICATION_DELAY_TIME)
 
-        from askbot.models import send_instant_notifications_about_activity_in_post
+        from askbot.tasks import send_instant_notifications_about_activity_in_post
         send_instant_notifications_about_activity_in_post.apply_async((
                                 update_activity,
                                 self,
