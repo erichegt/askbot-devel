@@ -1159,9 +1159,7 @@ class Thread(models.Model):
         #todo - this can actually be done asynchronously - not so important
         modified_tags, unused_tags = separate_unused_tags(removed_tags)
 
-        delete_tags(unused_tags)#tags with used_count == 0 are deleted
         modified_tags = removed_tags
-
         #add new tags to the relation
         added_tagnames = updated_tagnames - previous_tagnames
 
@@ -1183,6 +1181,8 @@ class Thread(models.Model):
             modified_tags.extend(added_tags)
         else:
             added_tags = Tag.objects.none()
+
+        delete_tags(unused_tags)#tags with used_count == 0 are deleted
 
         #Save denormalized tag names on thread. Preserve order from user input.
         accepted_added_tags = filter_accepted_tags(added_tags)
