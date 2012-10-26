@@ -712,6 +712,7 @@ MessageCenter.prototype.decorate = function(element) {
         threadContainer.decorate(threadElement);
     } else {
         this._secondCol.append(threadContainer.getElement());
+        threadContainer.hide();
     }
 
     var me = this;
