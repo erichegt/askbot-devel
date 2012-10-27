@@ -30,7 +30,6 @@ from askbot import models
 from askbot import forms
 from askbot.conf import should_show_sort_by_relevance
 from askbot.conf import settings as askbot_settings
-from askbot.models.tag import get_global_group
 from askbot.utils import category_tree
 from askbot.utils import decorators
 from askbot.utils import url_utils
@@ -472,7 +471,7 @@ def get_tags_by_wildcard(request):
     """
     wildcard = request.GET.get('wildcard', None)
     if wildcard is None:
-        raise Http404
+        return HttpResponseForbidden()
 
     matching_tags = models.Tag.objects.get_by_wildcards( [wildcard,] )
     count = matching_tags.count()
@@ -649,7 +648,7 @@ def add_tag_category(request):
 def get_groups_list(request):
     """returns names of group tags
     for the autocomplete function"""
-    global_group = get_global_group()
+    global_group = models.Group.objects.get_global_group()
     groups = models.Group.objects.exclude_personal()
     group_names = groups.exclude(
                         name=global_group.name
@@ -1346,6 +1345,8 @@ def get_editor(request):
     * scripts - an array of script tags
     * success - True
     """
+    if 'config' not in request.GET:
+        return HttpResponseForbidden()
     config = simplejson.loads(request.GET['config'])
     form = forms.EditorForm(editor_attrs=config)
     editor_html = render_text_into_skin(

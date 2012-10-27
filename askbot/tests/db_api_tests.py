@@ -15,7 +15,6 @@ from askbot.tests.utils import with_settings
 from askbot import models
 from askbot import const
 from askbot.conf import settings as askbot_settings
-from askbot.models.tag import get_global_group
 import datetime
 
 class DBApiTests(AskbotTestCase):
@@ -515,11 +514,11 @@ class GroupTests(AskbotTestCase):
 
     def test_global_group_name_setting_changes_group_name(self):
         askbot_settings.update('GLOBAL_GROUP_NAME', 'all-people')
-        group = get_global_group()
+        group = models.Group.objects.get_global_group()
         self.assertEqual(group.name, 'all-people')
 
     def test_ask_global_group_by_id_works(self):
-        group = get_global_group()
+        group = models.Group.objects.get_global_group()
         q = self.post_question(user=self.u1, group_id=group.id)
         self.assertEqual(q.groups.count(), 2)
         self.assertEqual(q.groups.filter(name=group.name).exists(), True)
@@ -601,7 +600,7 @@ class GroupTests(AskbotTestCase):
 
         data['thread'].make_public(recursive=True)
 
-        global_group = get_global_group()
+        global_group = models.Group.objects.get_global_group()
         groups = [global_group, private_group, self.u1.get_personal_group()]
         self.assertObjectGroupsEqual(data['thread'], groups)
         self.assertObjectGroupsEqual(data['question'], groups)
@@ -616,7 +615,7 @@ class GroupTests(AskbotTestCase):
         thread = data['thread']
         thread.add_to_groups([private_group], recursive=True)
 
-        global_group = get_global_group()
+        global_group = models.Group.objects.get_global_group()
         groups = [global_group, private_group, self.u1.get_personal_group()]
         self.assertObjectGroupsEqual(thread, groups)
         self.assertObjectGroupsEqual(data['question'], groups)

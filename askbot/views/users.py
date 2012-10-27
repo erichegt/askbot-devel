@@ -39,8 +39,6 @@ from askbot.conf import settings as askbot_settings
 from askbot import models
 from askbot import exceptions
 from askbot.models.badges import award_badges_signal
-from askbot.models.tag import get_global_group
-from askbot.models.tag import get_groups
 from askbot.models.tag import format_personal_group_name
 from askbot.skins.loaders import render_into_skin
 from askbot.search.state_manager import SearchState
@@ -65,7 +63,7 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
     """Users view, including listing of users by group"""
 
     if askbot_settings.GROUPS_ENABLED and not by_group:
-        default_group = get_global_group()
+        default_group = models.Group.objects.get_global_group()
         group_slug = slugify(default_group.name)
         new_url = reverse('users_by_group',
                 kwargs={'group_id': default_group.id,
@@ -178,7 +176,7 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
     #extra context for the groups
     if askbot_settings.GROUPS_ENABLED:
         #todo: cleanup this branched code after groups are migrated to auth_group
-        user_groups = get_groups().exclude_personal()
+        user_groups = models.Group.objects.exclude_personal()
         if len(user_groups) <= 1:
             assert(user_groups[0].name == askbot_settings.GLOBAL_GROUP_NAME)
             user_groups = None
@@ -491,7 +489,7 @@ def user_stats(request, user, context):
 
     user_groups = models.Group.objects.get_for_user(user = user)
     user_groups = user_groups.exclude_personal()
-    global_group = get_global_group()
+    global_group = models.Group.objects.get_global_group()
     user_groups = user_groups.exclude(name=global_group.name)
 
     if request.user == user:
@@ -599,7 +597,7 @@ def user_recent(request, user, context):
         elif activity.activity_type == const.TYPE_ACTIVITY_COMMENT_QUESTION:
             cm = activity.content_object
             q = cm.parent
-            assert q.is_question()
+            #assert q.is_question(): todo the activity types may be wrong
             if not q.deleted:
                 activities.append(Event(
                     time=cm.added_at,
@@ -613,7 +611,7 @@ def user_recent(request, user, context):
         elif activity.activity_type == const.TYPE_ACTIVITY_COMMENT_ANSWER:
             cm = activity.content_object
             ans = cm.parent
-            assert ans.is_answer()
+            #assert ans.is_answer()
             question = ans.thread._question_post()
             if not ans.deleted and not question.deleted:
                 activities.append(Event(
