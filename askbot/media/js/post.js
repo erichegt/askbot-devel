@@ -1635,6 +1635,7 @@ EditCommentForm.prototype.getSaveHandler = function(){
             dataType: "json",
             data: post_data,
             success: function(json) {
+                //type is 'edit' or 'add'
                 if (me._type == 'add'){
                     me._comment.dispose();
                     me._comment.getContainerWidget().reRenderComments(json);
