@@ -61,11 +61,8 @@ def ask_widget(request, widget_id):
     widget = get_object_or_404(models.AskWidget, id=widget_id)
 
     if request.method == "POST":
-        form = forms.AskWidgetForm(
-                    include_text=widget.include_text_field,
-                    data=request.POST,
-                    user=request.user
-                )
+        form = forms.AskWidgetForm(include_text=widget.include_text_field,
+                data=request.POST)
         if form.is_valid():
             ask_anonymously = form.cleaned_data['ask_anonymously']
             title = form.cleaned_data['title']
@@ -119,10 +116,7 @@ def ask_widget(request, widget_id):
                 next_url = '%s?next=%s' % (reverse('widget_signin'), reverse('ask_by_widget'))
                 return redirect(next_url)
 
-        form = forms.AskWidgetForm(
-            include_text=widget.include_text_field,
-            user=request.user
-        )
+        form = forms.AskWidgetForm(include_text=widget.include_text_field)
 
     data = {
             'form': form,

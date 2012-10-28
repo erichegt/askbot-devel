@@ -362,10 +362,10 @@ def process_emailed_question(
             'subject': subject,
             'body_text': body_text
         }
-        user = User.objects.get(email__iexact = email_address)
-        form = AskByEmailForm(data, user=user)
+        form = AskByEmailForm(data)
         if form.is_valid():
             email_address = form.cleaned_data['email']
+            user = User.objects.get(email__iexact = email_address)
 
             if user.can_post_by_email() is False:
                 raise PermissionDenied(messages.insufficient_reputation(user))

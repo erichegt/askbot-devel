@@ -884,6 +884,17 @@ class Post(models.Model):
             if parent_post is None:
                 break
             quote_level += 1
+            """
+            output += '<p>'
+            output += _(
+                'In reply to %(user)s %(post)s of %(date)s'
+            ) % {
+                'user': parent_post.author.username,
+                'post': _(parent_post.post_type),
+                'date': parent_post.added_at.strftime(const.DATETIME_FORMAT)
+            }
+            output += '</p>'
+            """
             output += parent_post.format_for_email(
                 quote_level = quote_level,
                 format = 'parent_subthread'

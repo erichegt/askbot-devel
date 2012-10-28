@@ -549,7 +549,7 @@ def question(request, id):#refactor - long subroutine. display question body, an
         if drafts.count() > 0:
             initial['text'] = drafts[0].text
 
-    answer_form = AnswerForm(initial, user=request.user)
+    answer_form = AnswerForm(initial)
 
     user_can_post_comment = (
         request.user.is_authenticated() and request.user.can_post_comment()
