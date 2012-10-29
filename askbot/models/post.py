@@ -503,8 +503,8 @@ class Post(models.Model):
 
         last_revision = self.html
         data = self.parse_post_text()
+        self.html = author.fix_html_links(data['html'])
 
-        self.html = data['html']
         newly_mentioned_users = set(data['newly_mentioned_users']) - set([author])
         removed_mentions = data['removed_mentions']
 

@@ -57,6 +57,7 @@ from askbot.models.widgets import AskWidget, QuestionWidget
 from askbot import auth
 from askbot.utils.decorators import auto_now_timestamp
 from askbot.utils.slug import slugify
+from askbot.utils.html import replace_links_with_text
 from askbot.utils.html import sanitize_html
 from askbot.utils.diff import textDiff as htmldiff
 from askbot.utils.url_utils import strip_path
@@ -2478,6 +2479,25 @@ def _process_vote(user, post, timestamp=None, cancel=False, vote_type=None):
                 )
     return vote
 
+def user_fix_html_links(self, text):
+    """depending on the user's privilege, allow links
+    and hotlinked images or replace them with plain text
+    url
+    """
+    is_simple_user = not self.is_administrator_or_moderator()
+    has_low_rep = self.reputation < askbot_settings.MIN_REP_TO_INSERT_LINK
+    if is_simple_user and has_low_rep:
+        result = replace_links_with_text(text)
+        if result != text:
+            message = ungettext(
+                'At least %d karma point is required to insert links',
+                'At least %d karma points is required to insert links',
+                askbot_settings.MIN_REP_TO_INSERT_LINK
+            ) % askbot_settings.MIN_REP_TO_INSERT_LINK
+            self.message_set.create(message=message)
+        return result
+    return text
+
 def user_unfollow_question(self, question = None):
     self.followed_threads.remove(question.thread)
 
@@ -2790,6 +2810,7 @@ User.add_to_class('get_tag_filtered_questions', user_get_tag_filtered_questions)
 User.add_to_class('get_messages', get_messages)
 User.add_to_class('delete_messages', delete_messages)
 User.add_to_class('toggle_favorite_question', toggle_favorite_question)
+User.add_to_class('fix_html_links', user_fix_html_links)
 User.add_to_class('follow_question', user_follow_question)
 User.add_to_class('unfollow_question', user_unfollow_question)
 User.add_to_class('is_following_question', user_is_following_question)

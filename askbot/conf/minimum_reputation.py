@@ -107,6 +107,15 @@ settings.register(
 settings.register(
     livesettings.IntegerValue(
         MIN_REP,
+        'MIN_REP_TO_INSERT_LINK',
+        default=10,
+        description=_('Insert links')
+    )
+)
+
+settings.register(
+    livesettings.IntegerValue(
+        MIN_REP,
         'MIN_REP_TO_CLOSE_OWN_QUESTIONS',
         default=25,
         description=_('Close own questions'),
