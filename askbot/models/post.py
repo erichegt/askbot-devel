@@ -503,8 +503,8 @@ class Post(models.Model):
 
         last_revision = self.html
         data = self.parse_post_text()
+        self.html = author.fix_html_links(data['html'])
 
-        self.html = data['html']
         newly_mentioned_users = set(data['newly_mentioned_users']) - set([author])
         removed_mentions = data['removed_mentions']
 
@@ -674,7 +674,7 @@ class Post(models.Model):
                 return
             cache.cache.set(cache_key, True, settings.NOTIFICATION_DELAY_TIME)
 
-        from askbot.models import send_instant_notifications_about_activity_in_post
+        from askbot.tasks import send_instant_notifications_about_activity_in_post
         send_instant_notifications_about_activity_in_post.apply_async((
                                 update_activity,
                                 self,

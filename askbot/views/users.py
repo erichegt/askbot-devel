@@ -597,7 +597,7 @@ def user_recent(request, user, context):
         elif activity.activity_type == const.TYPE_ACTIVITY_COMMENT_QUESTION:
             cm = activity.content_object
             q = cm.parent
-            assert q.is_question()
+            #assert q.is_question(): todo the activity types may be wrong
             if not q.deleted:
                 activities.append(Event(
                     time=cm.added_at,
@@ -611,7 +611,7 @@ def user_recent(request, user, context):
         elif activity.activity_type == const.TYPE_ACTIVITY_COMMENT_ANSWER:
             cm = activity.content_object
             ans = cm.parent
-            assert ans.is_answer()
+            #assert ans.is_answer()
             question = ans.thread._question_post()
             if not ans.deleted and not question.deleted:
                 activities.append(Event(

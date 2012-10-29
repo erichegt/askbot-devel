@@ -1,11 +1,11 @@
 """Utilities for working with HTML."""
+from bs4 import BeautifulSoup
 import html5lib
 from html5lib import sanitizer, serializer, tokenizer, treebuilders, treewalkers
 import re
 import htmlentitydefs
 from urlparse import urlparse
 from django.core.urlresolvers import reverse
-from django.utils.html import escape
 from askbot.conf import settings as askbot_settings
 
 class HTMLSanitizerMixin(sanitizer.HTMLSanitizerMixin):
@@ -55,11 +55,46 @@ def absolutize_urls(html):
     img_replacement = '\g<prefix>"%s/\g<url>" style="max-width:500px;"' % askbot_settings.APP_URL
     replacement = '\g<prefix>"%s\g<url>"' % askbot_settings.APP_URL
     html = url_re1.sub(img_replacement, html)
-    html= url_re2.sub(img_replacement, html)
+    html = url_re2.sub(img_replacement, html)
     html = url_re3.sub(replacement, html)
     #temporal fix for bad regex with wysiwyg editor
     return url_re4.sub(replacement, html).replace('%s//' % askbot_settings.APP_URL,
                                                   '%s/' % askbot_settings.APP_URL)
+
+def replace_links_with_text(html):
+    """any absolute links will be replaced with the
+    url in plain text, same with any img tags
+    """
+    def format_url_replacement(url, text):
+        url = url.strip()
+        text = text.strip()
+        url_domain = urlparse(url).netloc
+        if url and text and url_domain != text and url != text:
+            return '%s (%s)' % (url, text)
+        return url or text or ''
+            
+    soup = BeautifulSoup(html)
+    abs_url_re = r'^http(s)?://'
+
+    images = soup.find_all('img')
+    for image in images:
+        url = image.get('src', '')
+        text = image.get('alt', '')
+        if url == '' or re.match(abs_url_re, url):
+            image.replaceWith(format_url_replacement(url, text))
+
+    links = soup.find_all('a')
+    for link in links:
+        url = link.get('href', '')
+        text = ''.join(link.text) or ''
+
+        if text == '':#this is due to an issue with url inlining in comments
+            link.replaceWith('')
+        elif url == '' or re.match(abs_url_re, url):
+            link.replaceWith(format_url_replacement(url, text))
+
+    return soup.find('body').renderContents()
+            
 
 def sanitize_html(html):
     """Sanitizes an HTML fragment."""

@@ -57,6 +57,7 @@ from askbot.models.widgets import AskWidget, QuestionWidget
 from askbot import auth
 from askbot.utils.decorators import auto_now_timestamp
 from askbot.utils.slug import slugify
+from askbot.utils.html import replace_links_with_text
 from askbot.utils.html import sanitize_html
 from askbot.utils.diff import textDiff as htmldiff
 from askbot.utils.url_utils import strip_path
@@ -2478,6 +2479,25 @@ def _process_vote(user, post, timestamp=None, cancel=False, vote_type=None):
                 )
     return vote
 
+def user_fix_html_links(self, text):
+    """depending on the user's privilege, allow links
+    and hotlinked images or replace them with plain text
+    url
+    """
+    is_simple_user = not self.is_administrator_or_moderator()
+    has_low_rep = self.reputation < askbot_settings.MIN_REP_TO_INSERT_LINK
+    if is_simple_user and has_low_rep:
+        result = replace_links_with_text(text)
+        if result != text:
+            message = ungettext(
+                'At least %d karma point is required to insert links',
+                'At least %d karma points is required to insert links',
+                askbot_settings.MIN_REP_TO_INSERT_LINK
+            ) % askbot_settings.MIN_REP_TO_INSERT_LINK
+            self.message_set.create(message=message)
+        return result
+    return text
+
 def user_unfollow_question(self, question = None):
     self.followed_threads.remove(question.thread)
 
@@ -2790,6 +2810,7 @@ User.add_to_class('get_tag_filtered_questions', user_get_tag_filtered_questions)
 User.add_to_class('get_messages', get_messages)
 User.add_to_class('delete_messages', delete_messages)
 User.add_to_class('toggle_favorite_question', toggle_favorite_question)
+User.add_to_class('fix_html_links', user_fix_html_links)
 User.add_to_class('follow_question', user_follow_question)
 User.add_to_class('unfollow_question', user_unfollow_question)
 User.add_to_class('is_following_question', user_is_following_question)
@@ -3058,80 +3079,6 @@ def get_reply_to_addresses(user, post):
                                                     **reply_args
                                                 ).as_email_address()
     return primary_addr, secondary_addr
-
-#todo: action
-@task()
-def send_instant_notifications_about_activity_in_post(
-                                                update_activity = None,
-                                                post = None,
-                                                recipients = None,
-                                            ):
-    #reload object from the database
-    post = Post.objects.get(id=post.id)
-    if post.is_approved() is False:
-        return
-
-    if recipients is None:
-        return
-
-    acceptable_types = const.RESPONSE_ACTIVITY_TYPES_FOR_INSTANT_NOTIFICATIONS
-
-    if update_activity.activity_type not in acceptable_types:
-        return
-
-    #calculate some variables used in the loop below
-    from askbot.skins.loaders import get_template
-    update_type_map = const.RESPONSE_ACTIVITY_TYPE_MAP_FOR_TEMPLATES
-    update_type = update_type_map[update_activity.activity_type]
-    origin_post = post.get_origin_post()
-    headers = mail.thread_headers(
-                            post,
-                            origin_post,
-                            update_activity.activity_type
-                        )
-
-    logger = logging.getLogger()
-    if logger.getEffectiveLevel() <= logging.DEBUG:
-        log_id = uuid.uuid1()
-        message = 'email-alert %s, logId=%s' % (post.get_absolute_url(), log_id)
-        logger.debug(message)
-    else:
-        log_id = None
-
-
-    for user in recipients:
-        if user.is_blocked():
-            continue
-
-        reply_address, alt_reply_address = get_reply_to_addresses(user, post)
-
-        subject_line, body_text = format_instant_notification_email(
-                            to_user = user,
-                            from_user = update_activity.user,
-                            post = post,
-                            reply_address = reply_address,
-                            alt_reply_address = alt_reply_address,
-                            update_type = update_type,
-                            template = get_template('email/instant_notification.html')
-                        )
-
-        headers['Reply-To'] = reply_address
-        try:
-            mail.send_mail(
-                subject_line=subject_line,
-                body_text=body_text,
-                recipient_list=[user.email],
-                related_object=origin_post,
-                activity_type=const.TYPE_ACTIVITY_EMAIL_UPDATE_SENT,
-                headers=headers,
-                raise_on_failure=True
-            )
-        except askbot_exceptions.EmailNotSent, error:
-            logger.debug(
-                '%s, error=%s, logId=%s' % (user.email, error, log_id)
-            )
-        else:
-            logger.debug('success %s, logId=%s' % (user.email, log_id))
 
 
 def notify_author_of_published_revision(

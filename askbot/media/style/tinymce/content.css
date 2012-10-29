@@ -51,8 +51,78 @@ font[face=mceinline] {font-family:inherit !important}
 
 /* overrides on top of default */
 body.mceContentBody {
-    font-size: 13px;
-    background-color:#fff;
-    padding: 0;
+    font-size: 14px;
+    background-color: white;
+    padding: 5px;
+    margin: 0;
     line-height:135%;
+    color: #525252;
+    font-family: Arial;
+}
+
+body.mceContentBody p {
+   margin-bottom: 14px;
+   line-height: 1.4;
+   font-size: 14px;
+}
+
+body.mceContentBody p:last-child {
+    margin-bottom: 0;
+}
+
+body.mceContentBody pre {
+    background-color: #E7F1F8;
+}
+
+body.mceContentBody blockquote {
+    background-color: #eee;
+}
+
+body.mceContentBody img {
+    max-width: 600px;
+}
+
+body.mceContentBody a {
+    color: #1b79bd;
+}
+
+body.mceContentBody li {
+    margin-bottom:7px;
+    font-size:14px;
+}
+
+body.mceContentBody ul {
+    list-style: disc;
+    margin-left: 20px;
+    padding-left: 0px;
+    margin-bottom: 1em;
+}
+
+body.mceContentBody ol {
+    list-style: decimal;
+    margin-left: 30px;
+    margin-bottom: 1em;
+    padding-left: 0px;
+}
+
+body.mceContentBody pre {
+    font-family: Consolas, Monaco, Liberation Mono, Lucida Console, Monospace;
+    font-size: 100%;
+    margin-bottom: 10px;
+    background-color: #F5F5F5;
+    padding-left: 5px;
+    padding-top: 5px;
+    padding-bottom: 20px ! ie7;
+}
+
+body.mceContentBody code {
+    font-family: Consolas, Monaco, Liberation Mono, Lucida Console, Monospace;
+    font-size: 100%;
+}
+
+body.mceContentBody blockquote {
+    margin-bottom: 10px;
+    margin-right: 15px;
+    padding: 10px 0px 1px 10px;
+    background-color: #F5F5F5;
 }

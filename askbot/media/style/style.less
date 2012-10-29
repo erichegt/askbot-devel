@@ -102,18 +102,15 @@ pre {
     font-family: Consolas, Monaco, Liberation Mono, Lucida Console, Monospace;
     font-size: 100%;
     margin-bottom: 10px;
-    /*overflow: auto;*/
     background-color: #F5F5F5;
     padding-left: 5px;
     padding-top: 5px;
-    /*width: 671px;*/
     padding-bottom: 20px ! ie7;
 }
 
 code {
     font-family: Consolas, Monaco, Liberation Mono, Lucida Console, Monospace;
     font-size: 100%;
-
 }
 
 blockquote {
@@ -1678,15 +1675,16 @@ ul#related-tags li {
 }
 
 .wmd-preview {
+    color: #525252;
     margin: 0;
     padding: 5px;
     background-color: #F5F5F5;
     min-height: 20px;
     overflow: auto;
     font-size:13px;
-    font-family:@body-font;
+    font-family: @body-font;
 
-    p{
+    p {
        margin-bottom: 14px;
        line-height: 1.4;
        font-size: 14px;
@@ -1695,19 +1693,27 @@ ul#related-tags li {
     p:last-child{
         margin-bottom: 0;
     }
-}
 
-.wmd-preview pre {
-    background-color: #E7F1F8;
+    pre {
+        background-color: #E7F1F8;
+    }
 
-}
+    blockquote {
+        background-color: #eee;
+    }
 
-.wmd-preview blockquote {
-    background-color: #eee;
-}
+    img {
+        max-width: 600px;
+    }
 
-.wmd-preview IMG {
-    max-width: 600px;
+    a {
+        color: @link;
+    }
+
+    li {
+        margin-bottom:7px;
+        font-size:14px;
+    }
 }
 
 .defaultSkin table.mceLayout,
@@ -3603,17 +3609,6 @@ p.signup_p {
     input {
         display: inline;
     }
-}
-
-/* a workaround to set link colors correctly */
-
-.wmd-preview a {
-    color:@link;
-}
-
-.wmd-preview li {
-    margin-bottom:7px;
-    font-size:14px;
 }
 
 .search-result-summary {

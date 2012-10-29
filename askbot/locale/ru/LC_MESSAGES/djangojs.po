@@ -346,7 +346,7 @@ msgstr "Пожалуйста, выберите и загрузите файл:"
 #~ msgid "cancel"
 #~ msgstr "отмена"
 
-#~ msgid "confirm abandon comment"
+#~ msgid "Are you sure you don't want to post this comment?"
 #~ msgstr "Вы действительно уверены, что не хотите добавлять этот комментарий?"
 
 #~ msgid "confirm delete comment"

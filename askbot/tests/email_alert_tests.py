@@ -1037,7 +1037,11 @@ class PostApprovalTests(utils.AskbotTestCase):
 
 
 class AbsolutizeUrlsInEmailsTests(utils.AskbotTestCase):
-    @with_settings(MIN_REP_TO_TRIGGER_EMAIL=1, APP_URL='http://example.com/')
+    @with_settings(
+        MIN_REP_TO_TRIGGER_EMAIL=1,
+        APP_URL='http://example.com/',
+        MIN_REP_TO_INSERT_LINK=1
+    )
     def test_urls_are_absolute(self):
         u1 = self.create_user('u1')
         max_email = models.EmailFeedSetting.MAX_EMAIL_SCHEDULE

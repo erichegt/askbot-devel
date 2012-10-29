@@ -2,6 +2,7 @@ from django.test import TestCase
 from askbot.tests.utils import with_settings
 from askbot.utils.url_utils import urls_equal
 from askbot.utils.html import absolutize_urls
+from askbot.utils.html import replace_links_with_text
 from askbot.conf import settings as askbot_settings
 
 class UrlUtilsTests(TestCase):
@@ -17,11 +18,58 @@ class UrlUtilsTests(TestCase):
 
         self.assertTrue(e('http://cnn.com/path', 'http://cnn.com/path/', True))
         self.assertFalse(e('http://cnn.com/path', 'http://cnn.com/path/'))
-        
+
+
+class ReplaceLinksWithTextTests(TestCase):
+    """testing correctness of `askbot.utils.html.replace_links_with_text"""
+
+    def test_local_link_not_replaced(self):
+        text = '<a href="/some-link">some link</a>'
+        self.assertEqual(replace_links_with_text(text), text) 
+
+    def test_link_without_url_replaced(self):
+        text = '<a>some link</a>'
+        self.assertEqual(replace_links_with_text(text), 'some link') 
+
+    def test_external_link_without_text_replaced(self):
+        text = '<a href="https://example.com/"></a>'
+        #in this case we delete the link
+        self.assertEqual(replace_links_with_text(text), '') 
+
+    def test_external_link_with_text_replaced(self):
+        text = '<a href="https://example.com/">some link</a>'
+        self.assertEqual(
+            replace_links_with_text(text),
+            'https://example.com/ (some link)'
+        )
+
+    def test_local_image_not_replaced(self):
+        text = '<img src="/some-image.gif"/>'
+        self.assertEqual(replace_links_with_text(text), text) 
+
+    def test_local_url_with_hotlinked_image_replaced(self):
+        text = '<a href="/some-link"><img src="http://example.com/img.png" alt="picture""> some text</a>'
+        self.assertEqual(
+            replace_links_with_text(text),
+            '<a href="/some-link">http://example.com/img.png (picture) some text</a>'
+        )
+
+    def test_hotlinked_image_without_alt_replaced(self):
+        text = '<img src="https://example.com/some-image.gif"/>'
+        self.assertEqual(
+            replace_links_with_text(text),
+            'https://example.com/some-image.gif'
+        )
+
+    def test_hotlinked_image_with_alt_replaced(self):
+        text = '<img src="https://example.com/some-image.gif" alt="picture"/>'
+        self.assertEqual(
+            replace_links_with_text(text),
+            'https://example.com/some-image.gif (picture)'
+        )
 
 class HTMLUtilsTests(TestCase):
     """tests for :mod:`askbot.utils.html` module"""
-
     @with_settings(APP_URL='http://example.com')
     def test_absolutize_urls(self):
         text = """<img class="junk" src="/some.gif"> <img class="junk" src="/cat.gif"> <IMG SRC='/some.png'>"""
