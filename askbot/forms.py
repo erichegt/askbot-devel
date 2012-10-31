@@ -775,6 +775,7 @@ class PostPrivatelyForm(forms.Form, FormWithHideableFields):
     def allows_post_privately(self):
         user = self._user
         return (
+            askbot_settings.GROUPS_ENABLED and \
             user and user.is_authenticated() and \
             user.can_make_group_private_posts()
         )
