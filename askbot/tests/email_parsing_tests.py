@@ -30,4 +30,11 @@ u'\n\nthis is my reply!\n\nOn Wed, Oct 31, 2012 at 1:45 AM, <kp@kp-dev.askbot.co
 u'\n\nthis is my another reply!\n\nOn Wed, Oct 31, 2012 at 1:45 AM, <kp@kp-dev.askbot.com> wrote:\n>\n> '
 
 u'\n\nSending this from my yahoo mail account.\n\n\n\n________________________________\n From: "kp@kp-dev.askbot.com" <kp@kp-dev.askbot.com>\nTo: fadeev@rocketmail.com \nSent: Wednesday, October 31, 2012 2:41 AM\nSubject: "This is my test question"\n \n\n  \n \n \n'
+
+u'On Monday 01 October 2012 21:22:44 you wrote: \n\nSecond try, no HTML kmail does weird things.'
+
+u'outlook.com (new hotmail) with RTF on \n\nSubject: "Posting a question by email." \nFrom: kp@kp-dev.askbot.com \nTo: aj_fitoria@hotmail.com \nDate: Thu, 1 Nov 2012 16:30:27 +0000'
+
+u'reply from hotmail without RTF \n________________________________ \n> Subject: "test with recovered signature" \n> From: kp@kp-dev.askbot.com \n> To: aj_fitoria@hotmail.com \n> Date: Thu, 1 Nov 2012 16:44:35 +0000'
+
 """
