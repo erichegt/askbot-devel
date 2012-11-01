@@ -2490,8 +2490,8 @@ def user_fix_html_links(self, text):
         result = replace_links_with_text(text)
         if result != text:
             message = ungettext(
-                'At least %d karma point is required to insert links',
-                'At least %d karma points is required to insert links',
+                'At least %d karma point is required to post links',
+                'At least %d karma points is required to post links',
                 askbot_settings.MIN_REP_TO_INSERT_LINK
             ) % askbot_settings.MIN_REP_TO_INSERT_LINK
             self.message_set.create(message=message)

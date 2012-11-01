@@ -211,7 +211,7 @@ def ask(request):#view used to ask a new question
     user can start posting a question anonymously but then
     must login/register in order for the question go be shown
     """
-    form = forms.AskForm(request.REQUEST)
+    form = forms.AskForm(request.REQUEST, user=request.user)
     if request.method == 'POST':
         if form.is_valid():
             timestamp = datetime.datetime.now()
@@ -264,7 +264,7 @@ def ask(request):#view used to ask a new question
                 return HttpResponseRedirect(url_utils.get_login_url())
 
     if request.method == 'GET':
-        form = forms.AskForm()
+        form = forms.AskForm(user=request.user)
 
     draft_title = ''
     draft_text = ''
@@ -386,24 +386,24 @@ def edit_question(request, id):
                     rev_id = revision_form.cleaned_data['revision']
                     revision = question.revisions.get(revision = rev_id)
                     form = forms.EditQuestionForm(
-                                            question = question,
-                                            user = request.user,
-                                            revision = revision
+                                            question=question,
+                                            user=request.user,
+                                            revision=revision
                                         )
                 else:
                     form = forms.EditQuestionForm(
                                             request.POST,
-                                            question = question,
-                                            user = request.user,
-                                            revision = revision
+                                            question=question,
+                                            user=quest.user,
+                                            revision=revision
                                         )
             else:#new content edit
                 # Always check modifications against the latest revision
                 form = forms.EditQuestionForm(
                                         request.POST,
-                                        question = question,
-                                        revision = revision,
-                                        user = request.user,
+                                        question=question,
+                                        revision=revision,
+                                        user=request.user,
                                     )
                 revision_form = forms.RevisionForm(question, revision)
                 if form.is_valid():
@@ -437,10 +437,10 @@ def edit_question(request, id):
                 'wiki': question.wiki
             }
             form = forms.EditQuestionForm(
-                                    question = question,
-                                    revision = revision,
-                                    user = request.user,
-                                    initial = initial
+                                    question=question,
+                                    revision=revision,
+                                    user=request.user,
+                                    initial=initial
                                 )
 
         data = {
@@ -481,15 +481,20 @@ def edit_answer(request, id):
                     # Replace with those from the selected revision
                     rev = revision_form.cleaned_data['revision']
                     revision = answer.revisions.get(revision = rev)
-                    form = forms.EditAnswerForm(answer, revision)
+                    form = forms.EditAnswerForm(
+                                    answer, revision, user=request.user
+                                )
                 else:
                     form = forms.EditAnswerForm(
                                             answer,
                                             revision,
-                                            request.POST
+                                            request.POST,
+                                            user=request.user
                                         )
             else:
-                form = forms.EditAnswerForm(answer, revision, request.POST)
+                form = forms.EditAnswerForm(
+                    answer, revision, request.POST, user=request.user
+                )
                 revision_form = forms.RevisionForm(answer, revision)
 
                 if form.is_valid():
@@ -506,7 +511,7 @@ def edit_answer(request, id):
                     return HttpResponseRedirect(answer.get_absolute_url())
         else:
             revision_form = forms.RevisionForm(answer, revision)
-            form = forms.EditAnswerForm(answer, revision)
+            form = forms.EditAnswerForm(answer, revision, user=request.user)
             if request.user.can_make_group_private_posts():
                 form.initial['post_privately'] = answer.is_private()
         data = {
@@ -536,7 +541,7 @@ def answer(request, id):#process a new answer
     """
     question = get_object_or_404(models.Post, post_type='question', id=id)
     if request.method == "POST":
-        form = forms.AnswerForm(request.POST)
+        form = forms.AnswerForm(request.POST, user=request.user)
         if form.is_valid():
             wiki = form.cleaned_data['wiki']
             text = form.cleaned_data['text']

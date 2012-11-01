@@ -4,6 +4,7 @@ Changes in Askbot
 Development version
 -------------------
 * Added minimum reputation to insert links and hotlinked images (Evgeny)
+* Added minimum reputation to suggest links as plain text (Evgeny)
 * Added support of Haystack for search (Adolfo)
 * Added minimum reputation setting to accept any answer as correct (Evgeny)
 * Added "VIP" option to groups - if checked, all posts belong to the group and users of that group in the future will be able to moderate those posts. Moderation features for VIP group are in progress (Evgeny)
