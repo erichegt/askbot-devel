@@ -1,5 +1,7 @@
 from django import forms as django_forms
+from django.contrib.auth.models import AnonymousUser
 from askbot.tests.utils import AskbotTestCase
+from askbot.tests.utils import with_settings
 from askbot.conf import settings as askbot_settings
 from askbot import forms
 from askbot.utils import forms as util_forms
@@ -53,9 +55,10 @@ class AskByEmailFormTests(AskbotTestCase):
         and makes sure that tags and title are parsed out"""
         setting_backup = askbot_settings.TAGS_ARE_REQUIRED
         askbot_settings.update('TAGS_ARE_REQUIRED', True)
+        user = AnonymousUser()
         for test_case in SUBJECT_LINE_CASES:
             self.data['subject'] = test_case[0]
-            form = forms.AskByEmailForm(self.data)
+            form = forms.AskByEmailForm(self.data, user=user)
             output = test_case[1]
             if output is None:
                 self.assertFalse(form.is_valid())
@@ -75,10 +78,11 @@ class AskByEmailFormTests(AskbotTestCase):
         """loops through variants of the from field
         in the emails and tests the email address
         extractor"""
+        user = AnonymousUser()
         for test_case in EMAIL_CASES:
             self.data['sender'] = test_case[0]
             expected_result = test_case[1]
-            form = forms.AskByEmailForm(self.data)
+            form = forms.AskByEmailForm(self.data, user=user)
             if expected_result is None:
                 self.assertFalse(form.is_valid())
             else:
@@ -196,9 +200,9 @@ class EditQuestionAnonymouslyFormTests(AskbotTestCase):
             data['reveal_identity'] = 'on'
         self.form = forms.EditQuestionForm(
                         data,
-                        question = question,
-                        user = editor,
-                        revision = question.get_latest_revision(),
+                        question=question,
+                        user=editor,
+                        revision=question.get_latest_revision(),
                     )
 
     def test_reveal_identity_field(self):
@@ -230,7 +234,7 @@ class AskFormTests(AskbotTestCase):
         }
         if ask_anonymously == True:
             data['ask_anonymously'] = 'on'
-        self.form = forms.AskForm(data)
+        self.form = forms.AskForm(data, user=AnonymousUser())
         self.form.full_clean()
 
     def assert_anon_is(self, value):
@@ -317,7 +321,7 @@ class AnswerEditorFieldTests(AskbotTestCase):
     def setUp(self):
         self.old_min_length = askbot_settings.MIN_ANSWER_BODY_LENGTH
         askbot_settings.update('MIN_ANSWER_BODY_LENGTH', 10)
-        self.field = forms.AnswerEditorField()
+        self.field = forms.AnswerEditorField(user=AnonymousUser())
 
     def tearDown(self):
         askbot_settings.update('MIN_ANSWER_BODY_LENGTH', self.old_min_length)
@@ -364,8 +368,6 @@ class PostAsSomeoneFormTests(AskbotTestCase):
 
 class AskWidgetFormTests(AskbotTestCase):
 
-    form = forms.AskWidgetForm
-
     def setUp(self):
         self.good_data = {'title': "What's the price of a house in london?"}
         self.good_data_anon = {'title': "What's the price of a house in london?",
@@ -374,12 +376,40 @@ class AskWidgetFormTests(AskbotTestCase):
         self.bad_data = {'title': ''}
 
     def test_valid_input(self):
-        form_object = self.form(include_text=False, data=self.good_data)
-        print form_object.errors
+        form_object = forms.AskWidgetForm(
+            include_text=False, data=self.good_data, user=AnonymousUser()
+        )
         self.assertTrue(form_object.is_valid())
-        form_object = self.form(include_text=False, data=self.good_data_anon)
+        form_object = forms.AskWidgetForm(
+            include_text=False, data=self.good_data_anon, user=AnonymousUser()
+        )
         self.assertTrue(form_object.is_valid())
 
     def test_invalid_input(self):
-        form_object = self.form(False, data=self.bad_data)
+        form_object = forms.AskWidgetForm(
+            include_text=False, data=self.bad_data, user=AnonymousUser()
+        )
         self.assertFalse(form_object.is_valid())
+
+
+TEXT_WITH_LINK = 'blah blah http://example.com/url/image.png'
+class EditorFieldTests(AskbotTestCase):
+
+    def setUp(self):
+        self.user = self.create_user('user')
+        self.user.reputation = 5
+        self.user.save()
+
+    @with_settings(EDITOR_TYPE='markdown', MIN_REP_TO_SUGGEST_LINK=10)
+    def test_low_rep_user_cannot_post_links_markdown(self):
+        field = forms.EditorField(user=self.user)
+        self.assertRaises(
+            django_forms.ValidationError, field.clean, TEXT_WITH_LINK
+        )
+
+    @with_settings(EDITOR_TYPE='tinymce', MIN_REP_TO_SUGGEST_LINK=10)
+    def test_low_rep_user_cannot_post_links_tinymce(self):
+        field = forms.EditorField(user=self.user)
+        self.assertRaises(
+            django_forms.ValidationError, field.clean, TEXT_WITH_LINK
+        )

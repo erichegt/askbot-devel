@@ -11,6 +11,7 @@ from django.utils.text import get_text_list
 from django.contrib.auth.models import User
 from django_countries import countries
 from askbot.utils.forms import NextUrlField, UserNameField
+from askbot.utils.markup import URL_RE
 from askbot.mail import extract_first_email_address
 from recaptcha_works.fields import RecaptchaField
 from askbot.conf import settings as askbot_settings
@@ -273,6 +274,11 @@ class EditorField(forms.CharField):
     min_length = 10  # sentinel default value
 
     def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        if user is None:
+            raise ValueError('user parameter is required')
+        self.user = user
+
         editor_attrs = kwargs.pop('editor_attrs', {})
         super(EditorField, self).__init__(*args, **kwargs)
         self.required = True
@@ -295,6 +301,21 @@ class EditorField(forms.CharField):
                 self.min_length
             ) % self.min_length
             raise forms.ValidationError(msg)
+
+        if re.search(URL_RE, value):
+            min_rep = askbot_settings.MIN_REP_TO_SUGGEST_LINK
+            if self.user.is_anonymous():
+                raise forms.ValidationError(
+                    _('Links or images cannot be posted anonymously')
+                )
+            elif self.user.reputation < min_rep:
+                raise forms.ValidationError(
+                    ungettext_lazy(
+                        'At at least %d karma point is required to post links',
+                        'At at least %d karma points are required to post links',
+                        min_rep
+                    ) % min_rep
+                )
         return value
 
 
@@ -302,7 +323,10 @@ class QuestionEditorField(EditorField):
     """Editor field for the questions"""
 
     def __init__(self, *args, **kwargs):
-        super(QuestionEditorField, self).__init__(*args, **kwargs)
+        user = kwargs.pop('user', None)
+        super(QuestionEditorField, self).__init__(
+                                user=user, *args, **kwargs
+                            )
         self.length_error_template_singular = \
             'question body must be > %d character'
         self.length_error_template_plural = \
@@ -477,10 +501,12 @@ class EditorForm(forms.Form):
     the field must be created dynamically, so it's added
     in the __init__() function"""
 
-    def __init__(self, editor_attrs=None):
+    def __init__(self, user=None, editor_attrs=None):
         super(EditorForm, self).__init__()
         editor_attrs = editor_attrs or {}
-        self.fields['editor'] = EditorField(editor_attrs=editor_attrs)
+        self.fields['editor'] = EditorField(
+                                    user=user, editor_attrs=editor_attrs
+                                )
 
 
 class DumpUploadForm(forms.Form):
@@ -775,6 +801,7 @@ class PostPrivatelyForm(forms.Form, FormWithHideableFields):
     def allows_post_privately(self):
         user = self._user
         return (
+            askbot_settings.GROUPS_ENABLED and \
             user and user.is_authenticated() and \
             user.can_make_group_private_posts()
         )
@@ -897,9 +924,10 @@ class AskForm(PostAsSomeoneForm, PostPrivatelyForm):
     )
 
     def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
         super(AskForm, self).__init__(*args, **kwargs)
         #it's important that this field is set up dynamically
-        self.fields['text'] = QuestionEditorField()
+        self.fields['text'] = QuestionEditorField(user=user)
         #hide ask_anonymously field
         if askbot_settings.ALLOW_ASK_ANONYMOUSLY is False:
             self.hide_field('ask_anonymously')
@@ -932,11 +960,12 @@ class AskWidgetForm(forms.Form, FormWithHideableFields):
     )
 
     def __init__(self, include_text=True, *args, **kwargs):
+        user = kwargs.pop('user', None)
         super(AskWidgetForm, self).__init__(*args, **kwargs)
         #hide ask_anonymously field
         if not askbot_settings.ALLOW_ASK_ANONYMOUSLY:
             self.hide_field('ask_anonymously')
-        self.fields['text'] = QuestionEditorField()
+        self.fields['text'] = QuestionEditorField(user=user)
         if not include_text:
             self.hide_field('text')
             #hack to make it validate
@@ -1020,7 +1049,11 @@ class AskByEmailForm(forms.Form):
             'required': ASK_BY_EMAIL_SUBJECT_HELP
         }
     )
-    body_text = QuestionEditorField()
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super(AskByEmailForm, self).__init__(*args, **kwargs)
+        self.fields['body_text'] = QuestionEditorField(user=user)
 
     def clean_sender(self):
         """Cleans the :attr:`~askbot.forms.AskByEmail.sender` attribute
@@ -1074,7 +1107,6 @@ class AskByEmailForm(forms.Form):
 
 
 class AnswerForm(PostAsSomeoneForm, PostPrivatelyForm):
-    text = AnswerEditorField()
     wiki = WikiField()
     openid = forms.CharField(
         required=False, max_length=255,
@@ -1084,7 +1116,7 @@ class AnswerForm(PostAsSomeoneForm, PostPrivatelyForm):
 
     def __init__(self, *args, **kwargs):
         super(AnswerForm, self).__init__(*args, **kwargs)
-        self.fields['text'] = AnswerEditorField()
+        self.fields['text'] = AnswerEditorField(user=kwargs['user'])
         self.fields['email_notify'].widget.attrs['id'] = \
                                     'question-subscribe-updates'
 
@@ -1169,11 +1201,11 @@ class EditQuestionForm(PostAsSomeoneForm, PostPrivatelyForm):
     def __init__(self, *args, **kwargs):
         """populate EditQuestionForm with initial data"""
         self.question = kwargs.pop('question')
-        self.user = kwargs['user']#preserve for superclass
+        self.user = kwargs.pop('user')#preserve for superclass
         revision = kwargs.pop('revision')
         super(EditQuestionForm, self).__init__(*args, **kwargs)
         #it is important to add this field dynamically
-        self.fields['text'] = QuestionEditorField()
+        self.fields['text'] = QuestionEditorField(user=self.user)
         self.fields['title'].initial = revision.title
         self.fields['text'].initial = revision.text
         self.fields['tags'].initial = revision.tagnames
@@ -1275,9 +1307,10 @@ class EditAnswerForm(PostAsSomeoneForm, PostPrivatelyForm):
 
     def __init__(self, answer, revision, *args, **kwargs):
         self.answer = answer
+        user = kwargs.pop('user', None)
         super(EditAnswerForm, self).__init__(*args, **kwargs)
         #it is important to add this field dynamically
-        self.fields['text'] = AnswerEditorField()
+        self.fields['text'] = AnswerEditorField(user=user)
         self.fields['text'].initial = revision.text
         self.fields['wiki'].initial = answer.wiki
 

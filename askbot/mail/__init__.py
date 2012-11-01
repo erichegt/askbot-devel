@@ -82,16 +82,15 @@ def thread_headers(post, orig_post, update):
     return headers
 
 def clean_html_email(email_body):
-    '''needs more clenup might not work for other email templates
-       that does not use table layout'''
-
-    remove_linejump = lambda s: s.replace('\n', '')
-
+    """needs more clenup might not work for other email templates
+    that do not use table layout
+    """
     soup = BeautifulSoup(email_body)
-    table_tds = soup.find('body')
-    phrases = map(lambda s: s.strip(),
-                  filter(bool, table_tds.get_text().split('\n')))
-
+    body_element = soup.find('body')
+    phrases = map(
+        lambda s: s.strip(),
+        filter(bool, body_element.get_text().split('\n'))
+    )
     return '\n\n'.join(phrases)
 
 def send_mail(
@@ -266,10 +265,15 @@ def bounce_email(
 
 def extract_reply(text):
     """take the part above the separator
-    and discard the last line above the separator"""
+    and discard the last line above the separator
+    """
     if const.REPLY_SEPARATOR_REGEX.search(text):
         text = const.REPLY_SEPARATOR_REGEX.split(text)[0]
-        return '\n'.join(text.splitlines(True)[:-3])
+        text_lines = text.splitlines(False)
+        #log last 10 lines of text - to capture email responses
+        logging.debug('reply-border-separator|' + '|'.join(text_lines[-10:]))
+        #here we need code stripping the "On ... somebody wrote:"
+        return '\n'.join(text_lines[:-3])
     else:
         return text
 
@@ -362,10 +366,10 @@ def process_emailed_question(
             'subject': subject,
             'body_text': body_text
         }
-        form = AskByEmailForm(data)
+        user = User.objects.get(email__iexact = email_address)
+        form = AskByEmailForm(data, user=user)
         if form.is_valid():
             email_address = form.cleaned_data['email']
-            user = User.objects.get(email__iexact = email_address)
 
             if user.can_post_by_email() is False:
                 raise PermissionDenied(messages.insufficient_reputation(user))

@@ -23,3 +23,11 @@ class EmailParseTests(utils.AskbotTestCase):
         print cleaned_body
         print "CLEANED BODY"
         self.assertEquals(cleaned_body, self.expected_output)
+
+"""collection of quote separators separated with an empty line
+u'\n\nthis is my reply!\n\nOn Wed, Oct 31, 2012 at 1:45 AM, <kp@kp-dev.askbot.com> wrote:\n\n> **\n>            '
+
+u'\n\nthis is my another reply!\n\nOn Wed, Oct 31, 2012 at 1:45 AM, <kp@kp-dev.askbot.com> wrote:\n>\n> '
+
+u'\n\nSending this from my yahoo mail account.\n\n\n\n________________________________\n From: "kp@kp-dev.askbot.com" <kp@kp-dev.askbot.com>\nTo: fadeev@rocketmail.com \nSent: Wednesday, October 31, 2012 2:41 AM\nSubject: "This is my test question"\n \n\n  \n \n \n'
+"""

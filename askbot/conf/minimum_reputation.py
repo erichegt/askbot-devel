@@ -108,8 +108,21 @@ settings.register(
     livesettings.IntegerValue(
         MIN_REP,
         'MIN_REP_TO_INSERT_LINK',
+        default=30,
+        description=_('Insert clickable links')
+    )
+)
+
+settings.register(
+    livesettings.IntegerValue(
+        MIN_REP,
+        'MIN_REP_TO_SUGGEST_LINK',
         default=10,
-        description=_('Insert links')
+        description=_('Insert link suggestions as plain text'),
+        help_text=_(
+            'This value should be smaller than that for "insert clickable links". '
+            'This setting should stop link-spamming by newly registered users.'
+        )
     )
 )
 

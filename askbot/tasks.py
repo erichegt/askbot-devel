@@ -243,4 +243,3 @@ def send_instant_notifications_about_activity_in_post(
             )
         else:
             logger.debug('success %s, logId=%s' % (user.email, log_id))
-
