@@ -51,7 +51,10 @@
             {% if settings.WIKI_ON %}
                 {{ macros.checkbox_in_div(answer.wiki) }}
             {% endif %}
-            {% if request.user.is_authenticated() and request.user.can_make_group_private_posts() %}
+            {% if settings.GROUPS_ENABLED and 
+                request.user.is_authenticated() and 
+                request.user.can_make_group_private_posts()
+            %}
                 {{ macros.checkbox_in_div(answer.post_privately) }}
             {% endif %}
         {% endif %}

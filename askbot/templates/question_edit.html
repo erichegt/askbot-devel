@@ -38,7 +38,10 @@
             {% if form.can_stay_anonymous() %}
                 {{ macros.checkbox_in_div(form.reveal_identity) }}
             {% endif %}
-            {% if request.user.is_authenticated() and request.user.can_make_group_private_posts() %}
+            {% if settings.GROUPS_ENABLED and 
+                request.user.is_authenticated() and 
+                request.user.can_make_group_private_posts()
+            %}
                 {{ macros.checkbox_in_div(form.post_privately) }}
             {% endif %}
         </div>
