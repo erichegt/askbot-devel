@@ -37,4 +37,6 @@ u'outlook.com (new hotmail) with RTF on \n\nSubject: "Posting a question by emai
 
 u'reply from hotmail without RTF \n________________________________ \n> Subject: "test with recovered signature" \n> From: kp@kp-dev.askbot.com \n> To: aj_fitoria@hotmail.com \n> Date: Thu, 1 Nov 2012 16:44:35 +0000'
 
+u'Reply from squirremail \n'
+
 """
