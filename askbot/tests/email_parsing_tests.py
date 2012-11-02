@@ -24,14 +24,22 @@ class EmailParseTests(utils.AskbotTestCase):
         print "CLEANED BODY"
         self.assertEquals(cleaned_body, self.expected_output)
 
-"""collection of quote separators separated with an empty line
-u'\n\nthis is my reply!\n\nOn Wed, Oct 31, 2012 at 1:45 AM, <kp@kp-dev.askbot.com> wrote:\n\n> **\n>            '
+    def test_gmail_rich_text_response_stripped(self):
+        text = u'\n\nthis is my reply!\n\nOn Wed, Oct 31, 2012 at 1:45 AM, <kp@kp-dev.askbot.com> wrote:\n\n> **\n>            '
+        self.assertEqual(mail.extract_body(text), 'this is my reply!')
 
-u'\n\nthis is my another reply!\n\nOn Wed, Oct 31, 2012 at 1:45 AM, <kp@kp-dev.askbot.com> wrote:\n>\n> '
+    def test_gmail_plain_text_response_stripped(text):
+        text = u'\n\nthis is my another reply!\n\nOn Wed, Oct 31, 2012 at 1:45 AM, <kp@kp-dev.askbot.com> wrote:\n>\n> '
+        self.assertEqual(mail.extract_body(text), 'this is my another reply!')
 
-u'\n\nSending this from my yahoo mail account.\n\n\n\n________________________________\n From: "kp@kp-dev.askbot.com" <kp@kp-dev.askbot.com>\nTo: fadeev@rocketmail.com \nSent: Wednesday, October 31, 2012 2:41 AM\nSubject: "This is my test question"\n \n\n  \n \n \n'
+    def test_yahoo_mail_response_stripped(self):
+        text = u'\n\nthis is my reply!\n\n\n\n________________________________\n From: "kp@kp-dev.askbot.com" <kp@kp-dev.askbot.com>\nTo: fadeev@rocketmail.com \nSent: Wednesday, October 31, 2012 2:41 AM\nSubject: "This is my test question"\n \n\n  \n \n \n'
+        self.assertEqual(mail.extract_body(text), 'this is my reply!')
 
-u'On Monday 01 October 2012 21:22:44 you wrote: \n\nSecond try, no HTML kmail does weird things.'
+    def test_kmail_plain_text_response_stripped(text):
+        text = u'On Monday 01 October 2012 21:22:44 you wrote: \n\nSecond try, no HTML kmail does weird things.'
+        self.assertEqual(mail.extract_body(text), 'this is my reply!')
+        
 
 u'outlook.com (new hotmail) with RTF on \n\nSubject: "Posting a question by email." \nFrom: kp@kp-dev.askbot.com \nTo: aj_fitoria@hotmail.com \nDate: Thu, 1 Nov 2012 16:30:27 +0000'
 
