@@ -57,7 +57,7 @@ def strip_email_client_quote_separator(text):
             return regex.sub('', text)
     #did not find a quote separator!!! log it
     log_message = u'\nno matching quote separator: %s\n' % text
-    sys.err.write(log_message.encode('utf-8'))
+    sys.stderr.write(log_message.encode('utf-8'))
     return text[:-2]#strip two lines, only guessing here
 
 def extract_reply_contents(text, reply_separator=None):
