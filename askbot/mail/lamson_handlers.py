@@ -274,7 +274,7 @@ def PROCESS(
 
     #2) process body text and email signature
     user = reply_address_object.user
-    if signature:#if there, then it was stripped
+    if signature is not None:#if there, then it was stripped
         if signature != user.email_signature:
             user.email_signature = signature
     else:#try to strip signature

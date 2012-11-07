@@ -310,7 +310,7 @@ def extract_user_signature(text, reply_code):
 
         return '\n'.join(tail)
     else:
-        return ''
+        return None
 
 
 def process_parts(parts, reply_code=None):
