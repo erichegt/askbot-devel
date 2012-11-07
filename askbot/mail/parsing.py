@@ -14,7 +14,7 @@ import sys
 #to keep them simpler and make the additions of language variants
 #easier.
 GMAIL_QUOTE_RE = r'\nOn [^\n]* wrote:\Z'
-YAHOO_QUOTE_RE = r'\n_+\n From: [^\n]+\nTo: [^\n]+\nSent: [^\n]+\nSubject: [^\n]+\Z'
+YAHOO_QUOTE_RE = r'\n_+\n\s*From: [^\n]+\nTo: [^\n]+\nSent: [^\n]+\nSubject: [^\n]+\Z'
 KMAIL_QUOTE_RE = r'\AOn [^\n]+ you wrote:\s*\n\n'
 OUTLOOK_RTF_QUOTE_RE = r'\nSubject: [^\n]+\nFrom: [^\n]+\nTo: [^\n]+\nDate: [^\n]+\Z'
 OUTLOOK_TEXT_QUOTE_RE = r'\n_+\Z'
