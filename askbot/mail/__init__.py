@@ -1,10 +1,10 @@
 """functions that send email in askbot
 these automatically catch email-related exceptions
 """
-import logging
 import os
 import re
 import smtplib
+import sys
 from askbot import exceptions
 from askbot import const
 from askbot.conf import settings as askbot_settings
@@ -135,7 +135,7 @@ def send_mail(
         if related_object is not None:
             assert(activity_type is not None)
     except Exception, error:
-        logging.critical(unicode(error))
+        sys.stderr.write('\n' + error.encode('utf-8') + '\n')
         if raise_on_failure == True:
             raise exceptions.EmailNotSent(unicode(error))
 
@@ -172,7 +172,7 @@ def mail_moderators(
         msg.content_subtype = 'html'
         msg.send()
     except smtplib.SMTPException, error:
-        logging.critical(unicode(error))
+        sys.stderr.write('\n' + error.encode('utf-8') + '\n')
         if raise_on_failure == True:
             raise exceptions.EmailNotSent(unicode(error))
 
