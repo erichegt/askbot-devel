@@ -84,8 +84,8 @@ class ReplyAddressModelTests(AskbotTestCase):
                                     'instruction': 'reply above this line'
                                 }
         msg = MockMessage(
-            "This is a test reply \n\nOn such and such someone"
-            "wrote something \n\n%s\nlorem ipsum " % (reply_separator),
+            "This is a test reply \n\nOn such and such someone "
+            "wrote: \n\n%s\nlorem ipsum " % (reply_separator),
             "user1@domain.com"
         )
         msg['Subject'] = 'test subject'

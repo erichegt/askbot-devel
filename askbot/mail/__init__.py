@@ -1,9 +1,18 @@
 """functions that send email in askbot
 these automatically catch email-related exceptions
 """
-import os
-import smtplib
 import logging
+import os
+import re
+import smtplib
+from askbot import exceptions
+from askbot import const
+from askbot.conf import settings as askbot_settings
+from askbot.mail import parsing
+from askbot.utils import url_utils
+from askbot.utils.file_utils import store_file
+from askbot.utils.html import absolutize_urls
+from bs4 import BeautifulSoup
 from django.core import mail
 from django.conf import settings as django_settings
 from django.core.exceptions import PermissionDenied
@@ -12,14 +21,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import string_concat
 from django.template import Context
 from django.utils.html import strip_tags
-from askbot import exceptions
-from askbot import const
-from askbot.conf import settings as askbot_settings
-from askbot.utils import url_utils
-from askbot.utils.file_utils import store_file
-from askbot.utils.html import absolutize_urls
 
-from bs4 import BeautifulSoup
 #todo: maybe send_mail functions belong to models
 #or the future API
 def prefix_the_subject_line(subject):
@@ -82,7 +84,8 @@ def thread_headers(post, orig_post, update):
     return headers
 
 def clean_html_email(email_body):
-    """needs more clenup might not work for other email templates
+    """returns the content part from an HTML email.
+    todo: needs more clenup might not work for other email templates
     that do not use table layout
     """
     soup = BeautifulSoup(email_body)
@@ -266,16 +269,12 @@ def bounce_email(
 def extract_reply(text):
     """take the part above the separator
     and discard the last line above the separator
+    ``text`` is the input text
     """
-    if const.REPLY_SEPARATOR_REGEX.search(text):
-        text = const.REPLY_SEPARATOR_REGEX.split(text)[0]
-        text_lines = text.splitlines(False)
-        #log last 10 lines of text - to capture email responses
-        logging.debug('reply-border-separator|' + '|'.join(text_lines[-10:]))
-        #here we need code stripping the "On ... somebody wrote:"
-        return '\n'.join(text_lines[:-3])
-    else:
-        return text
+    return parsing.extract_reply_contents(
+                                text,
+                                const.REPLY_SEPARATOR_REGEX
+                            )
 
 def process_attachment(attachment):
     """will save a single
@@ -294,11 +293,11 @@ def process_attachment(attachment):
 def extract_user_signature(text, reply_code):
     """extracts email signature as text trailing
     the reply code"""
-    striped_text = strip_tags(text)
-    if reply_code in striped_text:
+    stripped_text = strip_tags(text)
+    if reply_code in stripped_text:
         #extract the signature
         tail = list()
-        for line in reversed(striped_text.splitlines()):
+        for line in reversed(stripped_text.splitlines()):
             #scan backwards from the end until the magic line
             if reply_code in line:
                 break
@@ -314,10 +313,10 @@ def extract_user_signature(text, reply_code):
         return ''
 
 
-def process_parts(parts, reply_code = None):
-    """Process parts will upload the attachments and parse out the
-    body, if body is multipart. Secondly - links to attachments
-    will be added to the body of the question.
+def process_parts(parts, reply_code=None):
+    """Uploads the attachments and parses out the
+    body, if body is multipart.
+    Links to attachments will be added to the body of the question.
     Returns ready to post body of the message and the list
     of uploaded files.
     """
@@ -366,7 +365,7 @@ def process_emailed_question(
             'subject': subject,
             'body_text': body_text
         }
-        user = User.objects.get(email__iexact = email_address)
+        user = User.objects.get(email__iexact=from_address)
         form = AskByEmailForm(data, user=user)
         if form.is_valid():
             email_address = form.cleaned_data['email']
