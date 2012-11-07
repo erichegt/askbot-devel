@@ -2201,4 +2201,5 @@ class AnonymousAnswer(DraftContent):
             wiki=self.wiki,
             text=self.text
         )
+        self.question.thread.invalidate_cached_data()
         self.delete()
