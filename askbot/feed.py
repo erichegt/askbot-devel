@@ -18,6 +18,7 @@ from django.contrib.syndication.feeds import Feed
 from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ObjectDoesNotExist
+from django.http import Http404
 
 from askbot.models import Post
 from askbot.conf import settings as askbot_settings
@@ -37,6 +38,8 @@ class RssIndividualQuestionFeed(Feed):
         return askbot_settings.APP_DESCRIPTION
 
     def get_object(self, bits):
+        if askbot_settings.RSS_ENABLED is False:
+            raise Http404
         if len(bits) != 1:
             raise ObjectDoesNotExist
         return Post.objects.get_questions().get(id__exact = bits[0])
@@ -144,6 +147,8 @@ class RssLastestQuestionsFeed(Feed):
     def items(self, item):
         """get questions for the feed
         """
+        if askbot_settings.RSS_ENABLED is False:
+            raise Http404
         #initial filtering
         qs = Post.objects.get_questions().filter(deleted=False)
 
@@ -163,7 +168,6 @@ class RssLastestQuestionsFeed(Feed):
                 qs = qs.filter(thread__tags__name = tag)
 
         return qs.order_by('-thread__last_activity_at')[:30]
-
 
 
 def main():

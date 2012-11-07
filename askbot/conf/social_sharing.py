@@ -8,9 +8,18 @@ from django.utils.translation import ugettext as _
 
 SOCIAL_SHARING = ConfigurationGroup(
             'SOCIAL_SHARING',
-            _('Sharing content on social networks'), 
+            _('Content sharing'), 
             super_group = EXTERNAL_SERVICES
         )
+
+settings.register(
+    BooleanValue(
+        SOCIAL_SHARING,
+        'RSS_ENABLED',
+        default=True,
+        description=_('Check to enable RSS feeds')
+    )
+)
 
 settings.register(
     BooleanValue(

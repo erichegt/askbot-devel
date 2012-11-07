@@ -3,6 +3,7 @@ Changes in Askbot
 
 Development version
 -------------------
+* Added option to enable/disable rss feeds (Evgeny)
 * Added minimum reputation to insert links and hotlinked images (Evgeny)
 * Added minimum reputation to suggest links as plain text (Evgeny)
 * Added support of Haystack for search (Adolfo)
