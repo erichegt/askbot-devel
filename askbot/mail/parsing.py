@@ -2,6 +2,7 @@
 this file is a candidate for publishing as an independent module
 """
 import re
+import sys
 
 #Regexes for quote separators
 #add more via variables ending with _QUOTE_RE
@@ -43,20 +44,19 @@ def strip_trailing_empties_and_quotes(text):
 def strip_leading_empties(text):
     return re.sub(r'\A[\n\s\xa0]*', '', text)
 
-def strip_email_client_formatting(text):
-    """strips email client formatting from the responses,
-    such as empty lines and quote separators (on ... wrote)
+def strip_email_client_quote_separator(text):
+    """strips email client quote separator from the responses,
+    e.g. (on such date XYZ wrote)
 
     if one client-specific separator matches, then result
     is immediately returned
     """
-    text = strip_trailing_empties_and_quotes(text)
     for regex in CLIENT_SPECIFIC_QUOTE_REGEXES:
         if regex.search(text):
-            text = regex.sub('', text)
-            break
-    text = strip_trailing_empties_and_quotes(text)
-    return strip_leading_empties(text)
+            return regex.sub('', text)
+    #did not find a quote separator!!! log it
+    sys.stderr.write('no quote separator: %s\n' % text)
+    return text
 
 def extract_reply_contents(text, reply_separator=None):
     """If reply_separator is given,
@@ -75,4 +75,8 @@ def extract_reply_contents(text, reply_separator=None):
                 text = reply_separator.split(text)[0]
             else:
                 raise ValueError('reply_separator must be a string or a compiled regex')
-    return strip_email_client_formatting(text)
+
+    text = strip_trailing_empties_and_quotes(text)
+    text = strip_email_client_quote_separator(text)
+    text = strip_trailing_empties_and_quotes(text)
+    return strip_leading_empties(text)
