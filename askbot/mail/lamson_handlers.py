@@ -147,13 +147,6 @@ def process_reply(func):
 
             #here is the business part of this function
             parts = get_parts(message)
-            for part_type, content in parts:
-                if part_type == 'body':
-                    print '==============================='
-                    print 'message :', content
-                    break
-                else:
-                    continue
             func(
                 from_address = message.From,
                 subject_line = message['Subject'],
