@@ -14,7 +14,7 @@ import sys
 #to keep them simpler and make the additions of language variants
 #easier.
 GMAIL_QUOTE_RE = r'\nOn [^\n]* wrote:\Z'
-GMAIL_QUOTE_RE2 = r'\d{4}/\d{1,2}/d{1,2} [^\n]\Z'
+GMAIL_SECOND_QUOTE_RE = r'\d{4}/\d{1,2}/d{1,2} [^\n]\Z'
 YAHOO_QUOTE_RE = r'\n_+\n\s*From: [^\n]+\nTo: [^\n]+\nSent: [^\n]+\nSubject: [^\n]+\Z'
 KMAIL_QUOTE_RE = r'\AOn [^\n]+ you wrote:\s*\n\n'
 OUTLOOK_RTF_QUOTE_RE = r'\nSubject: [^\n]+\nFrom: [^\n]+\nTo: [^\n]+\nDate: [^\n]+\Z'
@@ -58,7 +58,8 @@ def strip_email_client_quote_separator(text):
     #did not find a quote separator!!! log it
     log_message = u'\nno matching quote separator: %s\n' % text
     sys.stderr.write(log_message.encode('utf-8'))
-    return text[:-2]#strip two lines, only guessing here
+    text_lines = text.splitlines(False)
+    return ''.join(text_lines[:-3])#strip 3 lines as a guess
 
 def extract_reply_contents(text, reply_separator=None):
     """If reply_separator is given,
