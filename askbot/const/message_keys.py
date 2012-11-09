@@ -54,7 +54,4 @@ def get_i18n_message(key):
             'Please contact the forum administrator to reach a resolution.'
         )
     }
-    if key in messages:
-        return messages.get(key)
-    else:
-        raise KeyError(key)
+    return messages[key]

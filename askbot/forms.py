@@ -4,6 +4,7 @@ import re
 from django import forms
 from askbot import const
 from askbot.const import message_keys
+from django.core.exceptions import PermissionDenied
 from django.forms.util import ErrorList
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext_lazy, string_concat
@@ -11,7 +12,6 @@ from django.utils.text import get_text_list
 from django.contrib.auth.models import User
 from django_countries import countries
 from askbot.utils.forms import NextUrlField, UserNameField
-from askbot.utils.markup import URL_RE
 from askbot.mail import extract_first_email_address
 from recaptcha_works.fields import RecaptchaField
 from askbot.conf import settings as askbot_settings
@@ -302,20 +302,16 @@ class EditorField(forms.CharField):
             ) % self.min_length
             raise forms.ValidationError(msg)
 
-        if re.search(URL_RE, value):
-            min_rep = askbot_settings.MIN_REP_TO_SUGGEST_LINK
-            if self.user.is_anonymous():
-                raise forms.ValidationError(
-                    _('Links or images cannot be posted anonymously')
-                )
-            elif self.user.reputation < min_rep:
-                raise forms.ValidationError(
-                    ungettext_lazy(
-                        'At at least %d karma point is required to post links',
-                        'At at least %d karma points are required to post links',
-                        min_rep
-                    ) % min_rep
-                )
+        if self.user.is_anonymous():
+            #we postpone this validation if user is posting
+            #before logging in, up until publishing the post
+            return value
+
+        try:
+            self.user.assert_can_post_text(value)
+        except PermissionDenied, e:
+            raise forms.ValidationError(unicode(e))
+
         return value
 
 

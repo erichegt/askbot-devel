@@ -11,6 +11,7 @@ from django.core.urlresolvers import reverse
 from django.utils.hashcompat import md5_constructor
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
+from django.utils.translation import string_concat
 
 import askbot
 from askbot.conf import settings as askbot_settings
@@ -1418,16 +1419,35 @@ class AnonymousQuestion(DraftContent):
     tagnames = models.CharField(max_length=125)
     is_anonymous = models.BooleanField(default=False)
 
-    def publish(self,user):
+    def publish(self, user):
         added_at = datetime.datetime.now()
         #todo: wrong - use User.post_question() instead
-        Thread.objects.create_new(
-            title = self.title,
-            added_at = added_at,
-            author = user,
-            wiki = self.wiki,
-            is_anonymous = self.is_anonymous,
-            tagnames = self.tagnames,
-            text = self.text,
-        )
-        self.delete()
+        try:
+            user.assert_can_post_text(self.text)
+            Thread.objects.create_new(
+                title = self.title,
+                added_at = added_at,
+                author = user,
+                wiki = self.wiki,
+                is_anonymous = self.is_anonymous,
+                tagnames = self.tagnames,
+                text = self.text,
+            )
+            self.delete()
+        except django_exceptions.PermissionDenied, error:
+            #delete previous draft questions (only one is allowed anyway)
+            prev_drafts = DraftQuestion.objects.filter(author=user)
+            prev_drafts.delete()
+            #convert this question to draft
+            DraftQuestion.objects.create(
+                            author=user,
+                            title=self.title,
+                            text=self.text,
+                            tagnames=self.tagnames
+                        )
+            #add message with a link to the ask page
+            extra_message = _(
+                'Please, <a href="%s">review your question</a>.'
+            ) % reverse('ask')
+            message = string_concat(unicode(error), u' ', extra_message)
+            user.message_set.create(message=unicode(message))

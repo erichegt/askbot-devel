@@ -13,6 +13,7 @@ import collections
 import datetime
 import hashlib
 import logging
+import re
 import urllib
 import uuid
 from celery import states
@@ -56,6 +57,7 @@ from askbot.models.repute import Award, Repute, Vote
 from askbot.models.widgets import AskWidget, QuestionWidget
 from askbot import auth
 from askbot.utils.decorators import auto_now_timestamp
+from askbot.utils.markup import URL_RE
 from askbot.utils.slug import slugify
 from askbot.utils.html import replace_links_with_text
 from askbot.utils.html import sanitize_html
@@ -632,6 +634,19 @@ def user_assert_can_upload_file(request_user):
         min_rep_setting = askbot_settings.MIN_REP_TO_UPLOAD_FILES,
         low_rep_error_message = low_rep_error_message
     )
+
+
+def user_assert_can_post_text(self, text):
+    """Raises exceptions.PermissionDenied, if user does not have
+    privilege to post given text, depending on the contents
+    """
+    if re.search(URL_RE, text):
+        min_rep = askbot_settings.MIN_REP_TO_SUGGEST_LINK
+        if self.is_authenticated() and self.reputation < min_rep:
+            message = _(
+                'Could not post, because your karma is insufficient to publish links'
+            )
+            raise django_exceptions.PermissionDenied(message)
 
 
 def user_assert_can_post_question(self):
@@ -2867,6 +2882,7 @@ User.add_to_class('assert_can_upload_file', user_assert_can_upload_file)
 User.add_to_class('assert_can_post_question', user_assert_can_post_question)
 User.add_to_class('assert_can_post_answer', user_assert_can_post_answer)
 User.add_to_class('assert_can_post_comment', user_assert_can_post_comment)
+User.add_to_class('assert_can_post_text', user_assert_can_post_text)
 User.add_to_class('assert_can_edit_post', user_assert_can_edit_post)
 User.add_to_class('assert_can_edit_deleted_post', user_assert_can_edit_deleted_post)
 User.add_to_class('assert_can_see_deleted_post', user_assert_can_see_deleted_post)
