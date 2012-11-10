@@ -19,8 +19,7 @@ class Migration(SchemaMigration):
             db.send_create_signal('askbot', ['Message'])
 
     def backwards(self, orm):
-        if django.get_version() > '1.3.1' and db_table_exists('auth_message'):
-            db.delete_table('auth_message')
+        pass
 
     models = {
         'askbot.activity': {

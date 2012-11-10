@@ -127,11 +127,22 @@ def deploy_askbot(directory, options):
 
     path_utils.create_path(directory)
 
-    if django.VERSION[0] == 1 and django.VERSION[1] < 3:
+    if django.VERSION[0] > 1:
+        raise Exception(
+            'Django framework with major version > 1 is not supported'
+        )
+
+    if django.VERSION[1] < 3:
         #force people install the django-staticfiles app
         context['staticfiles_app'] = ''
     else:
         context['staticfiles_app'] = "'django.contrib.staticfiles',"
+
+    if django.VERSION[1] <=3:
+        auth_context_processor = 'django.core.context_processors.auth'
+    else:
+        auth_context_processor = 'django.contrib.auth.context_processors.auth'
+    context['auth_context_processor'] = auth_context_processor
 
     path_utils.deploy_into(
         directory,
