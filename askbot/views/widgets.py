@@ -1,12 +1,10 @@
 from datetime import datetime
 
-from django.core import exceptions
 from django.template import Context
 from django.http import HttpResponse, Http404
 from django.views.decorators import csrf
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect, get_object_or_404
-from django.views.decorators.cache import cache_page
 
 from django.contrib.auth.decorators import login_required
 
@@ -96,7 +94,7 @@ def ask_widget(request, widget_id):
             }
             if request.user.is_authenticated():
                 data_dict['author'] = request.user
-                question = post_question(data_dict, request)
+                #question = post_question(data_dict, request)
                 return redirect('ask_by_widget_complete')
             else:
                 request.session['widget_question'] = data_dict

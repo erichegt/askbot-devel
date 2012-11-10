@@ -319,7 +319,6 @@ def tags(request):#view showing a listing of available tags - plain list
     return render_into_skin('tags.html', data, request)
 
 @csrf.csrf_protect
-#@cache_page(60 * 5)
 def question(request, id):#refactor - long subroutine. display question body, answers and comments
     """view that displays body of the question and
     all answers to it
