@@ -90,9 +90,10 @@ def clean_html_email(email_body):
     """
     soup = BeautifulSoup(email_body)
     body_element = soup.find('body')
+    filter_func = lambda s: bool(s.strip())
     phrases = map(
         lambda s: s.strip(),
-        filter(bool, body_element.get_text().split('\n'))
+        filter(filter_func, body_element.get_text().split('\n'))
     )
     return '\n\n'.join(phrases)
 

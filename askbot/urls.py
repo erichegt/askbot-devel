@@ -2,6 +2,7 @@
 askbot askbot url configuraion file
 """
 import os.path
+import django
 from django.conf import settings
 from django.conf.urls.defaults import url, patterns, include
 from django.conf.urls.defaults import handler500, handler404
@@ -218,6 +219,11 @@ urlpatterns = patterns('',
         views.meta.list_suggested_tags,
         name = 'list_suggested_tags'
     ),
+
+    #feeds
+    url(r'^feeds/rss/$', RssLastestQuestionsFeed(), name="latest_questions_feed"),
+    url(r'^feeds/question/(?P<pk>\d+)/$', RssIndividualQuestionFeed(), name="individual_question_feed"),
+
     url(#ajax only
         r'^%s$' % 'moderate-suggested-tag',
         views.commands.moderate_suggested_tag,
@@ -473,16 +479,9 @@ urlpatterns = patterns('',
         views.widgets.question_widget,
         name = 'question_widget'
     ),
-    url(
-        r'^feeds/(?P<url>.*)/$',
-        'django.contrib.syndication.views.feed',
-        {'feed_dict': feeds},
-        name='feeds'
-    ),
     #upload url is ajax only
     url( r'^%s$' % _('upload/'), views.writers.upload, name='upload'),
     url(r'^%s$' % _('feedback/'), views.meta.feedback, name='feedback'),
-    #url(r'^feeds/rss/$', RssLastestQuestionsFeed, name="latest_questions_feed"),
     url(
         r'^doc/(?P<path>.*)$',
         'django.views.static.serve',

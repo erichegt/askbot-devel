@@ -65,6 +65,11 @@ from askbot.utils.diff import textDiff as htmldiff
 from askbot.utils.url_utils import strip_path
 from askbot import mail
 
+from django import get_version as django_version
+
+if django_version() > '1.3.1':
+    from askbot.models.message import Message
+
 def get_model(model_name):
     """a shortcut for getting model for an askbot app"""
     return models.get_model('askbot', model_name)
@@ -115,6 +120,38 @@ def get_users_by_text_query(search_query, users_query_set = None):
         #        models.Q(username__search = search_query) |
         #        models.Q(about__search = search_query)
         #    )
+
+class RelatedObjectSimulator(object):
+    '''Objects that simulates the "messages_set" related field
+    somehow django does not creates it automatically in django1.4.1'''
+
+    def __init__(self, user, model_class):
+        self.user = user
+        self.model_class = model_class
+
+    def create(self, **kwargs):
+        return self.model_class.objects.create(user=self.user, **kwargs)
+
+    def filter(self, *args, **kwargs):
+        return self.model_class.objects.filter(*args, **kwargs)
+
+
+#django 1.4.1 only
+@property
+def user_message_set(self):
+    return RelatedObjectSimulator(self, Message)
+
+#django 1.4.1 only
+def user_get_and_delete_messages(self):
+    messages = []
+    for message in Message.objects.filter(user=self):
+        messages.append(message)
+        message.delete()
+    return messages
+
+if django_version() > '1.3.1':
+    User.add_to_class('message_set', user_message_set)
+    User.add_to_class('get_and_delete_messages', user_get_and_delete_messages)
 
 User.add_to_class(
             'status',
@@ -3544,7 +3581,6 @@ def moderate_group_joining(sender, instance=None, created=False, **kwargs):
                 recipients = group.get_moderators(),
                 content_object = group
             )
-
 
 #signal for User model save changes
 django_signals.pre_save.connect(make_admin_if_first_user, sender=User)

@@ -11,7 +11,7 @@ from askbot.conf import settings as askbot_settings
 
 PROTECTED_VIEW_MODULES = (
     'askbot.views',
-    'django.contrib.syndication.views',
+    'askbot.feed',
 )
 ALLOWED_VIEWS = (
     'askbot.views.meta.media',
@@ -30,7 +30,13 @@ def is_view_allowed(func):
     """True, if view is allowed to access
     by the special rule
     """
-    view_path = func.__module__ + '.' + func.__name__
+    if hasattr(func, '__name__'):
+        view_path = func.__module__ + '.' + func.__name__
+    elif hasattr(func, '__class__'):
+        view_path = func.__module__ + '.' + func.__class__.__name__
+    else:
+        view_path = ''
+
     return view_path in ALLOWED_VIEWS
 
 class ForumModeMiddleware(object):
@@ -51,7 +57,7 @@ class ForumModeMiddleware(object):
 
             if is_view_allowed(resolver_match.func):
                 return
-            
+
             if is_view_protected(resolver_match.func):
                 request.user.message_set.create(
                     _('Please log in to use %s') % \
