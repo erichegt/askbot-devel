@@ -7,12 +7,13 @@ question: why not run these from askbot/__init__.py?
 
 the main function is run_startup_tests
 """
-import sys
+import askbot
+import django
 import os
 import re
-import urllib
-import askbot
 import south
+import sys
+import urllib
 from django.db import transaction, connection
 from django.conf import settings as django_settings
 from django.core.exceptions import ImproperlyConfigured
@@ -348,7 +349,6 @@ def test_new_skins():
 def test_staticfiles():
     """tests configuration of the staticfiles app"""
     errors = list()
-    import django
     django_version = django.VERSION
     if django_version[0] == 1 and django_version[1] < 3:
         staticfiles_app_name = 'staticfiles'
@@ -686,6 +686,48 @@ def test_longerusername():
         errors.append('run "python manage.py migrate longerusername"')
         print_errors(errors)
 
+def test_template_context_processors():
+    """makes sure that all necessary template context processors
+    are in the settings.py"""
+
+    required_processors = [
+        'django.core.context_processors.request',
+        'askbot.context.application_settings',
+        'askbot.user_messages.context_processors.user_messages',
+        'django.core.context_processors.csrf',
+    ]
+    old_auth_processor = 'django.core.context_processors.auth'
+    new_auth_processor = 'django.contrib.auth.context_processors.auth'
+
+    invalid_processors = list()
+    if django.VERSION[1] <= 3:
+        required_processors.append(old_auth_processor)
+        if new_auth_processor in django_settings.TEMPLATE_CONTEXT_PROCESSORS:
+            invalid_processors.append(new_auth_processor)
+    elif django.VERSION[1] > 3:
+        required_processors.append(new_auth_processor)
+        if old_auth_processor in django_settings.TEMPLATE_CONTEXT_PROCESSORS:
+            invalid_processors.append(old_auth_processor)
+            
+    missing_processors = list()
+    for processor in required_processors:
+        if processor not in django_settings.TEMPLATE_CONTEXT_PROCESSORS:
+            missing_processors.append(processor)
+
+    errors = list()
+    if invalid_processors:
+        message = 'remove from TEMPLATE_CONTEXT_PROCESSORS in settings.py:\n'
+        message += format_as_text_tuple_entries(invalid_processors)
+        errors.append(message)
+
+    if missing_processors:
+        message = 'add to TEMPLATE_CONTEXT_PROCESSORS in settings.py:\n'
+        message += format_as_text_tuple_entries(missing_processors)
+        errors.append(message)
+
+    print_errors(errors)
+
+
 def run_startup_tests():
     """function that runs
     all startup tests, mainly checking settings config so far
@@ -700,6 +742,7 @@ def run_startup_tests():
     test_middleware()
     test_celery()
     #test_csrf_cookie_domain()
+    test_template_context_processors()
     test_tinymce()
     test_staticfiles()
     test_new_skins()
