@@ -1,8 +1,9 @@
 Changes in Askbot
 =================
 
-Development version
+0.7.44 (Nov 11, 2012)
 -------------------
+* Support for django 1.4 (Adolfo)
 * Added option to enable/disable rss feeds (Evgeny)
 * Added minimum reputation to insert links and hotlinked images (Evgeny)
 * Added minimum reputation to suggest links as plain text (Evgeny)
