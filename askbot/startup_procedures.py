@@ -45,7 +45,7 @@ class AskbotConfigError(ImproperlyConfigured):
 
 def askbot_warning(line):
     """prints a warning with the nice header, but does not quit"""
-    print >> sys.stderr, PREAMBLE + '\n' + line
+    print >> sys.stderr, line
 
 def print_errors(error_messages, header = None, footer = None):
     """if there is one or more error messages,
@@ -728,6 +728,32 @@ def test_template_context_processors():
     print_errors(errors)
 
 
+def test_cache_backend():
+    """prints a warning if cache backend is disabled or per-process"""
+    if django.VERSION[1] > 2:
+        backend = django_settings.CACHES['default']['BACKEND']
+    else:
+        backend = django_settings.CACHE_BACKEND
+
+    errors = list()
+    if backend.strip() == '' or 'dummy' in backend:
+        message = """Please enable at least a "locmem" cache (for a single process server).
+If you need to run > 1 server process, set up some production caching system,
+such as redis or memcached"""
+        errors.append(message)
+
+    if 'locmem' in backend:
+        message = """WARNING!!! You are using a 'locmem' (local memory) caching backend,
+which is OK for a low volume site running on a single-process server.
+For a multi-process configuration it is neccessary to have a production
+cache system, such as redis or memcached.
+
+With local memory caching and multi-process setup you might intermittently
+see outdated content on your site.
+"""
+        askbot_warning(message)
+
+
 def run_startup_tests():
     """function that runs
     all startup tests, mainly checking settings config so far
@@ -749,6 +775,7 @@ def run_startup_tests():
     test_longerusername()
     test_avatar()
     test_haystack()
+    test_cache_backend()
     settings_tester = SettingsTester({
         'CACHE_MIDDLEWARE_ANONYMOUS_ONLY': {
             'value': True,
