@@ -136,7 +136,7 @@ def send_mail(
         if related_object is not None:
             assert(activity_type is not None)
     except Exception, error:
-        sys.stderr.write('\n' + error.encode('utf-8') + '\n')
+        sys.stderr.write('\n' + unicode(error).encode('utf-8') + '\n')
         if raise_on_failure == True:
             raise exceptions.EmailNotSent(unicode(error))
 

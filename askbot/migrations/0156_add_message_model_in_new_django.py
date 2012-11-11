@@ -13,6 +13,7 @@ class Migration(SchemaMigration):
     def forwards(self, orm):
         if django.get_version() > '1.3.1' and not db_table_exists('auth_message'):
             db.create_table('auth_message', (
+                ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
                 ('user', self.gf('django.db.models.fields.related.ForeignKey')(related_name='_message_set', to=orm['auth.User'])),
                 ('message', self.gf('django.db.models.fields.TextField')())
             ))
