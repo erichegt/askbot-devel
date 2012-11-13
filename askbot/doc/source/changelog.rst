@@ -1,6 +1,11 @@
 Changes in Askbot
 =================
 
+Development version
+-------------------
+* Feedback sender's email is added to the Reply-To header
+  in the feedback form (Evgeny)
+
 0.7.44 (Nov 11, 2012)
 -------------------
 * Support for django 1.4 (Adolfo)
