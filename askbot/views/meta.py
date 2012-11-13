@@ -100,13 +100,26 @@ def feedback(request):
             data=request.POST
         )
         if form.is_valid():
+
             if not request.user.is_authenticated():
-                data['email'] = form.cleaned_data.get('email',None)
+                data['email'] = form.cleaned_data.get('email', None)
+            else:
+                data['email'] = request.user.email
+
             data['message'] = form.cleaned_data['message']
-            data['name'] = form.cleaned_data.get('name',None)
+            data['name'] = form.cleaned_data.get('name', None)
             template = get_template('email/feedback_email.txt', request)
             message = template.render(RequestContext(request, data))
-            mail_moderators(_('Q&A forum feedback'), message)
+
+            headers = {}
+            if data['email']:
+                headers = {'Reply-To': data['email']}
+
+            mail_moderators(
+                _('Q&A forum feedback'),
+                message,
+                headers=headers
+            )
             msg = _('Thanks for the feedback!')
             request.user.message_set.create(message=msg)
             return HttpResponseRedirect(get_next_url(request))
