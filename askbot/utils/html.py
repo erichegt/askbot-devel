@@ -93,7 +93,7 @@ def replace_links_with_text(html):
         elif url == '' or re.match(abs_url_re, url):
             link.replaceWith(format_url_replacement(url, text))
 
-    return soup.find('body').renderContents()
+    return unicode(soup.find('body').renderContents(), 'utf-8')
             
 
 def sanitize_html(html):

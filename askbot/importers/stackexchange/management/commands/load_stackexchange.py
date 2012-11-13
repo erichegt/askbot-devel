@@ -17,7 +17,12 @@ import askbot.deps.django_authopenid.models as askbot_openid
 import askbot.importers.stackexchange.models as se
 from askbot.forms import EditUserEmailFeedsForm
 from askbot.conf import settings as askbot_settings
-from django.contrib.auth.models import Message as DjangoMessage
+
+try:
+    from django.contrib.auth.models import Message as DjangoMessage
+except ImportError:
+    from askbot.models.message import Message as DjangoMessage
+
 from django.utils.translation import ugettext as _
 from askbot.utils.slug import slugify
 from askbot.models.badges import award_badges_signal, award_badges
@@ -154,12 +159,12 @@ class X(object):#
         #or use database to store these associations
         try:
             if isinstance(se_post, se.PostComment):
-                return askbot.Comment.objects.get(id=COMMENT[se_post.id].id)
+                return askbot.Post.objects.get(id=COMMENT[se_post.id].id)
             post_type = se_post.post_type.name
             if post_type == 'Question':
-                return askbot.Question.objects.get(id=QUESTION[se_post.id].id)
+                return askbot.Post.objects.get(id=QUESTION[se_post.id].id)
             elif post_type == 'Answer':
-                return askbot.Answer.objects.get(id=ANSWER[se_post.id].id)
+                return askbot.Post.objects.get(id=ANSWER[se_post.id].id)
             else:
                 raise Exception('unknown post type %s' % post_type)
         except KeyError:
@@ -285,6 +290,8 @@ class Command(BaseCommand):
 
     @transaction.commit_manually
     def handle(self, *arg, **kwarg):
+
+        askbot_settings.update('LIMIT_ONE_ANSWER_PER_USER', False)
 
         if not importer_is_ready():
             raise CommandError(
@@ -522,10 +529,7 @@ class Command(BaseCommand):
     def mark_activity(self,p,u,t):
         """p,u,t - post, user, timestamp
         """
-        if isinstance(p, askbot.Question):
-            p.thread.set_last_activity(last_activity_by=u, last_activity_at=t)
-        elif isinstance(p, askbot.Answer):
-            p.question.thread.set_last_activity(last_activity_by=u, last_activity_at=t)
+        p.thread.set_last_activity(last_activity_by=u, last_activity_at=t)
 
     def _process_post_rollback_revision_group(self, rev_group):
         #todo: don't know what to do here as there were no
