@@ -6,8 +6,8 @@ This is the list of contributors to the code of Askbot project.
 The list is probably incomplete, apologies for any omissions.
 Thanks for all your help
 
-Programming and documentation
------------------------------
+Programming, bug fixes and documentation
+----------------------------------------
 * Mike Chen & Sailing Cai - original authors of CNPROG forum
 * Evgeny Fadeev - founder of askbot
 * `Adolfo Fitoria <http://fitoria.net>`_
@@ -42,6 +42,7 @@ Programming and documentation
 * `Alexandros <https://github.com/alexandros-z>`_
 * `Paul Backhouse <https://github.com/powlo>`_
 * `jtrain <https://github.com/jtrain>`_
+* Niki Rocco
 
 Translations
 ------------
