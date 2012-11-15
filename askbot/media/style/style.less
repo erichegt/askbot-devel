@@ -404,7 +404,7 @@ body.user-messages {
        display:block;
        float:left;
     }
-    
+
     #homeButton:hover{
         .sprites(-6px-45,-36px);
     }
@@ -425,6 +425,7 @@ body.user-messages {
             line-height:55px;
             margin-left:16px
         }
+
         .on{
             background:url(../images/scopearrow.png) no-repeat center bottom;
         }
@@ -4002,4 +4003,44 @@ textarea.tipped-input {
 .modal-body > textarea {
     width: 515px;
     margin-bottom: 0px;
+}
+
+/* modifications for small screens */
+@media screen and (max-width: 960px) {/* content margins touch viewport */
+}
+@media screen and (max-width: 480px) {
+    .content-wrapper {
+        width: 100%;
+    }
+    #ContentRight {
+        display: none;
+    }
+    #ContentLeft {
+        width: 100%;
+    }
+    #secondaryHeader #scopeWrapper {
+        display: none;
+    }
+    #askButton {
+        display: block;
+        float: none;
+        margin: auto;
+        margin-top: 5px;
+    }
+    #homeButton {
+    }
+    .main-page {
+        h1,
+        .counts .views,
+        .counts .votes,
+        .rss,
+        .tabBar,
+        .tags,
+        .userinfo {
+            display: none;
+        }
+    }
+    .short-summary {
+        width: 100%;
+    }
 }
