@@ -91,7 +91,8 @@ class ProgressBar(object):
         self.iterable = iterable
         self.length = length
         self.counter = float(0)
-        self.barlen = 60
+        self.max_barlen = 60
+        self.curr_barlen = 0
         self.progress = ''
         if message and length > 0:
             print message
@@ -103,17 +104,33 @@ class ProgressBar(object):
     def print_progress_bar(self):
         """prints the progress bar"""
 
+        self.backspace_progress_percent()
+
+        tics_to_write = 0
+        if self.length < self.max_barlen:
+            tics_to_write = self.max_barlen/self.length
+        elif int(self.counter) % (self.length/self.max_barlen) == 0:
+            tics_to_write = 1
+
+        if self.curr_barlen + tics_to_write <= self.max_barlen:
+            sys.stdout.write('-' * tics_to_write)
+            self.curr_barlen += tics_to_write
+
+        self.print_progress_percent()
+
+    def backspace_progress_percent(self):
         sys.stdout.write('\b'*len(self.progress))
 
-        if self.length < self.barlen:
-            sys.stdout.write('-'*(self.barlen/self.length))
-        elif int(self.counter) % (self.length / self.barlen) == 0:
-            sys.stdout.write('-')
-
+    def print_progress_percent(self):
+        """prints percent of achieved progress"""
         self.progress = ' %.2f%%' % (100 * (self.counter/self.length))
         sys.stdout.write(self.progress)
         sys.stdout.flush()
 
+    def finish_progress_bar(self):
+        """brint the last bars, to make all bars equal length"""
+        self.backspace_progress_percent()
+        sys.stdout.write('-' * (self.max_barlen - self.curr_barlen))
 
     def next(self):
 
@@ -121,7 +138,8 @@ class ProgressBar(object):
             result = self.iterable.next()
         except StopIteration:
             if self.length > 0:
-                self.print_progress_bar()
+                self.finish_progress_bar()
+                self.print_progress_percent()
                 sys.stdout.write('\n')
             raise
 

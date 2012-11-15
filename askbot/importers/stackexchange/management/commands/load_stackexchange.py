@@ -1,5 +1,5 @@
 #todo: http://stackoverflow.com/questions/837828/how-to-use-a-slug-in-django 
-DEBUGME = False 
+DEBUGME = False
 import os
 import re
 import sys
@@ -38,7 +38,8 @@ if DEBUGME == True:
     from askbot.utils import dummy_transaction as transaction
     HEAP = hpy()
 else:
-    from django.db import transaction
+    #from django.db import transaction
+    from askbot.utils import dummy_transaction as transaction
 
 xml_read_order = (
         'VoteTypes','UserTypes','Users','Users2Votes',
@@ -315,7 +316,8 @@ it may be helpful to split this procedure in two:\n
 
         if django_settings.DEBUG:
             raise CommandError(
-                'Please set DEBUG to False in the settings.py to reduce RAM usage'
+                'Please set DEBUG to False in the settings.py to reduce '
+                'RAM usage during the import process'
             )
 
         #process the command line arguments, if given
@@ -368,36 +370,36 @@ it may be helpful to split this procedure in two:\n
         self.save_askbot_message_id_list()
 
         #transfer data into ASKBOT tables
-        print 'Transferring users...',
+        print 'Transferring users...'
         self.transfer_users()
         transaction.commit()
         print 'done.'
-        print 'Transferring content edits...',
+        print 'Transferring content edits...'
         sys.stdout.flush()
         self.transfer_question_and_answer_activity()
         transaction.commit()
         print 'done.'
-        print 'Transferring view counts...',
+        print 'Transferring view counts...'
         sys.stdout.flush()
         self.transfer_question_view_counts()
         transaction.commit()
         print 'done.'
-        print 'Transferring comments...',
+        print 'Transferring comments...'
         sys.stdout.flush()
         self.transfer_comments()
         transaction.commit()
         print 'done.'
-        print 'Transferring badges and badge awards...',
+        print 'Transferring badges and badge awards...'
         sys.stdout.flush()
         self.transfer_badges()
         transaction.commit()
         print 'done.'
-        print 'Transferring Q&A votes...',
+        print 'Transferring Q&A votes...'
         sys.stdout.flush()
         self.transfer_QA_votes()#includes favorites, accepts and flags
         transaction.commit()
         print 'done.'
-        print 'Transferring comment votes...',
+        print 'Transferring comment votes...'
         sys.stdout.flush()
         self.transfer_comment_votes()
         transaction.commit()
@@ -444,7 +446,8 @@ it may be helpful to split this procedure in two:\n
         """transfers some messages from
         SE to ASKBOT
         """
-        for m in se.Message.objects.all().iterator():
+        messages = se.Message.objects.all()
+        for m in ProgressBar(messages.iterator(), messages.count()):
             if m.is_read:
                 continue
             if m.user is None:
@@ -707,7 +710,8 @@ it may be helpful to split this procedure in two:\n
             self._process_post_revision_group(c_group)
 
     def transfer_comments(self):
-        for se_c in se.PostComment.objects.all().iterator():
+        comments = se.PostComment.objects.all()
+        for se_c in ProgressBar(comments.iterator(), comments.count()):
             if se_c.deletion_date:
                 print 'Warning deleted comment %d dropped' % se_c.id
                 sys.stdout.flush()
@@ -730,7 +734,9 @@ it may be helpful to split this procedure in two:\n
 
     def _collect_missing_badges(self):
         self._missing_badges = {}
-        for se_b in se.Badge.objects.all():
+        badges = se.Badge.objects.all()
+        message = 'Collecting missing badges'
+        for se_b in ProgressBar(badges.iterator(), badges.count(), message):
             name = X.get_badge_name(se_b.name)
             try:
                 #todo: query badge from askbot.models.badges
@@ -747,7 +753,9 @@ it may be helpful to split this procedure in two:\n
     def _award_badges(self):
         #note: SE does not keep information on
         #content-related badges like askbot does
-        for se_a in se.User2Badge.objects.all().iterator():
+        badges = se.User2Badge.objects.all()
+        message = 'Awarding badges'
+        for se_a in ProgressBar(badges.iterator(), badges.count(), message):
             if se_a.user.id == -1:
                 continue #skip community user
             u = USER[se_a.user.id]
@@ -790,7 +798,8 @@ it may be helpful to split this procedure in two:\n
         pass
 
     def transfer_question_view_counts(self):
-        for se_q in se.Post.objects.filter(post_type__name='Question').iterator():
+        questions = se.Post.objects.filter(post_type__name='Question')
+        for se_q in ProgressBar(questions.iterator(), questions.count()):
             q = X.get_post(se_q)
             if q is None:
                 continue
@@ -799,7 +808,8 @@ it may be helpful to split this procedure in two:\n
 
 
     def transfer_QA_votes(self):
-        for v in se.Post2Vote.objects.all().iterator():
+        votes = se.Post2Vote.objects.all()
+        for v in ProgressBar(votes.iterator(), votes.count()):
             vote_type = v.vote_type.name
             if not vote_type in X.vote_actions:
                 continue
@@ -826,7 +836,8 @@ it may be helpful to split this procedure in two:\n
             transaction.commit()
 
     def transfer_comment_votes(self):
-        for v in se.Comment2Vote.objects.all().iterator():
+        votes = se.Comment2Vote.objects.all()
+        for v in ProgressBar(votes.iterator(), votes.count()):
             vote_type = v.vote_type.name
             if vote_type not in ('UpMod', 'Offensive'):
                 continue
@@ -869,10 +880,11 @@ it may be helpful to split this procedure in two:\n
         xml_data = self.zipfile.read(xml_path)
 
         tree = et.fromstring(xml_data)
-        print 'loading from %s to %s' % (xml_path, table_name) ,
+        print 'loading from %s to %s' % (xml_path, table_name)
         model = models.get_model('stackexchange', table_name)
         i = 0
-        for row in tree.findall('.//row'):
+        rows = tree.findall('.//row')
+        for row in ProgressBar(iter(rows), len(rows)):
             model_entry = model()
             i += 1
             for col in row.getchildren():
@@ -897,8 +909,7 @@ it may be helpful to split this procedure in two:\n
 
     def transfer_users(self):
         se_users = se.User.objects.all()
-        count = se_users.count()
-        for se_u in ProgressBar(se_users.iterator(), count):
+        for se_u in ProgressBar(se_users.iterator(), se_users.count()):
             #if se_u.id == -1:#skip the Community user
             #    continue
             u = askbot.User()
