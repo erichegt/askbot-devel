@@ -9,6 +9,7 @@
         <meta name="keywords" content="{%block keywords%}{%endblock%},{{settings.APP_KEYWORDS|escape}}" />
         {% if settings.GOOGLE_SITEMAP_CODE %}
         <meta name="google-site-verification" content="{{settings.GOOGLE_SITEMAP_CODE}}" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         {% endif %}
         <link rel="shortcut icon" href="{{ settings.SITE_FAVICON|media }}" />
         {% block before_css %}{% endblock %}

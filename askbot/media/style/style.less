@@ -395,45 +395,37 @@ body.user-messages {
     border-top:#fcfcfc 1px solid;
     margin-bottom:10px;
     font-family:@main-font;
+}
 
-    #homeButton{
-        border-right:#afaf9e 1px solid;
-       .sprites(-6px,-36px);
-        height:55px;
-       width:43px;
-       display:block;
-       float:left;
-    }
+#homeButton{
+    border-right: #afaf9e 1px solid;
+    .sprites(-6px,-36px);
+    height:55px;
+    width:43px;
+    display:block;
+    float:left;
+}
 
-    #homeButton:hover{
-        .sprites(-6px-45,-36px);
-    }
-    
-    #scopeWrapper{
-        width:688px;
-        float:left;
-        
-        a{
-            display:block;
-           float:left;
-         }
+#homeButton:hover{
+    .sprites(-45px,-36px);
+}
 
-        .scope-selector{
-            font-size:20px;
-            color:#7a7a6b;
-            height:55px;
-            line-height:55px;
-            margin-left:16px
-        }
+.scope-selector {
+    display:block;
+    float:left;
+    font-size:20px;
+    color:#7a7a6b;
+    height:55px;
+    line-height:55px;
+    margin-left:16px
+}
 
-        .on{
-            background:url(../images/scopearrow.png) no-repeat center bottom;
-        }
+.scope-selector.on {
+    background:url(../images/scopearrow.png) no-repeat center bottom;
+}
 
-        .ask-message{
-            font-size:24px;
-        }
-    }
+.scope-selector.ask-message {
+    font-size:24px;
 }
 
 .validate-email-page {
@@ -456,15 +448,15 @@ body.user-messages {
 }
 
 #searchBar { /* Main search form , check widgets/search_bar.html */
-    display: inline-block;
+    display: block;
     background-color: #fff;
-    width: 400px;
     border: 1px solid #c9c9b5;
-    float:right;
     height:42px;
-    margin:6px 0px 0px 15px;
+    padding: 0 420px 0 45px;/* right & left padding is for the buttons */
+    margin: 0;
+    width: 100%;
 
-    .searchInput, .searchInputCancelable{
+    .searchInput {
         font-size: 26px;
         height: 39px;
         line-height: 39px;
@@ -476,70 +468,45 @@ body.user-messages {
         padding-top: 1px;
         font-family:@body-font;
         vertical-align: top;
-    }
-
-    .searchInput,{
-        width: 340px;
-    }
-
-    .searchInputCancelable {
-        width: 305px;
-    }
-
-    .logoutsearch {
-        width: 337px;
-    }
-
-    .searchBtn {
-        font-size: 10px;
-        color: #666;
-        background-color: #eee;
-        height: 42px;
-        border:#FFF 1px solid;
-        line-height: 22px;
-        text-align: center;
-        float:right;
-        margin: 0px;
-        width:48px;
-        .sprites(-98px,-36px);
-        cursor:pointer;
-    }
-
-    .searchBtn:hover {
-        .sprites(-98px-48,-36px);
-    }
-
-    .cancelSearchBtn {
-        font-size: 30px;
-        color: #ce8888;
-        background:#fff;
-        height: 42px;
-        line-height: 42px;
-        border:0px;
-        border-left:#deded0 1px solid;
-        text-align: center;
-        width: 35px;
-        cursor:pointer;
-    }
-
-    .cancelSearchBtn:hover {
-        color: #d84040;
+        width: 100%;
     }
 }
 
-body.anon {
-    #searchBar {
-        width: 500px;
-        .searchInput {
-            width: 440px;
-        }
-
-        .searchInputCancelable {
-            width: 405px;
-        }
-    }
+.searchBtn {
+    font-size: 10px;
+    color: #666;
+    background-color: #eee;
+    height: 42px;
+    border:#FFF 1px solid;
+    line-height: 22px;
+    text-align: center;
+    float:right;
+    margin: 0px;
+    width:48px;
+    .sprites(-98px,-36px);
+    cursor:pointer;
 }
 
+.searchBtn:hover {
+    .sprites(-98px-48,-36px);
+}
+
+.cancelSearchBtn {
+    font-size: 30px;
+    color: #ce8888;
+    background:#fff;
+    height: 42px;
+    line-height: 42px;
+    border:0px;
+    border-left:#deded0 1px solid;
+    text-align: center;
+    width: 35px;
+    cursor:pointer;
+}
+
+.cancelSearchBtn:hover {
+    color: #d84040;
+}
 
 #askButton{ /* check blocks/secondary_header.html and widgets/ask_button.html*/
     line-height:44px;
@@ -553,6 +520,20 @@ body.anon {
 #askButton:hover{
     .button-style-hover;
 }
+
+/* 
+    Put the secondary navigation together:
+    1) raise the search bar by 55px
+    2) add padding to fit the buttons
+*/
+#searchBar {
+    padding: 0 250px 0 200px;
+    margin-top: -55px;
+}
+body.anon #searchBar {
+    padding-left: 150px;/* we don't have the "followed" scope */
+}
+
 
 /* ----- Content layout, check two_column_body.html or one_column_body.html ----- */
 
@@ -3756,24 +3737,12 @@ pre.prettyprint { clear:both;padding: 3px; border: 0px solid #888; }
 /* language-specific fixes */
 body.lang-es {
     #searchBar {
-        width: 398px;
-        .searchInput {
-            width: 337px;
-        }
-        .searchInputCancelable {
-            width: 302px;
-        }
+        /* need special left padding */
     }
 }
 body.anon.lang-es {
     #searchBar {
-        width: 485px;
-        .searchInput {
-            width: 425px;
-        }
-        .searchInputCancelable {
-            width: 390px;
-        }
+        /* need special left padding */
     }
 }
 
