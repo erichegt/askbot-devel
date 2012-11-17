@@ -20,6 +20,8 @@ from django.http import HttpResponseRedirect
 from django.http import HttpResponseForbidden
 from django.forms import ValidationError, IntegerField, CharField
 from django.shortcuts import get_object_or_404
+from django.shortcuts import render
+from django.template.loader import get_template
 from django.views.decorators import csrf
 from django.utils import simplejson
 from django.utils.html import escape
@@ -35,8 +37,7 @@ from askbot.utils import decorators
 from askbot.utils import url_utils
 from askbot.utils.forms import get_db_object_or_404
 from askbot import mail
-from django.template import Context
-from askbot.skins.loaders import render_into_skin, get_template
+from django.template import RequestContext
 from askbot.skins.loaders import render_into_skin_as_string
 from askbot.skins.loaders import render_text_into_skin
 from askbot import const
@@ -115,7 +116,7 @@ def manage_inbox(request):
                                     'post': post.html,
                                     'reject_reason': reject_reason.details.html
                                    }
-                            body_text = template.render(Context(data))
+                            body_text = template.render(RequestContext(request, data))
                             mail.send_mail(
                                 subject_line = _('your post was not accepted'),
                                 body_text = unicode(body_text),
@@ -684,7 +685,7 @@ def subscribe_for_tags(request):
             return HttpResponseRedirect(reverse('index'))
         else:
             data = {'tags': tag_names}
-            return render_into_skin('subscribe_for_tags.html', data, request)
+            return render(request, 'subscribe_for_tags.html', data)
     else:
         all_tag_names = pure_tag_names + wildcards
         message = _('Please sign in to subscribe for: %(tags)s') \
@@ -769,7 +770,7 @@ def close(request, id):#close question
                 'question': question,
                 'form': form,
             }
-            return render_into_skin('close.html', data, request)
+            return render(request, 'close.html', data)
     except exceptions.PermissionDenied, e:
         request.user.message_set.create(message = unicode(e))
         return HttpResponseRedirect(question.get_absolute_url())
@@ -798,7 +799,7 @@ def reopen(request, id):#re-open question
                 'closed_by_profile_url': closed_by_profile_url,
                 'closed_by_username': closed_by_username,
             }
-            return render_into_skin('reopen.html', data, request)
+            return render(request, 'reopen.html', data)
 
     except exceptions.PermissionDenied, e:
         request.user.message_set.create(message = unicode(e))

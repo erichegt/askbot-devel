@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.conf import settings as django_settings
-from askbot.skins.loaders import get_template
 from django.template import Context
+from django.template.loader import get_template
 from askbot import mail
 from askbot import models
 from askbot.tests import utils

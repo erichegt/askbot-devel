@@ -1,10 +1,15 @@
-"""this is an unfortunate copy-paste (mostly)
+"""
+todo: remove this module - not needed any more
+
+this is an unfortunate copy-paste (mostly)
 from the avatar app - the reason is that django-avatar app
 does not support jinja templates
 """
 import urllib
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
+from django.template.loader import get_template
+from django.shortcuts import render
 from django.utils.translation import ugettext as _
 from django.views.decorators import csrf
 from django.conf import settings
@@ -17,7 +22,6 @@ from avatar.settings import AVATAR_MAX_AVATARS_PER_USER, AVATAR_DEFAULT_SIZE
 from avatar.util import get_primary_avatar, get_default_avatar_url
 from avatar.views import render_primary as django_avatar_render_primary
 
-from askbot.skins.loaders import render_into_skin
 from askbot import models
 
 notification = False
@@ -111,7 +115,7 @@ def add(request, extra_context=None, next_override=None,
     if extra_context:
         data.update(extra_context)
 
-    return render_into_skin('avatar/add.html', data, request)
+    return render(request, 'avatar/add.html', data)
 
 @login_required
 @csrf.csrf_protect
@@ -153,7 +157,7 @@ def change(request, extra_context=None, next_override=None,
     if extra_context:
         data.update(extra_context)
 
-    return render_into_skin('avatar/change.html', data, request)
+    return render(request, 'avatar/change.html', data)
 
 @login_required
 @csrf.csrf_protect
@@ -190,7 +194,7 @@ def delete(request, extra_context=None, next_override=None, *args, **kwargs):
     if extra_context:
         data.update(extra_context)
 
-    return render_into_skin('avatar/confirm_delete.html', data, request)
+    return render(request, 'avatar/confirm_delete.html', data)
 
 def render_primary(request, user_id = None, *args, **kwargs):
     user = models.User.objects.get(id = user_id)

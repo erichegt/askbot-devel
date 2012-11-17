@@ -1,6 +1,7 @@
 import datetime
 from django.core.management.base import NoArgsCommand
 from django.conf import settings as django_settings
+from django.template.loader import get_template
 from askbot import models
 from askbot import const
 from askbot.conf import settings as askbot_settings
@@ -8,7 +9,6 @@ from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from askbot import mail
 from askbot.utils.classes import ReminderSchedule
-from askbot.skins.loaders import get_template
 from django.template import Context
 
 DEBUG_THIS_COMMAND = False
@@ -73,7 +73,7 @@ class Command(NoArgsCommand):
                    }
 
             template = get_template('email/accept_answer_reminder.html')
-            body_text = template.render(Context(data))
+            body_text = template.render(Context(data))#todo: set lang
 
             if DEBUG_THIS_COMMAND:
                 print "User: %s<br>\nSubject:%s<br>\nText: %s<br>\n" % \

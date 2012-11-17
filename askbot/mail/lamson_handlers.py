@@ -3,13 +3,13 @@ import functools
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.conf import settings as django_settings
 from django.template import Context
+from django.template.loader import get_template
 from django.utils.translation import ugettext as _
 from lamson.routing import route, stateless
 from lamson.server import Relay
 from askbot.models import ReplyAddress, Group, Tag
 from askbot import mail
 from askbot.conf import settings as askbot_settings
-from askbot.skins.loaders import get_template
 
 #we might end up needing to use something like this
 #to distinguish the reply text from the quoted original message
@@ -166,7 +166,7 @@ def process_reply(func):
 
         if error is not None:
             template = get_template('email/reply_by_email_error.html')
-            body_text = template.render(Context({'error':error}))
+            body_text = template.render(Context({'error':error}))#todo: set lang
             mail.send_mail(
                 subject_line = "Error posting your reply",
                 body_text = body_text,
@@ -243,7 +243,7 @@ def VALIDATE_EMAIL(
 
         mail.send_mail(
             subject_line = _('Re: Welcome to %(site_name)s') % data,
-            body_text = template.render(Context(data)),
+            body_text = template.render(Context(data)),#todo: set lang
             recipient_list = [from_address,]
         )
     except ValueError:
@@ -312,6 +312,6 @@ def PROCESS(
 
         mail.send_mail(
             subject_line = _('Re: %s') % subject_line,
-            body_text = template.render(Context(data)),
+            body_text = template.render(Context(data)),#todo: set lang
             recipient_list = [from_address,]
         )

@@ -21,6 +21,7 @@ from celery.task import task
 from django.core.urlresolvers import reverse, NoReverseMatch
 from django.db.models import signals as django_signals
 from django.template import Context
+from django.template.loader import get_template
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from django.utils.safestring import mark_safe
@@ -3438,9 +3439,8 @@ def send_respondable_email_validation_message(
                                 )
     data['email_code'] = reply_address.address
 
-    from askbot.skins.loaders import get_template
     template = get_template(template_name)
-    body_text = template.render(Context(data))
+    body_text = template.render(Context(data))#todo: set lang
 
     reply_to_address = 'welcome-%s@%s' % (
                             reply_address.address,

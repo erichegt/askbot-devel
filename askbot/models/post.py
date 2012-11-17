@@ -862,8 +862,8 @@ class Post(models.Model):
         if quote_level > 0, the post will be indented that number of times
         todo: move to views?
         """
-        from askbot.skins.loaders import get_template
         from django.template import Context
+        from django.template.loader import get_template
         template = get_template('email/quoted_post.html')
         data = {
             'post': self,
@@ -871,7 +871,7 @@ class Post(models.Model):
             'is_leaf_post': is_leaf_post,
             'format': format
         }
-        return template.render(Context(data))
+        return template.render(Context(data))#todo: set lang
 
     def format_for_email_as_parent_thread_summary(self):
         """format for email as summary of parent posts
@@ -895,10 +895,10 @@ class Post(models.Model):
         """outputs question or answer and all it's comments
         returns empty string for all other post types
         """
-        from askbot.skins.loaders import get_template
         from django.template import Context
+        from django.template.loader import get_template
         template = get_template('email/post_as_subthread.html')
-        return template.render(Context({'post': self}))
+        return template.render(Context({'post': self}))#todo: set lang
 
     def set_cached_comments(self, comments):
         """caches comments in the lifetime of the object

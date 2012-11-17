@@ -21,6 +21,7 @@ from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
+from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseForbidden
 from django.http import HttpResponseRedirect, Http404
 from django.utils.translation import ugettext as _
@@ -40,7 +41,6 @@ from askbot import models
 from askbot import exceptions
 from askbot.models.badges import award_badges_signal
 from askbot.models.tag import format_personal_group_name
-from askbot.skins.loaders import render_into_skin
 from askbot.search.state_manager import SearchState
 from askbot.utils import url_utils
 from askbot.utils.loading import load_module
@@ -200,7 +200,7 @@ def show_users(request, by_group=False, group_id=None, group_slug=None):
         'group_openness_choices': group_openness_choices
     }
 
-    return render_into_skin('users.html', data, request)
+    return render(request, 'users.html', data)
 
 @csrf.csrf_protect
 def user_moderate(request, subject, context):
@@ -294,7 +294,7 @@ def user_moderate(request, subject, context):
         'user_status_changed': user_status_changed
     }
     context.update(data)
-    return render_into_skin('user_profile/user_moderate.html', context, request)
+    return render(request, 'user_profile/user_moderate.html', context)
 
 #non-view function
 def set_new_email(user, new_email, nomessage=False):
@@ -356,7 +356,7 @@ def edit_user(request, id):
         'support_custom_avatars': ('avatar' in django_settings.INSTALLED_APPS),
         'view_user': user,
     }
-    return render_into_skin('user_profile/user_edit.html', data, request)
+    return render(request, 'user_profile/user_edit.html', data)
 
 def user_stats(request, user, context):
     question_filter = {}
@@ -528,7 +528,7 @@ def user_stats(request, user, context):
     }
     context.update(data)
 
-    return render_into_skin('user_profile/user_stats.html', context, request)
+    return render(request, 'user_profile/user_stats.html', context)
 
 def user_recent(request, user, context):
 
@@ -682,7 +682,7 @@ def user_recent(request, user, context):
         'activities' : activities[:const.USER_VIEW_DATA_SIZE]
     }
     context.update(data)
-    return render_into_skin('user_profile/user_recent.html', context, request)
+    return render(request, 'user_profile/user_recent.html', context)
 
 #not a view - no direct url route here, called by `user_responses`
 @csrf.csrf_protect
@@ -714,7 +714,7 @@ def show_group_join_requests(request, user, context):
         'join_requests': join_requests
     }
     context.update(data)
-    return render_into_skin('user_inbox/group_join_requests.html', context, request)
+    return render(request, 'user_inbox/group_join_requests.html', context)
 
 
 @owner_or_moderator_required
@@ -769,9 +769,7 @@ def user_responses(request, user, context):
             'page_title' : _('profile - messages')
         }
         context.update(data)
-        return render_into_skin(
-            'user_inbox/messages.html', context, request
-        )
+        return render(request, 'user_inbox/messages.html', context)
     else:
         raise Http404
 
@@ -839,7 +837,7 @@ def user_responses(request, user, context):
         'responses' : filtered_response_list,
     }
     context.update(data)
-    return render_into_skin('user_inbox/responses_and_flags.html', context, request)
+    return render(request, 'user_inbox/responses_and_flags.html', context)
 
 def user_network(request, user, context):
     if 'followit' not in django_settings.INSTALLED_APPS:
@@ -850,7 +848,7 @@ def user_network(request, user, context):
         'followers': user.get_followers(),
     }
     context.update(data)
-    return render_into_skin('user_profile/user_network.html', context, request)
+    return render(request, 'user_profile/user_network.html', context)
 
 @owner_or_moderator_required
 def user_votes(request, user, context):
@@ -880,7 +878,7 @@ def user_votes(request, user, context):
         'votes' : votes[:const.USER_VIEW_DATA_SIZE]
     }
     context.update(data)
-    return render_into_skin('user_profile/user_votes.html', context, request)
+    return render(request, 'user_profile/user_votes.html', context)
 
 
 def user_reputation(request, user, context):
@@ -903,7 +901,7 @@ def user_reputation(request, user, context):
         'reps': reps
     }
     context.update(data)
-    return render_into_skin('user_profile/user_reputation.html', context, request)
+    return render(request, 'user_profile/user_reputation.html', context)
 
 
 def user_favorites(request, user, context):
@@ -921,7 +919,7 @@ def user_favorites(request, user, context):
         'questions' : questions,
     }
     context.update(data)
-    return render_into_skin('user_profile/user_favorites.html', context, request)
+    return render(request, 'user_profile/user_favorites.html', context)
 
 
 @owner_or_moderator_required
@@ -972,10 +970,10 @@ def user_email_subscriptions(request, user, context):
         'action_status': action_status,
     }
     context.update(data)
-    return render_into_skin(
+    return render(
+        request,
         'user_profile/user_email_subscriptions.html',
-        context,
-        request
+        context
     )
 
 @csrf.csrf_protect
@@ -994,7 +992,7 @@ def user_custom_tab(request, user, context):
         'tab_name': tab_settings['SLUG'],
         'page_title': page_title
     })
-    return render_into_skin('user_profile/custom_tab.html', context, request)
+    return render(request, 'user_profile/custom_tab.html', context)
 
 USER_VIEW_CALL_TABLE = {
     'stats': user_stats,
@@ -1118,4 +1116,4 @@ def groups(request, id = None, slug = None):
         'tab_name': scope,
         'page_class': 'groups-page'
     }
-    return render_into_skin('groups.html', data, request)
+    return render(request, 'groups.html', data)

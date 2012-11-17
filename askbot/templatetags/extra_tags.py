@@ -1,11 +1,12 @@
 import math
 from django import template
+from django.template import RequestContext
+from django.template.loader import get_template
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 from askbot.utils import functions
 from askbot.utils.slug import slugify
-from askbot.skins.loaders import get_template
 from askbot.conf import settings as askbot_settings
 
 register = template.Library()
@@ -90,8 +91,8 @@ class IncludeJinja(template.Node):
         self.request_var = template.Variable(request_var)
     def render(self, context):
         request = self.request_var.resolve(context)
-        jinja_template = get_template(self.filename, request)
-        return jinja_template.render(context)
+        jinja_template = get_template(self.filename)
+        return jinja_template.render(RequestContext(request, context))
 
 @register.tag
 def include_jinja(parser, token):
@@ -112,4 +113,3 @@ def include_jinja(parser, token):
         raise template.TemplateSyntaxError('file name must be quoted')
 
     return IncludeJinja(filename, request_var)
-

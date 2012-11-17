@@ -24,6 +24,7 @@ import uuid
 
 from django.contrib.contenttypes.models import ContentType
 from django.template import Context
+from django.template.loader import get_template
 from django.utils.translation import ugettext as _
 from celery.decorators import task
 from askbot.conf import settings as askbot_settings
@@ -80,7 +81,6 @@ def notify_author_of_published_revision_celery_task(revision):
         }
 
         #load the template
-        from askbot.skins.loaders import get_template
         template = get_template('email/notify_author_about_approved_post.html')
         #todo: possibly add headers to organize messages in threads
         headers = {'Reply-To': append_content_address}
@@ -191,7 +191,6 @@ def send_instant_notifications_about_activity_in_post(
         return
 
     #calculate some variables used in the loop below
-    from askbot.skins.loaders import get_template
     update_type_map = const.RESPONSE_ACTIVITY_TYPE_MAP_FOR_TEMPLATES
     update_type = update_type_map[update_activity.activity_type]
     origin_post = post.get_origin_post()

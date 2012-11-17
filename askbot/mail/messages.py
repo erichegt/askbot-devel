@@ -3,8 +3,8 @@ of email messages for various occasions
 """
 import functools
 from django.template import Context
+from django.template.loader import get_template
 from askbot.conf import settings as askbot_settings
-from askbot.skins.loaders import get_template
 from askbot.utils import html as html_utils
 
 def message(template = None):
@@ -16,7 +16,7 @@ def message(template = None):
         def wrapped(*args, **kwargs):
             template_object = get_template(template)
             data = func(*args, **kwargs)
-            return template_object.render(Context(data))
+            return template_object.render(Context(data))#todo: set lang
         return wrapped
     return decorate
 

@@ -211,14 +211,28 @@ def test_encoding():
 def test_template_loader():
     """Sends a warning if you have an old style template
     loader that used to send a warning"""
-    old_template_loader = 'askbot.skins.loaders.load_template_source'
-    if old_template_loader in django_settings.TEMPLATE_LOADERS:
-        raise AskbotConfigError(
-                "\nPlease change: \n"
-                "'askbot.skins.loaders.load_template_source', to\n"
-                "'askbot.skins.loaders.filesystem_load_template_source',\n"
-                "in the TEMPLATE_LOADERS of your settings.py file"
+    old_loaders = (
+        'askbot.skins.loaders.load_template_source',
+        'askbot.skins.loaders.filesystem_load_template_source',
+    )
+    errors = list()
+    for loader in old_loaders:
+        if loader in django_settings.TEMPLATE_LOADERS:
+            errors.append(
+                'remove "%s" from the TEMPLATE_LOADERS setting' % loader
+            )
+
+    current_loader = 'askbot.skins.loaders.Loader'
+    if current_loader not in django_settings.TEMPLATE_LOADERS:
+        errors.append(
+            'add "%s" to the beginning of the TEMPLATE_LOADERS' % current_loader
         )
+    elif django_settings.TEMPLATE_LOADERS[0] != current_loader:
+        errors.append(
+            '"%s" must be the first element of TEMPLATE_LOADERS' % current_loader
+        )
+        
+    print_errors(errors)
 
 def test_celery():
     """Tests celery settings
@@ -457,7 +471,6 @@ def test_staticfiles():
             'Run command (after fixing the above errors)\n'
             '    python manage.py collectstatic\n'
         )
-
 
     print_errors(errors)
     if django_settings.STATICFILES_STORAGE == \
