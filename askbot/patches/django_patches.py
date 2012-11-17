@@ -339,3 +339,16 @@ def add_available_attrs_decorator():
         return tuple(a for a in WRAPPER_ASSIGNMENTS if hasattr(fn, a))
     import django.utils.decorators
     django.utils.decorators.available_attrs = available_attrs
+
+def add_render_shortcut():
+    """adds `render` shortcut, introduced with django 1.3"""
+    try:
+        from django.shortcuts import render
+    except ImportError:
+        def render(request, template, data=None):
+            from django.shortcuts import render_to_response
+            from django.template import RequestContext
+            return render_to_response(template, RequestContext(request, data))
+
+        import django.shortcuts
+        django.shortcuts.render = render
