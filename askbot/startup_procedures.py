@@ -774,24 +774,24 @@ def test_group_messaging():
         errors.append("add to the INSTALLED_APPS:\n'group_messaging'")
 
     settings_sample = ("GROUP_MESSAGING = {\n"
-    "    'base_url_getter_function': 'askbot.models.user_get_profile_url',\n"
-    "    'base_url_params': {'section': 'messages', 'sort': 'inbox'}\n"
+    "    'BASE_URL_GETTER_FUNCTION': 'askbot.models.user_get_profile_url',\n"
+    "    'BASE_URL_PARAMS': {'section': 'messages', 'sort': 'inbox'}\n"
     "}")
 
     settings = getattr(django_settings, 'GROUP_MESSAGING', {})
     if settings:
-        url_params = settings.get('base_url_params', {})
+        url_params = settings.get('BASE_URL_PARAMS', {})
         have_wrong_params = not (
                         url_params.get('section', None) == 'messages' and \
                         url_params.get('sort', None) == 'inbox'
                     )
-        url_getter = settings.get('base_url_getter_function', None)
+        url_getter = settings.get('BASE_URL_GETTER_FUNCTION', None)
         if url_getter != 'askbot.models.user_get_profile_url' or have_wrong_params:
             errors.append(
                 "make setting 'GROUP_MESSAGING to be exactly:\n" + settings_sample
             )
             
-        url_params = settings.get('base_url_params', None)
+        url_params = settings.get('BASE_URL_PARAMS', None)
     else:
         errors.append('add this to your settings.py:\n' + settings_sample)
 

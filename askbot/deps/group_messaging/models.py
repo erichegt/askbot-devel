@@ -333,13 +333,13 @@ class Message(models.Model):
         """returns absolute url to the thread"""
         assert(user != None)
         settings = django_settings.GROUP_MESSAGING
-        func_path = settings['base_url_getter_function']
+        func_path = settings['BASE_URL_GETTER_FUNCTION']
         path_bits = func_path.split('.')
         url_getter = getattr(
                         import_module('.'.join(path_bits[:-1])),
                         path_bits[-1]
                     )
-        params = copy.copy(settings['base_url_params'])
+        params = copy.copy(settings['BASE_URL_PARAMS'])
         params['thread_id'] = self.id
         url = url_getter(user) + '?' + urllib.urlencode(params)
         #if include_domain_name: #don't need this b/c
