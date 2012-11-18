@@ -35,6 +35,16 @@ def askbot_setup():
             )
 
     parser.add_option(
+                '-e', '--db-engine',
+                dest='database_engine',
+                action='store',
+                type='choice',
+                choices=('1', '2', '3'),
+                default=None,
+                help='Database engine, type 1 for postgresql, 2 for sqlite, 3 for mysql'
+            )
+
+    parser.add_option(
                 "-d", "--db-name",
                 dest = "database_name",
                 default = None,
@@ -78,13 +88,14 @@ def askbot_setup():
 
     try:
         options = parser.parse_args()[0]
-        #ask
+        #ask users to give missing parameters
+        #todo: make this more explicit here
         if options.verbosity >= 1:
             print messages.DEPLOY_PREAMBLE
 
         directory = path_utils.clean_directory(options.dir_name)
         while directory is None:
-            directory = path_utils.get_install_directory(force = options.force)
+            directory = path_utils.get_install_directory(force=options.force)
 
         deploy_askbot(directory, options)
     except KeyboardInterrupt:
@@ -100,8 +111,17 @@ def deploy_askbot(directory, options):
     and the log file
     """
 
+    database_engine_codes = {
+        1: 'postgresql_psycopg2',
+        2: 'sqlite3',
+        3: 'mysql'
+    }
+
+    database_engine = database_engine_codes[options.database_engine]
+
     help_file = path_utils.get_path_to_help_file()
     context = {
+        'database_engine': database_engine,
         'database_name': options.database_name,
         'database_password': options.database_password,
         'database_user': options.database_user,
