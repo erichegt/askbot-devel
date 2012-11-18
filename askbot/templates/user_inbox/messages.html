@@ -22,6 +22,7 @@
         }
         table.threads-list {
             width: 100%;
+            border-spacing: 0px;
         }
         .threads-list tr {
             height: 2em;
@@ -35,6 +36,16 @@
         }
         .threads-list tr:hover {
             background-color: #eff5f6;
+        }
+        .threads-list td.delete-or-restore {
+            width: 15px;
+            background-image: none;
+        }
+        .threads-list tr:hover td.delete-or-restore {
+            background: url({{"/images/delete.png"|media}}) no-repeat center center;
+        }
+        .threads-list.trash tr:hover td.delete-or-restore {
+            background-image: url({{"/images/delete.png"|media}});
         }
         td.empty {
             line-height: 30px;
@@ -93,7 +104,7 @@
     {% trans %}inbox - messages{% endtrans %}
 {% endblock %}
 {% block inbox_content %}
-    {% include "group_messaging/home.html" %}
+    {% include group_messaging_template_name %}
 {% endblock %}
 {% block userjs %}
     <script type="text/javascript" src="{{ 'js/group_messaging.js'|media }}"></script>

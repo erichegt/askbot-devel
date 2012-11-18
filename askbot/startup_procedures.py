@@ -767,6 +767,38 @@ see outdated content on your site.
         askbot_warning(message)
 
 
+def test_group_messaging():
+    """tests correctness of the "group_messaging" app configuration"""
+    errors = list()
+    if 'group_messaging' not in django_settings.INSTALLED_APPS:
+        errors.append("add to the INSTALLED_APPS:\n'group_messaging'")
+
+    settings_sample = ("GROUP_MESSAGING = {\n"
+    "    'base_url_getter_function': 'askbot.models.user_get_profile_url',\n"
+    "    'base_url_params': {'section': 'messages', 'sort': 'inbox'}\n"
+    "}")
+
+    settings = getattr(django_settings, 'GROUP_MESSAGING', {})
+    if settings:
+        url_params = settings.get('base_url_params', {})
+        have_wrong_params = not (
+                        url_params.get('section', None) == 'messages' and \
+                        url_params.get('sort', None) == 'inbox'
+                    )
+        url_getter = settings.get('base_url_getter_function', None)
+        if url_getter != 'askbot.models.user_get_profile_url' or have_wrong_params:
+            errors.append(
+                "make setting 'GROUP_MESSAGING to be exactly:\n" + settings_sample
+            )
+            
+        url_params = settings.get('base_url_params', None)
+    else:
+        errors.append('add this to your settings.py:\n' + settings_sample)
+
+    if errors:
+        print_errors(errors)
+
+
 def run_startup_tests():
     """function that runs
     all startup tests, mainly checking settings config so far
@@ -787,6 +819,7 @@ def run_startup_tests():
     test_new_skins()
     test_longerusername()
     test_avatar()
+    test_group_messaging()
     test_haystack()
     test_cache_backend()
     settings_tester = SettingsTester({
