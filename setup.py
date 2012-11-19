@@ -127,6 +127,6 @@ print """**************************************************************
 *                                                            *
 *  Please take a look at the manual http://askbot.org/doc/   *
 *  And please do not hesitate to ask your questions at       *
-*  at http://askbot.org                                      *
+*  at http://askbot.org/en/questions/                        *
 *                                                            *
 **************************************************************"""
