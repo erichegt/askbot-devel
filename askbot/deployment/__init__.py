@@ -124,6 +124,20 @@ def askbot_setup():
         options_dict['database_engine'] = database_engine
 
         deploy_askbot(options_dict)
+
+        if database_engine == 'postgresql_psycopg2':
+            try:
+                import psycopg2
+            except ImportError:
+                print '\nNEXT STEPS: install python binding for postgresql'
+                print 'pip install psycopg2\n'
+        elif database_engine == 'mysql':
+            try:
+                import _mysql
+            except ImportError:
+                print '\nNEXT STEP: install python binding for mysql'
+                print 'pip install mysql-python\n'
+
     except KeyboardInterrupt:
         print "\n\nAborted."
         sys.exit(1)
