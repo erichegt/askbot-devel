@@ -45,6 +45,7 @@ from django.shortcuts import render
 from django.template.loader import get_template
 from django.views.decorators import csrf
 from django.utils.encoding import smart_unicode
+from askbot.utils.functions import generate_random_key
 from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from django.utils.safestring import mark_safe
@@ -964,7 +965,7 @@ def register(request, login_provider_name=None, user_identifier=None):
             else:
                 request.session['username'] = username
                 request.session['email'] = email
-                key = util.generate_random_key()
+                key = generate_random_key()
                 email = request.session['email']
                 send_email_key(email, key, handler_url_name='verify_email_and_register')
                 request.session['validation_code'] = key
@@ -1107,7 +1108,7 @@ def signup_with_password(request):
                 request.session['email'] = email
                 request.session['password'] = password
                 #todo: generate a key and save it in the session
-                key = util.generate_random_key()
+                key = generate_random_key()
                 email = request.session['email']
                 send_email_key(email, key, handler_url_name='verify_email_and_register')
                 request.session['validation_code'] = key
@@ -1206,7 +1207,7 @@ def send_email_key(email, key, handler_url_name='user_account_recover'):
     send_mail(subject, message, django_settings.DEFAULT_FROM_EMAIL, [email])
 
 def send_user_new_email_key(user):
-    user.email_key = util.generate_random_key()
+    user.email_key = generate_random_key()
     user.save()
     send_email_key(user.email, user.email_key)
 

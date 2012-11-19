@@ -19,8 +19,7 @@ CANT_INSTALL_INTO_FILE = '%(path)s is a file\ncannot install there'
 SHOULD_ADD_APP_HERE = 'Directory %(path)s?\nalready has a Django ' \
                     + 'project - do you want to add askbot app to that project?'
 
-HOW_TO_DEPLOY_NEW = 'Done. Please find further instructions in the file below:'\
-                    + '\n%(help_file)s'
+HOW_TO_DEPLOY_NEW = 'Done. Please find further instructions at http://askbot.org/doc/'
 
 HOW_TO_ADD_ASKBOT_TO_DJANGO = HOW_TO_DEPLOY_NEW
 

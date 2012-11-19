@@ -848,7 +848,3 @@ def ldap_check_password(username, password):
     except ldap.LDAPError, e:
         logging.critical(unicode(e))
         return False
-
-def generate_random_key():
-    random.seed()
-    return '%032x' % random.getrandbits(128) 

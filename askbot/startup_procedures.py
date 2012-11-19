@@ -799,6 +799,17 @@ def test_group_messaging():
         print_errors(errors)
 
 
+def test_secret_key():
+    key = django_settings.SECRET_KEY
+    if key.strip() == '':
+        print_errors(['please create a random SECRET_KEY setting',])
+    elif key == 'sdljdfjkldsflsdjkhsjkldgjlsdgfs s ':
+        print_errors([
+            'Please change your SECRET_KEY setting, the current is not secure'
+        ])
+        
+
+
 def run_startup_tests():
     """function that runs
     all startup tests, mainly checking settings config so far
@@ -822,6 +833,7 @@ def run_startup_tests():
     test_group_messaging()
     test_haystack()
     test_cache_backend()
+    test_secret_key()
     settings_tester = SettingsTester({
         'CACHE_MIDDLEWARE_ANONYMOUS_ONLY': {
             'value': True,

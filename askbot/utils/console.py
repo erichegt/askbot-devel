@@ -34,6 +34,7 @@ def choice_dialog(prompt_phrase, choices = None, invalid_phrase = None):
             print invalid_phrase % {'opt_string': opt_string}
         time.sleep(1)
 
+
 def simple_dialog(prompt_phrase, required=False):
     """asks user to enter a string, if `required` is True,
     will repeat question until non-empty input is given
@@ -49,6 +50,13 @@ def simple_dialog(prompt_phrase, required=False):
             return response
 
         time.sleep(1)
+
+
+def get_yes_or_no(prompt_phrase):
+    while True:
+        response = raw_input(prompt_phrase + ' (yes/no)\n> ').strip()
+        if response in ('yes', 'no'):
+            return response
             
 
 def open_new_file(prompt_phrase, extension = '', hint = None):
