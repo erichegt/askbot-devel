@@ -24,13 +24,32 @@ def choice_dialog(prompt_phrase, choices = None, invalid_phrase = None):
     assert(hasattr(choices, '__iter__'))
     assert(not isinstance(choices, basestring))
     while 1:
-        response = raw_input('\n%s (type %s): ' % (prompt_phrase, '/'.join(choices)))
+        response = raw_input(
+            '\n%s (type %s)\n> ' % (prompt_phrase, '/'.join(choices))
+        )
         if response in choices:
             return response
         elif invalid_phrase != None:
             opt_string = ','.join(choices)
             print invalid_phrase % {'opt_string': opt_string}
         time.sleep(1)
+
+def simple_dialog(prompt_phrase, required=False):
+    """asks user to enter a string, if `required` is True,
+    will repeat question until non-empty input is given
+    """
+    while 1:
+
+        if required:
+            prompt_phrase += ' (required)'
+
+        response = raw_input(prompt_phrase + '\n> ').strip()
+        
+        if response or required is False:
+            return response
+
+        time.sleep(1)
+            
 
 def open_new_file(prompt_phrase, extension = '', hint = None):
     """will ask for a file name to be typed

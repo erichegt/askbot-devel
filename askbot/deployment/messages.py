@@ -7,11 +7,12 @@ DEPLOY_PREAMBLE = """
 Deploying Askbot - Django Q&A forum application
 Problems installing? -> please email admin@askbot.org
 
-To CANCEL - hit Ctr-C at any time"""
+To CANCEL - hit Ctr-C at any time
+"""
 
-WHERE_TO_DEPLOY = 'In which directory to deploy the forum?'
-
-WHERE_TO_DEPLOY_QUIT = 'Where deploy the forum (directory)? Ctrl-C to quit.'
+WHERE_TO_DEPLOY = """Enter directory path (absolute or relative) to deploy
+askbot. To choose current directory - enter "."
+>"""
 
 CANT_INSTALL_INTO_FILE = '%(path)s is a file\ncannot install there'
 
