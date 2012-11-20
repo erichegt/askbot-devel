@@ -41,14 +41,16 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
 from django.core.urlresolvers import reverse
 from django.forms.util import ErrorList
+from django.shortcuts import render
+from django.template.loader import get_template
 from django.views.decorators import csrf
 from django.utils.encoding import smart_unicode
+from askbot.utils.functions import generate_random_key
 from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from django.utils.safestring import mark_safe
 from askbot.mail import send_mail
 from recaptcha_works.decorators import fix_recaptcha_remote_ip
-from askbot.skins.loaders import render_into_skin, get_template
 from askbot.deps.django_authopenid.ldap_auth import ldap_create_user
 from askbot.deps.django_authopenid.ldap_auth import ldap_authenticate
 from askbot.utils.loading import load_module
@@ -169,7 +171,7 @@ def logout_page(request):
         'page_class': 'meta',
         'have_federated_login_methods': util.have_enabled_federated_login_methods()
     }
-    return render_into_skin('authopenid/logout.html', data, request)
+    return render(request, 'authopenid/logout.html', data)
 
 def get_url_host(request):
     if request.is_secure():
@@ -721,7 +723,7 @@ def show_signin_view(
     data['major_login_providers'] = major_login_providers.values()
     data['minor_login_providers'] = minor_login_providers.values()
 
-    return render_into_skin(template_name, data, request)
+    return render(request, template_name, data)
 
 @login_required
 def delete_login_method(request):
@@ -963,7 +965,7 @@ def register(request, login_provider_name=None, user_identifier=None):
             else:
                 request.session['username'] = username
                 request.session['email'] = email
-                key = util.generate_random_key()
+                key = generate_random_key()
                 email = request.session['email']
                 send_email_key(email, key, handler_url_name='verify_email_and_register')
                 request.session['validation_code'] = key
@@ -993,7 +995,7 @@ def register(request, login_provider_name=None, user_identifier=None):
         'login_type':'openid',
         'gravatar_faq_url':reverse('faq') + '#gravatar',
     }
-    return render_into_skin('authopenid/complete.html', data, request)
+    return render(request, 'authopenid/complete.html', data)
 
 def signin_failure(request, message):
     """
@@ -1052,7 +1054,7 @@ def verify_email_and_register(request):
             return HttpResponseRedirect(reverse('index'))
     else:
         data = {'page_class': 'validate-email-page'}
-        return render_into_skin('authopenid/verify_email.html', data, request)
+        return render(request, 'authopenid/verify_email.html', data)
 
 @not_authenticated
 @decorators.valid_password_login_provider_required
@@ -1106,7 +1108,7 @@ def signup_with_password(request):
                 request.session['email'] = email
                 request.session['password'] = password
                 #todo: generate a key and save it in the session
-                key = util.generate_random_key()
+                key = generate_random_key()
                 email = request.session['email']
                 send_email_key(email, key, handler_url_name='verify_email_and_register')
                 request.session['validation_code'] = key
@@ -1138,10 +1140,10 @@ def signup_with_password(request):
                 'minor_login_providers': minor_login_providers.values(),
                 'login_form': login_form
             }
-    return render_into_skin(
+    return render(
+                request,
                 'authopenid/signup_with_password.html',
-                context_data,
-                request
+                context_data
             )
     #what if request is not posted?
 
@@ -1201,11 +1203,11 @@ def send_email_key(email, key, handler_url_name='user_account_recover'):
                             '?validation_code=' + key
     }
     template = get_template('authopenid/email_validation.html')
-    message = template.render(data)
+    message = template.render(data)#todo: inject language preference
     send_mail(subject, message, django_settings.DEFAULT_FROM_EMAIL, [email])
 
 def send_user_new_email_key(user):
-    user.email_key = util.generate_random_key()
+    user.email_key = generate_random_key()
     user.save()
     send_email_key(user.email, user.email_key)
 
@@ -1273,4 +1275,4 @@ def validation_email_sent(request):
         'change_email_url': reverse('user_changeemail'),
         'action_type': 'validate'
     }
-    return render_into_skin('authopenid/changeemail.html', data, request)
+    return render(request, 'authopenid/changeemail.html', data)

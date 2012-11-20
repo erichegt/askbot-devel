@@ -1,4 +1,5 @@
 from django.core.management.base import NoArgsCommand
+from django.template.loader import get_template
 from askbot import models
 from askbot import const
 from askbot.conf import settings as askbot_settings
@@ -6,7 +7,6 @@ from django.utils.translation import ungettext
 from askbot import mail
 from askbot.utils.classes import ReminderSchedule
 from askbot.models.question import Thread
-from askbot.skins.loaders import get_template
 from django.template import Context
 
 DEBUG_THIS_COMMAND = False
@@ -78,7 +78,7 @@ class Command(NoArgsCommand):
                    }
 
             template = get_template('email/unanswered_question_reminder.html')
-            body_text = template.render(Context(data))
+            body_text = template.render(Context(data))#todo: set lang
 
 
             if DEBUG_THIS_COMMAND:

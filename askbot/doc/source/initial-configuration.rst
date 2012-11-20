@@ -48,6 +48,8 @@ There may be an error message; ignore it.
     | -n <NAME>                        | Name of the instance, this is the name that the            |
     |                                  | folder will use.                                           |
     +----------------------------------+------------------------------------------------------------+
+    | -e <DATABASE_ENGINE>             | Integer values: 1 - postgresql, 2 - sqlite3, 3 - mysql     |
+    +----------------------------------+------------------------------------------------------------+
     | -d <DATABASE_NAME>               | The database name that the instance will use.              |
     +----------------------------------+------------------------------------------------------------+
     | -u <DATABASE_USER>               | The database user that the instance will use.              |

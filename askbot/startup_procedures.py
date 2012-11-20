@@ -211,14 +211,28 @@ def test_encoding():
 def test_template_loader():
     """Sends a warning if you have an old style template
     loader that used to send a warning"""
-    old_template_loader = 'askbot.skins.loaders.load_template_source'
-    if old_template_loader in django_settings.TEMPLATE_LOADERS:
-        raise AskbotConfigError(
-                "\nPlease change: \n"
-                "'askbot.skins.loaders.load_template_source', to\n"
-                "'askbot.skins.loaders.filesystem_load_template_source',\n"
-                "in the TEMPLATE_LOADERS of your settings.py file"
+    old_loaders = (
+        'askbot.skins.loaders.load_template_source',
+        'askbot.skins.loaders.filesystem_load_template_source',
+    )
+    errors = list()
+    for loader in old_loaders:
+        if loader in django_settings.TEMPLATE_LOADERS:
+            errors.append(
+                'remove "%s" from the TEMPLATE_LOADERS setting' % loader
+            )
+
+    current_loader = 'askbot.skins.loaders.Loader'
+    if current_loader not in django_settings.TEMPLATE_LOADERS:
+        errors.append(
+            'add "%s" to the beginning of the TEMPLATE_LOADERS' % current_loader
         )
+    elif django_settings.TEMPLATE_LOADERS[0] != current_loader:
+        errors.append(
+            '"%s" must be the first element of TEMPLATE_LOADERS' % current_loader
+        )
+        
+    print_errors(errors)
 
 def test_celery():
     """Tests celery settings
@@ -457,7 +471,6 @@ def test_staticfiles():
             'Run command (after fixing the above errors)\n'
             '    python manage.py collectstatic\n'
         )
-
 
     print_errors(errors)
     if django_settings.STATICFILES_STORAGE == \
@@ -754,6 +767,49 @@ see outdated content on your site.
         askbot_warning(message)
 
 
+def test_group_messaging():
+    """tests correctness of the "group_messaging" app configuration"""
+    errors = list()
+    if 'group_messaging' not in django_settings.INSTALLED_APPS:
+        errors.append("add to the INSTALLED_APPS:\n'group_messaging'")
+
+    settings_sample = ("GROUP_MESSAGING = {\n"
+    "    'BASE_URL_GETTER_FUNCTION': 'askbot.models.user_get_profile_url',\n"
+    "    'BASE_URL_PARAMS': {'section': 'messages', 'sort': 'inbox'}\n"
+    "}")
+
+    settings = getattr(django_settings, 'GROUP_MESSAGING', {})
+    if settings:
+        url_params = settings.get('BASE_URL_PARAMS', {})
+        have_wrong_params = not (
+                        url_params.get('section', None) == 'messages' and \
+                        url_params.get('sort', None) == 'inbox'
+                    )
+        url_getter = settings.get('BASE_URL_GETTER_FUNCTION', None)
+        if url_getter != 'askbot.models.user_get_profile_url' or have_wrong_params:
+            errors.append(
+                "make setting 'GROUP_MESSAGING to be exactly:\n" + settings_sample
+            )
+            
+        url_params = settings.get('BASE_URL_PARAMS', None)
+    else:
+        errors.append('add this to your settings.py:\n' + settings_sample)
+
+    if errors:
+        print_errors(errors)
+
+
+def test_secret_key():
+    key = django_settings.SECRET_KEY
+    if key.strip() == '':
+        print_errors(['please create a random SECRET_KEY setting',])
+    elif key == 'sdljdfjkldsflsdjkhsjkldgjlsdgfs s ':
+        print_errors([
+            'Please change your SECRET_KEY setting, the current is not secure'
+        ])
+        
+
+
 def run_startup_tests():
     """function that runs
     all startup tests, mainly checking settings config so far
@@ -774,8 +830,10 @@ def run_startup_tests():
     test_new_skins()
     test_longerusername()
     test_avatar()
+    test_group_messaging()
     test_haystack()
     test_cache_backend()
+    test_secret_key()
     settings_tester = SettingsTester({
         'CACHE_MIDDLEWARE_ANONYMOUS_ONLY': {
             'value': True,

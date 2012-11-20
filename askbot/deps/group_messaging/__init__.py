@@ -11,4 +11,7 @@ the group should be named `'_personal_1'`.
 
 Only one person must be a member of a personal group and
 each user must have such group.
+
+TODO: decouple this application
+first step is to package send_mail separately
 """

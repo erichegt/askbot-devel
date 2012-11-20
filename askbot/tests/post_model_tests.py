@@ -3,13 +3,13 @@ import datetime
 from operator import attrgetter
 import time
 from askbot.search.state_manager import SearchState
-from askbot.skins.loaders import get_template
 from django.contrib.auth.models import User
 from django.core import cache, urlresolvers
 from django.core.cache.backends.dummy import DummyCache
 from django.core.cache.backends.locmem import LocMemCache
 
 from django.core.exceptions import ValidationError
+from django.template.loader import get_template
 from askbot.tests.utils import AskbotTestCase
 from askbot.models import Post
 from askbot.models import PostRevision

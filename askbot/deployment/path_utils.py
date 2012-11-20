@@ -15,6 +15,11 @@ from askbot.utils import console
 from askbot.deployment.template_loader import SettingsTemplate
 
 
+FILES_TO_CREATE = ('__init__.py', 'manage.py', 'urls.py', 'django.wsgi')
+BLANK_FILES = ('__init__.py', 'manage.py')
+LOG_DIR_NAME = 'log'
+
+
 def split_at_break_point(directory):
     """splits directory path into two pieces
     first that exists and secon - that does not
@@ -154,8 +159,8 @@ def deploy_into(directory, new_project = False, verbosity = 1, context = None):
     """
     assert(isinstance(new_project, bool))
     if new_project:
-        copy_files = ('__init__.py', 'manage.py', 'urls.py', 'django.wsgi')
-        blank_files = ('__init__.py', 'manage.py')
+        copy_files = FILES_TO_CREATE
+        blank_files = BLANK_FILES
         if verbosity >= 1:
             print 'Copying files: '
         for file_name in copy_files:
@@ -176,8 +181,8 @@ def deploy_into(directory, new_project = False, verbosity = 1, context = None):
                     print '* %s ' % file_name
                 shutil.copy(src, directory)
         #copy log directory
-        src = os.path.join(SOURCE_DIR, 'setup_templates', 'log')
-        log_dir = os.path.join(directory, 'log')
+        src = os.path.join(SOURCE_DIR, 'setup_templates', LOG_DIR_NAME)
+        log_dir = os.path.join(directory, LOG_DIR_NAME)
         create_path(log_dir)
         touch(os.path.join(log_dir, 'askbot.log'))
 
@@ -252,8 +257,12 @@ def get_install_directory(force = False):
     using a directory with an existing django project.
     """
     from askbot.deployment import messages
-    where_to_deploy_msg = messages.WHERE_TO_DEPLOY_QUIT
+    where_to_deploy_msg = messages.WHERE_TO_DEPLOY
     directory = raw_input(where_to_deploy_msg + ' ')
+
+    if directory.strip() == '':
+        return None
+
     directory = clean_directory(directory)
 
     if directory is None:

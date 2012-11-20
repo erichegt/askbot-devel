@@ -17,6 +17,9 @@ def patch_django():
         django_patches.add_csrf_protection()
         django_patches.add_available_attrs_decorator()
 
+    if major == 1 and minor <=2:
+        django_patches.add_render_shortcut()
+
 def patch_coffin():
     """coffin before version 0.3.4
     does not have csrf_token template tag.

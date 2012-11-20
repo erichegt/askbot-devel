@@ -15,6 +15,11 @@ urlpatterns = patterns('',
         name='thread_details'
     ),
     url(
+        '^threads/(?P<thread_id>\d+)/delete-or-restore/$',
+        views.DeleteOrRestoreThread().as_view(),
+        name='delete_or_restore_thread'
+    ),
+    url(
         '^threads/create/$',
         views.NewThread().as_view(),
         name='create_thread'

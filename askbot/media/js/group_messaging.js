@@ -265,15 +265,19 @@ NewThreadComposer.prototype.onAfterShow = function() {
 
 NewThreadComposer.prototype.onSendErrorInternal = function(data) {
     var missingUsers = data['missing_users']
+    var errors = [];
     if (missingUsers) {
         var errorTpl = ngettext(
                             'user {{str}} does not exist',
                             'users {{str}} do not exist',
                             missingUsers.length
                         )
-        error = errorTpl.replace('{{str}}', joinAsPhrase(missingUsers));
-        this._toInputError.html(error);
+        errors.push(errorTpl.replace('{{str}}', joinAsPhrase(missingUsers)));
     }
+    if (data['self_message']) {
+        errors.push(gettext('cannot send message to yourself'));
+    }
+    this._toInputError.html(errors.join(', '));
 };
 
 NewThreadComposer.prototype.getInputData = function() {
@@ -331,6 +335,14 @@ var ThreadHeading = function() {
 };
 inherits(ThreadHeading, SimpleControl);
 
+ThreadHeading.prototype.setParent = function(elem) {
+    this._threadsList = elem;
+};
+
+ThreadHeading.prototype.getParent = function() {
+    return this._threadsList;
+};
+
 ThreadHeading.prototype.getId = function() {
     return this._id;
 };
@@ -338,6 +350,12 @@ ThreadHeading.prototype.getId = function() {
 ThreadHeading.prototype.decorate = function(element) {
     this._element = element;
     this._id = element.data('threadId');
+    var deleter = element.find('.delete-or-restore');
+    var me = this;
+    setupButtonEventHandlers($(deleter), function() {
+        me.getParent().deleteOrRestoreThread(me.getId());
+        return false;
+    });
 };
 
 /**
@@ -359,12 +377,17 @@ ThreadsList.prototype.getOpenThreadHandler = function(threadId) {
     };
 };
 
-ThreadsList.prototype.setHTML = function(html) {
-    $.each(this._threads, function(idx, thread) {
-        thread.dispose();
-    });
-    this._element.html(html);
-    this.decorate(this._element);
+ThreadsList.prototype.deleteOrRestoreThread = function(threadId) {
+    var ctr = this._messageCenter;
+    ctr.deleteOrRestoreThread(threadId, this._senderId);
+};
+
+ThreadsList.prototype.getThreadsCount = function() {
+    if (self._threads) {
+        return self._threads.length;
+    } else {
+        return 0;
+    }
 };
 
 ThreadsList.prototype.decorate = function(element) {
@@ -374,12 +397,14 @@ ThreadsList.prototype.decorate = function(element) {
     var threads = [];
     $.each(headingElements, function(idx, headingElement) {
         var heading = new ThreadHeading();
+        heading.setParent(me);
         heading.decorate($(headingElement));
         var threadId = heading.getId();
         heading.setHandler(me.getOpenThreadHandler(threadId));
         threads.push(heading);
     });
     this._threads = threads;
+    this._senderId = element.data('senderId');
 }
 
 
@@ -443,16 +468,31 @@ ThreadContainer.prototype.setReplyUrl = function(url) {
     this._replyUrl = url;
 };
 
+ThreadContainer.prototype.appendEditor = function() {
+    var editor = new ReplyComposer();
+    editor.setSendUrl(this._replyUrl);
+    this._element.append(editor.getElement());
+    this._editor = editor;
+    editor.show();
+};
+
 ThreadContainer.prototype.createDom = function() {
     this._element = this.makeElement('div');
     var content = this.makeElement('div');
     this._contentElement = content;
     this._element.append(content);
+    this.appendEditor();
+};
 
-    var editor = new ReplyComposer();
-    editor.setSendUrl(this._replyUrl);
-    this._element.append(editor.getElement());
-    this._editor = editor;
+ThreadContainer.prototype.decorate = function(element) {
+    this._element = element;
+    this._contentElement = $(element.children()[0]);
+    var thread = new Thread();
+    thread.decorate(element.find('.thread'));
+    this.appendEditor();
+    var postData = {parent_id: thread.getLastMessageId()};
+    this._editor.setPostData(postData);
+    this._editor.setThread(thread);
 };
 
 
@@ -604,23 +644,41 @@ MessageCenter.prototype.openThread = function(threadId) {
     });
 };
 
-MessageCenter.prototype.loadThreadsForSender = function(senderId) {
+MessageCenter.prototype.setThreadsList = function(list) {
+    this._threadsList = list;
+    this._secondCol.prepend(list.getElement());
+};
+
+MessageCenter.prototype.hitThreadsList = function(url, senderId, requestMethod) {
     var threadsList = this._threadsList;
-    var url = this._urls['getThreads'];
-    me = this;
+    var me = this;
     $.ajax({
-        type: 'GET',
+        type: requestMethod,
         dataType: 'json',
         url: url,
         cache: false,
         data: {sender_id: senderId},
         success: function(data) {
             if (data['success']) {
-                threadsList.setHTML(data['html']);
+                threadsList.dispose();
+                var threads = new ThreadsList();
+                threads.setMessageCenter(me);
+                threads.decorate($(data['html']));
+                me.setThreadsList(threads);
                 me.setState('show-list');
             }
         }
     });
+};
+
+MessageCenter.prototype.deleteOrRestoreThread = function(threadId, senderId) {
+    var url = this._urls['getThreads'] + threadId + '/delete-or-restore/';
+    this.hitThreadsList(url, senderId, 'POST');
+};
+
+MessageCenter.prototype.loadThreadsForSender = function(senderId) {
+    var url = this._urls['getThreads'];
+    this.hitThreadsList(url, senderId, 'GET');
 };
 
 MessageCenter.prototype.decorate = function(element) {
@@ -644,19 +702,31 @@ MessageCenter.prototype.decorate = function(element) {
     threads.setMessageCenter(this);
     threads.decorate($('.threads-list'));
     this._threadsList = threads;
-    //add empty thread container
+    //add empty thread container or decorate existing one
     var threadContainer = new ThreadContainer();
     this._threadContainer = threadContainer;
     threadContainer.setReplyUrl(this._urls['reply']);
-    this._secondCol.append(threadContainer.getElement());
+
+    var threadElement = $('.thread').parent().parent();
+    if (threadElement.length) {
+        threadContainer.decorate(threadElement);
+    } else {
+        this._secondCol.append(threadContainer.getElement());
+        threadContainer.hide();
+    }
 
     var me = this;
     //create editor
     var editor = new NewThreadComposer();
     this._secondCol.append(editor.getElement());
     editor.setSendUrl(element.data('createThreadUrl'));
-    editor.onAfterCancel(function() { me.setState('show-list') });
+    editor.onAfterCancel(function() { 
+        me.setState('show-list')
+    });
     editor.onSendSuccess(function() {
+        if (threads.getThreadsCount() === 0) {
+            me.loadThreadsForSender(-1);
+        }
         editor.cancel();
         notify.show(gettext('message sent'), true);
     });

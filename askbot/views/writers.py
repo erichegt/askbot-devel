@@ -14,6 +14,7 @@ import tempfile
 import time
 import urlparse
 from django.shortcuts import get_object_or_404
+from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseForbidden, Http404
@@ -29,7 +30,6 @@ from askbot import exceptions as askbot_exceptions
 from askbot import forms
 from askbot import models
 from askbot.conf import settings as askbot_settings
-from askbot.skins.loaders import render_into_skin
 from askbot.utils import decorators
 from askbot.utils.forms import format_errors
 from askbot.utils.functions import diff_date
@@ -192,7 +192,7 @@ def import_data(request):
         'dump_upload_form': form,
         'need_configuration': (not stackexchange.is_ready())
     }
-    return render_into_skin('import_data.html', data, request)
+    return render(request, 'import_data.html', data)
 
 #@login_required #actually you can post anonymously, but then must register
 @csrf.csrf_protect
@@ -302,7 +302,7 @@ def ask(request):#view used to ask a new question
         'tag_names': list()#need to keep context in sync with edit_question for tag editor
     }
     data.update(context.get_for_tag_editor())
-    return render_into_skin('ask.html', data, request)
+    return render(request, 'ask.html', data)
 
 @login_required
 @csrf.csrf_exempt
@@ -349,7 +349,7 @@ def retag_question(request, id):
             'question': question,
             'form' : form,
         }
-        return render_into_skin('question_retag.html', data, request)
+        return render(request, 'question_retag.html', data)
     except exceptions.PermissionDenied, e:
         if request.is_ajax():
             response_data = {
@@ -394,7 +394,7 @@ def edit_question(request, id):
                     form = forms.EditQuestionForm(
                                             request.POST,
                                             question=question,
-                                            user=quest.user,
+                                            user=question.user,
                                             revision=revision
                                         )
             else:#new content edit
@@ -455,7 +455,7 @@ def edit_question(request, id):
             'category_tree_data': askbot_settings.CATEGORY_TREE
         }
         data.update(context.get_for_tag_editor())
-        return render_into_skin('question_edit.html', data, request)
+        return render(request, 'question_edit.html', data)
 
     except exceptions.PermissionDenied, e:
         request.user.message_set.create(message = unicode(e))
@@ -522,7 +522,7 @@ def edit_answer(request, id):
             'revision_form': revision_form,
             'form': form,
         }
-        return render_into_skin('answer_edit.html', data, request)
+        return render(request, 'answer_edit.html', data)
 
     except exceptions.PermissionDenied, e:
         request.user.message_set.create(message = unicode(e))

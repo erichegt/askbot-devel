@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from django.core import cache  # import cache, not from cache import cache, to be able to monkey-patch cache.cache in test cases
 from django.core import exceptions as django_exceptions
 from django.core.urlresolvers import reverse
+from django.template.loader import get_template
 from django.utils.hashcompat import md5_constructor
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
@@ -30,7 +31,6 @@ from askbot import const
 from askbot.utils.lists import LazyList
 from askbot.search import mysql
 from askbot.utils.slug import slugify
-from askbot.skins.loaders import get_template #jinja2 template loading enviroment
 from askbot.search.state_manager import DummySearchState
 
 class ThreadQuerySet(models.query.QuerySet):
