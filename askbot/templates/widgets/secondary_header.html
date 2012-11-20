@@ -22,6 +22,11 @@
                 #}
                 <a id="homeButton" href="{% url questions %}"></a>
                 {% include "widgets/scope_nav.html" %}            
+                {# 
+                    three buttons below are in the opposite order because
+                    they are floated at the right
+                #}
+                {% include "widgets/ask_button.html" %}            
                 <input type="submit" value="" name="search" class="searchBtn" />
                 <input type="button"
                     value="X"
@@ -31,7 +36,6 @@
                         style="display: none;"
                     {% endif %}
                 />
-                {% include "widgets/ask_button.html" %}            
                 {# clears button floats #}
                 <div class="clearfix"></div>
             </div>

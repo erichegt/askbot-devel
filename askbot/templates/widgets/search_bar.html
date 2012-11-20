@@ -1,6 +1,6 @@
 {% if active_tab != "ask" %}
 {% spaceless %}
-<div id="searchBar">
+<div id="searchBar" {% if query %}class="cancelable"{% endif %}>
     {# url action depends on which tab is active #}
             {% if active_tab == "tags" %}
                 <input type="hidden" name="t" value="tag"/>
@@ -11,11 +11,7 @@
             {% endif %}
             {# class was searchInput #}
             <input 
-                {% if query %}
-                class="searchInputCancelable"
-                {% else %}
                 class="searchInput" 
-                {% endif %}
                 type="text" 
                 autocomplete="off"
                 value="{{ query|default_if_none('') }}" 

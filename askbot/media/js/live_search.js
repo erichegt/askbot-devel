@@ -127,12 +127,12 @@ var liveSearch = function(query_string) {
     var refresh_x_button = function(){
         if(query_val().length > 0){
             if (query.hasClass('searchInput')){
-                query.attr('class', 'searchInputCancelable');
+                $('#searchBar').attr('class', 'cancelable');
                 x_button.show();
             }
         } else {
             x_button.hide();
-            query.attr('class', 'searchInput');
+            $('#searchBar').removeClass('cancelable');
         }
     };
 

@@ -407,7 +407,7 @@ body.user-messages {
 }
 
 #homeButton:hover{
-    .sprites(-45px,-36px);
+    .sprites(-51px,-36px);
 }
 
 .scope-selector {
@@ -452,27 +452,26 @@ body.user-messages {
     background-color: #fff;
     border: 1px solid #c9c9b5;
     height:42px;
-    padding: 0 420px 0 45px;/* right & left padding is for the buttons */
-    margin: 0;
-    width: 100%;
 
-    .searchInput {
-        font-size: 26px;
-        height: 39px;
-        line-height: 39px;
+    input.searchInput {
+        font-size: 22px;
+        height: 26px;
+        line-height: 26px;
         font-weight:300;
         background:#FFF;
         border:0px;
         color:#484848;
-        padding-left:10px;
-        padding-top: 1px;
         font-family:@body-font;
-        vertical-align: top;
         width: 100%;
+        margin: 8px 0 6px 0;
+        padding: 0;
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+        box-shadow: none;
     }
 }
 
-.searchBtn {
+input[type="submit"].searchBtn {
     font-size: 10px;
     color: #666;
     background-color: #eee;
@@ -481,8 +480,8 @@ body.user-messages {
     line-height: 22px;
     text-align: center;
     float:right;
-    margin: 0px;
-    width:48px;
+    margin: 7px 28px 0 0;
+    width: 48px;
     .sprites(-98px,-36px);
     cursor:pointer;
 }
@@ -502,6 +501,8 @@ body.user-messages {
     text-align: center;
     width: 35px;
     cursor:pointer;
+    float: right;
+    margin-top: 7px;
 }
 
 .cancelSearchBtn:hover {
@@ -527,11 +528,16 @@ body.user-messages {
     2) add padding to fit the buttons
 */
 #searchBar {
-    padding: 0 250px 0 200px;
-    margin-top: -55px;
+    margin: 0 228px 0 327px;
+    width: auto;
+    margin-top: -49px;
+    padding: 0 49px 0 8px;
 }
 body.anon #searchBar {
-    padding-left: 150px;/* we don't have the "followed" scope */
+    margin-left: 227px;/* we don't have the "followed" scope */
+}
+#searchBar.cancelable {
+    padding-right: 82px;
 }
 
 
@@ -2492,7 +2498,10 @@ ul#related-tags li {
     form{
         margin-bottom:15px;
     }
-    input[type="text"],input[type="password"],select{
+
+    input[type="text"],
+    input[type="password"],
+    select{
         border:#cce6ec 3px solid;
         height:25px;
         line-height: 25px;
@@ -3976,6 +3985,12 @@ textarea.tipped-input {
 
 /* modifications for small screens */
 @media screen and (max-width: 960px) {/* content margins touch viewport */
+    #homeButton {
+        .sprites(1px,-36px);
+    }
+    #homeButton:hover {
+        .sprites(-44px,-36px);
+    }
 }
 @media screen and (max-width: 480px) {
     .content-wrapper {
@@ -3987,27 +4002,33 @@ textarea.tipped-input {
     #ContentLeft {
         width: 100%;
     }
-    #secondaryHeader #scopeWrapper {
-        display: none;
-    }
-    #askButton {
-        display: block;
-        float: none;
-        margin: auto;
-        margin-top: 5px;
-    }
-    #homeButton {
-    }
     .main-page {
         h1,
+        #askButton,
+        #navBadges,
+        .user-info,
         .counts .views,
         .counts .votes,
+        .help,
         .rss,
+        .scope-selector,
+        .settings,
         .tabBar,
         .tags,
-        .userinfo {
+        .userinfo,
+        .widgets {
             display: none;
         }
+
+        .short-summary:first-child {
+            padding-top: 0;
+        }
+    }
+    #searchBar {
+        margin: -49px 8px 0 52px;
+    }
+    input[type="submit"].searchBtn {
+        margin-right: 8px;
     }
     .short-summary {
         width: 100%;
