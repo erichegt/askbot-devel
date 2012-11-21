@@ -62,7 +62,7 @@ def help(request):
         'app_name': askbot_settings.APP_SHORT_NAME,
         'page_class': 'meta'
     }
-    return render(render, 'help.html', data)
+    return render(request, 'help.html', data)
 
 def faq(request):
     if askbot_settings.FORUM_FAQ.strip() != '':
