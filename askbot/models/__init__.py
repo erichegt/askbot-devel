@@ -66,9 +66,12 @@ from askbot.utils.diff import textDiff as htmldiff
 from askbot.utils.url_utils import strip_path
 from askbot import mail
 
-from django import get_version as django_version
+from django import VERSION
 
-if django_version() > '1.3.1':
+#stores the 1.X version not the security release numbers
+DJANGO_VERSION = VERSION[:2]
+
+if DJANGO_VERSION > (1, 3):
     from askbot.models.message import Message
 
 def get_model(model_name):
@@ -150,7 +153,7 @@ def user_get_and_delete_messages(self):
         message.delete()
     return messages
 
-if django_version() > '1.3.1':
+if DJANGO_VERSION > (1, 3):
     User.add_to_class('message_set', user_message_set)
     User.add_to_class('get_and_delete_messages', user_get_and_delete_messages)
 

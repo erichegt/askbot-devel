@@ -5,13 +5,15 @@ from south.v2 import SchemaMigration
 from django.db import models, connection
 import django
 
+DJANGO_VERSION = django.VERSION[:2]
+
 def db_table_exists(table_name):
     return table_name in connection.introspection.table_names()
 
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        if django.get_version() > '1.3.1' and not db_table_exists('auth_message'):
+        if DJANGO_VERSION > (1, 3) and not db_table_exists('auth_message'):
             db.create_table('auth_message', (
                 ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
                 ('user', self.gf('django.db.models.fields.related.ForeignKey')(related_name='_message_set', to=orm['auth.User'])),
