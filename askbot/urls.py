@@ -74,9 +74,9 @@ urlpatterns = patterns('',
     # END main page urls
 
     url(
-        r'^api/get_questions/',
-        views.commands.api_get_questions,
-        name='api_get_questions'
+        r'^api/title_search/',
+        views.commands.title_search,
+        name='title_search'
     ),
     url(
         r'^get-thread-shared-users/',

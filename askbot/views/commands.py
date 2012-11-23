@@ -696,31 +696,30 @@ def subscribe_for_tags(request):
 
 
 @decorators.get_only
-def api_get_questions(request):
-    """json api for retrieving questions"""
-    query = request.GET.get('query', '').strip()
-    if not query:
+def title_search(request):
+    """json api for retrieving questions by title match"""
+    query = request.GET.get('query_text')
+
+    if query is None:
         return HttpResponseBadRequest('Invalid query')
+
+    query = query.strip()
 
     if askbot_settings.GROUPS_ENABLED:
         threads = models.Thread.objects.get_visible(user=request.user)
     else:
         threads = models.Thread.objects.all()
 
-    threads = models.Thread.objects.get_for_query(
-                                    search_query=query,
-                                    qs=threads
-                                )
-
-    if should_show_sort_by_relevance():
-        threads = threads.extra(order_by = ['-relevance'])
+    threads = threads.get_for_title_query(query)
     #todo: filter out deleted threads, for now there is no way
     threads = threads.distinct()[:30]
+
     thread_list = [{
         'title': escape(thread.title),
         'url': thread.get_absolute_url(),
         'answer_count': thread.get_answer_count(request.user)
     } for thread in threads]
+
     json_data = simplejson.dumps(thread_list)
     return HttpResponse(json_data, mimetype = "application/json")
 

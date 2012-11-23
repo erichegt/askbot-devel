@@ -32,7 +32,6 @@
         {% include "meta/category_tree_js.html" %}
     {% endif %}
     <script type='text/javascript'>
-        askbot['urls']['api_get_questions'] = '{% url api_get_questions %}';
         askbot['urls']['saveDraftQuestion'] = '{% url save_draft_question %}';
         {% if settings.ENABLE_MATHJAX or settings.MARKUP_CODE_FRIENDLY %}
             var codeFriendlyMarkdown = true;

@@ -214,7 +214,7 @@
 <script type="text/javascript" src='{{"/js/live_search_new_thread.js"|media}}'></script>
 <script type="text/javascript" charset="utf-8">
     askbot['settings']['minSearchWordLength'] = {{settings.MIN_SEARCH_WORD_LENGTH}};
-    askbot['urls']['api_get_questions'] = '{% url api_get_questions %}';
+    askbot['urls']['titleSearch'] = '{% url title_search %}';
     askbot['urls']['upload'] = '{% url upload %}';
     $(document).ready(function(){
       $("#id_title").focus();

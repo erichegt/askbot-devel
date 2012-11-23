@@ -1,3 +1,61 @@
+var SearchDropMenu = function() {
+    WrappedElement.call(this);
+    this._data = undefined;
+}
+inherits(SearchDropMenu, WrappedElement);
+
+SearchDropMenu.prototype.setData = function(data) {
+    this._data = data;
+};
+
+SearchDropMenu.prototype.setAskHandler = function(handler) {
+    this._askHandler = handler;
+};
+
+/**
+ * assumes that data is already set
+ */
+SearchDropMenu.prototype.render = function() {
+    this._element.empty();
+    var list = this._element;
+    $.each(this._data, function(idx, item) {
+        var listItem = $('<li></li>');
+        var link = $('<a></a>');
+        link.attr('href', item['url']);
+        link.html(item['title']);
+        listItem.append(link);
+        list.append(listItem);
+    });
+    //add ask button, @todo: make into separate class?
+    var listItem = this.makeElement('li');
+    this._element.append(listItem);
+    var button = this.makeElement('button');
+    button.html(gettext('Ask Your Question'))
+    listItem.append(button);
+    var handler = this._askHandler;
+    setupButtonEventHandlers(button, handler);
+};
+
+SearchDropMenu.prototype.createDom = function() {
+    this._element = this.makeElement('ul');
+    this._element.addClass('search-drop-menu');
+    this._element.hide();
+};
+
+SearchDropMenu.prototype.show = function() {
+    this._element.show();
+};
+
+SearchDropMenu.prototype.hide = function() {
+    this._element.hide();
+};
+
+SearchDropMenu.prototype.reset = function() {
+    this._data = undefined;
+    this._element.empty();
+    this._element.hide();
+};
+
 var TagWarningBox = function(){
     WrappedElement.call(this);
     this._tags = [];
@@ -58,12 +116,14 @@ TagWarningBox.prototype.showWarning = function(){
  * in response to the search query
  */
 var FullTextSearch = function() {
+    WrappedElement.call(this);
     this._running = false;
     this._baseUrl = askbot['urls']['questions'];
     this._q_list_sel = 'question-list';//id of question listing div
     /** @todo: the questions/ needs translation... */
     this._searchUrl = '/scope:all/sort:activity-desc/page:1/'
 };
+inherits(FullTextSearch, WrappedElement);
 
 /**
  * @param {{boolean=}} optional, if given then function is setter
@@ -115,7 +175,7 @@ FullTextSearch.prototype.runTagSearch = function() {
         url: url,
         dataType: 'json',
         success: function(data, text_status, xhr){
-            me.renderResult(data, text_status, xhr);
+            me.renderFullTextResult(data, text_status, xhr);
             $('#ab-tag-search').val('');
         },
     });
@@ -166,7 +226,29 @@ FullTextSearch.prototype.activateTagSearchInput = function() {
     //);
 };
 
-FullTextSearch.prototype.sendQuery = function(query_text) {
+FullTextSearch.prototype.sendTitleSearchQuery = function(query_text) {
+    this.isRunning(true);
+    this._prevText = query_text;
+    var data = {query_text: query_text};
+    var me = this;
+    $.ajax({
+        url: askbot['urls']['titleSearch'],
+        data: data,
+        dataType: 'json',
+        success: function(data, text_status, xhr){
+            me.renderTitleSearchResult(data, text_status, xhr);
+        },
+        complete: function(){
+            me.isRunning(false);
+            me.evalTitleSearchQuery();
+        },
+        cache: false
+    });
+    this.updateHistory(url);
+};
+
+
+FullTextSearch.prototype.sendFullTextSearchQuery = function(query_text) {
     this.isRunning(true);
     var searchUrl = this.getSearchUrl();
     var prevText = this._prevText;
@@ -189,11 +271,10 @@ FullTextSearch.prototype.sendQuery = function(query_text) {
         url: url,
         dataType: 'json',
         success: function(data, text_status, xhr){
-            me.renderResult(data, text_status, xhr);
+            me.renderFullTextSearchResult(data, text_status, xhr);
         },
         complete: function(){
             me.isRunning(false);
-            me.evalQuery();
         },
         cache: false
     });
@@ -201,14 +282,24 @@ FullTextSearch.prototype.sendQuery = function(query_text) {
 };
 
 FullTextSearch.prototype.refresh = function() {
-    this.sendQuery();/* used for tag search, maybe not necessary */
+    this.sendFullTextSearchQuery();/* used for tag search, maybe not necessary */
 };
 
 FullTextSearch.prototype.getSearchQuery = function() {
     return $.trim(this._query.val());
 };
 
-FullTextSearch.prototype.renderResult = function(data, text_status, xhr){
+/**
+ * renders title search result in the dropdown under the search input
+ */
+FullTextSearch.prototype.renderTitleSearchResult = function(data) {
+    var menu = this._dropMenu;
+    menu.setData(data);
+    menu.render();
+    menu.show();
+};
+
+FullTextSearch.prototype.renderFullTextSearchResult = function(data) {
     if (data['questions'].length === 0) {
         return;
     }
@@ -264,22 +355,25 @@ FullTextSearch.prototype.renderResult = function(data, text_status, xhr){
     });
 };
 
-FullTextSearch.prototype.restartQuery = function() {
-    this._query.val('');
-    this.refreshXButton();
-    this.sendQuery();
-};
-
-FullTextSearch.prototype.evalQuery = function() {
+FullTextSearch.prototype.evalTitleSearchQuery = function() {
     var cur_query = this.getSearchQuery();
     var prevText = this._prevText;
     if (cur_query !== prevText && this.isRunning() === false){
         if (cur_query.length >= askbot['settings']['minSearchWordLength']){
-            this.sendQuery(cur_query);
+            this.sendTitleSearchQuery(cur_query);
         } else if (cur_query.length === 0){
-            this.restartQuery();
+            this._query.val('');
+            this.refreshXButton();
+            this._dropMenu.reset();
         }
     }
+};
+
+FullTextSearch.prototype.reset = function() {
+    this._prevText = '';
+    this._dropMenu.reset();
+    this._element.val('');
+    this._element.focus();
 };
 
 FullTextSearch.prototype.refreshXButton = function() {
@@ -367,7 +461,7 @@ FullTextSearch.prototype.removeSearchTag = function(tag) {
     var searchUrl = this.getSearchUrl()
     searchUrl = QSutils.remove_search_tag(searchUrl, tag);
     this.setSearchUrl(searchUrl);
-    this.sendQuery();
+    this.sendFullTextSearchQuery();
 };
 
 FullTextSearch.prototype.setActiveSortTab = function(sort_method, query_string){
@@ -428,12 +522,31 @@ FullTextSearch.prototype.renderRelevanceSortTab = function(query_string) {
     }
 };
 
+FullTextSearch.prototype.makeAskHandler = function() {
+    var me = this;
+    return function() {
+        var query = me.getSearchQuery();
+        window.location.href = askbot['urls']['ask'] + '?title=' + query;
+    };
+};
+
 FullTextSearch.prototype.decorate = function(element) {
     this._element = element;/* this is a bit artificial we don't use _element */
     this._query = element;
     this._x_button = $('input[name=reset_query]');
     this._prevText = this.getSearchQuery();
     this._tag_warning_box = new TagWarningBox();
+
+    var dropMenu = new SearchDropMenu();
+    dropMenu.setAskHandler(this.makeAskHandler());
+    this._dropMenu = dropMenu;
+    element.after(this._dropMenu.getElement());
+
+    var menuCloser = function(){
+        dropMenu.reset();
+    };
+    $(element).click(function(e){ return false });
+    $(document).click(menuCloser);
 
     //the tag search input is optional in askbot
     $('#ab-tag-search').parent().before(
@@ -458,7 +571,7 @@ FullTextSearch.prototype.decorate = function(element) {
     // enable x button (search reset)
     this._x_button.click(function () {
         /* wrapped in closure because it's not yet defined at this point */
-        me.restartQuery();
+        me.reset();
     });
     this.refreshXButton();
 
@@ -469,7 +582,7 @@ FullTextSearch.prototype.decorate = function(element) {
         if (me.isRunning() === false){
             clearTimeout(main_page_eval_handle);
             main_page_eval_handle = setTimeout(
-                function() { me.evalQuery() },
+                function() { me.evalTitleSearchQuery() },
                 400
             );
         }

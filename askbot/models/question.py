@@ -42,6 +42,14 @@ class ThreadQuerySet(models.query.QuerySet):
             groups = [Group.objects.get_global_group()]
         return self.filter(groups__in=groups).distinct()
 
+    def get_for_title_query(self, search_query):
+        """returns threads matching title query
+        todo: possibly add tags
+        todo: implement full text search on relevant fields
+        """
+        return self.filter(title__icontains=search_query)
+
+
 class ThreadManager(BaseQuerySetManager):
 
     def get_query_set(self):
@@ -174,6 +182,7 @@ class ThreadManager(BaseQuerySetManager):
     def get_for_query(self, search_query, qs=None):
         """returns a query set of questions,
         matching the full text query
+        todo: move to query set
         """
         if getattr(django_settings, 'ENABLE_HAYSTACK_SEARCH', False):
             from askbot.search.haystack import AskbotSearchQuerySet
