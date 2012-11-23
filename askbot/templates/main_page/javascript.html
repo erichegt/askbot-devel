@@ -1,12 +1,13 @@
 <script type="text/javascript">
     /*<![CDATA[*/
-    var sortMethod = '{{sort}}';
-    var showSortByRelevance = {% if show_sort_by_relevance %}true{% else %}false{% endif %};
-    var minSearchWordLength = {{settings.MIN_SEARCH_WORD_LENGTH}};
+    askbot['settings']['showSortByRelevance'] = {% if show_sort_by_relevance %}true{% else %}false{% endif %};
+    askbot['settings']['minSearchWordLength'] = {{settings.MIN_SEARCH_WORD_LENGTH}};
     $(document).ready(function(){
         /*var on_tab = '#nav_questions';
         $(on_tab).attr('className','on');*/
-        liveSearch('{{ search_state.query_string()|escapejs }}');
+        var search = new FullTextSearch();
+        search.setSearchUrl('{{ search_state.query_string()|escapejs }}');
+        search.decorate($('input#keywords'));
         Hilite.exact = false;
         Hilite.elementid = "question-list";
         Hilite.debug_referrer = location.href;

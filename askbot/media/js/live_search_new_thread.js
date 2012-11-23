@@ -32,7 +32,7 @@ var liveSearchNewThreadInit = function(auto_focus_out) {
     var eval_query = function(){
         cur_text = $.trim(query.val());
         if (cur_text !== prev_text && running === false){
-            if (cur_text.length >= minSearchWordLength){
+            if (cur_text.length >= askbot['settings']['minSearchWordLength']){
                 send_query(cur_text);
             } else if (cur_text.length === 0){
                 restart_query();

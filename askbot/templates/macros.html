@@ -498,11 +498,11 @@ for the purposes of the AJAX comment editor #}
            title="{{desc_tooltip}}"><span>{{label}}</span></a>
     {% endif %}
     <script type="text/javascript">{# need to pass on text translations to js #}
-        var sortButtonData = sortButtonData || {};
-        sortButtonData["{{key_name}}"] = {
-            label: "{{label}}",
-            asc_tooltip: "{{asc_tooltip}}",
-            desc_tooltip: "{{desc_tooltip}}"
+        askbot['data']['sortButtonData'] = askbot['data']['sortButtonData'] || {};
+        askbot['data']['sortButtonData']['{{key_name}}'] = {
+            label: '{{label}}',
+            asc_tooltip: '{{asc_tooltip}}',
+            desc_tooltip: '{{desc_tooltip}}'
         };
     </script>
 {%- endmacro %}

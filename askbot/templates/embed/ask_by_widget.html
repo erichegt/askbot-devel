@@ -213,7 +213,7 @@
 
 <script type="text/javascript" src='{{"/js/live_search_new_thread.js"|media}}'></script>
 <script type="text/javascript" charset="utf-8">
-    var minSearchWordLength = {{settings.MIN_SEARCH_WORD_LENGTH}};
+    askbot['settings']['minSearchWordLength'] = {{settings.MIN_SEARCH_WORD_LENGTH}};
     askbot['urls']['api_get_questions'] = '{% url api_get_questions %}';
     askbot['urls']['upload'] = '{% url upload %}';
     $(document).ready(function(){

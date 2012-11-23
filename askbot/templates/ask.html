@@ -21,8 +21,7 @@
         <script type='text/javascript' src='{{"/js/wmd/wmd.js"|media}}'></script>
     {% endif %}
     <script type='text/javascript'>
-        var sortMethod = undefined;//need for live_search
-        var minSearchWordLength = {{settings.MIN_SEARCH_WORD_LENGTH}};
+        askbot['settings']['minSearchWordLength'] = {{settings.MIN_SEARCH_WORD_LENGTH}};
     </script>
     <script type='text/javascript' src='{{"/js/live_search_new_thread.js"|media}}'></script>
     {% include "meta/editor_data.html" %}
