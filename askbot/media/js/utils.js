@@ -97,6 +97,18 @@ var showMessage = function(element, msg, where) {
     };
 })(jQuery);
 
+/**
+ * @return {number} key code of the event or `undefined`
+ */
+var getKeyCode = function(e) {
+    if (e.which) {
+        return e.which;
+    } else if (e.keyCode) {
+        return e.keyCode;
+    }
+    return undefined;
+};
+
 var makeKeyHandler = function(key, callback){
     return function(e){
         if ((e.which && e.which == key) || (e.keyCode && e.keyCode == key)){

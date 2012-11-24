@@ -451,7 +451,7 @@ body.user-messages {
     display: block;
     background-color: #fff;
     border: 1px solid #c9c9b5;
-    height: auto;
+    height: 41px;
     z-index: 10000;
     position: relative;
 
@@ -471,11 +471,30 @@ body.user-messages {
         -moz-box-shadow: none;
         box-shadow: none;
     }
-    .search-drop-menu {
+}
+
+.search-drop-menu {
+    box-sizing: border-box;
+    background: whitesmoke;
+    border: 1px solid #c9c9b5;
+    border-top: none;
+    position: relative;
+    top: 1px;
+    z-index: 10000;
+
+    ul {
         list-style: none;
+        overflow: auto;
+        padding: 10px;
+        position: relative;
         li {
             padding: 5px 0;
         }
+    }
+
+    .footer {
+        text-align: center;
+        padding-bottom: 10px;
     }
 }
 
@@ -483,7 +502,7 @@ input[type="submit"].searchBtn {
     font-size: 10px;
     color: #666;
     background-color: #eee;
-    height: 42px;
+    height: 41px;
     border:#FFF 1px solid;
     line-height: 22px;
     text-align: center;
@@ -507,7 +526,7 @@ input[type="submit"].searchBtn {
     font-size: 30px;
     color: #ce8888;
     background:#fff;
-    height: 42px;
+    height: 41px;
     line-height: 42px;
     border:0px;
     border-left:#deded0 1px solid;
@@ -547,6 +566,11 @@ input[type="submit"].searchBtn {
     width: auto;
     margin-top: -49px;
     padding: 0 49px 0 8px;
+}
+/* line up drop menu the same way as the search bar */
+.search-drop-menu {
+    margin: 0 228px 0 327px;
+    width: auto;
 }
 body.anon #searchBar {
     margin-left: 227px;/* we don't have the "followed" scope */

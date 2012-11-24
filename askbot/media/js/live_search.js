@@ -16,8 +16,8 @@ SearchDropMenu.prototype.setAskHandler = function(handler) {
  * assumes that data is already set
  */
 SearchDropMenu.prototype.render = function() {
-    this._element.empty();
-    var list = this._element;
+    var list = this._resultsList;
+    list.empty();
     $.each(this._data, function(idx, item) {
         var listItem = $('<li></li>');
         var link = $('<a></a>');
@@ -26,24 +26,41 @@ SearchDropMenu.prototype.render = function() {
         listItem.append(link);
         list.append(listItem);
     });
+};
+
+SearchDropMenu.prototype.createDom = function() {
+    this._element = this.makeElement('div');
+    this._element.addClass('search-drop-menu');
+    this._element.hide();
+
+    this._resultsList = this.makeElement('ul');
+    this._element.append(this._resultsList);
+
     //add ask button, @todo: make into separate class?
-    var listItem = this.makeElement('li');
-    this._element.append(listItem);
+    var footer = this.makeElement('div');
+    this._element.append(footer);
+    this._footer = footer;
+
+    footer.addClass('footer');
     var button = this.makeElement('button');
+    button.addClass('submit');
     button.html(gettext('Ask Your Question'))
-    listItem.append(button);
+    footer.append(button);
     var handler = this._askHandler;
     setupButtonEventHandlers(button, handler);
 };
 
-SearchDropMenu.prototype.createDom = function() {
-    this._element = this.makeElement('ul');
-    this._element.addClass('search-drop-menu');
-    this._element.hide();
-};
-
 SearchDropMenu.prototype.show = function() {
-    this._element.show();
+    var searchBar = this._element.prev();
+    var searchBarHeight = searchBar.outerHeight();
+    var topOffset = searchBar.offset().top + searchBarHeight;
+    this._element.show();//show so that size calcs work
+    var footerHeight = this._footer.outerHeight();
+    var windowHeight = $(window).height();
+    this._resultsList.css(
+        'max-height',
+        windowHeight - topOffset - footerHeight - 30 //what is this number?
+    );
 };
 
 SearchDropMenu.prototype.hide = function() {
@@ -108,6 +125,48 @@ TagWarningBox.prototype.showWarning = function(){
     );
     this._warning.show();
 };
+
+/**
+ * @constructor
+ * tool tip to be shown on top of the search input
+ */
+var SearchToolTip = function() {
+    WrappedElement.call(this);
+};
+inherits(SearchToolTip, WrappedElement);
+
+SearchToolTip.prototype.show = function() {
+    this._element.show();
+};
+
+SearchToolTip.prototype.hide = function() {
+    this._element.hide();
+};
+
+SearchToolTip.prototype.setClickHandler = function(handler) {
+    this._clickHandler = handler;
+};
+
+SearchToolTip.prototype.createDom = function() {
+    var element = this.makeElement('div');
+    this._element = element;
+
+    element.html(gettext('search or ask your question'));
+    element.addClass('tool-tip');
+    element.css({
+        'margin-top': '-40px',
+        'padding-top': '10px',
+        'color': '#999',
+        'height': '30px',
+        'line-height': '20px',
+        'font-size': '20px',
+        'font-style': 'italic'
+    });
+
+    var handler = this._clickHandler;
+    element.click(function() { handler() });
+};
+    
 
 /**
  * @constructor
@@ -374,16 +433,17 @@ FullTextSearch.prototype.reset = function() {
     this._dropMenu.reset();
     this._element.val('');
     this._element.focus();
+    this._toolTip.show();
 };
 
 FullTextSearch.prototype.refreshXButton = function() {
     if(this.getSearchQuery().length > 0){
         if (this._query.hasClass('searchInput')){
             $('#searchBar').attr('class', 'cancelable');
-            this._x_button.show();
+            this._xButton.show();
         }
     } else {
-        this._x_button.hide();
+        this._xButton.hide();
         $('#searchBar').removeClass('cancelable');
     }
 };
@@ -530,17 +590,66 @@ FullTextSearch.prototype.makeAskHandler = function() {
     };
 };
 
+FullTextSearch.prototype.updateToolTip = function() {
+    var query = this.getSearchQuery();
+    if (query === '') {
+        this._toolTip.show();
+    } else {
+        this._toolTip.hide();
+    }
+};
+
+/**
+ * keydown handler operates on the tooltip and the X button
+ * keyup is not good enough, because in that case
+ * tooltip will be displayed with the input box simultaneously
+ */
+FullTextSearch.prototype.makeKeyDownHandler = function() {
+    var me = this;
+    var toolTip = this._toolTip;
+    var xButton = this._xButton;
+    return function(e) {//don't like the keyup delay to
+        var keyCode = getKeyCode(e);
+        var query = me.getSearchQuery();
+        if (query.length === 1) {
+            if (keyCode !== 8 && keyCode !== 46) {
+                toolTip.hide();
+                xButton.show();
+            }
+        } else if (query.length === 0) {
+            if (keyCode !== 8 && keyCode !== 48) {
+                toolTip.hide();
+                //xButton.show();//causes a jump of search input...
+            } else {
+                toolTip.show();
+                //xButton.hide();
+            }
+        } else {
+            me.updateToolTip();
+            me.refreshXButton();
+        }
+    };
+};
+
 FullTextSearch.prototype.decorate = function(element) {
     this._element = element;/* this is a bit artificial we don't use _element */
     this._query = element;
-    this._x_button = $('input[name=reset_query]');
+    this._xButton = $('input[name=reset_query]');
     this._prevText = this.getSearchQuery();
     this._tag_warning_box = new TagWarningBox();
+
+    var toolTip = new SearchToolTip();
+    toolTip.setClickHandler(function() {
+        toolTip.hide();
+        element.focus();
+    });
+    this._element.after(toolTip.getElement());
+    this._toolTip = toolTip;
 
     var dropMenu = new SearchDropMenu();
     dropMenu.setAskHandler(this.makeAskHandler());
     this._dropMenu = dropMenu;
-    element.after(this._dropMenu.getElement());
+    element.parent().after(this._dropMenu.getElement());
 
     var menuCloser = function(){
         dropMenu.reset();
@@ -569,7 +678,7 @@ FullTextSearch.prototype.decorate = function(element) {
         );
     });
     // enable x button (search reset)
-    this._x_button.click(function () {
+    this._xButton.click(function () {
         /* wrapped in closure because it's not yet defined at this point */
         me.reset();
     });
@@ -577,7 +686,9 @@ FullTextSearch.prototype.decorate = function(element) {
 
     // enable query box
     var main_page_eval_handle;
+    this._query.keydown(this.makeKeyDownHandler());
     this._query.keyup(function(e){
+        me.updateToolTip();
         me.refreshXButton();
         if (me.isRunning() === false){
             clearTimeout(main_page_eval_handle);
