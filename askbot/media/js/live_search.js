@@ -35,13 +35,36 @@ SearchDropMenu.prototype.render = function() {
     }
 };
 
+/**
+ * @param {number} idx position of item starting from 1 for the topmost
+ * Selects item inentified by position.
+ * Scrolls the list to make top of the item visible.
+ */
 SearchDropMenu.prototype.selectItem = function(idx) {
     //idx is 1-based index
     this._selectedItemIndex = idx;
-    this._resultsList.find('li').removeClass('selected');
+    var list = this._resultsList;
+    list.find('li').removeClass('selected');
     var item = this.getItem(idx);
-    if (item) {
+    if (item && idx > 0) {
         item.addClass('selected');
+        var itemTopY = item.position().top;//relative to visible area
+        var curScrollTop = list.scrollTop();
+
+        /* if item is clipped on top, scroll down */
+        if (itemTopY < 0) {
+            list.scrollTop(curScrollTop + itemTopY);
+            return;
+        }
+
+        var listHeight = list.outerHeight();
+        /* pixels above the lower border of the list */
+        var itemPeepHeight = listHeight - itemTopY;
+        /* pixels below the lower border */
+        var itemSinkHeight = item.outerHeight() - itemPeepHeight;
+        if (itemSinkHeight > 0) {
+            list.scrollTop(curScrollTop + itemSinkHeight);
+        } 
     }
 
 };
@@ -69,21 +92,25 @@ SearchDropMenu.prototype.makeKeyHandler = function() {
     var me = this;
     return function(e) {
         var keyCode = getKeyCode(e);
-        if (keyCode !== 38 && keyCode !== 40 && keyCode != 13) {
+        if (keyCode === 27) {//escape
+            me.hide();
+            return false;
+        }
+        if (keyCode !== 38 && keyCode !== 40 && keyCode !== 13) {
             return;
         }
         var itemCount = me.getItemCount();
         if (itemCount > 0) {
             var curItem = me.getSelectedItemIndex();
-            if (keyCode === 38) {
+            if (keyCode === 38) {//upArrow
                 if (curItem > 0) {
                     curItem = curItem - 1;
                 }
-            } else if (keyCode === 40) {
+            } else if (keyCode === 40) {//downArrow
                 if (curItem < itemCount) {
                     curItem = curItem + 1;
                 }
-            } else if (keyCode === 13) {
+            } else if (keyCode === 13) {//enter
                 me.navigateToItem(curItem);
                 return false;
             }
@@ -117,6 +144,10 @@ SearchDropMenu.prototype.createDom = function() {
     $(document).keydown(this.makeKeyHandler());
 };
 
+SearchDropMenu.prototype.isOpen = function() {
+    return this._element.is(':visible');
+};
+
 SearchDropMenu.prototype.show = function() {
     var searchBar = this._element.prev();
     var searchBarHeight = searchBar.outerHeight();
@@ -126,7 +157,7 @@ SearchDropMenu.prototype.show = function() {
     var windowHeight = $(window).height();
     this._resultsList.css(
         'max-height',
-        windowHeight - topOffset - footerHeight - 30 //what is this number?
+        windowHeight - topOffset - footerHeight - 40 //what is this number?
     );
 };
 
@@ -137,6 +168,7 @@ SearchDropMenu.prototype.hide = function() {
 SearchDropMenu.prototype.reset = function() {
     this._data = undefined;
     this._resultsList.empty();
+    this._selectedItemIndex = 0;
     this._element.hide();
 };
 
@@ -352,10 +384,6 @@ FullTextSearch.prototype.activateTagSearchInput = function() {
         button,
         function() { me.runTagSearch() }
     );
-    //var tag_search_input = $('#ab-tag-search');
-    //tag_search_input.keydown(
-    //    makeKeyHandler(13, run_tag_search)
-    //);
 };
 
 FullTextSearch.prototype.sendTitleSearchQuery = function(query_text) {
@@ -494,9 +522,7 @@ FullTextSearch.prototype.evalTitleSearchQuery = function() {
         if (cur_query.length >= askbot['settings']['minSearchWordLength']){
             this.sendTitleSearchQuery(cur_query);
         } else if (cur_query.length === 0){
-            this._query.val('');
-            this.refreshXButton();
-            this._dropMenu.reset();
+            this.reset();
         }
     }
 };
@@ -683,16 +709,22 @@ FullTextSearch.prototype.makeKeyDownHandler = function() {
     var me = this;
     var toolTip = this._toolTip;
     var xButton = this._xButton;
+    var dropMenu = this._dropMenu;
     return function(e) {//don't like the keyup delay to
         var keyCode = getKeyCode(e);
+
+        if (keyCode === 27) {//escape key
+            if (dropMenu.isOpen() === false) {
+                me.reset();
+                return false;
+            }
+        }
+
         var query = me.getSearchQuery();
         if (query.length === 0) {
-            if (keyCode !== 8 && keyCode !== 48) {
+            if (keyCode !== 8 && keyCode !== 48) {//del and backspace
                 toolTip.hide();
                 //xButton.show();//causes a jump of search input...
-            } else {
-                //toolTip.show();
-                //xButton.hide();
             }
         } else {
             me.updateToolTip();
