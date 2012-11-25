@@ -382,6 +382,30 @@ WrappedElement.prototype.dispose = function(){
 
 /**
  * @constructor
+ * a simple link
+ */
+var Link = function() {
+    WrappedElement.call(this);
+};
+inherits(Link, WrappedElement);
+
+Link.prototype.setUrl = function(url) {
+    this._url = url;
+};
+
+Link.prototype.setText = function(text) {
+    this._text = text;
+};
+
+Link.prototype.createDom = function() {
+    var link = this.makeElement('a');
+    this._element = link;
+    link.attr('href', this._url);
+    link.html(this._text);
+};
+
+/**
+ * @constructor
  * Widget is a Wrapped element with state
  */
 var Widget = function() {
@@ -1509,9 +1533,13 @@ var SelectBox = function(){
     this._items = [];
     this._select_handler = function(){};//empty default
     this._is_editable = false;
-    this._item_class = SelectBoxItem;
+    this._item_class = this.setItemClass(SelectBoxItem);
 };
 inherits(SelectBox, Widget);
+
+SelectBox.prototype.setItemClass = function(itemClass) {
+    this._item_class = itemClass;
+};
 
 SelectBox.prototype.setEditable = function(is_editable) {
     this._is_editable = is_editable;
@@ -1543,7 +1571,21 @@ SelectBox.prototype.getItemByIndex = function(idx) {
     return this._items[idx];
 };
 
-//why do we have these two almost identical methods?
+/**
+ * removes all items
+ */
+SelectBox.prototype.empty = function() {
+    var items = this._items;
+    $.each(items, function(idx, item){
+        item.dispose();
+    });
+    this._items = [];
+};
+
+/* 
+ * why do we have these two almost identical methods?
+ * the difference seems to be remove/vs fade out
+ */
 SelectBox.prototype.removeItem = function(id){
     var item = this.getItem(id);
     item.getElement().fadeOut();
@@ -1666,6 +1708,12 @@ SelectBox.prototype.decorate = function(element){
             me.getSelectHandler(item)
         );
     });
+};
+
+SelectBox.prototype.createDom = function() {
+    var element = this.makeElement('ul');
+    this._element = element;
+    element.addClass('select-box');
 };
 
 /**

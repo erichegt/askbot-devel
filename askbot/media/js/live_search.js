@@ -1,6 +1,7 @@
 var SearchDropMenu = function() {
     WrappedElement.call(this);
     this._data = undefined;
+    this._selectedItemIndex = 0;
 }
 inherits(SearchDropMenu, WrappedElement);
 
@@ -18,14 +19,78 @@ SearchDropMenu.prototype.setAskHandler = function(handler) {
 SearchDropMenu.prototype.render = function() {
     var list = this._resultsList;
     list.empty();
+    var me = this;
     $.each(this._data, function(idx, item) {
-        var listItem = $('<li></li>');
-        var link = $('<a></a>');
+        var listItem = me.makeElement('li');
+        var link = me.makeElement('a');
         link.attr('href', item['url']);
         link.html(item['title']);
         listItem.append(link);
         list.append(listItem);
     });
+    if (this._data.length === 0) {
+        list.addClass('empty');
+    } else {
+        list.removeClass('empty');
+    }
+};
+
+SearchDropMenu.prototype.selectItem = function(idx) {
+    //idx is 1-based index
+    this._selectedItemIndex = idx;
+    this._resultsList.find('li').removeClass('selected');
+    var item = this.getItem(idx);
+    if (item) {
+        item.addClass('selected');
+    }
+
+};
+
+SearchDropMenu.prototype.getItem = function(idx) {
+    return $(this._resultsList.find('li')[idx - 1]);
+};
+
+SearchDropMenu.prototype.getItemCount = function() {
+    return this._resultsList.find('li').length;
+};
+
+SearchDropMenu.prototype.getSelectedItemIndex = function() {
+    return this._selectedItemIndex;
+};
+
+SearchDropMenu.prototype.navigateToItem = function(idx) {
+    var item = this.getItem(idx);
+    if (item) {
+        window.location.href = item.find('a').attr('href');
+    }
+};
+
+SearchDropMenu.prototype.makeKeyHandler = function() {
+    var me = this;
+    return function(e) {
+        var keyCode = getKeyCode(e);
+        if (keyCode !== 38 && keyCode !== 40 && keyCode != 13) {
+            return;
+        }
+        var itemCount = me.getItemCount();
+        if (itemCount > 0) {
+            var curItem = me.getSelectedItemIndex();
+            if (keyCode === 38) {
+                if (curItem > 0) {
+                    curItem = curItem - 1;
+                }
+            } else if (keyCode === 40) {
+                if (curItem < itemCount) {
+                    curItem = curItem + 1;
+                }
+            } else if (keyCode === 13) {
+                me.navigateToItem(curItem);
+                return false;
+            }
+            me.selectItem(curItem);
+            return false
+        }
+    };
 };
 
 SearchDropMenu.prototype.createDom = function() {
@@ -35,6 +100,7 @@ SearchDropMenu.prototype.createDom = function() {
 
     this._resultsList = this.makeElement('ul');
     this._element.append(this._resultsList);
+    this._element.addClass('empty');
 
     //add ask button, @todo: make into separate class?
     var footer = this.makeElement('div');
@@ -48,6 +114,7 @@ SearchDropMenu.prototype.createDom = function() {
     footer.append(button);
     var handler = this._askHandler;
     setupButtonEventHandlers(button, handler);
+    $(document).keydown(this.makeKeyHandler());
 };
 
 SearchDropMenu.prototype.show = function() {
@@ -69,7 +136,7 @@ SearchDropMenu.prototype.hide = function() {
 
 SearchDropMenu.prototype.reset = function() {
     this._data = undefined;
-    this._element.empty();
+    this._resultsList.empty();
     this._element.hide();
 };
 
@@ -81,9 +148,8 @@ inherits(TagWarningBox, WrappedElement);
 
 TagWarningBox.prototype.createDom = function(){
     this._element = this.makeElement('div');
-    this._element
-        .css('display', 'block')
-        .css('margin', '0 0 13px 2px');
+    this._element.css('display', 'block');
+    this._element.css('margin', '0 0 13px 2px');
     this._element.addClass('non-existing-tags');
     this._warning = this.makeElement('p');
     this._element.append(this._warning);
@@ -130,41 +196,48 @@ TagWarningBox.prototype.showWarning = function(){
  * @constructor
  * tool tip to be shown on top of the search input
  */
-var SearchToolTip = function() {
+var InputToolTip = function() {
     WrappedElement.call(this);
 };
-inherits(SearchToolTip, WrappedElement);
+inherits(InputToolTip, WrappedElement);
 
-SearchToolTip.prototype.show = function() {
+InputToolTip.prototype.show = function() {
+    this._element.removeClass('dimmed');
     this._element.show();
 };
 
-SearchToolTip.prototype.hide = function() {
+InputToolTip.prototype.hide = function() {
+    this._element.removeClass('dimmed');
     this._element.hide();
 };
 
-SearchToolTip.prototype.setClickHandler = function(handler) {
+InputToolTip.prototype.dim = function() {
+    this._element.addClass('dimmed');
+};
+
+InputToolTip.prototype.setClickHandler = function(handler) {
     this._clickHandler = handler;
 };
 
-SearchToolTip.prototype.createDom = function() {
+InputToolTip.prototype.createDom = function() {
     var element = this.makeElement('div');
     this._element = element;
 
     element.html(gettext('search or ask your question'));
-    element.addClass('tool-tip');
-    element.css({
-        'margin-top': '-40px',
-        'padding-top': '10px',
-        'color': '#999',
-        'height': '30px',
-        'line-height': '20px',
-        'font-size': '20px',
-        'font-style': 'italic'
-    });
+    element.addClass('input-tool-tip');
 
     var handler = this._clickHandler;
-    element.click(function() { handler() });
+    var me = this;
+    element.click(function() { 
+        handler();
+        me.dim();
+        return false;
+    });
+    $(document).click(function() {
+        if (element.css('display') === 'block') {
+            element.removeClass('dimmed');
+        }
+    });
 };
     
 
@@ -433,6 +506,7 @@ FullTextSearch.prototype.reset = function() {
     this._dropMenu.reset();
     this._element.val('');
     this._element.focus();
+    this._xButton.hide();
     this._toolTip.show();
 };
 
@@ -587,6 +661,7 @@ FullTextSearch.prototype.makeAskHandler = function() {
     return function() {
         var query = me.getSearchQuery();
         window.location.href = askbot['urls']['ask'] + '?title=' + query;
+        return false;
     };
 };
 
@@ -611,17 +686,12 @@ FullTextSearch.prototype.makeKeyDownHandler = function() {
     return function(e) {//don't like the keyup delay to
         var keyCode = getKeyCode(e);
         var query = me.getSearchQuery();
-        if (query.length === 1) {
-            if (keyCode !== 8 && keyCode !== 46) {
-                toolTip.hide();
-                xButton.show();
-            }
-        } else if (query.length === 0) {
+        if (query.length === 0) {
             if (keyCode !== 8 && keyCode !== 48) {
                 toolTip.hide();
                 //xButton.show();//causes a jump of search input...
             } else {
-                toolTip.show();
+                //toolTip.show();
                 //xButton.hide();
             }
         } else {
@@ -638,9 +708,8 @@ FullTextSearch.prototype.decorate = function(element) {
     this._prevText = this.getSearchQuery();
     this._tag_warning_box = new TagWarningBox();
 
-    var toolTip = new SearchToolTip();
+    var toolTip = new InputToolTip();
     toolTip.setClickHandler(function() {
-        toolTip.hide();
         element.focus();
     });
     this._element.after(toolTip.getElement());

@@ -471,6 +471,15 @@ body.user-messages {
         -moz-box-shadow: none;
         box-shadow: none;
     }
+
+    div.input-tool-tip {
+        margin-top: -40px;
+        padding-top: 10px;
+        height: 30px;
+        line-height: 20px;
+        font-size: 20px;
+        font-style: italic;
+    }
 }
 
 .search-drop-menu {
@@ -490,12 +499,26 @@ body.user-messages {
         li {
             padding: 5px 0;
         }
+        li.selected {
+            background: #aaa;
+        }
+    }
+
+    ul.empty {
+        padding: 1px;
     }
 
     .footer {
         text-align: center;
         padding-bottom: 10px;
     }
+}
+
+.input-tool-tip {
+    color: #999;
+}
+.input-tool-tip.dimmed {
+    color: #ccc;
 }
 
 input[type="submit"].searchBtn {
@@ -572,8 +595,11 @@ input[type="submit"].searchBtn {
     margin: 0 228px 0 327px;
     width: auto;
 }
-body.anon #searchBar {
-    margin-left: 227px;/* we don't have the "followed" scope */
+body.anon {
+    #searchBar,
+    .search-drop-menu {
+        margin-left: 227px;/* we don't have the "followed" scope */
+    }
 }
 #searchBar.cancelable {
     padding-right: 82px;
