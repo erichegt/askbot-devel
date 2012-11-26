@@ -772,7 +772,7 @@ def answer_to_comment(request):
         answer_id = int(answer_id)
         answer = get_object_or_404(models.Post,
                 post_type = 'answer', id=answer_id)
-        if len(answer.text) <= 300:
+        if len(answer.text) <= askbot_settings.MAX_COMMENT_LENGTH:
             answer.post_type = 'comment'
             answer.parent =  answer.thread._question_post()
             #can we trust this?
@@ -790,7 +790,11 @@ def answer_to_comment(request):
 
             answer.thread.invalidate_cached_data()
         else:
-            request.user.message_set.create(message = _("the selected answer cannot be a comment"))
+            message = _(
+                'Cannot convert, because text has more characters than '
+                '%(max_chars)s - maximum allowed for comments'
+            ) % askbot_settings.MAX_COMMENT_LENGTH
+            request.user.message_set.create(message=message)
 
         return HttpResponseRedirect(answer.get_absolute_url())
     else:
