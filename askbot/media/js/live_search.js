@@ -2,6 +2,7 @@ var SearchDropMenu = function() {
     WrappedElement.call(this);
     this._data = undefined;
     this._selectedItemIndex = 0;
+    this._askButtonEnabled = true;
 }
 inherits(SearchDropMenu, WrappedElement);
 
@@ -11,6 +12,10 @@ SearchDropMenu.prototype.setData = function(data) {
 
 SearchDropMenu.prototype.setAskHandler = function(handler) {
     this._askHandler = handler;
+};
+
+SearchDropMenu.prototype.setAskButtonEnabled = function(isEnabled) {
+    this._askButtonEnabled = isEnabled;
 };
 
 /**
@@ -134,13 +139,16 @@ SearchDropMenu.prototype.createDom = function() {
     this._element.append(footer);
     this._footer = footer;
 
-    footer.addClass('footer');
-    var button = this.makeElement('button');
-    button.addClass('submit');
-    button.html(gettext('Ask Your Question'))
-    footer.append(button);
-    var handler = this._askHandler;
-    setupButtonEventHandlers(button, handler);
+    if (this._askButtonEnabled) {
+        footer.addClass('footer');
+        var button = this.makeElement('button');
+        button.addClass('submit');
+        button.html(gettext('Ask Your Question'))
+        footer.append(button);
+        var handler = this._askHandler;
+        setupButtonEventHandlers(button, handler);
+    }
+
     $(document).keydown(this.makeKeyHandler());
 };
 
@@ -286,6 +294,7 @@ var FullTextSearch = function() {
     this._q_list_sel = 'question-list';//id of question listing div
     /** @todo: the questions/ needs translation... */
     this._searchUrl = '/scope:all/sort:activity-desc/page:1/'
+    this._askButtonEnabled = true;
 };
 inherits(FullTextSearch, WrappedElement);
 
@@ -301,6 +310,10 @@ FullTextSearch.prototype.isRunning = function(val) {
         this._running = val;
     }
 };
+
+FullTextSearch.prototype.setAskButtonEnabled = function(isEnabled) {
+    this._askButtonEnabled = isEnabled;
+}
 
 /**
  * @param {{string}} url for the page displaying search results
@@ -404,7 +417,6 @@ FullTextSearch.prototype.sendTitleSearchQuery = function(query_text) {
         },
         cache: false
     });
-    this.updateHistory(url);
 };
 
 
@@ -749,6 +761,7 @@ FullTextSearch.prototype.decorate = function(element) {
 
     var dropMenu = new SearchDropMenu();
     dropMenu.setAskHandler(this.makeAskHandler());
+    dropMenu.setAskButtonEnabled(this._askButtonEnabled);
     this._dropMenu = dropMenu;
     element.parent().after(this._dropMenu.getElement());
 

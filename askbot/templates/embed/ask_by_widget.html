@@ -217,9 +217,11 @@
     askbot['urls']['titleSearch'] = '{% url title_search %}';
     askbot['urls']['upload'] = '{% url upload %}';
     $(document).ready(function(){
-      $("#id_title").focus();
-      $("#id_title").addClass('questionTitleInput');
-      liveSearchNewThreadInit(true);
+        var searchInput = $('#id_title');
+        searchInput.addClass('questionTitleInput');
+        var search = new FullTextSearch();
+        search.decorate(searchInput);
+        searchInput.focus();
     });
 </script>
 {% endblock %}
