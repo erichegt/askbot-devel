@@ -19,6 +19,7 @@
         askbot['data']['userIsAuthenticated'] = false;
         askbot['data']['userReputation'] = 0;
     {% endif %}
+    askbot['data']['maxCommentLength'] = {{settings.MAX_COMMENT_LENGTH}};
     askbot['urls'] = {};
     askbot['settings'] = {};
     askbot['settings']['editorType'] = '{{ settings.EDITOR_TYPE }}';
