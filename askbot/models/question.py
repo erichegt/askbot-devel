@@ -48,7 +48,12 @@ class ThreadQuerySet(models.query.QuerySet):
         todo: implement full text search on relevant fields
         """
         db_engine_name = askbot.get_database_engine_name()
-        if 'mysql' in db_engine_name and mysql.supports_full_text_search():
+        if 'postgresql_psycopg2' in db_engine_name:
+            from askbot.search import postgresql
+            return postgresql.run_title_search(
+                                    self, search_query
+                                ).order_by('-relevance')
+        elif 'mysql' in db_engine_name and mysql.supports_full_text_search():
             return self.filter(title__search=search_query)
         else:
             return self.filter(title__icontains=search_query)
@@ -208,7 +213,7 @@ class ThreadManager(BaseQuerySetManager):
                 )
             elif 'postgresql_psycopg2' in askbot.get_database_engine_name():
                 from askbot.search import postgresql
-                return postgresql.run_full_text_search(qs, search_query)
+                return postgresql.run_thread_search(qs, search_query)
             else:
                 return qs.filter(
                     models.Q(title__icontains=search_query) |

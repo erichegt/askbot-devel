@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
+import askbot
 import datetime
+import os
 from south.db import db
 from south.v2 import DataMigration
 from django.db import models
 from askbot.migrations_api import mysql_table_supports_full_text_search
 from askbot.migrations_api import get_drop_index_sql
 from askbot.migrations_api import get_create_full_text_index_sql
+from askbot.search import postgresql
 
 INDEX_NAME = 'askbot_thread_search_index'
 
@@ -20,6 +23,14 @@ class Migration(DataMigration):
                 columns = ('title', 'tagnames')
                 sql = get_create_full_text_index_sql(INDEX_NAME, table_name, columns)
                 db.execute(sql)
+        elif db.backend_name == 'postgres':
+            script_path = os.path.join(
+                                askbot.get_install_directory(),
+                                'search',
+                                'postgresql',
+                                'thread_and_post_models_27112012.plsql'
+                            )
+            postgresql.setup_full_text_search(script_path)
 
     def backwards(self, orm):
         "Write your backwards methods here."

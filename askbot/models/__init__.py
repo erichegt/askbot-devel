@@ -109,7 +109,7 @@ def get_users_by_text_query(search_query, users_query_set = None):
             users_query_set = User.objects.all()
         if 'postgresql_psycopg2' in askbot.get_database_engine_name():
             from askbot.search import postgresql
-            return postgresql.run_full_text_search(users_query_set, search_query)
+            return postgresql.run_thread_search(users_query_set, search_query)
         else:
             return users_query_set.filter(
                 models.Q(username__icontains=search_query) |
