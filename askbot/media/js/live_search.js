@@ -106,6 +106,7 @@ SearchDropMenu.prototype.makeKeyHandler = function() {
         }
         var itemCount = me.getItemCount();
         if (itemCount > 0) {
+            //count is 0 with no title matches, curItem is 0 when none is selected
             var curItem = me.getSelectedItemIndex();
             if (keyCode === 38) {//upArrow
                 if (curItem > 0) {
@@ -116,8 +117,12 @@ SearchDropMenu.prototype.makeKeyHandler = function() {
                     curItem = curItem + 1;
                 }
             } else if (keyCode === 13) {//enter
-                me.navigateToItem(curItem);
-                return false;
+                if (curItem === 0) {
+                    return true;
+                } else {
+                    me.navigateToItem(curItem);
+                    return false;
+                }
             }
             me.selectItem(curItem);
             return false
