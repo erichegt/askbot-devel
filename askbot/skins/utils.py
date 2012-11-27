@@ -169,11 +169,14 @@ def get_media_url(url, ignore_missing = False):
     #print after - before
     return url
 
-def update_media_revision(skin = None):
+def update_media_revision(skin=None):
     """update skin media revision number based on the contents
     of the skin media directory"""
     from askbot.conf import settings as askbot_settings
     resource_revision = askbot_settings.MEDIA_RESOURCE_REVISION
+
+    import pdb
+    pdb.set_trace()
 
     if skin:
         if skin in get_skin_choices():

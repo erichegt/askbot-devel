@@ -47,7 +47,11 @@ class ThreadQuerySet(models.query.QuerySet):
         todo: possibly add tags
         todo: implement full text search on relevant fields
         """
-        return self.filter(title__icontains=search_query)
+        db_engine_name = askbot.get_database_engine_name()
+        if 'mysql' in db_engine_name and mysql.supports_full_text_search():
+            return self.filter(title__search=search_query)
+        else:
+            return self.filter(title__icontains=search_query)
 
 
 class ThreadManager(BaseQuerySetManager):
