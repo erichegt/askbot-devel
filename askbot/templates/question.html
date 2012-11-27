@@ -63,7 +63,10 @@
                     var answer_id = 'post-id-' + post_id;
                     var answer_container = document.getElementById(answer_id);
                     var answer_element= answer_container.getElementsByClassName('answer-body')[0].children[1];
-                    if (answer_element.textContent.length > 300){
+                    if (
+                        answer_element.textContent.length > 
+                        askbot['data']['maxCommentLength']
+                    ){
                         convert_answer.parentNode.removeChild(convert_answer);
                     }
                 } else{

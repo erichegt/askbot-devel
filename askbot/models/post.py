@@ -416,11 +416,11 @@ class Post(models.Model):
 
         if self.post_type in ('question', 'answer', 'tag_wiki', 'reject_reason'):
             _urlize = False
-            _use_markdown = True
+            _use_markdown = (askbot_settings.EDITOR_TYPE == 'markdown')
             _escape_html = False #markdow does the escaping
         elif self.is_comment():
             _urlize = True
-            _use_markdown = True
+            _use_markdown = (askbot_settings.EDITOR_TYPE == 'markdown')
             _escape_html = True
         else:
             raise NotImplementedError
