@@ -128,15 +128,16 @@ var setupButtonEventHandlers = function(button, callback){
 
 
 var putCursorAtEnd = function(element){
-    var el = element.get()[0];
+    var el = $(element).get()[0];
+    var jEl = $(el);
     if (el.setSelectionRange){
-        var len = element.val().length * 2;
+        var len = jEl.val().length * 2;
         el.setSelectionRange(len, len);
     }
     else{
-        element.val(element.val());
+        jEl.val(jEl.val());
     }
-    element.scrollTop = 999999;
+    jEl.scrollTop(999999);
 };
 
 var setCheckBoxesIn = function(selector, value){
@@ -213,7 +214,8 @@ QSutils.patch_query_string = function (query_string, patch, remove) {
     var mapping = {};
 
     if(!remove) {
-        mapping[patch_split[0]] = patch_split[1]; // prepopulate the patched selector if it's not meant to be removed
+        // prepopulate the patched selector if it's not meant to be removed
+        mapping[patch_split[0]] = patch_split[1];
     }
 
     for (var i = 0; i < params.length; i++) {

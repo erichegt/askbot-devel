@@ -745,6 +745,19 @@ FullTextSearch.prototype.makeKeyDownHandler = function() {
     };
 };
 
+FullTextSearch.prototype.makeFormSubmitHandler = function() {
+    var me = this;
+    var baseUrl = me._baseUrl;
+    return function(evt) {
+        // if user clicks the button the s(h)e probably wants page reload,
+        // so provide that experience but first update the query string
+        me.updateQueryString();
+        var searchUrl = me.getSearchUrl();
+        evt.preventDefault();
+        window.location.href = baseUrl + searchUrl;
+    };
+};
+
 FullTextSearch.prototype.decorate = function(element) {
     this._element = element;/* this is a bit artificial we don't use _element */
     this._query = element;
@@ -757,6 +770,10 @@ FullTextSearch.prototype.decorate = function(element) {
         element.focus();
     });
     this._element.after(toolTip.getElement());
+    //below is called after getElement, b/c element must be defined
+    if (this._prevText !== '') {
+        toolTip.hide();//hide if search query is not empty
+    }
     this._toolTip = toolTip;
 
     var dropMenu = new SearchDropMenu();
@@ -765,11 +782,8 @@ FullTextSearch.prototype.decorate = function(element) {
     this._dropMenu = dropMenu;
     element.parent().after(this._dropMenu.getElement());
 
-    var menuCloser = function(){
-        dropMenu.reset();
-    };
-    $(element).click(function(e){ return false });
-    $(document).click(menuCloser);
+    $(element).click(function(e) { return false });
+    $(document).click(function() { dropMenu.reset(); });
 
     //the tag search input is optional in askbot
     $('#ab-tag-search').parent().before(
@@ -815,13 +829,5 @@ FullTextSearch.prototype.decorate = function(element) {
 
     this.activateTagSearchInput();
 
-    var baseUrl = this._baseUrl;
-    var searchUrl = this.getSearchUrl();
-    $("form#searchForm").submit(function(event) {
-        // if user clicks the button the s(h)e probably wants page reload,
-        // so provide that experience but first update the query string
-        event.preventDefault();
-        me.updateQueryString();
-        window.location.href = baseUrl + searchUrl;
-    });
+    $("form#searchForm").submit(me.makeFormSubmitHandler());
 };
