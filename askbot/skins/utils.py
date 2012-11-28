@@ -175,14 +175,14 @@ def update_media_revision(skin = None):
     from askbot.conf import settings as askbot_settings
     resource_revision = askbot_settings.MEDIA_RESOURCE_REVISION
 
-    if skin:
-        if skin in get_skin_choices():
-            skin_path = get_path_to_skin(skin)
-        else:
-            raise MediaNotFound('Skin %s not found' % skin)
+    skin = skin or askbot_settings.ASKBOT_DEFAULT_SKIN
+
+    if skin in get_available_skins().keys():
+        skin_path = get_path_to_skin(skin)
     else:
-        skin = 'default'
-        skin_path = get_path_to_skin(askbot_settings.ASKBOT_DEFAULT_SKIN)
+        assert(skin != 'default')
+        msg = 'Skin "%s" not found. Please check ASKBOT_EXTRA_SKINS_DIR setting'
+        raise MediaNotFound(msg % skin)
 
     media_dirs = [
         os.path.join(skin_path, 'media'),
