@@ -206,10 +206,17 @@ def email_is_allowed(
     return False
 
 class UserEmailField(forms.EmailField):
-    def __init__(self,skip_clean=False,**kw):
+    def __init__(self, skip_clean=False, **kw):
         self.skip_clean = skip_clean
+
+        hidden = kw.pop('hidden', False)
+        if hidden is True:
+            widget_class = forms.TextInput
+        else:
+            widget_class = forms.HiddenInput
+
         super(UserEmailField,self).__init__(
-            widget=forms.TextInput(
+            widget=widget_class(
                     attrs=dict(login_form_widget_attrs, maxlength=200)
                 ),
             label=mark_safe(_('Your email <i>(never shared)</i>')),
