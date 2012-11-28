@@ -211,9 +211,9 @@ class UserEmailField(forms.EmailField):
 
         hidden = kw.pop('hidden', False)
         if hidden is True:
-            widget_class = forms.TextInput
-        else:
             widget_class = forms.HiddenInput
+        else:
+            widget_class = forms.TextInput
 
         super(UserEmailField,self).__init__(
             widget=widget_class(
