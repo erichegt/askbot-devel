@@ -175,9 +175,6 @@ def update_media_revision(skin=None):
     from askbot.conf import settings as askbot_settings
     resource_revision = askbot_settings.MEDIA_RESOURCE_REVISION
 
-    import pdb
-    pdb.set_trace()
-
     if skin:
         if skin in get_skin_choices():
             skin_path = get_path_to_skin(skin)
