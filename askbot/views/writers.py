@@ -716,7 +716,7 @@ def delete_comment(request):
             parent = comment.parent
             comment.delete()
             #attn: recalc denormalized field
-            parent.comment_count = parent.comment_count - 1
+            parent.comment_count = parent.comments.count()
             parent.save()
             parent.thread.invalidate_cached_data()
 

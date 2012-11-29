@@ -903,7 +903,8 @@ def register(request, login_provider_name=None, user_identifier=None):
     email = request.session.get('email', '')
     logging.debug('request method is %s' % request.method)
 
-    register_form = forms.OpenidRegisterForm(
+    form_class = forms.get_registration_form_class()
+    register_form = form_class(
                 initial={
                     'next': next_url,
                     'username': request.session.get('username', ''),
@@ -931,9 +932,10 @@ def register(request, login_provider_name=None, user_identifier=None):
         login_provider_name = request.session['login_provider_name']
 
         logging.debug('trying to create new account associated with openid')
-        register_form = forms.OpenidRegisterForm(request.POST)
+        form_class = forms.get_registration_form_class()
+        register_form = form_class(request.POST)
         if not register_form.is_valid():
-            logging.debug('OpenidRegisterForm is INVALID')
+            logging.debug('registration form is INVALID')
         else:
             username = register_form.cleaned_data['username']
             email = register_form.cleaned_data['email']
