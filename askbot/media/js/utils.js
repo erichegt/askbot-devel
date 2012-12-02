@@ -384,6 +384,16 @@ OneShotForm.prototype.setSubmitButton = function(button) {
     this._submitBtn = button;
 };
 
+OneShotForm.prototype.enable = function() {
+    this._element.data('submitted', false);
+    this._submitBtn.removeClass('disabled');
+};
+
+OneShotForm.prototype.disable = function() {
+    this._element.data('submitted', true);
+    this._submitBtn.addClass('disabled');
+};
+
 OneShotForm.prototype.decorate = function(element) {
     this._element = element;
     var me = this;
@@ -392,8 +402,7 @@ OneShotForm.prototype.decorate = function(element) {
         if (element.data('submitted') === true) {
             evt.preventDefault();
         } else {
-            element.data('submitted', true);
-            button.addClass('disabled');
+            me.disable();
             return true;
         }
     };
