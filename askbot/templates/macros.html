@@ -631,7 +631,7 @@ answer {% if answer.accepted() %}accepted-answer{% endif %} {% if answer.author_
 {#todo: rename this to avatar #}
 {%- macro gravatar(user, size) -%}
 {% spaceless %}
-<a style="text-decoration:none"
+<a class="avatar-box"
     href="{{ user.get_absolute_url() }}"
 ><img class="gravatar" 
     width="{{size}}" height="{{size}}"
