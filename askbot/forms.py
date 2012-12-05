@@ -1330,7 +1330,7 @@ class EditTagWikiForm(forms.Form):
 class EditUserForm(forms.Form):
     email = forms.EmailField(
                     label=u'Email',
-                    required=True,
+                    required=False,
                     max_length=255,
                     widget=forms.TextInput(attrs={'size': 35})
                 )

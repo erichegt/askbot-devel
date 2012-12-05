@@ -972,6 +972,9 @@ class Post(models.Model):
         elif tag_mark_reason == 'bad':
             email_tag_filter_strategy = const.EXCLUDE_IGNORED
             user_set_getter = User.objects.exclude
+        elif tag_mark_reason == 'subscribed':
+            email_tag_filter_strategy = const.INCLUDE_SUBSCRIBED
+            user_set_getter = User.objects.filter
         else:
             raise ValueError('Uknown value of tag mark reason %s' % tag_mark_reason)
 
@@ -1005,6 +1008,10 @@ class Post(models.Model):
                 empty_wildcard_filter = {'ignored_tags__exact': ''}
                 wildcard_tags_attribute = 'ignored_tags'
                 update_subscribers = lambda the_set, item: the_set.discard(item)
+            elif tag_mark_reason == 'subscribed':
+                empty_wildcard_filter = {'subscribed_tags__exact': ''}
+                wildcard_tags_attribute = 'subscribed_tags'
+                update_subscribers = lambda the_set, item: the_set.add(item)
 
             potential_wildcard_subscribers = User.objects.filter(
                 notification_subscriptions__in = subscription_records
@@ -1043,15 +1050,23 @@ class Post(models.Model):
 
         #segment of users who have tag filter turned off
         global_subscribers = User.objects.filter(
-            email_tag_filter_strategy = const.INCLUDE_ALL
+            models.Q(email_tag_filter_strategy=const.INCLUDE_ALL)
+            & models.Q(
+                notification_subscriptions__feed_type='q_all',
+                notification_subscriptions__frequency='i'
+            )
         )
         subscriber_set.update(global_subscribers)
 
         #segment of users who want emails on selected questions only
+        if askbot_settings.SUBSCRIBED_TAG_SELECTOR_ENABLED:
+            good_mark_reason = 'subscribed'
+        else:
+            good_mark_reason = 'good'
         subscriber_set.update(
             self.get_global_tag_based_subscribers(
                 subscription_records = global_subscriptions,
-                tag_mark_reason = 'good'
+                tag_mark_reason = good_mark_reason
             )
         )
 
@@ -1256,7 +1271,7 @@ class Post(models.Model):
         return self.filter_authorized_users(subscribers)
 
     def get_notify_sets(self, mentioned_users=None, exclude_list=None):
-        """returns three lists in a dictionary with keys:
+        """returns three lists of users in a dictionary with keys:
         * 'for_inbox' - users for which to add inbox items
         * 'for_mentions' - for whom mentions are added
         * 'for_email' - to whom email notifications should be sent
