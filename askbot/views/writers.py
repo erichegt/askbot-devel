@@ -249,7 +249,6 @@ def ask(request):#view used to ask a new question
             else:
                 request.session.flush()
                 session_key = request.session.session_key
-                summary = strip_tags(text)[:120]
                 models.AnonymousQuestion.objects.create(
                     session_key = session_key,
                     title       = title,
@@ -257,7 +256,6 @@ def ask(request):#view used to ask a new question
                     wiki = wiki,
                     is_anonymous = ask_anonymously,
                     text = text,
-                    summary = summary,
                     added_at = timestamp,
                     ip_addr = request.META['REMOTE_ADDR'],
                 )
@@ -580,7 +578,6 @@ def answer(request, id):#process a new answer
                     question=question,
                     wiki=wiki,
                     text=text,
-                    summary=strip_tags(text)[:120],
                     session_key=request.session.session_key,
                     ip_addr=request.META['REMOTE_ADDR'],
                 )

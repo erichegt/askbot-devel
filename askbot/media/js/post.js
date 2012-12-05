@@ -1444,7 +1444,7 @@ EditCommentForm.prototype.attachTo = function(comment, mode){
         this._submit_btn.html(gettext('save comment'));
     }
     this.getElement().show();
-    this.enableButtons();
+    this.enableForm();
     this.focus();
     putCursorAtEnd(this._textarea);
 };
@@ -1571,12 +1571,16 @@ EditCommentForm.prototype.createDom = function(){
     this._textarea.val(this._text);
 };
 
-EditCommentForm.prototype.enableButtons = function(){
+EditCommentForm.prototype.isEnabled = function() {
+    return (this._submit_btn.attr('disabled') !== 'disabled');//confusing! setters use boolean
+};
+
+EditCommentForm.prototype.enableForm = function() {
     this._submit_btn.attr('disabled', false);
     this._cancel_btn.attr('disabled', false);
 };
 
-EditCommentForm.prototype.disableButtons = function(){
+EditCommentForm.prototype.disableForm = function() {
     this._submit_btn.attr('disabled', true);
     this._cancel_btn.attr('disabled', true);
 };
@@ -1585,7 +1589,7 @@ EditCommentForm.prototype.reset = function(){
     this._comment = null;
     this._text = '';
     this._textarea.val('');
-    this.enableButtons();
+    this.enableForm();
 };
 
 EditCommentForm.prototype.confirmAbandon = function(){
@@ -1607,6 +1611,9 @@ EditCommentForm.prototype.getSaveHandler = function(){
 
     var me = this;
     return function(){
+        if (me.isEnabled() === false) {//prevent double submits
+            return false;
+        }
         var text = me._textarea.val();
         if (text.length < 10){
             me.focus();
@@ -1627,7 +1634,7 @@ EditCommentForm.prototype.getSaveHandler = function(){
             post_url = askbot['urls']['postComments'];
         }
 
-        me.disableButtons();
+        me.disableForm();
 
         $.ajax({
             type: "POST",
@@ -1650,7 +1657,7 @@ EditCommentForm.prototype.getSaveHandler = function(){
                 me._comment.getElement().show();
                 showMessage(me._comment.getElement(), xhr.responseText, 'after');
                 me.detach();
-                me.enableButtons();
+                me.enableForm();
             }
         });
         return false;

@@ -49,7 +49,6 @@ class DraftContent(models.Model):
     ip_addr = models.IPAddressField(max_length=21) #allow high port numbers
     author = models.ForeignKey(User,null=True)
     text = models.TextField()
-    summary = models.CharField(max_length=180)
 
     class Meta:
         abstract = True

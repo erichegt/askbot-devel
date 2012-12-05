@@ -1,4 +1,5 @@
 {% extends "one_column_body.html" %}
+{% import "macros.html" as macros %}
 <!-- complete.html -->
 {#
 views calling this template: 
@@ -28,13 +29,18 @@ parameters:
         </ul>
     {% endif %}
     <div class="login">
-        {% if login_type=='openid' %}
-        <form name="fregister" action="{% url user_register %}" method="POST">{% csrf_token %}
-        {% elif login_type=='facebook' %}
-        <form name="fregister" action="" method="POST">{% csrf_token %}
-        {% else %}
-        <form name="fregister" action="{{ default_form_action }}" method="POST">{% csrf_token %}
-        {% endif %}
+        <form 
+            id="register-form"
+            name="fregister" 
+            {% if login_type=='openid' %}
+                action="{% url user_register %}"
+            {% elif login_type=='facebook' %}
+                action=""
+            {% else %}
+                action="{{ default_form_action }}"
+            {% endif %}
+            method="POST"
+        >{% csrf_token %}
             {{ openid_register_form.next }}
             <div class="form-row-vertical">
                 <label for="id_username">
@@ -56,8 +62,19 @@ anyone, must be valid</i>)
                 {% endif %}
                 {{ openid_register_form.email }}
             </div>
-            <div class="submit-row"><input type="submit" class="submit" name="bnewaccount" value="{% trans %}Signup{% endtrans %}"/></div>
+            <div class="submit-row">
+                <input 
+                    id="register-button"
+                    type="submit"
+                    class="submit"
+                    name="bnewaccount"
+                    value="{% trans %}Signup{% endtrans %}"
+                />
+            </div>
         </form>
     </div>
 {% endblock %}
 <!-- end complete.html -->
+{% block endjs %}
+    {{ macros.one_shot_form_js(form='#register-form', submit_button='#register-button') }}
+{% endblock %}
