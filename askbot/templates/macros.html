@@ -780,3 +780,13 @@ answer {% if answer.accepted() %}accepted-answer{% endif %} {% if answer.author_
         {{datetime_object.replace(microsecond=0)|add_tz_offset}}
     </abbr>
 {%- endmacro -%}
+
+{% macro one_shot_form_js(form=None, submit_button=None) %}
+    <script type="text/javascript">
+        (function() {
+            var form = new OneShotForm();
+            form.setSubmitButton($("{{submit_button}}"));
+            form.decorate($("{{form}}"));
+        })();
+    </script>
+{% endmacro %}

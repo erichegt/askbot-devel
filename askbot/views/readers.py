@@ -228,7 +228,7 @@ def questions(request, **kwargs):
             'tag_list_type' : tag_list_type,
             'font_size' : extra_tags.get_tag_font_size(related_tags),
             'display_tag_filter_strategy_choices': conf.get_tag_display_filter_strategy_choices(),
-            'email_tag_filter_strategy_choices': const.TAG_EMAIL_FILTER_STRATEGY_CHOICES,
+            'email_tag_filter_strategy_choices': conf.get_tag_email_filter_strategy_choices(),
             'update_avatar_data': schedules.should_update_avatar_data(request),
             'query_string': search_state.query_string(),
             'search_state': search_state,

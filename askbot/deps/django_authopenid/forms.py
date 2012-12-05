@@ -33,12 +33,13 @@ import logging
 from django import forms
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
-from django.conf import settings
+from django.conf import settings as django_settings
 from askbot.conf import settings as askbot_settings
 from askbot import const as askbot_const
 from django.utils.safestring import mark_safe
 from recaptcha_works.fields import RecaptchaField
 from askbot.utils.forms import NextUrlField, UserNameField, UserEmailField, SetPasswordForm
+from askbot.utils.loading import load_module
 
 # needed for some linux distributions like debian
 try:
@@ -105,7 +106,7 @@ class OpenidSigninForm(forms.Form):
         if 'openid_url' in self.cleaned_data:
             openid_url = self.cleaned_data['openid_url']
             if xri.identifierScheme(openid_url) == 'XRI' and getattr(
-                settings, 'OPENID_DISALLOW_INAMES', False
+                    django_settings, 'OPENID_DISALLOW_INAMES', False
                 ):
                 raise forms.ValidationError(_('i-names are not supported'))
             return self.cleaned_data['openid_url']
@@ -449,3 +450,13 @@ class EmailPasswordForm(forms.Form):
             except:
                 raise forms.ValidationError(_("sorry, there is no such user name"))
         return self.cleaned_data['username']
+
+def get_registration_form_class():
+    """returns class for the user registration form
+    user has a chance to specify the form via setting `REGISTRATION_FORM`
+    """
+    custom_class = getattr(django_settings, 'REGISTRATION_FORM', None)
+    if custom_class:
+        return load_module(custom_class)
+    else:
+        return OpenidRegisterForm

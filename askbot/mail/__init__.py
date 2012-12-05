@@ -1,6 +1,7 @@
 """functions that send email in askbot
 these automatically catch email-related exceptions
 """
+import logging
 import os
 import re
 import smtplib
@@ -133,6 +134,7 @@ def send_mail(
                     )
         msg.attach_alternative(body_text, "text/html")
         msg.send()
+        logging.debug('sent update to %s' % ','.join(recipient_list))
         if related_object is not None:
             assert(activity_type is not None)
     except Exception, error:
