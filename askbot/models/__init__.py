@@ -212,14 +212,14 @@ User.add_to_class('show_marked_tags', models.BooleanField(default = True))
 User.add_to_class(
     'email_tag_filter_strategy',
     models.SmallIntegerField(
-        choices=const.TAG_DISPLAY_FILTER_STRATEGY_CHOICES,
+        choices=const.TAG_EMAIL_FILTER_FULL_STRATEGY_CHOICES,
         default=const.EXCLUDE_IGNORED
     )
 )
 User.add_to_class(
     'display_tag_filter_strategy',
     models.SmallIntegerField(
-        choices=const.TAG_EMAIL_FILTER_STRATEGY_CHOICES,
+        choices=const.TAG_DISPLAY_FILTER_STRATEGY_CHOICES,
         default=const.INCLUDE_ALL
     )
 )

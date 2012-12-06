@@ -30,17 +30,17 @@ from django.utils.translation import string_concat
 from askbot.utils.slug import slugify
 from askbot import models
 from askbot import forms
-from askbot.conf import should_show_sort_by_relevance
+from askbot import conf
+from askbot import const
+from askbot import mail
 from askbot.conf import settings as askbot_settings
 from askbot.utils import category_tree
 from askbot.utils import decorators
 from askbot.utils import url_utils
 from askbot.utils.forms import get_db_object_or_404
-from askbot import mail
 from django.template import RequestContext
 from askbot.skins.loaders import render_into_skin_as_string
 from askbot.skins.loaders import render_text_into_skin
-from askbot import const
 
 
 @csrf.csrf_exempt
@@ -712,7 +712,7 @@ def api_get_questions(request):
                                     qs=threads
                                 )
 
-    if should_show_sort_by_relevance():
+    if conf.should_show_sort_by_relevance():
         threads = threads.extra(order_by = ['-relevance'])
     #todo: filter out deleted threads, for now there is no way
     threads = threads.distinct()[:30]
@@ -736,10 +736,12 @@ def set_tag_filter_strategy(request):
     filter_value = int(request.POST['filter_value'])
     assert(filter_type in ('display', 'email'))
     if filter_type == 'display':
-        assert(filter_value in dict(const.TAG_DISPLAY_FILTER_STRATEGY_CHOICES))
+        allowed_values_dict = dict(conf.get_tag_display_filter_strategy_choices())
+        assert(filter_value in allowed_values_dict)
         request.user.display_tag_filter_strategy = filter_value
     else:
-        assert(filter_value in dict(const.TAG_EMAIL_FILTER_STRATEGY_CHOICES))
+        allowed_values_dict = dict(conf.get_tag_email_filter_strategy_choices())
+        assert(filter_value in allowed_values_dict)
         request.user.email_tag_filter_strategy = filter_value
     request.user.save()
     return HttpResponse('', mimetype = "application/json")

@@ -576,6 +576,16 @@ class InstantWholeForumEmailAlertTests(EmailAlertTests):
         self.expected_results['q_ans'] = {'message_count': 1, }
         self.expected_results['q_ans_new_answer'] = {'message_count': 2, }
 
+    def test_global_subscriber_with_zero_frequency_gets_no_email(self):
+        user = self.target_user
+        user.notification_subscriptions.update(frequency='n')
+        user.email_tag_filter_strategy = const.INCLUDE_ALL
+        user.save()
+        self.post_question(author=self.other_user)
+        outbox = django.core.mail.outbox
+        self.assertEqual(len(outbox), 0)
+
+
 class BlankWeeklySelectedQuestionsEmailAlertTests(EmailAlertTests):
     """blank means that this is testing for the absence of email
     because questions are not followed as set by default in the
@@ -739,12 +749,12 @@ class FeedbackTests(utils.AskbotTestCase):
 
 class TagFollowedInstantWholeForumEmailAlertTests(utils.AskbotTestCase):
     def setUp(self):
-        self.create_user(
+        self.user1 = self.create_user(
             username = 'user1',
             notification_schedule = {'q_all': 'i'},
             status = 'm'
         )
-        self.create_user(
+        self.user2 = self.create_user(
             username = 'user2',
             status = 'm'
         )
@@ -773,7 +783,8 @@ class TagFollowedInstantWholeForumEmailAlertTests(utils.AskbotTestCase):
             self.user1.email in outbox[0].recipients()
         )
 
-    def test_tag_based_subscription_on_new_question_works(self):
+    @with_settings(SUBSCRIBED_TAG_SELECTOR_ENABLED=False)
+    def test_tag_based_subscription_on_new_question_works1(self):
         """someone subscribes for an pre-existing tag
         then another user asks a question with that tag
         and the subcriber receives an alert
@@ -788,6 +799,36 @@ class TagFollowedInstantWholeForumEmailAlertTests(utils.AskbotTestCase):
         self.user1.mark_tags(
             tagnames = ('something',),
             reason = 'good',
+            action = 'add'
+        )
+        self.user2.post_question(
+            title = 'some title',
+            body_text = 'some text for the question',
+            tags = 'something'
+        )
+        outbox = django.core.mail.outbox
+        self.assertEqual(len(outbox), 1)
+        self.assertEqual(len(outbox[0].recipients()), 1)
+        self.assertTrue(
+            self.user1.email in outbox[0].recipients()
+        )
+
+    @with_settings(SUBSCRIBED_TAG_SELECTOR_ENABLED=True)
+    def test_tag_based_subscription_on_new_question_works1(self):
+        """someone subscribes for an pre-existing tag
+        then another user asks a question with that tag
+        and the subcriber receives an alert
+        """
+        models.Tag(
+            name = 'something',
+            created_by = self.user1
+        ).save()
+
+        self.user1.email_tag_filter_strategy = const.INCLUDE_SUBSCRIBED
+        self.user1.save()
+        self.user1.mark_tags(
+            tagnames = ('something',),
+            reason = 'subscribed',
             action = 'add'
         )
         self.user2.post_question(

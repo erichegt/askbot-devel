@@ -720,3 +720,71 @@ class CommandViewTests(AskbotTestCase):
     def test_load_object_description_fails(self):
         response = self.client.get(reverse('load_object_description'))
         self.assertEqual(response.status_code, 404)#bad request
+
+    def test_set_tag_filter_strategy(self):
+        user = self.create_user('someuser')
+
+        def run_test_for_setting(self, filter_type, value):
+            response = self.client.post(
+                                reverse('set_tag_filter_strategy'),
+                                data={
+                                    'filter_type': filter_type,
+                                    'filter_value': value
+                                },
+                                HTTP_X_REQUESTED_WITH='XMLHttpRequest'
+                            )
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(response.content, '')
+
+        self.client.login(user_id=user.id, method='force')
+
+        from askbot import conf
+        values = dict(conf.get_tag_email_filter_strategy_choices()).keys()
+        for value in values:
+            run_test_for_setting(self, 'email', value)
+            user = self.reload_object(user)
+            self.assertEqual(user.email_tag_filter_strategy, value)
+
+        values = dict(conf.get_tag_display_filter_strategy_choices()).keys()
+        for value in values:
+            run_test_for_setting(self, 'display', value)
+            user = self.reload_object(user)
+            self.assertEqual(user.display_tag_filter_strategy, value)
+
+            
+class UserProfilePageTests(AskbotTestCase):
+    def setUp(self):
+        self.user = self.create_user('user')
+
+    @with_settings(EDITABLE_EMAIL=False)
+    def test_user_cannot_change_email(self):
+        #log in
+        self.client.login(user_id=self.user.id, method='force')
+        email_before = self.user.email
+        response = self.client.post(
+            reverse('edit_user', kwargs={'id': self.user.id}),
+            data={
+                'username': 'edited',
+                'email': 'fake@example.com'
+            }
+        )
+        self.assertEqual(response.status_code, 302)
+        user = self.reload_object(self.user)
+        self.assertEqual(user.username, 'edited')
+        self.assertEqual(user.email, email_before)
+
+    @with_settings(EDITABLE_EMAIL=True)
+    def test_user_can_change_email(self):
+        self.client.login(user_id=self.user.id, method='force')
+        email_before = self.user.email
+        response = self.client.post(
+            reverse('edit_user', kwargs={'id': self.user.id}),
+            data={
+                'username': 'edited',
+                'email': 'new@example.com'
+            }
+        )
+        self.assertEqual(response.status_code, 302)
+        user = self.reload_object(self.user)
+        self.assertEqual(user.username, 'edited')
+        self.assertEqual(user.email, 'new@example.com')
