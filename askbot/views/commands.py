@@ -714,11 +714,16 @@ def title_search(request):
     #todo: filter out deleted threads, for now there is no way
     threads = threads.distinct()[:30]
 
-    thread_list = [{
-        'title': escape(thread.title),
-        'url': thread.get_absolute_url(),
-        'answer_count': thread.get_answer_count(request.user)
-    } for thread in threads]
+    thread_list = list()
+    for thread in threads:#todo: this is a temp hack until thread model is fixed
+        try:
+            thread_list.append({
+                    'title': escape(thread.title),
+                    'url': thread.get_absolute_url(),
+                    'answer_count': thread.get_answer_count(request.user)
+                })
+        except:
+            continue
 
     json_data = simplejson.dumps(thread_list)
     return HttpResponse(json_data, mimetype = "application/json")
