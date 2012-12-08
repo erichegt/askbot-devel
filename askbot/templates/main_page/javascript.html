@@ -39,7 +39,7 @@
         }
         if (hash !== '' && hash !== undefined && url !== undefined){
             {# was this causing strange redirects in IE??? #}
-            window.location = 'http://' + window.location.host + url;
+            window.location = document.location.protocol + '//' + window.location.host + url;
         }
     }
     /*]]>*/
