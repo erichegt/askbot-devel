@@ -74,6 +74,8 @@
         {% if active_tab in ('questions', 'badges', 'ask') %}
         if (searchInput) {
             var search = new FullTextSearch();
+            askbot['controllers'] = askbot['controllers'] || {};
+            askbot['controllers']['fullTextSearch'] = search;
             {% if search_state %}
                 search.setSearchUrl('{{ search_state.query_string()|escapejs }}');
             {% else %}

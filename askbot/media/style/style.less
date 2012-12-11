@@ -551,8 +551,15 @@ input[type="submit"].searchBtn {
     position: relative;
     z-index: 10001;
 }
-.ask-page input[type="submit"].searchBtn {
-    display: none;
+.ask-page {
+    input[type="submit"].searchBtn {
+        display: none;
+    }
+    .input-tool-tip {
+        color: white;
+        height: 0;
+        z-index: 0;
+    }
 }
 
 .searchBtn:hover {

@@ -522,6 +522,11 @@ input[type="submit"].searchBtn {
 .ask-page input[type="submit"].searchBtn {
   display: none;
 }
+.ask-page .input-tool-tip {
+  color: white;
+  height: 0;
+  z-index: 0;
+}
 .searchBtn:hover {
   background: -146px -36px url(../images/sprites.png) no-repeat;
 }
