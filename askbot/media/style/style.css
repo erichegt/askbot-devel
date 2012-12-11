@@ -211,6 +211,9 @@ body.user-messages {
   font-size: 16px;
   color: #424242;
 }
+.wait-icon-box {
+  text-align: center;
+}
 #closeNotify {
   position: absolute;
   right: 5px;
@@ -490,12 +493,18 @@ body.user-messages {
   color: whitesmoke;
 }
 .search-drop-menu ul.empty {
-  padding: 5px;
-  margin: 0;
+  margin-bottom: 0;
 }
 .search-drop-menu .footer {
   text-align: center;
   padding-bottom: 10px;
+}
+.search-drop-menu.empty {
+  padding-bottom: 8px;
+}
+.search-drop-menu.empty ul {
+  padding: 5px;
+  margin: 0;
 }
 .input-tool-tip {
   color: #999;

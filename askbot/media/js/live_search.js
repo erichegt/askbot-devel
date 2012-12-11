@@ -130,6 +130,19 @@ SearchDropMenu.prototype.makeKeyHandler = function() {
     };
 };
 
+/** todo: change this to state management as >1 thing happens */
+SearchDropMenu.prototype.showWaitIcon = function() {
+    this._waitIcon.show();
+    this._footer.hide();
+    this._element.addClass('empty');
+};
+
+SearchDropMenu.prototype.hideWaitIcon = function() {
+    this._waitIcon.hide();
+    this._footer.show();
+    this._element.removeClass('empty');
+};
+
 SearchDropMenu.prototype.createDom = function() {
     this._element = this.makeElement('div');
     this._element.addClass('search-drop-menu');
@@ -138,6 +151,11 @@ SearchDropMenu.prototype.createDom = function() {
     this._resultsList = this.makeElement('ul');
     this._element.append(this._resultsList);
     this._element.addClass('empty');
+
+    var waitIcon = new WaitIcon();
+    waitIcon.hide();
+    this._element.append(waitIcon.getElement());
+    this._waitIcon = waitIcon;
 
     //add ask button, @todo: make into separate class?
     var footer = this.makeElement('div');
@@ -471,6 +489,7 @@ FullTextSearch.prototype.getSearchQuery = function() {
  */
 FullTextSearch.prototype.renderTitleSearchResult = function(data) {
     var menu = this._dropMenu;
+    menu.hideWaitIcon();
     menu.setData(data);
     menu.render();
     menu.show();
@@ -741,6 +760,8 @@ FullTextSearch.prototype.makeKeyDownHandler = function() {
         if (query.length === 0) {
             if (keyCode !== 8 && keyCode !== 48) {//del and backspace
                 toolTip.hide();
+                dropMenu.show();
+                dropMenu.showWaitIcon();
                 //xButton.show();//causes a jump of search input...
             }
         } else {
