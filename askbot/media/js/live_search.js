@@ -35,8 +35,10 @@ SearchDropMenu.prototype.render = function() {
     });
     if (this._data.length === 0) {
         list.addClass('empty');
+        this._element.addClass('empty');
     } else {
         list.removeClass('empty');
+        this._element.removeClass('empty');
     }
 };
 
@@ -132,15 +134,19 @@ SearchDropMenu.prototype.makeKeyHandler = function() {
 
 /** todo: change this to state management as >1 thing happens */
 SearchDropMenu.prototype.showWaitIcon = function() {
-    this._waitIcon.show();
-    this._footer.hide();
-    this._element.addClass('empty');
+    if (this._askButtonEnabled) {
+        this._waitIcon.show();
+        this._footer.hide();
+        this._element.addClass('empty');
+    }
 };
 
 SearchDropMenu.prototype.hideWaitIcon = function() {
-    this._waitIcon.hide();
-    this._footer.show();
-    this._element.removeClass('empty');
+    if (this._askButtonEnabled) {
+        this._waitIcon.hide();
+        this._footer.show();
+        this._element.removeClass('empty');
+    }
 };
 
 SearchDropMenu.prototype.createDom = function() {
