@@ -5,6 +5,9 @@ Development version
 -------------------
 * Feedback sender's email is added to the Reply-To header
   in the feedback form (Evgeny)
+* Reimplemented search as drop-down (Evgeny)
+* Basic design to work on smartphones (Evgeny)
+* Allowed use of alternative form on the user signup page (Evgeny)
 
 0.7.44 (Nov 11, 2012)
 -------------------
