@@ -213,6 +213,7 @@ body.user-messages {
 }
 .wait-icon-box {
   text-align: center;
+  margin-bottom: 8px;
 }
 #closeNotify {
   position: absolute;
@@ -499,9 +500,6 @@ body.user-messages {
   text-align: center;
   padding-bottom: 10px;
 }
-.search-drop-menu.empty {
-  padding-bottom: 8px;
-}
 .search-drop-menu.empty ul {
   padding: 5px;
   margin: 0;
@@ -535,6 +533,13 @@ input[type="submit"].searchBtn {
   color: white;
   height: 0;
   z-index: 0;
+}
+.ask-page .search-drop-menu.empty {
+  border: none;
+  padding: 0;
+}
+.ask-page .search-drop-menu.empty ul {
+  padding: 0;
 }
 .searchBtn:hover {
   background: -146px -36px url(../images/sprites.png) no-repeat;
