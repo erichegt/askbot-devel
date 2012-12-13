@@ -1,6 +1,10 @@
 Changes in Askbot
 =================
 
+0.7.47 (Dec 13, 2012)
+---------------------
+* Bugfix release
+
 0.7.46 (Dec 12, 2012)
 ---------------------
 * Bugfix release
