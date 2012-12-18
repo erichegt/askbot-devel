@@ -155,10 +155,19 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-/* create tsvector columns in the content tables */
+/* create tsvector columns in the content tables
+ need to isolate these into own transactions, b/c of a weird mix
+ of triggers/update and alter table statements
+*/
 SELECT add_tsvector_column('text_search_vector', 'askbot_thread');
+COMMIT;
+BEGIN;
 SELECT add_tsvector_column('text_search_vector', 'askbot_post');
+COMMIT;
+BEGIN;
 SELECT add_tsvector_column('title_search_vector', 'askbot_thread');
+COMMIT;
+BEGIN;
 
 /* populate tsvectors with data */
 -- post tsvectors
