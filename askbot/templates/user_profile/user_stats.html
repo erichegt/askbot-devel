@@ -124,7 +124,7 @@
                         </span>
                         <ul id="badge-context-{{ badge.id }}" class="badge-context-list" style="display:none">
                             {% for award in badge_user_awards %}
-                                {% if award.content_object_is_post %}
+                                {% if award.content_object and award.content_object_is_post %}
                                 <li>
                                     <a
                                         title="{{ award.content_object.get_snippet()|collapse }}"
