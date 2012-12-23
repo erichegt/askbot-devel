@@ -587,7 +587,11 @@ def signin(request, template_name='authopenid/signin.html'):
 
             elif login_form.cleaned_data['login_type'] == 'wordpress_site':
                 #here wordpress_site means for a self hosted wordpress blog not a wordpress.com blog
-                wp = Client(askbot_settings.WORDPRESS_SITE_URL, login_form.cleaned_data['username'], login_form.cleaned_data['password'])
+                wp = Client(
+                        askbot_settings.WORDPRESS_SITE_URL,
+                        login_form.cleaned_data['username'],
+                        login_form.cleaned_data['password']
+                    )
                 try:
                     wp_user = wp.call(GetUserInfo())
                     custom_wp_openid_url = '%s?user_id=%s' % (wp.url, wp_user.user_id)
@@ -602,7 +606,7 @@ def signin(request, template_name='authopenid/signin.html'):
                                     user_identifier = custom_wp_openid_url,
                                     login_provider_name = provider_name,
                                     redirect_url = next_url
-                                    )
+                                )
                 except WpFault, e:
                     logging.critical(unicode(e))
                     msg = _('The login password combination was not correct')
