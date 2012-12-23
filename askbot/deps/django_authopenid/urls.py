@@ -19,6 +19,11 @@ urlpatterns = patterns('askbot.deps.django_authopenid.views',
         'complete_oauth_signin',
         name='user_complete_oauth_signin'
     ),
+    url(
+        r'^signin/complete-oauth2/',
+        'complete_oauth2_signin',
+        name='user_complete_oauth2_signin'
+    ),
     url(r'^%s$' % _('register/'), 'register', name='user_register'),
     url(
         r'^%s$' % _('signup/'),

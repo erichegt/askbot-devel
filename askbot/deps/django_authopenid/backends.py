@@ -145,7 +145,7 @@ class AuthBackend(object):
                 return None
 
         elif method == 'oauth':
-            if login_providers[provider_name]['type'] == 'oauth':
+            if login_providers[provider_name]['type'] in ('oauth', 'oauth2'):
                 try:
                     assoc = UserAssociation.objects.get(
                                                 openid_url = oauth_user_id,
