@@ -796,7 +796,7 @@ class OAuthConnection(object):
 
         return auth_url
 
-def get_oauth2_starter_url(provider_name):
+def get_oauth2_starter_url(provider_name, csrf_token):
     """returns redirect url for the oauth2 protocol for a given provider"""
     from sanction.client import Client
 
@@ -809,7 +809,7 @@ def get_oauth2_starter_url(provider_name):
         client_id=client_id,
         redirect_uri=redirect_uri
     )
-    return client.auth_uri()
+    return client.auth_uri(state=csrf_token)
 
 
 def ldap_check_password(username, password):

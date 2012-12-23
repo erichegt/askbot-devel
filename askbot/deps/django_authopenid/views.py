@@ -33,6 +33,7 @@
 import datetime
 from django.http import HttpResponseRedirect, get_host, Http404
 from django.http import HttpResponse
+from django.http import HttpResponseBadRequest
 from django.template import RequestContext, Context
 from django.conf import settings as django_settings
 from askbot.conf import settings as askbot_settings
@@ -273,26 +274,40 @@ def complete_oauth2_signin(request):
     else:
         next_url = reverse('index')
 
-    providers = util.get_enabled_login_providers()
-    try:
-        provider_name = request.session['provider_name']
-        params = providers[provider_name]
-        assert(params['type'] == 'oauth2')
-    except Exception:
+    if 'error' in request.GET:
+        return HttpResponseRedirect(reverse('index'))
+
+    csrf_token = request.GET.get('state', None)
+    if csrf_token is None or csrf_token != request.session.pop('oauth2_csrf_token'):
         return HttpResponseBadRequest()
 
-    client_id = getattr(askbot_settings, provider_name.upper() + '_KEY')
-    client_secret = getattr(askbot_settings, provider_name.upper() + '_SECRET')
+    providers = util.get_enabled_login_providers()
+    provider_name = request.session.pop('provider_name')
+    params = providers[provider_name]
+    assert(params['type'] == 'oauth2')
+
+    client_id = getattr(
+            askbot_settings,
+            provider_name.upper() + '_KEY'
+        )
+
+    client_secret = getattr(
+            askbot_settings,
+            provider_name.upper() + '_SECRET'
+        )
 
     client = OAuth2Client(
-                    token_endpoint=params['token_endpoint'],
-                    resource_endpoint=params['resource_endpoint'],
-                    redirect_uri=askbot_settings.APP_URL + reverse('user_complete_oauth2_signin'),
-                    client_id=client_id,
-                    client_secret=client_secret
-                )
+            token_endpoint=params['token_endpoint'],
+            resource_endpoint=params['resource_endpoint'],
+            redirect_uri=askbot_settings.APP_URL + reverse('user_complete_oauth2_signin'),
+            client_id=client_id,
+            client_secret=client_secret
+        )
 
-    client.request_token(code=request.GET['code'], parser=params['response_parser'])
+    client.request_token(
+        code=request.GET['code'],
+        parser=params['response_parser']
+    )
 
     #todo: possibly set additional parameters here
     user_id = params['get_user_id_function'](client)
@@ -557,7 +572,9 @@ def signin(request, template_name='authopenid/signin.html'):
 
             elif login_form.cleaned_data['login_type'] == 'oauth2':
                 try:
-                    redirect_url = util.get_oauth2_starter_url(provider_name)
+                    csrf_token = generate_random_key(length=32)
+                    redirect_url = util.get_oauth2_starter_url(provider_name, csrf_token)
+                    request.session['oauth2_csrf_token'] = csrf_token
                     request.session['provider_name'] = provider_name
                     return HttpResponseRedirect(redirect_url)
                 except util.OAuthError, e:
