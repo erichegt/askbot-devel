@@ -21,3 +21,7 @@ python-openid
 pystache==0.3.1
 pylint
 pytz
+sanction
+django-tinymce
+longerusername
+beautifulsoup4

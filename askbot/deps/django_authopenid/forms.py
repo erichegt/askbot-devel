@@ -212,7 +212,8 @@ class LoginForm(forms.Form):
             self.cleaned_data['login_type'] = 'openid'
         elif provider_type == 'oauth':
             self.cleaned_data['login_type'] = 'oauth'
-            pass
+        elif provider_type == 'oauth2':
+            self.cleaned_data['login_type'] = 'oauth2'
         elif provider_type == 'facebook':
             self.cleaned_data['login_type'] = 'facebook'
             #self.do_clean_oauth_fields()

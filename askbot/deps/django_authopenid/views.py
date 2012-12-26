@@ -33,6 +33,7 @@
 import datetime
 from django.http import HttpResponseRedirect, get_host, Http404
 from django.http import HttpResponse
+from django.http import HttpResponseBadRequest
 from django.template import RequestContext, Context
 from django.conf import settings as django_settings
 from askbot.conf import settings as askbot_settings
@@ -54,6 +55,7 @@ from recaptcha_works.decorators import fix_recaptcha_remote_ip
 from askbot.deps.django_authopenid.ldap_auth import ldap_create_user
 from askbot.deps.django_authopenid.ldap_auth import ldap_authenticate
 from askbot.utils.loading import load_module
+from sanction.client import Client as OAuth2Client
 from urlparse import urlparse
 
 from openid.consumer.consumer import Consumer, \
@@ -264,6 +266,72 @@ def not_authenticated(func):
             return HttpResponseRedirect(get_next_url(request))
         return func(request, *args, **kwargs)
     return decorated
+
+def complete_oauth2_signin(request):
+    if 'next_url' in request.session:
+        next_url = request.session['next_url']
+        del request.session['next_url']
+    else:
+        next_url = reverse('index')
+
+    if 'error' in request.GET:
+        return HttpResponseRedirect(reverse('index'))
+
+    csrf_token = request.GET.get('state', None)
+    if csrf_token is None or csrf_token != request.session.pop('oauth2_csrf_token'):
+        return HttpResponseBadRequest()
+
+    providers = util.get_enabled_login_providers()
+    provider_name = request.session.pop('provider_name')
+    params = providers[provider_name]
+    assert(params['type'] == 'oauth2')
+
+    client_id = getattr(
+            askbot_settings,
+            provider_name.upper() + '_KEY'
+        )
+
+    client_secret = getattr(
+            askbot_settings,
+            provider_name.upper() + '_SECRET'
+        )
+
+    client = OAuth2Client(
+            token_endpoint=params['token_endpoint'],
+            resource_endpoint=params['resource_endpoint'],
+            redirect_uri=askbot_settings.APP_URL + reverse('user_complete_oauth2_signin'),
+            client_id=client_id,
+            client_secret=client_secret
+        )
+
+    client.request_token(
+        code=request.GET['code'],
+        parser=params['response_parser']
+    )
+
+    #todo: possibly set additional parameters here
+    user_id = params['get_user_id_function'](client)
+
+    user = authenticate(
+                oauth_user_id = user_id,
+                provider_name = provider_name,
+                method = 'oauth'
+            )
+
+    logging.debug('finalizing oauth signin')
+
+    request.session['email'] = ''#todo: pull from profile
+    request.session['username'] = ''#todo: pull from profile
+
+    return finalize_generic_signin(
+                        request = request,
+                        user = user,
+                        user_identifier = user_id,
+                        login_provider_name = provider_name,
+                        redirect_url = next_url
+                    )
+
+
 
 def complete_oauth_signin(request):
     if 'next_url' in request.session:
@@ -480,12 +548,10 @@ def signin(request, template_name='authopenid/signin.html'):
             elif login_form.cleaned_data['login_type'] == 'oauth':
                 try:
                     #this url may need to have "next" piggibacked onto
-                    callback_url = reverse('user_complete_oauth_signin')
-
                     connection = util.OAuthConnection(
-                                        provider_name,
-                                        callback_url = callback_url
-                                    )
+                                    provider_name,
+                                    callback_url=reverse('user_complete_oauth_signin')
+                                )
 
                     connection.start()
 
@@ -504,37 +570,28 @@ def signin(request, template_name='authopenid/signin.html'):
                         ) % {'provider': provider_name}
                     request.user.message_set.create(message = msg)
 
-            elif login_form.cleaned_data['login_type'] == 'facebook':
-                #have to redirect for consistency
-                #there is a requirement that 'complete_signin'
+            elif login_form.cleaned_data['login_type'] == 'oauth2':
                 try:
-                    #this call may raise FacebookError
-                    user_id = util.get_facebook_user_id(request)
-
-                    user = authenticate(
-                                method = 'facebook',
-                                facebook_user_id = user_id
-                            )
-
-                    return finalize_generic_signin(
-                                    request = request,
-                                    user = user,
-                                    user_identifier = user_id,
-                                    login_provider_name = provider_name,
-                                    redirect_url = next_url
-                                )
-
-                except util.FacebookError, e:
+                    csrf_token = generate_random_key(length=32)
+                    redirect_url = util.get_oauth2_starter_url(provider_name, csrf_token)
+                    request.session['oauth2_csrf_token'] = csrf_token
+                    request.session['provider_name'] = provider_name
+                    return HttpResponseRedirect(redirect_url)
+                except util.OAuthError, e:
                     logging.critical(unicode(e))
                     msg = _('Unfortunately, there was some problem when '
                             'connecting to %(provider)s, please try again '
                             'or use another provider'
-                        ) % {'provider': 'Facebook'}
+                        ) % {'provider': provider_name}
                     request.user.message_set.create(message = msg)
 
             elif login_form.cleaned_data['login_type'] == 'wordpress_site':
                 #here wordpress_site means for a self hosted wordpress blog not a wordpress.com blog
-                wp = Client(askbot_settings.WORDPRESS_SITE_URL, login_form.cleaned_data['username'], login_form.cleaned_data['password'])
+                wp = Client(
+                        askbot_settings.WORDPRESS_SITE_URL,
+                        login_form.cleaned_data['username'],
+                        login_form.cleaned_data['password']
+                    )
                 try:
                     wp_user = wp.call(GetUserInfo())
                     custom_wp_openid_url = '%s?user_id=%s' % (wp.url, wp_user.user_id)
@@ -549,7 +606,7 @@ def signin(request, template_name='authopenid/signin.html'):
                                     user_identifier = custom_wp_openid_url,
                                     login_provider_name = provider_name,
                                     redirect_url = next_url
-                                    )
+                                )
                 except WpFault, e:
                     logging.critical(unicode(e))
                     msg = _('The login password combination was not correct')

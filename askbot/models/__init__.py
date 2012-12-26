@@ -133,6 +133,10 @@ class RelatedObjectSimulator(object):
         self.user = user
         self.model_class = model_class
 
+    def count(self, **kwargs):
+        kwargs['user'] = self.user
+        return self.model_class.objects.filter(**kwargs).count()
+
     def create(self, **kwargs):
         return self.model_class.objects.create(user=self.user, **kwargs)
 
@@ -140,16 +144,16 @@ class RelatedObjectSimulator(object):
         return self.model_class.objects.filter(*args, **kwargs)
 
 
-#django 1.4.1 only
+#django 1.4.1 and above
 @property
 def user_message_set(self):
     return RelatedObjectSimulator(self, Message)
 
-#django 1.4.1 only
+#django 1.4.1 and above
 def user_get_and_delete_messages(self):
     messages = []
     for message in Message.objects.filter(user=self):
-        messages.append(message)
+        messages.append(message.message)
         message.delete()
     return messages
 
@@ -1636,7 +1640,7 @@ def user_post_question(
     if timestamp is None:
         timestamp = datetime.datetime.now()
 
-    #todo: split this into "create thread" + "add queston", if text exists
+    #todo: split this into "create thread" + "add question", if text exists
     #or maybe just add a blank question post anyway
     thread = Thread.objects.create_new(
                                     author = self,

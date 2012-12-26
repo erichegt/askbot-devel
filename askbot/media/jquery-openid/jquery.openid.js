@@ -405,12 +405,7 @@ $.fn.authenticator = function() {
         );
 
         setup_event_handlers(
-            signin_page.find('input.facebook'),
-            start_facebook_login
-        );
-
-        setup_event_handlers(
-            signin_page.find('input.oauth'),
+            signin_page.find('input.oauth,input.oauth2'),
             start_simple_login
         );
 

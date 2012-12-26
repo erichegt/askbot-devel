@@ -23,3 +23,6 @@ class Message(models.Model):
 
     def __unicode__(self):
         return self.message
+
+    def __str__(self):
+        return self.message.encode('utf-8')
