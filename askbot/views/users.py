@@ -560,24 +560,44 @@ def user_recent(request, user, context):
             self.content_object = content_object
             self.badge = badge
 
-    activities = []
-
     # TODO: Don't process all activities here for the user, only a subset ([:const.USER_VIEW_DATA_SIZE])
-    for activity in models.Activity.objects.filter(user=user):
+    activity_types = (
+        const.TYPE_ACTIVITY_ASK_QUESTION,
+        const.TYPE_ACTIVITY_ANSWER,
+        const.TYPE_ACTIVITY_COMMENT_QUESTION,
+        const.TYPE_ACTIVITY_COMMENT_ANSWER,
+        const.TYPE_ACTIVITY_UPDATE_QUESTION,
+        const.TYPE_ACTIVITY_UPDATE_ANSWER,
+        const.TYPE_ACTIVITY_MARK_ANSWER,
+        const.TYPE_ACTIVITY_PRIZE
+    )
+
+    #source of information about activities
+    activity_objects = models.Activity.objects.filter(
+                                        user=user,
+                                        activity_type__in=activity_types
+                                    )[:const.USER_VIEW_DATA_SIZE]
+
+    #a list of digest objects, suitable for display
+    #the number of activities to show is not guaranteed to be
+    #const.USER_VIEW_DATA_TYPE, because we don't show activity
+    #for deleted content
+    activities = []
+    for activity in activity_objects:
 
         # TODO: multi-if means that we have here a construct for which a design pattern should be used
 
         # ask questions
         if activity.activity_type == const.TYPE_ACTIVITY_ASK_QUESTION:
-            q = activity.content_object
-            if q.deleted:
+            question = activity.content_object
+            if not question.deleted:
                 activities.append(Event(
                     time=activity.active_at,
                     type=activity.activity_type,
-                    title=q.thread.title,
+                    title=question.thread.title,
                     summary='', #q.summary,  # TODO: was set to '' before, but that was probably wrong
                     answer_id=0,
-                    question_id=q.id
+                    question_id=question.id
                 ))
 
         elif activity.activity_type == const.TYPE_ACTIVITY_ANSWER:
@@ -678,7 +698,7 @@ def user_recent(request, user, context):
         'tab_name' : 'recent',
         'tab_description' : _('recent user activity'),
         'page_title' : _('profile - recent activity'),
-        'activities' : activities[:const.USER_VIEW_DATA_SIZE]
+        'activities' : activities
     }
     context.update(data)
     return render(request, 'user_profile/user_recent.html', context)

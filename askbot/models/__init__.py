@@ -1637,7 +1637,7 @@ def user_post_question(
     if timestamp is None:
         timestamp = datetime.datetime.now()
 
-    #todo: split this into "create thread" + "add queston", if text exists
+    #todo: split this into "create thread" + "add question", if text exists
     #or maybe just add a blank question post anyway
     thread = Thread.objects.create_new(
                                     author = self,

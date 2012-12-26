@@ -1,5 +1,6 @@
 import datetime
 from django.conf import settings as django_settings
+from django.core.urlresolvers import reverse
 from django.test.client import Client
 from askbot.tests.utils import AskbotTestCase
 from askbot.conf import settings
@@ -502,6 +503,6 @@ class BadgeTests(AskbotTestCase):
         self.u1.save()
         self.assert_have_badge('enthusiast', self.u1, 0)
         self.client.login(method = 'force', user_id = self.u1.id)
-        self.client.get('/' + django_settings.ASKBOT_URL)
+        self.client.get(reverse('questions'))
         self.assert_have_badge('enthusiast', self.u1, 1)
 
