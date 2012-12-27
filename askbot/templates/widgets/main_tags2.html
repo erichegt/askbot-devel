@@ -1,0 +1,15 @@
+<div class="box question-tags">
+    <ul id="main-tags" class="tags clearfix">
+	<li><strong>principais tags:</strong></li>
+        {% for tag in ["java", "html", "javascript", ".net", "arquitetura", "rails", "android", "ios"] %}
+        <li>
+	    <span class="tag-left">
+                <span class="tag tag-right" onclick='selecaoTag("{{ tag }}")'>{{ tag }}</span>
+            </span>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+<script>
+	function selecaoTag(name) {$('#id_tags').val($('#id_tags').val() + ' ' + name);}
+</script>

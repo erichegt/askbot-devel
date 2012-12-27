@@ -55,7 +55,6 @@
         #}
         {{ login_form.login_provider_name }}
         {{ login_form.next }}
-        <input id="id_facebook_email" type="hidden" name="facebook_email" value=""></input>
         {{ 
             login_macros.provider_buttons(
                 login_form = login_form,

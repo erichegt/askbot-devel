@@ -6,6 +6,10 @@
 </div>
 {% endif %}
 
+<!-- customizacao tags -->
+{% include "widgets/main_tags.html" %}
+<!-- fim customizacao tags -->
+
 {% if contributors and settings.SIDEBAR_MAIN_SHOW_AVATARS %}
     {% include "widgets/contributors.html" %}
 {% endif %}

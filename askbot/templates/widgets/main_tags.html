@@ -1,0 +1,25 @@
+  <div class="box">
+    <h2>Principais Tags</h2>
+    {% if tag_list_type == 'list' %}
+      <ul id="main-tags" class="tags">
+        {% for tag in ["java", "html", "javascript", ".net", "arquitetura", "rails", "android", "ios"] %}
+        <li>
+        {{ macros.tag_widget(
+              tag,
+              html_tag = 'span',
+              extra_content = '',
+              search_state = search_state
+        )}}
+        </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+        {{ 
+            macros.tag_cloud(
+                tags = tags,
+                font_sizes = font_size,
+                search_state = search_state
+            )
+        }}
+    {% endif %}
+  </div>

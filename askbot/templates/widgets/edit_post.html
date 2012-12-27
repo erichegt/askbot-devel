@@ -57,6 +57,7 @@
             {% endif %}
             <span class="form-error">{{ post_form.tags.errors }}</span><br/>
             {{ post_form.tags }}
+            {% include "widgets/main_tags2.html" %}
             <div class="title-desc">
                 {{ post_form.tags.help_text }}
             </div>

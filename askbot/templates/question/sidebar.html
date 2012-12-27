@@ -39,6 +39,7 @@
         <input type="checkbox" id="question-subscribe-sidebar"/>
         <label for="question-subscribe-sidebar">{% trans %}<strong>Here</strong> (once you log in) you will be able to sign up for the periodic email updates about this question.{% endtrans %}</label>
         {%endif%}
+{# desabilitando RSS nas questoes
         {% if settings.RSS_ENABLED %}
         <p class="rss">
             <a
@@ -47,6 +48,7 @@
                 >{% trans %}subscribe to rss feed{% endtrans %}</a>
         </p>
         {% endif %}
+#}
     </div> 
 </div>
 

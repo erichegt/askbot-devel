@@ -77,13 +77,4 @@ anyone, must be valid</i>)
 <!-- end complete.html -->
 {% block endjs %}
     {{ macros.one_shot_form_js(form='#register-form', submit_button='#register-button') }}
-    <script type="text/javascript">
-        var email = $('#id_email');
-        var username = $('#id_username');
-        if (email.val().length > 3){
-            email.attr("readonly", true);
-            username.focus();
-        }
-    </script>
 {% endblock %}
-
