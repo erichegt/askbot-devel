@@ -299,7 +299,7 @@ def complete_oauth2_signin(request):
     client = OAuth2Client(
             token_endpoint=params['token_endpoint'],
             resource_endpoint=params['resource_endpoint'],
-            redirect_uri=askbot_settings.APP_URL + reverse('user_complete_oauth2_signin'),
+            redirect_uri=askbot_settings.APP_URL + reverse('user_complete_oauth2_signin').replace("/ask/", ""),
             client_id=client_id,
             client_secret=client_secret
         )

@@ -803,7 +803,7 @@ def get_oauth2_starter_url(provider_name, csrf_token):
     providers = get_enabled_login_providers()
     params = providers[provider_name]
     client_id = getattr(askbot_settings, provider_name.upper() + '_KEY')
-    redirect_uri = askbot_settings.APP_URL + reverse('user_complete_oauth2_signin')
+    redirect_uri = askbot_settings.APP_URL + reverse('user_complete_oauth2_signin').replace("/ask/", "")
     client = Client(
         auth_endpoint=params['auth_endpoint'],
         client_id=client_id,
