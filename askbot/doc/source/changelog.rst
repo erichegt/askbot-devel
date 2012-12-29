@@ -1,6 +1,10 @@
 Changes in Askbot
 =================
 
+Development version
+-------------------
+* added RSS auto-discovery link
+
 0.7.47 (Dec 13, 2012)
 ---------------------
 * Bugfix release
