@@ -309,6 +309,8 @@ def complete_oauth2_signin(request):
         parser=params['response_parser']
     )
 
+    facebook_data = client.request("/me")
+
     #todo: possibly set additional parameters here
     user_id = params['get_user_id_function'](client)
 
@@ -320,8 +322,8 @@ def complete_oauth2_signin(request):
 
     logging.debug('finalizing oauth signin')
 
-    request.session['email'] = ''#todo: pull from profile
-    request.session['username'] = ''#todo: pull from profile
+    request.session['email'] = facebook_data['email'];
+    request.session['username'] = facebook_data['name']
 
     return finalize_generic_signin(
                         request = request,
