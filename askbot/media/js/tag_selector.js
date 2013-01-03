@@ -151,7 +151,9 @@ function pickedTags(){
                 'remove',
                 function(){
                     deleteTagLocally();
-                    //askbot['controllers']['fullTextSearch'].refresh();
+                    if ($('body').hasClass('main-page')) {
+                      askbot['controllers']['fullTextSearch'].refresh();
+                    }
                 }
             );
         }
