@@ -123,7 +123,8 @@ function pickedTags(){
 
         var data = JSON.stringify({
             tagnames: tagnames,
-            reason: reason
+            reason: reason,
+            user: askbot['data']['viewUserId'] 
         });
         var call_settings = {
             type:'POST',
