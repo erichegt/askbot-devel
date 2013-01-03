@@ -548,10 +548,8 @@ var Vote = function(){
     var acceptAnonymousMessage = gettext('insufficient privilege');
     var acceptOwnAnswerMessage = gettext('cannot pick own answer as best');
 
-    var pleaseLogin = " <a href='" + askbot['urls']['user_signin']
-                    + "?next=" + askbot['urls']['question_url_template']
-                    + "'>"
-                    + gettext('please login') + "</a>";
+    var pleaseLogin = " <a href='" + askbot['urls']['user_signin'] + ">"
+                        + gettext('please login') + "</a>";
 
     var favoriteAnonymousMessage = gettext('anonymous users cannot follow questions') + pleaseLogin;
     var subscribeAnonymousMessage = gettext('anonymous users cannot subscribe to questions') + pleaseLogin;
@@ -778,7 +776,7 @@ var Vote = function(){
             type: "POST",
             cache: false,
             dataType: "json",
-            url: askbot['urls']['vote_url_template'].replace('{{QuestionID}}', questionId),
+            url: askbot['urls']['vote_url'],
             data: { "type": voteType, "postId": postId },
             error: handleFail,
             success: function(data) {
@@ -1786,6 +1784,7 @@ Comment.prototype.setContent = function(data){
     this._user_link = $('<a></a>').attr('class', 'author');
     this._user_link.attr('href', this._data['user_url']);
     this._user_link.html(this._data['user_display_name']);
+    this._comment_body.append(' ');
     this._comment_body.append(this._user_link);
 
     this._comment_body.append(' (');
@@ -2147,15 +2146,7 @@ QASwapper.prototype.startSwapping = function(){
                 url: askbot['urls']['swap_question_with_answer'],
                 data: data,
                 success: function(data){
-                    var url_template = askbot['urls']['question_url_template'];
-                    new_question_url = url_template.replace(
-                        '{{QuestionID}}',
-                        data['id']
-                    ).replace(
-                        '{{questionSlug}}',
-                        data['slug']
-                    );
-                    window.location.href = new_question_url;
+                    window.location.href = data['question_url'];
                 }
             });
             break;
