@@ -150,7 +150,7 @@ function pickedTags(){
                 'remove',
                 function(){
                     deleteTagLocally();
-                    askbot['controllers']['fullTextSearch'].refresh();
+                    //askbot['controllers']['fullTextSearch'].refresh();
                 }
             );
         }

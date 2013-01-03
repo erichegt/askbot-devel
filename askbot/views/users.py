@@ -994,6 +994,7 @@ def user_email_subscriptions(request, user, context):
 
     data = {
         'active_tab': 'users',
+        'subscribed_tag_names': user.get_marked_tag_names('subscribed'),
         'page_class': 'user-profile-page',
         'tab_name': 'email_subscriptions',
         'tab_description': _('email subscription settings'),
