@@ -1,0 +1,9 @@
+<ul class="content-wrapper lang-nav">
+{% for language in settings.LANGUAGES %}
+    <li {% if language[0]|is_current_language() %}class="current"{% endif %}>
+        <a 
+            href="/{{ language[0] }}/{{ settings.ASKBOT_URL }}"
+        >{{ language[1] }}</a>
+    </li>
+{% endfor %}
+</ul>
