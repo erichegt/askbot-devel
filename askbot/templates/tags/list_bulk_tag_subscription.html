@@ -1,0 +1,52 @@
+{% extends "one_column_body.html" %}
+{% import "macros.html" as macros %}
+<!-- template list_bulk_tag_subscription.html -->
+{% block title %}{% spaceless %}{% trans %}Manage Tag subscriptions{% endtrans %}{% endspaceless %}{% endblock %}
+{% block content %}
+<h1 class="section-title">{% trans %}Manage Tag subscriptions{% endtrans %}</h1>
+<p>
+</p>
+<table class='tag-subscriptions'>
+    <thead>
+      <th>{% trans %}Date{%endtrans%} </th>
+      <th>{% trans %}Tags{%endtrans%} </th>
+      <th>{% trans %}Users{%endtrans%}</th>
+        {% if settings.GROUPS_ENABLED %}
+          <th>{%trans%}Groups{%endtrans%} </th>
+      {%endif%}
+      <th>{%trans%}Action{%endtrans%}</th>
+    </thead>
+    <tbody>
+      {% for subscription in object_list %}
+        <tr>
+            <td>{{subscription.date_added}}</td>
+            <td>
+              {{
+              macros.tag_list_widget(
+                subscription.tag_list(), 
+                deletable=True, 
+                css_class='subscribed marked-tags'
+              )
+              }}
+              <!--
+              <a href='#'>({% trans %}add tag{%endtrans%})</a>
+              <div class="inputs">
+                  <input id="subscribedTagInput" autocomplete="off" type="text"/>
+                  <input id="subscribedTagAdd" type="submit" value="{% trans %}add{% endtrans%}"/>
+              </div>
+              -->
+            </td>
+            <td>{%for user in subscription.users.all() %} <a href='{% url user_profile user.id, user.username|slugify %}'>{{user.username}},</a>{%endfor%} <a href='#'>({% trans %}edit{%endtrans%}) </td>
+            {% if settings.GROUPS_ENABLED %}
+            <td>{%for group in subscription.groups.all() %} <a href='{% url users_by_group group.id, group.name|slugify %}'>{{group.name}}</a>{%endfor%} </td>
+            {%endif%}
+            <td><a href='#'>{%trans%}Edit{%endtrans%}</a>&nbsp; - &nbsp;<a href='#'>{%trans%}Delete{%endtrans%}</a></td>
+        </tr>
+      {%endfor%}
+    </tbody>
+</table>
+{% endblock %}
+{#block endjs%}
+  <script type='text/javascript' src='{{"/js/tag_selector.js"|media}}'></script> 
+{%endblock#}
+<!-- end template list_bulk_tag_subscription.html -->

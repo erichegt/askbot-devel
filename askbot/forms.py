@@ -1652,3 +1652,14 @@ class ModerateTagForm(forms.Form):
 class ShareQuestionForm(forms.Form):
     thread_id = forms.IntegerField()
     recipient_name = forms.CharField()
+
+class BulkTagSubscriptionForm(forms.Form):
+    date_added = forms.DateField(required=False, widget=forms.HiddenInput())
+    tags = TagNamesField()
+
+    def __init__(self, *args, **kwargs):
+        from askbot.models import BulkTagSubscription, Tag, Group
+        super(BulkTagSubscriptionForm, self).__init__(*args, **kwargs)
+        self.fields['users'] = forms.ModelMultipleChoiceField(queryset=User.objects.all())
+        if askbot_settings.GROUPS_ENABLED:
+            self.fields['groups'] = forms.ModelMultipleChoiceField(queryset=Group.objects.all())

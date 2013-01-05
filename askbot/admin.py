@@ -4,7 +4,7 @@
 
 To make more models accessible in the Django admin interface, add more classes subclassing ``django.contrib.admin.Model``
 
-Names of the classes must be like `SomeModelAdmin`, where `SomeModel` must 
+Names of the classes must be like `SomeModelAdmin`, where `SomeModel` must
 exactly match name of the model used in the project
 """
 from django.contrib import admin
@@ -33,7 +33,7 @@ class ReputeAdmin(admin.ModelAdmin):
 
 class ActivityAdmin(admin.ModelAdmin):
     """  admin class"""
-    
+
 admin.site.register(models.Post)
 admin.site.register(models.Tag, TagAdmin)
 admin.site.register(models.Vote, VoteAdmin)
@@ -42,3 +42,4 @@ admin.site.register(models.PostRevision, PostRevisionAdmin)
 admin.site.register(models.Award, AwardAdmin)
 admin.site.register(models.Repute, ReputeAdmin)
 admin.site.register(models.Activity, ActivityAdmin)
+admin.site.register(models.BulkTagSubscription)

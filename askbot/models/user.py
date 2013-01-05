@@ -55,7 +55,7 @@ class ActivityManager(models.Manager):
                 mentioned_at = None,
                 mentioned_in = None,
                 reported = None
-            ): 
+            ):
 
         #todo: automate this using python inspect module
         kwargs = dict()
@@ -94,7 +94,7 @@ class ActivityManager(models.Manager):
         return mention_activity
 
     def get_mentions(
-                self, 
+                self,
                 mentioned_by = None,
                 mentioned_whom = None,
                 mentioned_at = None,
@@ -316,8 +316,8 @@ class EmailFeedSetting(models.Model):
         else:
             reported_at = '%s' % self.reported_at.strftime('%d/%m/%y %H:%M')
         return 'Email feed for %s type=%s, frequency=%s, reported_at=%s' % (
-                                                     self.subscriber, 
-                                                     self.feed_type, 
+                                                     self.subscriber,
+                                                     self.feed_type,
                                                      self.frequency,
                                                      reported_at
                                                  )
@@ -424,7 +424,7 @@ class GroupQuerySet(models.query.QuerySet):
 
 class GroupManager(BaseQuerySetManager):
     """model manager for askbot groups"""
-    
+
     def get_query_set(self):
         return GroupQuerySet(self.model)
 
@@ -591,3 +591,17 @@ class Group(AuthGroup):
     def save(self, *args, **kwargs):
         self.clean()
         super(Group, self).save(*args, **kwargs)
+
+
+class BulkTagSubscription(models.Model):
+    date_added = models.DateField(auto_now_add=True)
+    tags = models.ManyToManyField(Tag)
+    users = models.ManyToManyField(User)
+    groups = models.ManyToManyField(Group)
+
+    def tag_list(self):
+        return [tag.name for tag in self.tags.all()]
+
+    class Meta:
+        app_label = 'askbot'
+        ordering = ['-date_added']

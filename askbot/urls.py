@@ -215,6 +215,27 @@ urlpatterns = patterns('',
         name='tags'
     ),
     url(
+        r'^%s$' % _('tags/subscriptions/'),
+        views.commands.list_bulk_tag_subscription,
+        name='list_bulk_tag_subscription'
+    ),
+    url(#post only
+        r'^%s$' % _('tags/subscriptions/delete/'),
+        views.commands.delete_bulk_tag_subscription,
+        name='delete_bulk_tag_subscription'
+    ),
+    url(
+        r'^%s$' % _('tags/subscriptions/create/'),
+        views.commands.create_bulk_tag_subscription,
+        name='create_bulk_tag_subscription'
+    ),
+    url(
+        r'^%s(?P<pk>\d+)/$' % _('tags/subscriptions/edit/$'),
+        views.commands.edit_bulk_tag_subscription,
+        name='edit_bulk_tag_subscription'
+    ),
+
+    url(
         r'^%s$' % _('suggested-tags/'),
         views.meta.list_suggested_tags,
         name = 'list_suggested_tags'
