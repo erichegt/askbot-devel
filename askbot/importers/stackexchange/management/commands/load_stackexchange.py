@@ -24,7 +24,7 @@ try:
 except ImportError:
     from askbot.models.message import Message as DjangoMessage
 
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 from askbot.utils.console import ProgressBar
 from askbot.utils.slug import slugify
 from askbot.models.badges import award_badges_signal, award_badges

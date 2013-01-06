@@ -1,5 +1,7 @@
 """Procedures to initialize the full text search in PostgresQL"""
 from django.db import connection
+from django.conf import settings as django_settings
+from django.utils.translation import get_language
 
 def setup_full_text_search(script_path):
     """using postgresql database connection,
@@ -49,6 +51,9 @@ def run_full_text_search(query_set, query_text, text_search_vector_name):
         'params': extra_params,
         'select_params': extra_params,
     }
+    if getattr(django_settings, 'ASKBOT_MULTILINGUAL', True):
+        extra_kwargs['select']['language_code'] = get_language()
+
     return query_set.extra(**extra_kwargs)
 
 def run_thread_search(query_set, query):

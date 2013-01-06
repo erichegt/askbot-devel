@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.models import Group as AuthGroup
 from django.core import exceptions
 from django.forms import EmailField, URLField
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 from django.utils.html import strip_tags
 from askbot import const
 from askbot.conf import settings as askbot_settings

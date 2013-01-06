@@ -12,7 +12,7 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from django.utils.importlib import import_module
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 
 MAX_HEADLINE_LENGTH = 80
 MAX_SENDERS_INFO_LENGTH = 64

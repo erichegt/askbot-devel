@@ -25,7 +25,7 @@ import uuid
 from django.contrib.contenttypes.models import ContentType
 from django.template import Context
 from django.template.loader import get_template
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 from celery.decorators import task
 from askbot.conf import settings as askbot_settings
 from askbot import const

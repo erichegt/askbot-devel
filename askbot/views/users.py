@@ -24,7 +24,7 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseForbidden
 from django.http import HttpResponseRedirect, Http404
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 from django.utils import simplejson
 from django.views.decorators import csrf
 

@@ -11,7 +11,7 @@ from django.template import RequestContext, Template
 from django.template.loader import get_template
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.core.urlresolvers import reverse
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 from django.views import static
 from django.views.decorators import csrf
 from django.db.models import Max, Count

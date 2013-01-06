@@ -2,7 +2,7 @@
 from askbot.conf.settings_wrapper import settings
 from askbot.conf.super_groups import EXTERNAL_SERVICES
 from askbot.deps import livesettings
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 
 LDAP_SETTINGS = livesettings.ConfigurationGroup(
                     'LDAP_SETTINGS',

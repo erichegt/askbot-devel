@@ -10,9 +10,10 @@ from django.core import exceptions as django_exceptions
 from django.core.urlresolvers import reverse
 from django.template.loader import get_template
 from django.utils.hashcompat import md5_constructor
-from django.utils.translation import ugettext as _
-from django.utils.translation import ungettext
+from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ungettext_lazy
 from django.utils.translation import string_concat
+from django.utils.translation import get_language
 
 import askbot
 from askbot.conf import settings as askbot_settings
@@ -54,9 +55,14 @@ class ThreadQuerySet(models.query.QuerySet):
                                     self, search_query
                                 ).order_by('-relevance')
         elif 'mysql' in db_engine_name and mysql.supports_full_text_search():
-            return self.filter(title__search=search_query)
+            filter_parameters = {'title__search': search_query}
         else:
-            return self.filter(title__icontains=search_query)
+            filter_parameters = {'title__icontains': search_query}
+
+        if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False):
+            filter_parameters['language_code'] = get_language()
+
+        return self.filter(**filter_parameters)
 
 
 class ThreadManager(BaseQuerySetManager):
@@ -95,7 +101,7 @@ class ThreadManager(BaseQuerySetManager):
             tag_list = tag_list[:5]
             last_topic = _('" and more')
 
-        return '"' + '", "'.join(tag_list) + last_topic
+        return '"' + '", "'.join(tag_list) + unicode(last_topic)
 
     def create(self, *args, **kwargs):
         raise NotImplementedError
@@ -124,7 +130,8 @@ class ThreadManager(BaseQuerySetManager):
             title=title,
             tagnames=tagnames,
             last_activity_at=added_at,
-            last_activity_by=author
+            last_activity_by=author,
+            language_code=get_language()
         )
 
         #todo: code below looks like ``Post.objects.create_new()``
@@ -231,11 +238,16 @@ class ThreadManager(BaseQuerySetManager):
         """
         from askbot.conf import settings as askbot_settings # Avoid circular import
 
+        primary_filter = {
+            'posts__post_type': 'question',
+            'posts__deleted': False
+        }
+
+        if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False):
+            primary_filter['language_code'] = get_language()
+
         # TODO: add a possibility to see deleted questions
-        qs = self.filter(
-                posts__post_type='question',
-                posts__deleted=False,
-            ) # (***) brings `askbot_post` into the SQL query, see the ordering section below
+        qs = self.filter(**primary_filter)
 
         if askbot_settings.ENABLE_CONTENT_MODERATION:
             qs = qs.filter(approved = True)
@@ -522,6 +534,7 @@ class Thread(models.Model):
     answer_count = models.PositiveIntegerField(default=0)
     last_activity_at = models.DateTimeField(default=datetime.datetime.now)
     last_activity_by = models.ForeignKey(User, related_name='unused_last_active_in_threads')
+    language_code = models.CharField(max_length=16, default=django_settings.LANGUAGE_CODE)
 
     followed_by     = models.ManyToManyField(User, related_name='followed_threads')
     favorited_by    = models.ManyToManyField(User, through='FavoriteQuestion', related_name='unused_favorite_threads')
@@ -715,7 +728,7 @@ class Thread(models.Model):
         else:
             attr = None
         if attr is not None:
-            return u'%s %s' % (self.title, attr)
+            return u'%s %s' % (self.title, unicode(attr))
         else:
             return self.title
 
@@ -727,7 +740,7 @@ class Thread(models.Model):
 
         output = question.format_for_email_as_subthread()
         if answers:
-            answer_heading = ungettext(
+            answer_heading = ungettext_lazy(
                                     '%(count)d answer:',
                                     '%(count)d answers:',
                                     len(answers)

@@ -5,7 +5,7 @@ from askbot.conf.settings_wrapper import settings
 from askbot.deps import livesettings
 from askbot import const
 from askbot.conf.super_groups import DATA_AND_FORMATTING
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 
 FORUM_DATA_RULES = livesettings.ConfigurationGroup(
                         'FORUM_DATA_RULES',

@@ -1,4 +1,4 @@
-from django.utils.translation import ugettext
+from django.utils.translation import ugettext_lazy
 from askbot.deps.livesettings import values
 from askbot.deps.livesettings.models import SettingNotSet
 from askbot.deps.livesettings.utils import is_string_like
@@ -247,7 +247,7 @@ def config_choice_values(group, key, skip_missing=True, translate=False):
             raise SettingNotSet('%s.%s' % (group, key))
 
     if translate:
-        choices = [(k, ugettext(v)) for k, v in choices]
+        choices = [(k, ugettext_lazy(v)) for k, v in choices]
 
     return choices
 

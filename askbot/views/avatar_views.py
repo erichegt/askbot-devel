@@ -10,7 +10,7 @@ from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.template.loader import get_template
 from django.shortcuts import render
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 from django.views.decorators import csrf
 from django.conf import settings
 

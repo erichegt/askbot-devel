@@ -4,7 +4,7 @@ General skin settings
 from askbot.conf.settings_wrapper import settings
 from askbot.deps.livesettings import ConfigurationGroup
 from askbot.deps.livesettings import values
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 from django.conf import settings as django_settings
 from askbot.skins import utils as skin_utils
 from askbot import const
