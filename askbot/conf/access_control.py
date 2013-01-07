@@ -1,7 +1,7 @@
 from askbot.conf.settings_wrapper import settings
 from askbot.conf.super_groups import LOGIN_USERS_COMMUNICATION
 from askbot.deps import livesettings
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 
 ACCESS_CONTROL = livesettings.ConfigurationGroup(
                     'ACCESS_CONTROL',

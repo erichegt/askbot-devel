@@ -12,7 +12,7 @@ from django.core.exceptions import ImproperlyConfigured
 from django.http import HttpResponse, HttpResponseForbidden, Http404
 from django.http import HttpResponseRedirect
 from django.utils import simplejson
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import smart_str
 from askbot import exceptions as askbot_exceptions
 from askbot.conf import settings as askbot_settings

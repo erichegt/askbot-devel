@@ -31,6 +31,9 @@
     <body class="{% block body_class %}{% endblock %}{% if user_messages %} user-messages{% endif %}{% if page_class %} {{page_class}}{% endif %}{% if request.user.is_anonymous() %} anon{% endif %} lang-{{settings.LANGUAGE_CODE}}">
         {% include "widgets/system_messages.html" %}
         {% include "debug_header.html" %}
+        {% if settings.MULTILINGUAL %}
+            {% include "widgets/language_nav.html" %}
+        {% endif %}
         {% include "custom_header.html" ignore missing %}
         {% if settings.CUSTOM_HEADER|trim != '' %}
         <div id="custom-header">

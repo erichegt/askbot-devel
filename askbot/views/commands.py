@@ -25,7 +25,7 @@ from django.template.loader import get_template
 from django.views.decorators import csrf
 from django.utils import simplejson
 from django.utils.html import escape
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import string_concat
 from askbot.utils.slug import slugify
 from askbot import models
@@ -822,12 +822,13 @@ def swap_question_with_answer(request):
     """
     if request.user.is_authenticated():
         if request.user.is_administrator() or request.user.is_moderator():
-            answer = models.Post.objects.get_answers(request.user).get(id = request.POST['answer_id'])
+            answer = models.Post.objects.get_answers(
+                                                request.user
+                                            ).get(
+                                                id=request.POST['answer_id']
+                                            )
             new_question = answer.swap_with_question(new_title = request.POST['new_title'])
-            return {
-                'id': new_question.id,
-                'slug': new_question.slug
-            }
+            return {'question_url': new_question.get_absolute_url() }
     raise Http404
 
 @csrf.csrf_exempt

@@ -5,7 +5,7 @@ keywords
 from askbot.conf.settings_wrapper import settings
 from askbot.conf.super_groups import CONTENT_AND_UI
 from askbot.deps import livesettings
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 
 QA_SITE_SETTINGS = livesettings.ConfigurationGroup(
                     'QA_SITE_SETTINGS',

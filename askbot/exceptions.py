@@ -1,5 +1,5 @@
 from django.core import exceptions
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 
 class DeploymentError(exceptions.ImproperlyConfigured):
     """raised when there is some error with deployment"""

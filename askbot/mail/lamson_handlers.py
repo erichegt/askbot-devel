@@ -4,7 +4,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.conf import settings as django_settings
 from django.template import Context
 from django.template.loader import get_template
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 from lamson.routing import route, stateless
 from lamson.server import Relay
 from askbot.models import ReplyAddress, Group, Tag

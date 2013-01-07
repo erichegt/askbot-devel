@@ -807,6 +807,23 @@ def test_secret_key():
         print_errors([
             'Please change your SECRET_KEY setting, the current is not secure'
         ])
+
+
+def test_multilingual():
+    is_multilang = getattr(django_settings, 'ASKBOT_MULTILINGUAL', False)
+    django_version = django.VERSION
+    if django_version[0] == 1 and django_version[1] < 4:
+        print_errors([
+            'ASKBOT_MULTILINGUAL=True works only with django >= 1.4'
+        ])
+
+    trans_url = getattr(django_settings, 'ASKBOT_TRANSLATE_URL', False)
+    if is_multilang and trans_url:
+        print_errors([
+            'Please set ASKBOT_TRANSLATE_URL to False, the "True" option '
+            'is currently not supported due to a bug in django'
+        ])
+        
         
 
 
@@ -831,6 +848,7 @@ def run_startup_tests():
     test_longerusername()
     test_avatar()
     test_group_messaging()
+    test_multilingual()
     test_haystack()
     test_cache_backend()
     test_secret_key()

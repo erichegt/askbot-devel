@@ -6,6 +6,7 @@ from django.core import management
 from django.core.cache.backends.dummy import DummyCache
 from django.core import cache
 from django.utils import simplejson
+from django.utils.translation import activate as activate_language
 
 import coffin
 import coffin.template
@@ -18,7 +19,6 @@ from askbot.tests.utils import AskbotTestCase
 from askbot.conf import settings as askbot_settings
 from askbot.tests.utils import skipIf
 from askbot.tests.utils import with_settings
-
 
 
 def patch_jinja2():
@@ -54,6 +54,7 @@ class PageLoadTestCase(AskbotTestCase):
     @classmethod
     def setUpClass(cls):
         management.call_command('flush', verbosity=0, interactive=False)
+        activate_language(settings.LANGUAGE_CODE)
         management.call_command('askbot_add_test_content', verbosity=0, interactive=False)
 
     @classmethod
@@ -104,6 +105,9 @@ class PageLoadTestCase(AskbotTestCase):
         if hasattr(self.client, 'redirect_chain'):
             print 'redirect chain: %s' % ','.join(self.client.redirect_chain)
 
+        if r.status_code != status_code:
+            print 'Error in status code for url: %s' % url
+            
         self.assertEqual(r.status_code, status_code)
 
         if template and status_code != 302:
@@ -135,7 +139,8 @@ class PageLoadTestCase(AskbotTestCase):
         response = self.client.get(reverse('index'), follow=True)
         self.assertEqual(response.status_code, 200)
         self.failUnless(len(response.redirect_chain) == 1)
-        self.failUnless(response.redirect_chain[0][0].endswith('/questions/'))
+        redirect_url = response.redirect_chain[0][0]
+        self.failUnless(unicode(redirect_url).endswith('/questions/'))
         self.assertTrue(isinstance(response.template, list))
         self.assertIn('main_page.html', [t.name for t in response.template])
 

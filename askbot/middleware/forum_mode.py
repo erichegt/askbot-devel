@@ -3,7 +3,7 @@ contains :class:`ForumModeMiddleware`, which is
 enabling support of closed forum mode
 """
 from django.http import HttpResponseRedirect
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from django.core.urlresolvers import resolve
 from askbot.shims.django_shims import ResolverMatch

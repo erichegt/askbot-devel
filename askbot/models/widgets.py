@@ -1,5 +1,5 @@
 from django.db import models
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 from askbot.models import Tag, Group
 from askbot.const import DEFAULT_QUESTION_WIDGET_STYLE, SEARCH_ORDER_BY
 

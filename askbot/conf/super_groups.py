@@ -1,4 +1,4 @@
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 from askbot.deps.livesettings import SuperGroup
 from askbot.deps.livesettings import config_register_super_group
 
