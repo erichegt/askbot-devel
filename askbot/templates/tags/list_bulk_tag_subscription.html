@@ -36,11 +36,15 @@
               </div>
               -->
             </td>
-            <td>{%for user in subscription.users.all() %} <a href='{% url user_profile user.id, user.username|slugify %}'>{{user.username}},</a>{%endfor%} <a href='#'>({% trans %}edit{%endtrans%}) </td>
+            <td>{%for user in subscription.users.all() %} <a href='{% url user_profile user.id, user.username|slugify %}'>{{user.username}},</a>{%endfor%} <a href='#'> </td>
             {% if settings.GROUPS_ENABLED %}
             <td>{%for group in subscription.groups.all() %} <a href='{% url users_by_group group.id, group.name|slugify %}'>{{group.name}}</a>{%endfor%} </td>
             {%endif%}
-            <td><a href='#'>{%trans%}Edit{%endtrans%}</a>&nbsp; - &nbsp;<a href='#'>{%trans%}Delete{%endtrans%}</a></td>
+            <td><a href='{% url edit_bulk_tag_subscription subscription.id %}'>{%trans%}Edit{%endtrans%}</a>&nbsp; - &nbsp;
+              <form action="{%url delete_bulk_tag_subscription %}" method="POST" accept-charset="utf-8">
+                <input type="hidden" name="pk" value="{{subscription.id}}"/>
+                 <input type="submit" value="Delete" />
+               </form>
         </tr>
       {%endfor%}
     </tbody>

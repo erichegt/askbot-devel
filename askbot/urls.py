@@ -230,7 +230,7 @@ urlpatterns = patterns('',
         name='create_bulk_tag_subscription'
     ),
     url(
-        r'^%s(?P<pk>\d+)/$' % _('tags/subscriptions/edit/$'),
+        r'^%s(?P<pk>\d+)/$' % _('tags/subscriptions/edit/'),
         views.commands.edit_bulk_tag_subscription,
         name='edit_bulk_tag_subscription'
     ),

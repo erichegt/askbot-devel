@@ -41,6 +41,8 @@ from askbot.utils.forms import get_db_object_or_404
 from django.template import RequestContext
 from askbot.skins.loaders import render_into_skin_as_string
 from askbot.skins.loaders import render_text_into_skin
+from askbot.models.tag import get_tags_by_names
+
 
 
 @csrf.csrf_exempt
@@ -705,21 +707,20 @@ def list_bulk_tag_subscription(request):
 
 @decorators.admins_only
 def create_bulk_tag_subscription(request):
-    from askbot.models.tag import get_tags_by_names
     data = {'action': _('Create')}
     if request.method == "POST":
         form = forms.BulkTagSubscriptionForm(request.POST)
         if form.is_valid():
-            bulk_subscription = models.BulkTagSubscription()
-            bulk_subscription.save()
-            tags, new_tag_names = get_tags_by_names(form.cleaned_data['tags'].split(' '))
-            bulk_subscription.tags.add(*tags)
-            user_ids = [user.id for user in form.cleaned_data['users']]
-            bulk_subscription.users.add(*user_ids)
-            if 'groups' in form.cleaned_data:
-                group_ids = [user.id for user in form.cleaned_data['groups']]
-                bulk_subscription.groups.add(group_ids)
+            tag_names = form.cleaned_data['tags'].split(' ')
+            user_list = form.cleaned_data.get('users')
+            group_list = form.cleaned_data.get('groups')
 
+            bulk_subscription = models.BulkTagSubscription.objects.create(
+                                                                          tag_names=tag_names,
+                                                                          tag_author=request.user,
+                                                                          user_list=user_list,
+                                                                          group_list=group_list
+                                                                         )
             return HttpResponseRedirect(reverse('list_bulk_tag_subscription'))
         else:
             data['form'] = form
@@ -734,17 +735,44 @@ def edit_bulk_tag_subscription(request, pk):
                                           pk=pk)
     data = {'action': _('Edit')}
     if request.method == "POST":
-        pass
+        form = forms.BulkTagSubscriptionForm(request.POST)
+        if form.is_valid():
+            bulk_subscription.tags.clear()
+            bulk_subscription.users.clear()
+            bulk_subscription.groups.clear()
+
+            if 'groups' in form.cleaned_data:
+                group_ids = [user.id for user in form.cleaned_data['groups']]
+                bulk_subscription.groups.add(group_ids)
+
+            tags, new_tag_names = get_tags_by_names(form.cleaned_data['tags'].split(' '))
+            tag_id_list = [tag.id for tag in tags]
+
+            for new_tag_name in new_tag_names:
+                new_tag = models.Tag.objects.create(name=new_tag_name,
+                                             created_by=request.user)
+                tag_id_list.append(new_tag.id)
+
+            bulk_subscription.tags.add(*tag_id_list)
+
+            user_ids = []
+            for user in form.cleaned_data['users']:
+                user_ids.append(user)
+                user.mark_tags(bulk_subscription.tag_list(),
+                               reason='subscribed', action='add')
+
+            bulk_subscription.users.add(*user_ids)
+
+            return HttpResponseRedirect(reverse('list_bulk_tag_subscription'))
     else:
         form_initial = {
-                        'date_added': bulk_subscription.date_added,
                         'users': bulk_subscription.users.all(),
                         'groups': bulk_subscription.groups.all(),
-                        'tags': bulk_subscription.tags.all(),
+                        'tags': ' '.join([tag.name for tag in bulk_subscription.tags.all()]),
                        }
         data.update({
                     'bulk_subscription': bulk_subscription,
-                    'form': forms.BulkTagSubscription(**form_initial),
+                    'form': forms.BulkTagSubscriptionForm(initial=form_initial),
                    })
 
     return render(request, 'tags/form_bulk_tag_subscription.html', data)
@@ -752,7 +780,13 @@ def edit_bulk_tag_subscription(request, pk):
 @decorators.admins_only
 @decorators.post_only
 def delete_bulk_tag_subscription(request):
-    pass
+    pk = request.POST.get('pk')
+    if pk:
+        bulk_subscription = get_object_or_404(models.BulkTagSubscription, pk=pk)
+        bulk_subscription.delete()
+        return HttpResponseRedirect(reverse('list_bulk_tag_subscription'))
+    else:
+        return HttpResponseRedirect(reverse('list_bulk_tag_subscription'))
 
 @decorators.get_only
 def title_search(request):

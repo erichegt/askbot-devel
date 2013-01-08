@@ -17,6 +17,7 @@ from askbot.utils import functions
 from askbot.models.base import BaseQuerySetManager
 from askbot.models.tag import Tag
 from askbot.models.tag import clean_group_name#todo - delete this
+from askbot.models.tag import get_tags_by_names
 from askbot.forms import DomainNameField
 from askbot.utils.forms import email_is_allowed
 
@@ -592,12 +593,55 @@ class Group(AuthGroup):
         self.clean()
         super(Group, self).save(*args, **kwargs)
 
+class BulkTagSubscriptionManager(BaseQuerySetManager):
+
+    def create(self, tag_names=[],
+               user_list=[], group_list=[],
+               tag_author=None,  **kwargs):
+
+        new_object = super(BulkTagSubscriptionManager, self).create(**kwargs)
+        tag_name_list = []
+
+        if tag_names:
+            assert(tag_author)
+            tags, new_tag_names = get_tags_by_names(tag_names)
+            tags_id_list= [tag.id for tag in tags]
+            tag_name_list = [tag.name for tag in tags]
+
+            for tag_name in new_tag_names:
+                new_tag = Tag.objects.create(name=tagname, created_by=tag_author)
+                tags_id_list.append(new_tag.id)
+                tag_name_list.append(new_tag.name)
+
+            new_object.tags.add(*tags_id_list)
+
+        if user_list:
+            user_ids = []
+            for user in user_list:
+                user_ids.append(user.id)
+                user.mark_tags(tagnames=tag_name_list,
+                               reason='subscribed',
+                               action='add')
+
+            new_object.users.add(*user_ids)
+
+        if group_list:
+            group_ids = []
+            for group in group:
+                #TODO: do the group marked tag thing here
+                group_ids.append(group.id)
+            new_object.groups.add(*group_ids)
+
+        return new_object
+
 
 class BulkTagSubscription(models.Model):
     date_added = models.DateField(auto_now_add=True)
     tags = models.ManyToManyField(Tag)
     users = models.ManyToManyField(User)
     groups = models.ManyToManyField(Group)
+
+    objects = BulkTagSubscriptionManager()
 
     def tag_list(self):
         return [tag.name for tag in self.tags.all()]
