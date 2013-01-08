@@ -748,7 +748,7 @@ def edit_bulk_tag_subscription(request, pk):
 
             if 'groups' in form.cleaned_data:
                 group_ids = [user.id for user in form.cleaned_data['groups']]
-                bulk_subscription.groups.add(group_ids)
+                bulk_subscription.groups.add(*group_ids)
 
             tags, new_tag_names = get_tags_by_names(form.cleaned_data['tags'].split(' '))
             tag_id_list = [tag.id for tag in tags]

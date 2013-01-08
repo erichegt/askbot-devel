@@ -3546,6 +3546,18 @@ def add_missing_subscriptions(sender, instance, created, **kwargs):
     if created:
         instance.add_missing_askbot_subscriptions()
 
+def add_missing_tag_subscriptions(sender, instance, created, **kwargs):
+    '''``sender` is instance of `User``. When the user is created
+    it add the tag subscriptions to the user via BulkTagSubscription
+    and MarkedTags.
+    '''
+    if created:
+        user_groups = instance.get_groups()
+        for subscription in BulkTagSubscription.objects.filter(groups__in = user_groups):
+            tag_list = subscription.tag_list()
+            instance.mark_tags(tagnames = tag_list,
+                               reason='subscribed', action='add')
+
 def post_anonymous_askbot_content(
                                 sender,
                                 request,
@@ -3598,6 +3610,7 @@ django_signals.pre_save.connect(calculate_gravatar_hash, sender=User)
 django_signals.post_save.connect(add_missing_subscriptions, sender=User)
 django_signals.post_save.connect(add_user_to_global_group, sender=User)
 django_signals.post_save.connect(add_user_to_personal_group, sender=User)
+django_signals.post_save.connect(add_missing_tag_subscriptions, sender=User)
 django_signals.post_save.connect(record_award_event, sender=Award)
 django_signals.post_save.connect(notify_award_message, sender=Award)
 django_signals.post_save.connect(record_answer_accepted, sender=Post)
