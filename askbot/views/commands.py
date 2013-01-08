@@ -439,13 +439,18 @@ def mark_tag(request, **kwargs):#tagging system
     reason = post_data['reason']
     assert reason in ('good', 'bad', 'subscribed')
     #separate plain tag names and wildcard tags
-
     tagnames, wildcards = forms.clean_marked_tagnames(raw_tagnames)
-    cleaned_tagnames, cleaned_wildcards = request.user.mark_tags(
-                                                            tagnames,
-                                                            wildcards,
-                                                            reason = reason,
-                                                            action = action
+
+    if request.user.is_administrator() and post_data['user'] != request.user.id:
+        user = get_object_or_404(models.User, pk=post_data['user'])
+    else:
+        user = request.user
+
+    cleaned_tagnames, cleaned_wildcards = user.mark_tags(
+                                                         tagnames,
+                                                         wildcards,
+                                                         reason = reason,
+                                                         action = action
                                                         )
 
     #lastly - calculate tag usage counts

@@ -123,7 +123,8 @@ function pickedTags(){
 
         var data = JSON.stringify({
             tagnames: tagnames,
-            reason: reason
+            reason: reason,
+            user: askbot['data']['viewUserId'] 
         });
         var call_settings = {
             type:'POST',
@@ -150,7 +151,9 @@ function pickedTags(){
                 'remove',
                 function(){
                     deleteTagLocally();
-                    askbot['controllers']['fullTextSearch'].refresh();
+                    if ($('body').hasClass('main-page')) {
+                      askbot['controllers']['fullTextSearch'].refresh();
+                    }
                 }
             );
         }

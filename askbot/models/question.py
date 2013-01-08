@@ -21,7 +21,7 @@ from askbot.mail import messages
 from askbot.models.tag import Tag
 from askbot.models.tag import get_tags_by_names
 from askbot.models.tag import filter_accepted_tags, filter_suggested_tags
-from askbot.models.tag import delete_tags, separate_unused_tags
+from askbot.models.tag import separate_unused_tags
 from askbot.models.base import DraftContent, BaseQuerySetManager
 from askbot.models.post import Post, PostRevision
 from askbot.models.post import PostToGroup
@@ -1151,8 +1151,6 @@ class Thread(models.Model):
         """
         Updates Tag associations for a thread to match the given
         tagname string.
-        When tags are removed and their use count hits 0 - the tag is
-        automatically deleted.
         When an added tag does not exist - it is created
         If tag moderation is on - new tags are placed on the queue
 
@@ -1204,10 +1202,6 @@ class Thread(models.Model):
         else:
             added_tags = Tag.objects.none()
 
-        #this is odd: in sqlite you have to delete after creating new tags
-        #somehow sqlite does not continue the id sequence, like postgrjs&mysql do
-        delete_tags(unused_tags)#tags with used_count == 0 are deleted
-
         #Save denormalized tag names on thread. Preserve order from user input.
         accepted_added_tags = filter_accepted_tags(added_tags)
         added_tagnames = set([tag.name for tag in accepted_added_tags])
@@ -1242,7 +1236,7 @@ class Thread(models.Model):
         self.update_summary_html() # regenerate question/thread summary html
         ####################################################################
         #if there are any modified tags, update their use counts
-        modified_tags = set(modified_tags) - set(unused_tags)
+        modified_tags = set(modified_tags)
         if modified_tags:
             Tag.objects.update_use_counts(modified_tags)
             signals.tags_updated.send(None,
@@ -1368,7 +1362,7 @@ class Thread(models.Model):
         #because we do not include any visitor-related info in the cache key
         #ideally cache should be shareable between users, so straight up
         #using the user id for cache is wrong, we could use group
-        #memberships, but in that case we'd need to be more careful with 
+        #memberships, but in that case we'd need to be more careful with
         #cache invalidation
         context = {
             'thread': self,
