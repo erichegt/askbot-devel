@@ -1346,11 +1346,10 @@ def user_mark_tags(
     cleaned_wildcards = list()
     assert(action in ('add', 'remove'))
     if action == 'add':
-        assert(reason in ('good', 'bad', 'subscribed'))
-        #if askbot_settings.SUBSCRIBED_TAG_SELECTOR_ENABLED:
-        #    assert(reason in ('good', 'bad', 'subscribed'))
-        #else:
-        #    assert(reason in ('good', 'bad'))
+        if askbot_settings.SUBSCRIBED_TAG_SELECTOR_ENABLED:
+            assert(reason in ('good', 'bad', 'subscribed'))
+        else:
+            assert(reason in ('good', 'bad'))
     if wildcards:
         cleaned_wildcards = self.update_wildcard_tag_selections(
             action = action,
