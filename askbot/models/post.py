@@ -243,7 +243,7 @@ class PostManager(BaseQuerySetManager):
             author = author,
             revised_at = added_at,
             text = text,
-            comment = const.POST_STATUS['default_version'],
+            comment = unicode(const.POST_STATUS['default_version']),
             by_email = by_email
         )
 
