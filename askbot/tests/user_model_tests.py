@@ -1,6 +1,7 @@
 from askbot.tests.utils import AskbotTestCase
 from django.contrib.auth.models import User
 from askbot import models
+from askbot.conf import settings
 from askbot.models.tag import format_personal_group_name
 
 class UserModelTests(AskbotTestCase):
@@ -15,6 +16,27 @@ class UserModelTests(AskbotTestCase):
                                                 group=group, user=user
                                             )
         self.assertEqual(memberships.count(), 1)
+
+    def test_new_user_has_subscriptions(self):
+        old_value = settings.SUBSCRIBED_TAG_SELECTOR_ENABLED
+        old_group_value = settings.GROUPS_ENABLED
+        settings.SUBSCRIBED_TAG_SELECTOR_ENABLED = True
+        settings.GROUPS_ENABLED = True
+        one_tag  = self.create_tag('one-tag')
+        another_tag  = self.create_tag('another_tag')
+
+        global_group =  models.Group.objects.get_global_group()
+
+        bulk_subscription = models.BulkTagSubscription.objects.create(
+                                                                     tag_names=[one_tag.name, another_tag.name],
+                                                                     group_list = [global_group]
+                                                                     )
+        user = User.objects.create_user('someone', 'someone@example.com')
+        marked_tags = user.get_marked_tags('subscribed')
+        self.assertTrue(one_tag in marked_tags)
+        self.assertTrue(another_tag in marked_tags)
+        settings.SUBSCRIBED_TAG_SELECTOR_ENABLED = old_value
+        settings.GROUPS_ENABLED = old_group_value
 
     def test_delete_user(self):
         user = self.create_user('user')

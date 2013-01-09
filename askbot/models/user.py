@@ -603,8 +603,10 @@ class BulkTagSubscriptionManager(BaseQuerySetManager):
         tag_name_list = []
 
         if tag_names:
-            assert(tag_author)
             tags, new_tag_names = get_tags_by_names(tag_names)
+            if new_tag_names:
+                assert(tag_author)
+
             tags_id_list= [tag.id for tag in tags]
             tag_name_list = [tag.name for tag in tags]
 
@@ -627,7 +629,7 @@ class BulkTagSubscriptionManager(BaseQuerySetManager):
 
         if group_list:
             group_ids = []
-            for group in group:
+            for group in group_list:
                 #TODO: do the group marked tag thing here
                 group_ids.append(group.id)
             new_object.groups.add(*group_ids)

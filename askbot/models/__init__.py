@@ -3551,11 +3551,13 @@ def add_missing_tag_subscriptions(sender, instance, created, **kwargs):
     and MarkedTags.
     '''
     if created:
-        user_groups = instance.get_groups()
-        for subscription in BulkTagSubscription.objects.filter(groups__in = user_groups):
-            tag_list = subscription.tag_list()
-            instance.mark_tags(tagnames = tag_list,
-                               reason='subscribed', action='add')
+        if askbot_settings.SUBSCRIBED_TAG_SELECTOR_ENABLED and \
+                askbot_settings.GROUPS_ENABLED:
+            user_groups = instance.get_groups()
+            for subscription in BulkTagSubscription.objects.filter(groups__in = user_groups):
+                tag_list = subscription.tag_list()
+                instance.mark_tags(tagnames = tag_list,
+                                reason='subscribed', action='add')
 
 def post_anonymous_askbot_content(
                                 sender,
