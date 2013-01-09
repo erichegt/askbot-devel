@@ -184,7 +184,7 @@ class DBApiTests(AskbotTestCase):
         saved_question = models.Post.objects.get_questions().get(id = self.question.id)
         self.assertTrue(saved_question.thread.answer_count == 1)
 
-    def test_unused_tag_is_auto_deleted(self):
+    def test_unused_tag_is_not_auto_deleted(self):
         self.user.retag_question(self.question, tags='one-tag')
         tag = models.Tag.objects.get(name='one-tag')
         self.assertEquals(tag.used_count, 1)
@@ -192,7 +192,7 @@ class DBApiTests(AskbotTestCase):
         self.user.retag_question(self.question, tags='two-tag')
 
         count = models.Tag.objects.filter(name='one-tag').count()
-        self.assertEquals(count, 0)
+        self.assertEquals(count, 1)
 
     @with_settings(MAX_TAG_LENGTH=200, MAX_TAGS_PER_POST=50)
     def test_retag_tags_too_long_raises(self):
