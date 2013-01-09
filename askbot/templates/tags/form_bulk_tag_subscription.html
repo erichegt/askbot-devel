@@ -1,14 +1,16 @@
 {% extends "one_column_body.html" %}
 {% import "macros.html" as macros %}
-<!-- template list_bulk_tag_subscription.html -->
-{% block title %}{% spaceless %}{{action}}{% trans %}Manage Tag subscriptions{% endtrans %}{% endspaceless %}{% endblock %}
+<!-- template form_bulk_tag_subscription.html -->
+{% block title %}{% spaceless %}{{action}} {% trans %}Tag subscriptions{% endtrans %}{% endspaceless %}{% endblock %}
 {% block content %}
-<h1 class="section-title">{{action}}{% trans %}Tag subscriptions{% endtrans %}</h1>
+<h1 class="section-title">{{action}} {% trans %}Tag Subscriptions{% endtrans %}</h1>
 <p>
 </p>
 <form action="." method="POST" accept-charset="utf-8">
-{{form.as_p()}}
-<p><input type="submit" value="Save"></p>
+<table border="0">
+{{form.as_table()}}
+<tr><td colspan='2' style='text-align: right;'><input type="submit" class="submit" value="Save"></td></tr>
+</table>
 </form>
 {% endblock %}
 {%block endjs%}
@@ -16,4 +18,4 @@
   {{macros.tag_autocomplete_js()}}
   </script>
 {%endblock%}
-<!-- end template list_bulk_tag_subscription.html -->
+<!-- end template form_bulk_tag_subscription.html -->

@@ -4434,3 +4434,45 @@ textarea.tipped-input {
     width: 100%;
   }
 }
+.tag-subscriptions {
+  border-spacing: 10px;
+  border-collapse: separate;
+}
+.tag-subscriptions button {
+  height: 27px;
+  font-size: 14px;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  color: #4a757f;
+  font-family: 'Open Sans Condensed', Arial, sans-serif;
+  text-shadow: 0px 1px 0px #c6d9dd;
+  -moz-text-shadow: 0px 1px 0px #c6d9dd;
+  -webkit-text-shadow: 0px 1px 0px #c6d9dd;
+  border-top: #eaf2f3 1px solid;
+  background-color: #d1e2e5;
+  background-repeat: no-repeat;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#d1e2e5), color-stop(25%, #d1e2e5), to(#a9c2c7));
+  background-image: -webkit-linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
+  background-image: -moz-linear-gradient(top, #d1e2e5, #d1e2e5 25%, #a9c2c7);
+  background-image: -ms-linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
+  background-image: -o-linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
+  background-image: linear-gradient(#d1e2e5, #d1e2e5 25%, #a9c2c7);
+  border-radius: 4px;
+  -ms-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  -khtml-border-radius: 4px;
+  -webkit-box-shadow: 1px 1px 2px #636363;
+  -moz-box-shadow: 1px 1px 2px #636363;
+  box-shadow: 1px 1px 2px #636363;
+}
+.tag-subscriptions form {
+  display: inline-block;
+}
+.tag-subscriptions .action {
+  cursor: pointer;
+  color: #4A757F;
+  font-family: 'Open Sans Condensed', Arial, sans-serif;
+  text-decoration: none;
+}

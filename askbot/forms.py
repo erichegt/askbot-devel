@@ -388,8 +388,8 @@ class TagNamesField(forms.CharField):
                             'We ran out of space for recording the tags. '
                             'Please shorten or delete some of them.'
                         )
-        self.label = _('tags')
-        self.help_text = ungettext_lazy(
+        self.label = kwargs.get('label') or _('tags')
+        self.help_text = kwargs.get('help_text') or ungettext_lazy(
             'Tags are short keywords, with no spaces within. '
             'Up to %(max_tags)d tag can be used.',
             'Tags are short keywords, with no spaces within. '
@@ -1655,11 +1655,11 @@ class ShareQuestionForm(forms.Form):
 
 class BulkTagSubscriptionForm(forms.Form):
     date_added = forms.DateField(required=False, widget=forms.HiddenInput())
-    tags = TagNamesField()
+    tags = TagNamesField(label=_("Tags"), help_text=' ')
 
     def __init__(self, *args, **kwargs):
         from askbot.models import BulkTagSubscription, Tag, Group
         super(BulkTagSubscriptionForm, self).__init__(*args, **kwargs)
         self.fields['users'] = forms.ModelMultipleChoiceField(queryset=User.objects.all())
         if askbot_settings.GROUPS_ENABLED:
-            self.fields['groups'] = forms.ModelMultipleChoiceField(queryset=Group.objects.all())
+            self.fields['groups'] = forms.ModelMultipleChoiceField(queryset=Group.objects.exclude_personal())
