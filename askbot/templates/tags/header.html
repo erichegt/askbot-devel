@@ -32,6 +32,11 @@
                     ><span>{% trans %}suggested{% endtrans %}</span></a>
                 {% endif %}
             {% endif %}
+            {% if request.user.is_authenticated() and request.user.is_administrator() %}
+                    <a href="{% url list_bulk_tag_subscription %}"
+                        title="{% trans %}Bulk Tag Subscriptions{% endtrans %}"
+                    ><span>{% trans %}Manage bulk tag subscriptions{% endtrans %}</span></a>
+            {% endif %}
         </div>
     </div>
 </div>
