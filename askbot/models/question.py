@@ -10,8 +10,8 @@ from django.core import exceptions as django_exceptions
 from django.core.urlresolvers import reverse
 from django.template.loader import get_template
 from django.utils.hashcompat import md5_constructor
-from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import ungettext_lazy
+from django.utils.translation import ugettext as _
+from django.utils.translation import ungettext
 from django.utils.translation import string_concat
 from django.utils.translation import get_language
 
@@ -740,7 +740,7 @@ class Thread(models.Model):
 
         output = question.format_for_email_as_subthread()
         if answers:
-            answer_heading = ungettext_lazy(
+            answer_heading = ungettext(
                                     '%(count)d answer:',
                                     '%(count)d answers:',
                                     len(answers)

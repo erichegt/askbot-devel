@@ -3,7 +3,7 @@ from django.template.loader import get_template
 from askbot import models
 from askbot import const
 from askbot.conf import settings as askbot_settings
-from django.utils.translation import ungettext_lazy
+from django.utils.translation import ungettext
 from askbot import mail
 from askbot.utils.classes import ReminderSchedule
 from askbot.models.question import Thread
@@ -62,7 +62,7 @@ class Command(NoArgsCommand):
             threads = Thread.objects.filter(id__in=[qq.thread_id for qq in final_question_list])
             tag_summary = Thread.objects.get_tag_summary_from_threads(threads)
 
-            subject_line = ungettext_lazy(
+            subject_line = ungettext(
                 '%(question_count)d unanswered question about %(topics)s',
                 '%(question_count)d unanswered questions about %(topics)s',
                 question_count

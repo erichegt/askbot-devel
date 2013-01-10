@@ -3,7 +3,7 @@ from django import template
 from django.template import RequestContext
 from django.template.loader import get_template
 from django.utils.safestring import mark_safe
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 from askbot.utils import functions
 from askbot.utils.slug import slugify
@@ -15,7 +15,7 @@ GRAVATAR_TEMPLATE = (
                      '<a style="text-decoration:none" '
                      'href="%(user_profile_url)s"><img class="gravatar" '
                      'width="%(size)s" height="%(size)s" '
-                     'src="http://www.gravatar.com/avatar/%(gravatar_hash)s'
+                     'src="//www.gravatar.com/avatar/%(gravatar_hash)s'
                      '?s=%(size)s&amp;d=%(gravatar_type)s&amp;r=PG" '
                      'title="%(username)s" '
                      'alt="%(alt_text)s" /></a>')

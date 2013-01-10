@@ -2,7 +2,7 @@ from django.conf import settings
 from django.contrib.sites.models import Site
 from django.db import models
 from django.db.models import loading
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext_lazy
 from keyedcache import cache_key, cache_get, cache_set, NotCachedError
 from keyedcache.models import CachedObjectMixin
 from askbot.deps.livesettings.overrides import get_overrides
@@ -104,7 +104,7 @@ class ImmutableSetting(object):
 
 
 class Setting(models.Model, CachedObjectMixin):
-    site = models.ForeignKey(Site, verbose_name=_('Site'))
+    site = models.ForeignKey(Site, verbose_name=ugettext_lazy('Site'))
     group = models.CharField(max_length=100, blank=False, null=False)
     key = models.CharField(max_length=100, blank=False, null=False)
     value = models.CharField(max_length=255, blank=True)
@@ -150,7 +150,7 @@ class LongSettingManager(models.Manager):
 
 class LongSetting(models.Model, CachedObjectMixin):
     """A Setting which can handle more than 255 characters"""
-    site = models.ForeignKey(Site, verbose_name=_('Site'))
+    site = models.ForeignKey(Site, verbose_name=ugettext_lazy('Site'))
     group = models.CharField(max_length=100, blank=False, null=False)
     key = models.CharField(max_length=100, blank=False, null=False)
     value = models.TextField(blank=True)

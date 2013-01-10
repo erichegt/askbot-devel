@@ -48,7 +48,7 @@ from django.views.decorators import csrf
 from django.utils.encoding import smart_unicode
 from askbot.utils.functions import generate_random_key
 from django.utils.html import escape
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as _
 from django.utils.safestring import mark_safe
 from askbot.mail import send_mail
 from recaptcha_works.decorators import fix_recaptcha_remote_ip

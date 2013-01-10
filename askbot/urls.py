@@ -16,7 +16,7 @@ admin.autodiscover()
 #update_media_revision()#needs to be run once, so put it here
 
 if getattr(settings, "ASKBOT_TRANSLATE_URL", False):
-    from django.utils.translation import ugettext_lazy as _
+    from django.utils.translation import ugettext as _
 else:
     _ = lambda s:s
 

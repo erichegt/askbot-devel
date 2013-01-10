@@ -32,7 +32,8 @@
 import logging
 from django import forms
 from django.contrib.auth.models import User
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy
 from django.conf import settings as django_settings
 from askbot.conf import settings as askbot_settings
 from askbot import const as askbot_const
@@ -334,7 +335,7 @@ class SafeClassicRegisterForm(ClassicRegisterForm):
 class ChangePasswordForm(SetPasswordForm):
     """ change password form """
     oldpw = forms.CharField(widget=forms.PasswordInput(attrs={'class':'required'}),
-                label=mark_safe(_('Current password')))
+                label=mark_safe(ugettext_lazy('Current password')))
 
     def __init__(self, data=None, user=None, *args, **kwargs):
         if user is None:
@@ -434,7 +435,12 @@ class DeleteForm(forms.Form):
 
 class EmailPasswordForm(forms.Form):
     """ send new password form """
-    username = UserNameField(skip_clean=True,label=mark_safe(_('Your user name (<i>required</i>)')))
+    username = UserNameField(
+                    skip_clean=True,
+                    label=mark_safe(
+                            ugettext_lazy('Your user name (<i>required</i>)')
+                        )
+                )
 
     def __init__(self, data=None, files=None, auto_id='id_%s', prefix=None, 
             initial=None):

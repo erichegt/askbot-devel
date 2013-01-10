@@ -5,8 +5,8 @@ from django.template.loader import get_template
 from askbot import models
 from askbot import const
 from askbot.conf import settings as askbot_settings
-from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import ungettext_lazy
+from django.utils.translation import ugettext as _
+from django.utils.translation import ungettext
 from askbot import mail
 from askbot.utils.classes import ReminderSchedule
 from django.template import Context

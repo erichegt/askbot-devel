@@ -4,7 +4,8 @@ import string
 import logging
 from django.db import models
 from django.contrib.auth.models import User
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy
 from askbot.models.post import Post
 from askbot.models.base import BaseQuerySetManager
 from askbot.conf import settings as askbot_settings
@@ -34,12 +35,12 @@ class ReplyAddressManager(BaseQuerySetManager):
 			
 
 REPLY_ACTION_CHOICES = (
-    ('post_answer', _('Post an answer')),
-    ('post_comment', _('Post a comment')),
-    ('replace_content', _('Edit post')),
-    ('append_content', _('Append to post')),
-    ('auto_answer_or_comment', _('Answer or comment, depending on the size of post')),
-    ('validate_email', _('Validate email and record signature')),
+    ('post_answer', ugettext_lazy('Post an answer')),
+    ('post_comment', ugettext_lazy('Post a comment')),
+    ('replace_content', ugettext_lazy('Edit post')),
+    ('append_content', ugettext_lazy('Append to post')),
+    ('auto_answer_or_comment', ugettext_lazy('Answer or comment, depending on the size of post')),
+    ('validate_email', ugettext_lazy('Validate email and record signature')),
 )
 class ReplyAddress(models.Model):
     """Stores a reply address for the post
