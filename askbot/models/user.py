@@ -10,6 +10,7 @@ from django.contrib.auth.models import Group as AuthGroup
 from django.core import exceptions
 from django.forms import EmailField, URLField
 from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy
 from django.utils.html import strip_tags
 from askbot import const
 from askbot.conf import settings as askbot_settings
@@ -280,17 +281,17 @@ class EmailFeedSetting(models.Model):
         'm_and_c': 'i'
     }
     FEED_TYPE_CHOICES = (
-                    ('q_all',_('Entire forum')),
-                    ('q_ask',_('Questions that I asked')),
-                    ('q_ans',_('Questions that I answered')),
-                    ('q_sel',_('Individually selected questions')),
-                    ('m_and_c',_('Mentions and comment responses')),
+                    ('q_all', ugettext_lazy('Entire forum')),
+                    ('q_ask', ugettext_lazy('Questions that I asked')),
+                    ('q_ans', ugettext_lazy('Questions that I answered')),
+                    ('q_sel', ugettext_lazy('Individually selected questions')),
+                    ('m_and_c', ugettext_lazy('Mentions and comment responses')),
                     )
     UPDATE_FREQUENCY = (
-                    ('i',_('Instantly')),
-                    ('d',_('Daily')),
-                    ('w',_('Weekly')),
-                    ('n',_('No email')),
+                    ('i', ugettext_lazy('Instantly')),
+                    ('d', ugettext_lazy('Daily')),
+                    ('w', ugettext_lazy('Weekly')),
+                    ('n', ugettext_lazy('No email')),
                    )
 
 

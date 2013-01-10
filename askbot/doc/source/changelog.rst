@@ -4,6 +4,7 @@ Changes in Askbot
 Development version
 -------------------
 * added RSS auto-discovery link
+* added support for multilingual site (experimental)
 
 0.7.47 (Dec 13, 2012)
 ---------------------

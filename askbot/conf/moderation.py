@@ -5,7 +5,7 @@ from askbot.conf.super_groups import DATA_AND_FORMATTING
 from askbot.deps.livesettings import ConfigurationGroup
 from askbot.deps.livesettings import BooleanValue
 from django.core.cache import cache
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 
 def empty_cache_callback(old_value, new_value):
     """used to clear cache on change of certain values"""

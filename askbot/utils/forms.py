@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.conf import settings
 from django.http import Http404
 from django.shortcuts import get_object_or_404
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 from django.utils.safestring import mark_safe
 from askbot.conf import settings as askbot_settings
 from askbot.utils.slug import slugify

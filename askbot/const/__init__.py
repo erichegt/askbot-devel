@@ -4,7 +4,7 @@ All constants could be used in other modules
 For reasons that models, views can't have unicode
 text in this project, all unicode text go here.
 """
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 import re
 
 CLOSE_REASONS = (

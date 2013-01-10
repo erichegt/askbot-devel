@@ -1,8 +1,10 @@
-from django.core.management.base import NoArgsCommand
-from askbot.models import User
-from optparse import make_option
-from askbot.utils.console import choice_dialog
 from askbot.conf import settings as askbot_settings
+from askbot.models import User
+from askbot.utils.console import choice_dialog
+from django.core.management.base import NoArgsCommand
+from django.conf import settings as django_settings
+from django.utils import translation
+from optparse import make_option
 
 
 NUM_USERS = 40
@@ -235,6 +237,8 @@ class Command(NoArgsCommand):
                             choices = ("yes", "no", ))
             if answer != "yes":
                 return
+
+        translation.activate(django_settings.LANGUAGE_CODE)
 
         self.save_alert_settings()
         self.stop_alerts()# saves time on running the command

@@ -7,7 +7,7 @@ from askbot.conf.super_groups import DATA_AND_FORMATTING
 from askbot.deps.livesettings import ConfigurationGroup
 from askbot.deps.livesettings import BooleanValue, StringValue, LongStringValue
 from askbot import const
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 import re
 
 MARKUP = ConfigurationGroup(
