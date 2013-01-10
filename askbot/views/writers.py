@@ -20,7 +20,8 @@ from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseForbidden, Http404
 from django.utils import simplejson
 from django.utils.html import strip_tags, escape
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy
 from django.core.urlresolvers import reverse
 from django.core import exceptions
 from django.conf import settings
@@ -196,7 +197,7 @@ def import_data(request):
 
 #@login_required #actually you can post anonymously, but then must register
 @csrf.csrf_protect
-@decorators.check_authorization_to_post(_(
+@decorators.check_authorization_to_post(ugettext_lazy(
     "<span class=\"strong big\">You are welcome to start submitting your question "
     "anonymously</span>. When you submit the post, you will be redirected to the "
     "login/signup page. Your question will be saved in the current session and "
@@ -527,7 +528,7 @@ def edit_answer(request, id):
         return HttpResponseRedirect(answer.get_absolute_url())
 
 #todo: rename this function to post_new_answer
-@decorators.check_authorization_to_post(_('Please log in to answer questions'))
+@decorators.check_authorization_to_post(ugettext_lazy('Please log in to answer questions'))
 @decorators.check_spam('text')
 def answer(request, id):#process a new answer
     """view that posts new answer

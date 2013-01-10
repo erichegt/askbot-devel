@@ -812,7 +812,7 @@ def test_secret_key():
 def test_multilingual():
     is_multilang = getattr(django_settings, 'ASKBOT_MULTILINGUAL', False)
     django_version = django.VERSION
-    if django_version[0] == 1 and django_version[1] < 4:
+    if is_multilang and django_version[0] == 1 and django_version[1] < 4:
         print_errors([
             'ASKBOT_MULTILINGUAL=True works only with django >= 1.4'
         ])

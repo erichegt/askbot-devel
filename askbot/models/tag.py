@@ -1,7 +1,8 @@
 import re
 from django.db import models
 from django.contrib.auth.models import User
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy
 from django.conf import settings
 from askbot.models.base import BaseQuerySetManager
 from askbot import const
@@ -307,9 +308,9 @@ class Tag(models.Model):
 
 class MarkedTag(models.Model):
     TAG_MARK_REASONS = (
-        ('good', _('interesting')),
-        ('bad', _('ignored')),
-        ('subscribed', _('subscribed')),
+        ('good', ugettext_lazy('interesting')),
+        ('bad', ugettext_lazy('ignored')),
+        ('subscribed', ugettext_lazy('subscribed')),
     )
     tag = models.ForeignKey('Tag', related_name='user_selections')
     user = models.ForeignKey(User, related_name='tag_selections')

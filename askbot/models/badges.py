@@ -20,7 +20,7 @@ corresponding event name, actor (user object), context_object and optionally
 import datetime
 from django.template.defaultfilters import slugify
 from django.contrib.contenttypes.models import ContentType
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as _
 from django.dispatch import Signal
 from askbot.models.repute import BadgeData, Award
 from askbot.models.user import Activity
