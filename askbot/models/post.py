@@ -12,8 +12,7 @@ from django.contrib.auth.models import User
 from django.core import urlresolvers
 from django.db import models
 from django.utils import html as html_utils
-from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import ungettext_lazy
+from django.utils.translation import ugettext as _
 from django.utils.http import urlquote as django_urlquote
 from django.core import exceptions as django_exceptions
 from django.core import cache
@@ -243,7 +242,7 @@ class PostManager(BaseQuerySetManager):
             author = author,
             revised_at = added_at,
             text = text,
-            comment = const.POST_STATUS['default_version'],
+            comment = unicode(const.POST_STATUS['default_version']),
             by_email = by_email
         )
 

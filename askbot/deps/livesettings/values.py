@@ -10,7 +10,8 @@ from django.core.cache import cache
 from django.utils import simplejson
 from django.utils.datastructures import SortedDict
 from django.utils.encoding import smart_str
-from django.utils.translation import gettext, ugettext_lazy as _
+from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy
 from django.core.files import storage
 from askbot.deps.livesettings.models import find_setting, LongSetting, Setting, SettingNotSet
 from askbot.deps.livesettings.overrides import get_overrides
@@ -67,7 +68,7 @@ class SuperGroup(object):
             self.groups.append(group)
 
 
-BASE_SUPER_GROUP = SuperGroup(_('Main'))
+BASE_SUPER_GROUP = SuperGroup(ugettext_lazy('Main'))
 
 class ConfigurationGroup(SortedDotDict):
     """A simple wrapper for a group of configuration values"""
@@ -126,7 +127,11 @@ class ConfigurationGroup(SortedDotDict):
         vals = super(ConfigurationGroup, self).values()
         return [v for v in vals if v.enabled()]
 
-BASE_GROUP = ConfigurationGroup('BASE', _('Base Settings'), ordering=0)
+BASE_GROUP = ConfigurationGroup(
+                            'BASE',
+                            ugettext_lazy('Base Settings'),
+                            ordering=0
+                        )
 
 class Value(object):
 
@@ -242,7 +247,7 @@ class Value(object):
                 for x in self.choices:
                     if x[0] in self.default:
                         work.append(smart_str(x[1]))
-                note = gettext('Default value: ') + ", ".join(work)
+                note = _('Default value: ') + ", ".join(work)
 
             else:
                 note = _("Default value: %s") % unicode(self.default)

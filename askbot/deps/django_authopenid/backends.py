@@ -7,7 +7,7 @@ import logging
 from django.contrib.auth.models import User
 from django.core.exceptions import ImproperlyConfigured
 from django.conf import settings as django_settings
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as _
 from askbot.deps.django_authopenid.models import UserAssociation
 from askbot.deps.django_authopenid import util
 from askbot.deps.django_authopenid.ldap_auth import ldap_authenticate

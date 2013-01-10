@@ -22,8 +22,8 @@ from django.core.urlresolvers import reverse, NoReverseMatch
 from django.db.models import signals as django_signals
 from django.template import Context
 from django.template.loader import get_template
-from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import ungettext_lazy
+from django.utils.translation import ugettext as _
+from django.utils.translation import ungettext
 from django.utils.safestring import mark_safe
 from django.utils.html import escape
 from django.db import models
@@ -738,7 +738,7 @@ def user_assert_can_edit_comment(self, comment = None):
                 if now - comment.added_at > datetime.timedelta(0, delta_seconds):
                     if comment.is_last():
                         return
-                    error_message = ungettext_lazy(
+                    error_message = ungettext(
                         'Sorry, comments (except the last one) are editable only '
                         'within %(minutes)s minute from posting',
                         'Sorry, comments (except the last one) are editable only '
@@ -920,7 +920,7 @@ def user_assert_can_delete_question(self, question = None):
             if self.is_administrator() or self.is_moderator():
                 return
             else:
-                msg = ungettext_lazy(
+                msg = ungettext(
                     'Sorry, cannot delete your question since it '
                     'has an upvoted answer posted by someone else',
                     'Sorry, cannot delete your question since it '
@@ -1113,7 +1113,7 @@ def user_assert_can_remove_flag_offensive(self, post = None):
     )
 
     min_rep_setting = askbot_settings.MIN_REP_TO_FLAG_OFFENSIVE
-    low_rep_error_message = ungettext_lazy(
+    low_rep_error_message = ungettext(
         'Sorry, to flag posts a minimum reputation of %(min_rep)d is required',
         'Sorry, to flag posts a minimum reputation of %(min_rep)d is required',
         min_rep_setting
@@ -1887,10 +1887,10 @@ def user_post_answer(
             elif days == 1:
                 left = _('tomorrow')
             elif minutes >= 60:
-                left = ungettext_lazy('in %(hr)d hour','in %(hr)d hours',hours) % {'hr':hours}
+                left = ungettext('in %(hr)d hour','in %(hr)d hours',hours) % {'hr':hours}
             else:
-                left = ungettext_lazy('in %(min)d min','in %(min)d mins',minutes) % {'min':minutes}
-            day = ungettext_lazy('%(days)d day','%(days)d days',askbot_settings.MIN_DAYS_TO_ANSWER_OWN_QUESTION) % {'days':askbot_settings.MIN_DAYS_TO_ANSWER_OWN_QUESTION}
+                left = ungettext('in %(min)d min','in %(min)d mins',minutes) % {'min':minutes}
+            day = ungettext('%(days)d day','%(days)d days',askbot_settings.MIN_DAYS_TO_ANSWER_OWN_QUESTION) % {'days':askbot_settings.MIN_DAYS_TO_ANSWER_OWN_QUESTION}
             error_message = _(
                 'New users must wait %(days)s before answering their own question. '
                 ' You can post an answer %(left)s'
@@ -2387,21 +2387,21 @@ def user_get_badge_summary(self):
     by the user. It is assumed that user has some badges"""
     badge_bits = list()
     if self.gold:
-        bit = ungettext_lazy(
+        bit = ungettext(
                 'one gold badge',
                 '%(count)d gold badges',
                 self.gold
             ) % {'count': self.gold}
         badge_bits.append(bit)
     if self.silver:
-        bit = ungettext_lazy(
+        bit = ungettext(
                 'one silver badge',
                 '%(count)d silver badges',
                 self.silver
             ) % {'count': self.silver}
         badge_bits.append(bit)
     if self.bronze:
-        bit = ungettext_lazy(
+        bit = ungettext(
                 'one bronze badge',
                 '%(count)d bronze badges',
                 self.bronze
@@ -2549,7 +2549,7 @@ def user_fix_html_links(self, text):
     if is_simple_user and has_low_rep:
         result = replace_links_with_text(text)
         if result != text:
-            message = ungettext_lazy(
+            message = ungettext(
                 'At least %d karma point is required to post links',
                 'At least %d karma points is required to post links',
                 askbot_settings.MIN_REP_TO_INSERT_LINK

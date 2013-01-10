@@ -5,7 +5,7 @@ import time
 import urllib
 from coffin import template as coffin_template
 from django.core import exceptions as django_exceptions
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as _
 from django.utils.translation import get_language as django_get_language
 from django.contrib.humanize.templatetags import humanize
 from django.template import defaultfilters

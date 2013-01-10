@@ -18,7 +18,8 @@ from django.core import mail
 from django.conf import settings as django_settings
 from django.core.exceptions import PermissionDenied
 from django.forms import ValidationError
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy
 from django.utils.translation import string_concat
 from django.template import Context
 from django.utils.html import strip_tags
@@ -179,22 +180,22 @@ def mail_moderators(
         if raise_on_failure == True:
             raise exceptions.EmailNotSent(unicode(error))
 
-INSTRUCTIONS_PREAMBLE = _('<p>To ask by email, please:</p>')
-QUESTION_TITLE_INSTRUCTION = _(
+INSTRUCTIONS_PREAMBLE = ugettext_lazy('<p>To ask by email, please:</p>')
+QUESTION_TITLE_INSTRUCTION = ugettext_lazy(
     '<li>Type title in the subject line</li>'
 )
-QUESTION_DETAILS_INSTRUCTION = _(
+QUESTION_DETAILS_INSTRUCTION = ugettext_lazy(
     '<li>Type details of your question into the email body</li>'
 )
-OPTIONAL_TAGS_INSTRUCTION = _(
+OPTIONAL_TAGS_INSTRUCTION = ugettext_lazy(
 """<li>The beginning of the subject line can contain tags,
 <em>enclosed in the square brackets</em> like so: [Tag1; Tag2]</li>"""
 )
-REQUIRED_TAGS_INSTRUCTION = _(
+REQUIRED_TAGS_INSTRUCTION = ugettext_lazy(
 """<li>In the beginning of the subject add at least one tag
 <em>enclosed in the brackets</em> like so: [Tag1; Tag2].</li>"""
 )
-TAGS_INSTRUCTION_FOOTNOTE = _(
+TAGS_INSTRUCTION_FOOTNOTE = ugettext_lazy(
 """<p>Note that a tag may consist of more than one word, to separate
 the tags, use a semicolon or a comma, for example, [One tag; Other tag]</p>"""
 )

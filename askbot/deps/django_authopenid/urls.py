@@ -3,7 +3,7 @@ from django.conf import settings as django_settings
 from django.conf.urls.defaults import patterns, url
 
 if django_settings.ASKBOT_TRANSLATE_URL == True:
-    from django.utils.translation import ugettext_lazy as _
+    from django.utils.translation import ugettext as _
 else:
     _ = lambda val: val
 

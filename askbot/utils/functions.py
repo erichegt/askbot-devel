@@ -1,8 +1,8 @@
 import re
 import random
 import datetime
-from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import ungettext_lazy
+from django.utils.translation import ugettext as _
+from django.utils.translation import ungettext
 
 def get_from_dict_or_object(source, key):
     try:
@@ -102,13 +102,13 @@ def diff_date(date, use_on_prefix = False):
     elif days == 1:
         return _('yesterday')
     elif minutes >= 60:
-        return ungettext_lazy(
+        return ungettext(
             '%(hr)d hour ago',
             '%(hr)d hours ago',
             hours
         ) % {'hr':hours}
     else:
-        return ungettext_lazy(
+        return ungettext(
             '%(min)d min ago',
             '%(min)d mins ago',
             minutes

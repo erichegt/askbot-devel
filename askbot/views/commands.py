@@ -25,7 +25,7 @@ from django.template.loader import get_template
 from django.views.decorators import csrf
 from django.utils import simplejson
 from django.utils.html import escape
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as _
 from django.utils.translation import string_concat
 from askbot.utils.slug import slugify
 from askbot import models
