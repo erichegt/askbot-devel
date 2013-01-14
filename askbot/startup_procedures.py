@@ -811,20 +811,31 @@ def test_secret_key():
 
 def test_multilingual():
     is_multilang = getattr(django_settings, 'ASKBOT_MULTILINGUAL', False)
+
+    errors = list()
+
+    """
+    if is_multilang:
+        middleware = 'django.middleware.locale.LocaleMiddleware' 
+        if middleware not in django_settings.MIDDLEWARE_CLASSES:
+            errors.append(
+                "add 'django.middleware.locale.LocaleMiddleware' to your MIDDLEWARE_CLASSES "
+                "if you want a multilingual setup"
+            )
+    """
+
     django_version = django.VERSION
     if is_multilang and django_version[0] == 1 and django_version[1] < 4:
-        print_errors([
-            'ASKBOT_MULTILINGUAL=True works only with django >= 1.4'
-        ])
+        errors.append('ASKBOT_MULTILINGUAL=True works only with django >= 1.4')
 
     trans_url = getattr(django_settings, 'ASKBOT_TRANSLATE_URL', False)
     if is_multilang and trans_url:
-        print_errors([
+        errors.append(
             'Please set ASKBOT_TRANSLATE_URL to False, the "True" option '
             'is currently not supported due to a bug in django'
-        ])
-        
-        
+        )
+
+    print_errors(errors)
 
 
 def run_startup_tests():
