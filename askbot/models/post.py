@@ -1267,7 +1267,19 @@ class Post(models.Model):
 
         #if askbot_settings.GROUPS_ENABLED and self.is_effectively_private():
         #    for subscriber in subscribers:
-        return self.filter_authorized_users(subscribers)
+        subscribers = self.filter_authorized_users(subscribers)
+
+        #filter subscribers by language
+        if settings.ASKBOT_MULTILINGUAL:
+            language = self.thread.language_code
+            filtered_subscribers = list()
+            for subscriber in subscribers:
+                subscriber_languages = subscriber.languages.split()
+                if language in subscriber_languages:
+                    filtered_subscribers.append(subscriber)
+            return filtered_subscribers
+        else:
+            return subscribers
 
     def get_notify_sets(self, mentioned_users=None, exclude_list=None):
         """returns three lists of users in a dictionary with keys:

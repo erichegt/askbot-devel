@@ -223,6 +223,7 @@ def ask(request):#view used to ask a new question
             ask_anonymously = form.cleaned_data['ask_anonymously']
             post_privately = form.cleaned_data['post_privately']
             group_id = form.cleaned_data.get('group_id', None)
+            language = form.cleaned_data.get('language', None)
 
             if request.user.is_authenticated():
                 drafts = models.DraftQuestion.objects.filter(
@@ -233,14 +234,15 @@ def ask(request):#view used to ask a new question
                 user = form.get_post_user(request.user)
                 try:
                     question = user.post_question(
-                        title = title,
-                        body_text = text,
-                        tags = tagnames,
-                        wiki = wiki,
-                        is_anonymous = ask_anonymously,
-                        is_private = post_privately,
-                        timestamp = timestamp,
-                        group_id = group_id
+                        title=title,
+                        body_text=text,
+                        tags=tagnames,
+                        wiki=wiki,
+                        is_anonymous=ask_anonymously,
+                        is_private=post_privately,
+                        timestamp=timestamp,
+                        group_id=group_id,
+                        language=language
                     )
                     return HttpResponseRedirect(question.get_absolute_url())
                 except exceptions.PermissionDenied, e:

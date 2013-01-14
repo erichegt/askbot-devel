@@ -26,22 +26,40 @@
     </form>
     </div>
 
-  {%if settings.SUBSCRIBED_TAG_SELECTOR_ENABLED %}
-    <h2>{% trans %}Subscribed Tags{% endtrans %}</h2>
-        {{
-            macros.tag_list_widget(
-                subscribed_tag_names,
-                deletable = True,
-                css_class = 'subscribed marked-tags special',
-            )
-        }}
-        <br/>
-        <div class="inputs">
-            <input id="subscribedTagInput" autocomplete="off" type="text"/>
-            <input id="subscribedTagAdd" type="submit" value="{% trans %}add{% endtrans%}"/>
+    {% if settings.MULTILINGUAL %}
+    <h2>{% trans %}Subscribed languages{% endtrans %}</h2>
+    <form
+        method="post" 
+        action="{% url user_select_languages view_user.id, view_user.username|slugify %}"
+    >{% csrf_token %}
+        <select multiple name="languages">
+        {% for lang in settings.LANGUAGES %}
+            <option 
+                value="{{ lang[0] }}"
+                {% if lang[0] in user_languages %}selected="selected"{% endif %}
+            >{{ lang[1] }}</option>
+        {% endfor %}
+        </select><br/>
+        <input type="submit" class="select-language" value="{% trans %}Save languages{% endtrans %}" />
+    </form>
+    {% endif %}
+
+    {%if settings.SUBSCRIBED_TAG_SELECTOR_ENABLED %}
+        <h2>{% trans %}Subscribed Tags{% endtrans %}</h2>
+            {{
+                macros.tag_list_widget(
+                    subscribed_tag_names,
+                    deletable = True,
+                    css_class = 'subscribed marked-tags special',
+                )
+            }}
+            <br/>
+            <div class="inputs">
+                <input id="subscribedTagInput" autocomplete="off" type="text"/>
+                <input id="subscribedTagAdd" type="submit" value="{% trans %}add{% endtrans%}"/>
+            </div>
         </div>
-    </div>
-  {%endif%}
+    {%endif%}
 {% endblock %}
 {%block userjs%}
   <script type='text/javascript'>

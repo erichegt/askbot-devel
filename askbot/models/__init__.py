@@ -232,6 +232,11 @@ User.add_to_class(
 User.add_to_class('new_response_count', models.IntegerField(default=0))
 User.add_to_class('seen_response_count', models.IntegerField(default=0))
 User.add_to_class('consecutive_days_visit_count', models.IntegerField(default = 0))
+#list of languages for which user should receive email alerts
+User.add_to_class(
+    'languages',
+    models.CharField(max_length=128, default=django_settings.LANGUAGE_CODE)
+)
 
 GRAVATAR_TEMPLATE = "//www.gravatar.com/avatar/%(gravatar)s?" + \
     "s=%(size)d&amp;d=%(type)s&amp;r=PG"
@@ -1624,7 +1629,8 @@ def user_post_question(
                     group_id = None,
                     timestamp = None,
                     by_email = False,
-                    email_address = None
+                    email_address = None,
+                    language = None
                 ):
     """makes an assertion whether user can post the question
     then posts it and returns the question object"""
@@ -1644,17 +1650,18 @@ def user_post_question(
     #todo: split this into "create thread" + "add question", if text exists
     #or maybe just add a blank question post anyway
     thread = Thread.objects.create_new(
-                                    author = self,
-                                    title = title,
-                                    text = body_text,
-                                    tagnames = tags,
-                                    added_at = timestamp,
-                                    wiki = wiki,
-                                    is_anonymous = is_anonymous,
-                                    is_private = is_private,
-                                    group_id = group_id,
-                                    by_email = by_email,
-                                    email_address = email_address
+                                    author=self,
+                                    title=title,
+                                    text=body_text,
+                                    tagnames=tags,
+                                    added_at=timestamp,
+                                    wiki=wiki,
+                                    is_anonymous=is_anonymous,
+                                    is_private=is_private,
+                                    group_id=group_id,
+                                    by_email=by_email,
+                                    email_address=email_address,
+                                    language=language
                                 )
     question = thread._question_post()
     if question.author != self:

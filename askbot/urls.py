@@ -387,6 +387,14 @@ urlpatterns = patterns('',
         name = 'user_subscriptions'
     ),
     url(
+        r'^%s(?P<id>\d+)/(?P<slug>.+)/%s$' % (
+            _('users/'),
+            _('select_languages/'),
+        ),
+        views.users.user_select_languages,
+        name = 'user_select_languages'
+    ),
+    url(
         r'^%s(?P<id>\d+)/(?P<slug>.+)/$' % _('users/'),
         views.users.user,
         name='user_profile'

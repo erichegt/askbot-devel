@@ -113,15 +113,18 @@ class ThreadManager(BaseQuerySetManager):
                 added_at,
                 wiki,
                 text,
-                tagnames = None,
-                is_anonymous = False,
-                is_private = False,
-                group_id = None,
-                by_email = False,
-                email_address = None
+                tagnames=None,
+                is_anonymous=False,
+                is_private=False,
+                group_id=None,
+                by_email=False,
+                email_address=None,
+                language=None,
             ):
         """creates new thread"""
         # TODO: Some of this code will go to Post.objects.create_new
+
+        language = language or get_language()
 
         thread = super(
             ThreadManager,
@@ -131,7 +134,7 @@ class ThreadManager(BaseQuerySetManager):
             tagnames=tagnames,
             last_activity_at=added_at,
             last_activity_by=author,
-            language_code=get_language()
+            language_code=language
         )
 
         #todo: code below looks like ``Post.objects.create_new()``

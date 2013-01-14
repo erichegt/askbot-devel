@@ -17,6 +17,7 @@ import urllib
 from django.db.models import Count
 from django.conf import settings as django_settings
 from django.contrib.auth.decorators import login_required
+from django.core import exceptions as django_exceptions
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
@@ -955,6 +956,27 @@ def user_favorites(request, user, context):
     return render(request, 'user_profile/user_favorites.html', context)
 
 
+@csrf.csrf_protect
+def user_select_languages(request, id=None, slug=None):
+    if request.method != 'POST':
+        raise django_exceptions.PermissionDenied
+
+    user = get_object_or_404(models.User, id=id)
+
+    if not(request.user.id == user.id or request.user.is_administrator()):
+        raise django_exceptions.PermissionDenied
+
+    languages = request.POST.getlist('languages')
+    user.languages = ' '.join(languages)
+    user.save()
+
+    redirect_url = reverse(
+        'user_subscriptions',
+        kwargs={'id': user.id, 'slug': slugify(user.username)}
+    )
+    return HttpResponseRedirect(redirect_url)
+
+
 @owner_or_moderator_required
 @csrf.csrf_protect
 def user_email_subscriptions(request, user, context):
@@ -1002,6 +1024,7 @@ def user_email_subscriptions(request, user, context):
         'email_feeds_form': email_feeds_form,
         'tag_filter_selection_form': tag_filter_form,
         'action_status': action_status,
+        'user_languages': user.languages.split()
     }
     context.update(data)
     return render(
