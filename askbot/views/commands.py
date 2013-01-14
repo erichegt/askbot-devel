@@ -441,7 +441,7 @@ def mark_tag(request, **kwargs):#tagging system
     #separate plain tag names and wildcard tags
     tagnames, wildcards = forms.clean_marked_tagnames(raw_tagnames)
 
-    if request.user.is_administrator() and post_data['user'] != request.user.id:
+    if request.user.is_administrator() and 'user' in post_data:
         user = get_object_or_404(models.User, pk=post_data['user'])
     else:
         user = request.user
@@ -703,15 +703,17 @@ def subscribe_for_tags(request):
 
 @decorators.admins_only
 def list_bulk_tag_subscription(request):
+    if askbot_settings.SUBSCRIBED_TAG_SELECTOR_ENABLED is False:
+        raise Http404
     object_list = models.BulkTagSubscription.objects.all()
-
-    data = {
-            'object_list': object_list
-           }
+    data = {'object_list': object_list}
     return render(request, 'tags/list_bulk_tag_subscription.html', data)
 
 @decorators.admins_only
 def create_bulk_tag_subscription(request):
+    if askbot_settings.SUBSCRIBED_TAG_SELECTOR_ENABLED is False:
+        raise Http404
+
     data = {'action': _('Create')}
     if request.method == "POST":
         form = forms.BulkTagSubscriptionForm(request.POST)
@@ -721,11 +723,12 @@ def create_bulk_tag_subscription(request):
             group_list = form.cleaned_data.get('groups')
 
             bulk_subscription = models.BulkTagSubscription.objects.create(
-                                                                          tag_names=tag_names,
-                                                                          tag_author=request.user,
-                                                                          user_list=user_list,
-                                                                          group_list=group_list
-                                                                         )
+                                                            tag_names=tag_names,
+                                                            tag_author=request.user,
+                                                            user_list=user_list,
+                                                            group_list=group_list
+                                                        )
+
             return HttpResponseRedirect(reverse('list_bulk_tag_subscription'))
         else:
             data['form'] = form
@@ -736,6 +739,9 @@ def create_bulk_tag_subscription(request):
 
 @decorators.admins_only
 def edit_bulk_tag_subscription(request, pk):
+    if askbot_settings.SUBSCRIBED_TAG_SELECTOR_ENABLED is False:
+        raise Http404
+
     bulk_subscription = get_object_or_404(models.BulkTagSubscription,
                                           pk=pk)
     data = {'action': _('Edit')}
@@ -785,6 +791,9 @@ def edit_bulk_tag_subscription(request, pk):
 @decorators.admins_only
 @decorators.post_only
 def delete_bulk_tag_subscription(request):
+    if askbot_settings.SUBSCRIBED_TAG_SELECTOR_ENABLED is False:
+        raise Http404
+
     pk = request.POST.get('pk')
     if pk:
         bulk_subscription = get_object_or_404(models.BulkTagSubscription, pk=pk)

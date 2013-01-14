@@ -27,11 +27,14 @@ class UserModelTests(AskbotTestCase):
 
         global_group =  models.Group.objects.get_global_group()
 
+        the_boss = self.create_user('theboss')
         bulk_subscription = models.BulkTagSubscription.objects.create(
-                                                                     tag_names=[one_tag.name, another_tag.name],
-                                                                     group_list = [global_group]
-                                                                     )
-        user = User.objects.create_user('someone', 'someone@example.com')
+                                                tag_names=[one_tag.name, another_tag.name],
+                                                group_list=[global_group],
+                                                tag_author=the_boss
+                                            )
+
+        user = self.create_user('someone')
         marked_tags = user.get_marked_tags('subscribed')
         self.assertTrue(one_tag in marked_tags)
         self.assertTrue(another_tag in marked_tags)

@@ -5,6 +5,7 @@ Development version
 -------------------
 * added RSS auto-discovery link
 * added support for multilingual site (experimental)
+* tag subscription manager on the tags page (Adolfo)
 
 0.7.47 (Dec 13, 2012)
 ---------------------

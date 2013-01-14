@@ -596,9 +596,15 @@ class Group(AuthGroup):
 
 class BulkTagSubscriptionManager(BaseQuerySetManager):
 
-    def create(self, tag_names=[],
-               user_list=[], group_list=[],
-               tag_author=None,  **kwargs):
+    def create(
+                self, tag_names=None,
+                user_list=None, group_list=None,
+                tag_author=None,  **kwargs
+            ):
+
+        tag_names = tag_names or []
+        user_list = user_list or []
+        group_list = group_list or []
 
         new_object = super(BulkTagSubscriptionManager, self).create(**kwargs)
         tag_name_list = []
@@ -611,10 +617,13 @@ class BulkTagSubscriptionManager(BaseQuerySetManager):
             tags_id_list= [tag.id for tag in tags]
             tag_name_list = [tag.name for tag in tags]
 
-            for tag_name in new_tag_names:
-                new_tag = Tag.objects.create(name=tagname, created_by=tag_author)
-                tags_id_list.append(new_tag.id)
-                tag_name_list.append(new_tag.name)
+            new_tags = Tag.objects.create_in_bulk(
+                                        tag_names=new_tag_names,
+                                        user=tag_author
+                                    )
+
+            tags_id_list.extend([tag.id for tag in new_tags])
+            tag_name_list.extend([tag.name for tag in new_tags])
 
             new_object.tags.add(*tags_id_list)
 

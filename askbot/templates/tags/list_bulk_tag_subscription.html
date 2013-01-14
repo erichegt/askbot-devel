@@ -21,17 +21,28 @@
         <tr>
             <td>{{subscription.date_added}}</td>
             <td>
-              {{
-              macros.tag_list_widget(
-                subscription.tag_list(), 
-                deletable=False, 
-                css_class='subscribed marked-tags'
-              )
-              }}
+                {{
+                    macros.tag_list_widget(
+                        subscription.tag_list(), 
+                        deletable=False, 
+                        css_class='subscribed marked-tags'
+                    )
+                }}
             </td>
-            <td>{%for user in subscription.users.all() %} <a href='{% url user_profile user.id, user.username|slugify %}'>{{user.username}},</a>{%endfor%} <a href='#'> </td>
+            {% set comma=joiner(',') %}
+            <td>{%for user in subscription.users.all() %}{{ comma() }}
+                <a 
+                    href='{% url user_profile user.id, user.username|slugify %}'
+                >{{user.username}}</a>{%endfor%} <a href='#'>
+            </td>
             {% if settings.GROUPS_ENABLED %}
-            <td>{%for group in subscription.groups.all() %} <a href='{% url users_by_group group.id, group.name|slugify %}'>{{group.name}}</a>{%endfor%} </td>
+            {% set comma=joiner(',') %}
+            <td>
+                {% for group in subscription.groups.all() %}{{ comma() }}
+                    <a 
+                        href='{% url users_by_group group.id, group.name|slugify %}'
+                    >{{group.name}}</a>{%endfor%}
+            </td>
             {%endif%}
             <td>
               <button type="button"><a class='action' href='{% url edit_bulk_tag_subscription subscription.id %}'>{%trans%}Edit{%endtrans%}</a></button>

@@ -4296,22 +4296,31 @@ textarea.tipped-input {
     }
 }
 
-.tag-subscriptions{
+.tag-subscriptions {
     border-spacing: 10px; 
     border-collapse: separate;
 
-    button{
-      .button-style(27px, 14px);
+    button {
+        .button-style(27px, 14px);
     }
 
-    form{
-      display:inline-block;
+    form {
+        display: inline-block;
+        margin-bottom: 0;
     }
 
-    .action{
-      cursor: pointer;
-      color: #4A757F;
-      font-family: 'Open Sans Condensed', Arial, sans-serif;
-      text-decoration:none;
+    td {
+        vertical-align: middle;
+    }
+
+    .action {
+        cursor: pointer;
+        color: #4A757F;
+        font-family: 'Open Sans Condensed', Arial, sans-serif;
+        text-decoration: none;
+    }
+
+    ul.tags li {
+        margin: 2px 5px;
     }
 }
