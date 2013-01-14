@@ -1806,17 +1806,17 @@ class Post(models.Model):
                 comment = 'No.%s Revision' % rev_no
 
         return PostRevision.objects.create(
-            post = self,
-            revision   = rev_no,
-            title      = self.thread.title,
-            author     = author,
-            is_anonymous = is_anonymous,
-            revised_at = revised_at,
-            tagnames   = self.thread.tagnames,
-            summary    = comment,
-            text       = text,
-            by_email = by_email,
-            email_address = email_address
+            post=self,
+            revision=rev_no,
+            title=self.thread.title,
+            author=author,
+            is_anonymous=is_anonymous,
+            revised_at=revised_at,
+            tagnames=self.thread.tagnames,
+            summary=unicode(comment),
+            text=text,
+            by_email=by_email,
+            email_address=email_address
         )
 
     def add_revision(self, *kargs, **kwargs):
