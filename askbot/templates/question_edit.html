@@ -45,15 +45,8 @@
                 {{ macros.checkbox_in_div(form.post_privately) }}
             {% endif %}
             {% if settings.MULTILINGUAL %}
-                <label for="language">{% trans %}Change language{% endtrans %}</label>
-                <select name="language">
-                {% for lang in settings.LANGUAGES %}
-                    <option 
-                        value="{{ lang[0] }}"
-                        {% if lang[0] == question.get_origin_post().language_code %}selected="selected"{% endif %}
-                    >{{ lang[1] }}</option>
-                {% endfor %}
-                </select>
+                <label for="id_language">{% trans %}Change language{% endtrans %}</label>
+                {{ form.language }}
             {% endif %}
         </div>
         <input id="edit_post_form_submit_button" type="submit" value="{% trans %}Save edit{% endtrans %}" class="submit" />&nbsp;

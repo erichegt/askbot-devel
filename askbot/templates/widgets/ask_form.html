@@ -47,15 +47,8 @@
             {{ macros.checkbox_in_div(form.post_privately) }}
         {% endif %}
         {% if settings.MULTILINGUAL %}
-            <label for="language">{% trans %}Select language{% endtrans %}</label>
-            <select name="language">
-            {% for lang in settings.LANGUAGES %}
-                <option 
-                    value="{{ lang[0] }}"
-                    {% if lang[0]|is_current_language() %}selected="selected"{% endif %}
-                >{{ lang[1] }}</option>
-            {% endfor %}
-            </select>
+            <label for="id_language">{% trans %}Select language{% endtrans %}</label>
+            {{ form.language }}
         {% endif %}
     </div>
     {% if not request.user.is_authenticated() %}

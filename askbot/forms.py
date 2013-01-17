@@ -4,6 +4,7 @@ import re
 from django import forms
 from askbot import const
 from askbot.const import message_keys
+from django.conf import settings as django_settings
 from django.core.exceptions import PermissionDenied
 from django.forms.util import ErrorList
 from django.utils.translation import ugettext_lazy as _
@@ -201,6 +202,13 @@ class CountedWordsField(forms.CharField):
                 string_concat(self.field_name, ' ', msg)
             )
         return value
+
+
+class LanguageField(forms.ChoiceField):
+
+    def __init__(self, *args, **kwargs):
+        kwargs['choices'] = django_settings.LANGUAGES
+        super(LanguageField, self).__init__(*args, **kwargs)
 
 
 class DomainNameField(forms.CharField):
@@ -919,7 +927,6 @@ class AskForm(PostAsSomeoneForm, PostPrivatelyForm):
         required=False, max_length=255,
         widget=forms.TextInput(attrs={'size': 40, 'class': 'openid-input'})
     )
-    language = forms.CharField(required=False, max_length=16)
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
@@ -927,6 +934,9 @@ class AskForm(PostAsSomeoneForm, PostPrivatelyForm):
         #it's important that this field is set up dynamically
         self.fields['text'] = QuestionEditorField(user=user)
         #hide ask_anonymously field
+        if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False):
+            self.fields['language'] = LanguageField()
+
         if askbot_settings.ALLOW_ASK_ANONYMOUSLY is False:
             self.hide_field('ask_anonymously')
 
@@ -1208,12 +1218,21 @@ class EditQuestionForm(PostAsSomeoneForm, PostPrivatelyForm):
         if not self.can_stay_anonymous():
             self.hide_field('reveal_identity')
 
+        if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False):
+            self.fields['language'] = LanguageField()
+
     def has_changed(self):
         if super(EditQuestionForm, self).has_changed():
             return True
         if askbot_settings.GROUPS_ENABLED:
-            return self.question.is_private() \
-                != self.cleaned_data['post_privately']
+            was_private = self.question.is_private()
+            if was_private != self.cleaned_data['post_privately']:
+                return True
+
+        if getattr(django_settings, 'ASKBOT_MULTILINGUAL', False):
+            old_language = self.question.thread.language_code
+            if old_language != self.cleaned_data['language']:
+                return True
         else:
             return False
 

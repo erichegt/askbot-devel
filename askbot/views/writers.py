@@ -20,6 +20,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseForbidden, Http404
 from django.utils import simplejson
 from django.utils.html import strip_tags, escape
+from django.utils.translation import get_language
 from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy
 from django.core.urlresolvers import reverse
@@ -265,7 +266,10 @@ def ask(request):#view used to ask a new question
                 return HttpResponseRedirect(url_utils.get_login_url())
 
     if request.method == 'GET':
-        form = forms.AskForm(user=request.user)
+        form = forms.AskForm(
+                    user=request.user,
+                    initial={'language': get_language()}
+                )
 
     draft_title = ''
     draft_text = ''
@@ -409,9 +413,11 @@ def edit_question(request, id):
                 revision_form = forms.RevisionForm(question, revision)
                 if form.is_valid():
                     if form.has_changed():
-
                         if form.cleaned_data['reveal_identity']:
                             question.thread.remove_author_anonymity()
+
+                        if 'language' in form.cleaned_data:
+                            question.thread.language_code = form.cleaned_data['language']
 
                         is_anon_edit = form.cleaned_data['stay_anonymous']
                         is_wiki = form.cleaned_data.get('wiki', question.wiki)
@@ -420,9 +426,9 @@ def edit_question(request, id):
                         user = form.get_post_user(request.user)
 
                         user.edit_question(
-                            question = question,
-                            title = form.cleaned_data['title'],
-                            body_text = form.cleaned_data['text'],
+                            question=question,
+                            title=form.cleaned_data['title'],
+                            body_text=form.cleaned_data['text'],
                             revision_comment = form.cleaned_data['summary'],
                             tags = form.cleaned_data['tags'],
                             wiki = is_wiki,
@@ -434,6 +440,7 @@ def edit_question(request, id):
             #request type was "GET"
             revision_form = forms.RevisionForm(question, revision)
             initial = {
+                'language': question.thread.language_code,
                 'post_privately': question.is_private(),
                 'wiki': question.wiki
             }
