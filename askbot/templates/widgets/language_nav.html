@@ -1,9 +1,14 @@
-<ul class="content-wrapper lang-nav">
-{% for language in settings.LANGUAGES %}
-    <li {% if language[0]|is_current_language() %}class="current"{% endif %}>
-        <a 
-            href="/{{ language[0] }}/{{ settings.ASKBOT_URL }}"
-        >{{ language[1] }}</a>
-    </li>
-{% endfor %}
-</ul>
+<span class="lang-nav">
+    <span>{{ settings.LANGUAGES_DICT[language_code] }}</span>
+    <ul>
+    {% for lang in settings.LANGUAGES_DICT %}
+        {% if lang != language_code %}
+        <li>
+            <a 
+                href="/{{ lang }}/{{ settings.ASKBOT_URL }}"
+            >{{ settings.LANGUAGES_DICT[lang] }}</a>
+        </li>
+        {% endif %}
+    {% endfor %}
+    </ul>
+</span>

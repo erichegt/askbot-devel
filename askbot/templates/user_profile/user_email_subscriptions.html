@@ -33,11 +33,11 @@
         action="{% url user_select_languages view_user.id, view_user.username|slugify %}"
     >{% csrf_token %}
         <select multiple name="languages">
-        {% for lang in settings.LANGUAGES %}
+        {% for lang in settings.LANGUAGES_DICT %}
             <option 
-                value="{{ lang[0] }}"
-                {% if lang[0] in user_languages %}selected="selected"{% endif %}
-            >{{ lang[1] }}</option>
+                value="{{ lang }}"
+                {% if lang in user_languages %}selected="selected"{% endif %}
+            >{{ settings.LANGUAGES_DICT[lang] }}</option>
         {% endfor %}
         </select><br/>
         <input type="submit" class="select-language" value="{% trans %}Save languages{% endtrans %}" />

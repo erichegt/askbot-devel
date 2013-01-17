@@ -249,15 +249,23 @@ body.user-messages {
 }
 
 .lang-nav {
+    position: relative;
     ul {
+        display: none;
         list-style: none;
+        z-index: 10000;
+        margin: 0;
+    }
+    &:hover ul,
+    ul:hover {
+        display: block;
+        position: absolute;
+        width: 100px;
     }
     li {
-        display: inline;
-        padding-right: 16px;
-    }
-    li.current {
-        font-weight: bold;
+        color: @info-text;
+        background: white;
+        display: block;
     }
 }
 
